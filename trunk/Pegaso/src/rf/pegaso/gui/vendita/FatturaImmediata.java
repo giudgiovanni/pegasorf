@@ -2,49 +2,67 @@ package rf.pegaso.gui.vendita;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.sql.SQLException;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.EtchedBorder;
-
-import org.jdesktop.swingx.JXTable;
 
 import rf.myswing.IDJComboBox;
+import rf.myswing.util.MyTableCellRendererCentral;
+import rf.myswing.util.QuantitaDisponibileEditor;
 import rf.pegaso.db.DBManager;
+import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.pegaso.db.model.VenditeModel;
 import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.Cliente;
+import rf.pegaso.db.tabelle.Fornitore;
 import rf.pegaso.db.tabelle.Vendita;
+import rf.utility.ControlloDati;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompleteTextComponent;
 import rf.utility.gui.text.AutoCompletion;
 import rf.utility.gui.text.UpperAutoCompleteDocument;
 
+import java.awt.GridBagLayout;
+import javax.swing.JButton;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableColumn;
+
+import java.awt.GridBagConstraints;
+import java.awt.Rectangle;
+import javax.swing.JLabel;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Time;
+import java.util.Vector;
+
+import javax.swing.JTextField;
+
 import com.toedter.calendar.JDateChooser;
 import com.toedter.components.JSpinField;
+
+import javax.swing.JScrollPane;
+
+import org.jdesktop.swingx.JXTable;
+import javax.swing.JComboBox;
 
 public class FatturaImmediata extends JFrame{
 
 	/**
-	 *
+	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private DBManager dbm = null;
@@ -90,22 +108,22 @@ public class FatturaImmediata extends JFrame{
 	private double prezzoAcquisto = 0.00;
 	private double prezzoVendita = 0.00;
 	private int iva = 0;
-
+	
 	public FatturaImmediata(){
 		this.dbm = DBManager.getIstanceSingleton();
 		initialize();
 	}
-
+	
 	/**
 	 * This method initializes this
-	 *
+	 * 
 	 * @return void
 	 */
 	private void initialize() {
 		carrello = new Vector<Vendita>();
 		colonne = new Vector<String>();
 		caricaVettoreColonne();
-		this.setSize(new Dimension(800, 500));
+		this.setSize(new Dimension(800, 600));
 		this.setTitle("Fattura Immediata");
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); // Generated
 		this.setContentPane(getJContentPane());
@@ -118,14 +136,14 @@ public class FatturaImmediata extends JFrame{
 				setEnabled(true);
 			}
 		});
-		setExtendedState(MAXIMIZED_BOTH);
+		//setExtendedState(MAXIMIZED_BOTH);
 		UtilGUI.centraFrame(this);
-
+		
 		caricaClienti();
 		caricaDescrizione();
 		caricaVettoreColonne();
 	}
-
+	
 	class MyButtonListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
@@ -139,10 +157,20 @@ public class FatturaImmediata extends JFrame{
 				inserisci();
 		}
 	}
+	
+	class MyTableModelListener implements TableModelListener{
 
+		@Override
+		public void tableChanged(TableModelEvent arg0) {
+			calcoliBarraInferiore();
+		}
+
+		
+	}
+	
 	class MyComboBoxListener implements ActionListener {
 
-
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == cmbProdotti ) {
 				String id = ((IDJComboBox) cmbProdotti).getIDSelectedItem();
@@ -151,28 +179,37 @@ public class FatturaImmediata extends JFrame{
 			}
 				//caricaArticoloByDescrizione();
 		}
-
+		
 	}
 
 	private void inserisci() {
 		Vendita v  = new Vendita();
-		v.setCodiceArticolo(Integer.parseInt(txtCodice.getText()));
-		v.setCodiceVendita(Integer.parseInt(txtNumero.getText()));
+		try {
+			v.setCodiceArticolo(Articolo.idByCodiceBarre((String.valueOf(txtCodice.getText()))));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		v.setCodiceBarre(txtCodice.getText());
+		//v.setCodiceArticolo(Integer.parseInt(txtCodice.getText()));
+		v.setCodiceVendita(dbm.getNewID("fattura", "idfattura"));
+		//v.setCodiceVendita(Integer.parseInt(txtNumero.getText()));
 		v.setDescrizione(String.valueOf(cmbProdotti.getSelectedItem()));
-		v.setQta(spinQta.getValue());
+		v.setQta(Long.valueOf(spinQta.getValue()));
 		v.setPrezzoAcquisto(prezzoAcquisto);
 		v.setPrezzoVendita(prezzoVendita);
 		v.setIva(iva);
 		carrello.add(v);
 		DBManager.getIstanceSingleton().notifyDBStateChange();
+		calcoliBarraInferiore();
 	}
-
+	
 	/**
-	 * Questo metodo inizializza il nome delle colonne che compongono la tabella
-	 *
+	 * Questo metodo inizializza il nome delle colonne che compongono la tabella	
+	 * 		
 	 */
 	private void caricaVettoreColonne(){
-		colonne.add("Codice");
+		colonne.add("idArticolo");
+		colonne.add("codice");
 		colonne.add("descrizione");
 		colonne.add("quantita'");
 		colonne.add("prezzo");
@@ -180,11 +217,11 @@ public class FatturaImmediata extends JFrame{
 		colonne.add("sconto");
 		colonne.add("iva");
 	}
-
+	
 	/**
-	 * This method initializes jContentPane
-	 *
-	 * @return javax.swing.JPanel
+	 * This method initializes jContentPane	
+	 * 	
+	 * @return javax.swing.JPanel	
 	 */
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
@@ -198,9 +235,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes jPanelNord
-	 *
-	 * @return javax.swing.JPanel
+	 * This method initializes jPanelNord	
+	 * 	
+	 * @return javax.swing.JPanel	
 	 */
 	private JPanel getJPanelNord() {
 		if (jPanelNord == null) {
@@ -266,9 +303,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnChiudi
-	 *
-	 * @return javax.swing.JButton
+	 * This method initializes btnChiudi	
+	 * 	
+	 * @return javax.swing.JButton	
 	 */
 	private JButton getBtnChiudi() {
 		if (btnChiudi == null) {
@@ -281,47 +318,49 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnSalva
-	 *
-	 * @return javax.swing.JButton
+	 * This method initializes btnSalva	
+	 * 	
+	 * @return javax.swing.JButton	
 	 */
 	private JButton getBtnSalva() {
 		if (btnSalva == null) {
 			btnSalva = new JButton();
 			btnSalva.setText("Salva");
 			btnSalva.setBounds(new Rectangle(514, 7, 82, 26));
+			btnSalva.addActionListener(new MyButtonListener());
 		}
 		return btnSalva;
 	}
 
 	/**
-	 * This method initializes btnStampa
-	 *
-	 * @return javax.swing.JButton
+	 * This method initializes btnStampa	
+	 * 	
+	 * @return javax.swing.JButton	
 	 */
 	private JButton getBtnStampa() {
 		if (btnStampa == null) {
 			btnStampa = new JButton();
 			btnStampa.setText("Stampa");
 			btnStampa.setBounds(new Rectangle(607, 7, 82, 26));
+			btnStampa.addActionListener(new MyButtonListener());
 		}
 		return btnStampa;
 	}
 
 	/**
-	 * This method initializes txtNumero
-	 *
-	 * @return javax.swing.JTextField
+	 * This method initializes txtNumero	
+	 * 	
+	 * @return javax.swing.JTextField	
 	 */
 	private JTextField getTxtNumero() {
 		if (txtNumero == null) {
 			txtNumero = new JTextField();
 			txtNumero.setBounds(new Rectangle(190, 10, 100, 20));
-
+			
 		}
 		return txtNumero;
 	}
-
+	
 	private JDateChooser getDataCorrente() {
 		if (dataCorrente == null)
 			try {
@@ -334,9 +373,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes jPanelCentro
-	 *
-	 * @return javax.swing.JPanel
+	 * This method initializes jPanelCentro	
+	 * 	
+	 * @return javax.swing.JPanel	
 	 */
 	private JPanel getJPanelCentro() {
 		if (jPanelCentro == null) {
@@ -352,9 +391,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes jScrollPane
-	 *
-	 * @return javax.swing.JScrollPane
+	 * This method initializes jScrollPane	
+	 * 	
+	 * @return javax.swing.JScrollPane	
 	 */
 	private JScrollPane getJScrollPane() {
 		if (jScrollPane == null) {
@@ -362,7 +401,6 @@ public class FatturaImmediata extends JFrame{
 			try {
 				jScrollPane.setViewportView(getJTable());
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -370,32 +408,110 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes jTable
-	 *
-	 * @return javax.swing.JTable
-	 * @throws SQLException
+	 * This method initializes jTable	
+	 * 	
+	 * @return javax.swing.JTable	
+	 * @throws SQLException 
 	 */
 	private JXTable getJTable() throws SQLException {
 		if (jTable == null) {
-			model = new VenditeModel(carrello, colonne);
-			jTable = new JXTable(model);
-			DBManager.getIstanceSingleton().addDBStateChange(model);
+			try{
+				model = new VenditeModel(carrello, colonne);
+				jTable = new JXTable(model);
+				DBManager.getIstanceSingleton().addDBStateChange(model);
+				TableColumn col=jTable.getColumnModel().getColumn(0);
+				col.setMinWidth(0);
+				col.setMaxWidth(0);
+				col.setPreferredWidth(0);
+				jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				jTable.setDefaultEditor(Long.class, new QuantitaDisponibileEditor());
+				jTable.setDefaultRenderer(Object.class, new MyTableCellRendererCentral());
+				jTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+				jTable.packAll();
+				jTable.getTableHeader().setReorderingAllowed(false);
+				jTable.getModel().addTableModelListener(new MyTableModelListener());
+			} 
+			catch (java.lang.Throwable e) {
+				try {
+					PrintWriter p = new PrintWriter("errore.txt");
+					e.printStackTrace(p);
+					p.flush();
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				}
+			}
 		}
 		return jTable;
 	}
-
+	
 	private void stampa(){
-
+		
 	}
-
+	
 	private void salva(){
+		//Salviamo i dati della fattura
+		String num_fattura = txtNumero.getText();
+		if (num_fattura.equalsIgnoreCase("")) {
+			messaggioCampoMancante("Numero Fattura non presente.");
+			return;
+		}
+		PreparedStatement pst = null;
+		int idfattura = dbm.getNewID("fattura", "idfattura");
+		String insertF = "insert into fattura values (?,?,?,?,?,?)";
+		pst = dbm.getNewPreparedStatement(insertF);
+		try {
+			pst.setInt(1, idfattura);
+			pst.setInt(2, Integer.parseInt(num_fattura));
+			pst.setDate(3, new java.sql.Date(dataCorrente.getDate().getTime()));
+			pst.setTime(4, new Time(dataCorrente.getDate().getTime()));
+			pst.setInt(5, 1);
+			System.out.println((String)cmbClienti.getIDSelectedItem());
+			pst.setString(6, (String)cmbPagamento.getSelectedItem());
+
+			pst.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		
+		//salviamo i dettagli della fattura
+		String insertD = "insert into dettaglio_fattura values (?,?,?,?,?)";
+		pst = dbm.getNewPreparedStatement(insertD);
+		try {
+			for (Vendita v : carrello) {
+				pst.setInt(1, Articolo.idByCodiceBarre((String.valueOf(v.getCodiceArticolo()))));
+				pst.setInt(2, idfattura);
+				pst.setLong(3, v.getQta());
+				pst.setDouble(4, v.getPrezzoAcquisto());
+				pst.setDouble(5, v.getPrezzoVendita());
+
+				pst.executeUpdate();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+		try {
+			if (pst != null)
+				pst.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	dbm.notifyDBStateChange();
 
 	}
 
 	/**
-	 * This method initializes jPanelSud
-	 *
-	 * @return javax.swing.JPanel
+	 * @param string
+	 */
+	private void messaggioCampoMancante(String testo) {
+		JOptionPane.showMessageDialog(this, testo, "CAMPO VUOTO",
+				JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	/**
+	 * This method initializes jPanelSud	
+	 * 	
+	 * @return javax.swing.JPanel	
 	 */
 	private JPanel getJPanelSud() {
 		if (jPanelSud == null) {
@@ -404,15 +520,15 @@ public class FatturaImmediata extends JFrame{
 			lblUtile.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 			lblUtile.setText("Utile");
 			lblTotale = new JLabel();
-			lblTotale.setBounds(new Rectangle(605, 10, 40, 16));
+			lblTotale.setBounds(new Rectangle(655, 10, 40, 16));
 			lblTotale.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 			lblTotale.setText("Totale");
 			lblImposta = new JLabel();
-			lblImposta.setBounds(new Rectangle(495, 10, 50, 16));
+			lblImposta.setBounds(new Rectangle(550, 10, 50, 16));
 			lblImposta.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 			lblImposta.setText("Imposta");
 			lblImponibile = new JLabel();
-			lblImponibile.setBounds(new Rectangle(385, 10, 65, 16));
+			lblImponibile.setBounds(new Rectangle(440, 10, 65, 16));
 			lblImponibile.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 			lblImponibile.setText("Imponibile");
 			lblSconto = new JLabel();
@@ -438,57 +554,67 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes txtSconto
-	 *
-	 * @return javax.swing.JTextField
+	 * This method initializes txtSconto	
+	 * 	
+	 * @return javax.swing.JTextField	
 	 */
 	private JTextField getTxtSconto() {
 		if (txtSconto == null) {
 			txtSconto = new JTextField();
 			txtSconto.setBounds(new Rectangle(245, 30, 90, 20));
+			txtSconto.addKeyListener(new java.awt.event.KeyAdapter() {
+				public void keyPressed(java.awt.event.KeyEvent e) {
+					if ( e.getKeyCode() == KeyEvent.VK_ENTER )
+						calcoliBarraInferiore();
+					System.out.println("invio");
+				}
+			});
 		}
 		return txtSconto;
 	}
 
 	/**
-	 * This method initializes txtUtile
-	 *
-	 * @return javax.swing.JTextField
+	 * This method initializes txtUtile	
+	 * 	
+	 * @return javax.swing.JTextField	
 	 */
 	private JTextField getTxtUtile() {
 		if (txtImponibile == null) {
 			txtImponibile = new JTextField();
-			txtImponibile.setBounds(new Rectangle(385, 30, 90, 20));
+			txtImponibile.setBounds(new Rectangle(440, 30, 90, 20));
+			txtImponibile.setEditable(false);
 		}
 		return txtImponibile;
 	}
 
 	/**
-	 * This method initializes txtNPezzi
-	 *
-	 * @return javax.swing.JTextField
+	 * This method initializes txtNPezzi	
+	 * 	
+	 * @return javax.swing.JTextField	
 	 */
 	private JTextField getTxtNPezzi() {
 		if (txtImposta == null) {
 			txtImposta = new JTextField();
-			txtImposta.setBounds(new Rectangle(495, 30, 90, 20));
+			txtImposta.setBounds(new Rectangle(550, 30, 90, 20));
+			txtImposta.setEditable(false);
 		}
 		return txtImposta;
 	}
 
 	/**
-	 * This method initializes txtTotale
-	 *
-	 * @return javax.swing.JTextField
+	 * This method initializes txtTotale	
+	 * 	
+	 * @return javax.swing.JTextField	
 	 */
 	private JTextField getTxtTotale() {
 		if (txtTotale == null) {
 			txtTotale = new JTextField();
-			txtTotale.setBounds(new Rectangle(605, 30, 90, 20));
+			txtTotale.setBounds(new Rectangle(655, 30, 90, 20));
+			txtTotale.setEditable(false);
 		}
 		return txtTotale;
 	}
-
+	
 	private IDJComboBox getCmbClienti(){
 		if ( cmbClienti == null )
 			try {
@@ -500,9 +626,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnNuovoCliente
-	 *
-	 * @return javax.swing.JButton
+	 * This method initializes btnNuovoCliente	
+	 * 	
+	 * @return javax.swing.JButton	
 	 */
 	private JButton getBtnNuovoCliente() {
 		if (btnNuovoCliente == null) {
@@ -514,9 +640,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes cmbPagamento
-	 *
-	 * @return javax.swing.JComboBox
+	 * This method initializes cmbPagamento	
+	 * 	
+	 * @return javax.swing.JComboBox	
 	 */
 	private JComboBox getCmbPagamento() {
 		if (cmbPagamento == null) {
@@ -530,7 +656,7 @@ public class FatturaImmediata extends JFrame{
 		}
 		return cmbPagamento;
 	}
-
+	
 	private void caricaClienti(){
 //		Cliente c = new Cliente();
 //		String tmpClienti[] = null;
@@ -559,10 +685,10 @@ public class FatturaImmediata extends JFrame{
 //					"ERRORE LUNGHEZZA", 0);
 //			e.printStackTrace();
 //		}
-
+		
 		Cliente c = new Cliente();
 		try {
-
+			
 			String as[] = (String[]) c.allClienti();
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
@@ -603,10 +729,10 @@ public class FatturaImmediata extends JFrame{
 //					"ERRORE LUNGHEZZA", 0);
 //			e.printStackTrace();
 //		}
-
+		
 		Articolo a = new Articolo();
 		try {
-
+			
 			String as[] = (String[]) a.allArticoli();
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
@@ -619,11 +745,11 @@ public class FatturaImmediata extends JFrame{
 		AutoCompletion.enable(cmbProdotti);
 	}
 
-
+	
 	/**
-	 * This method initializes txtCodice
-	 *
-	 * @return javax.swing.JTextField
+	 * This method initializes txtCodice	
+	 * 	
+	 * @return javax.swing.JTextField	
 	 */
 	private JTextField getTxtCodice() {
 		if (txtCodice == null) {
@@ -653,47 +779,62 @@ public class FatturaImmediata extends JFrame{
 					}
 				});
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
 			}
 		}
 		return txtCodice;
 	}
-
+	
 	/**
-	 *
+	 * 
 	 */
 	private void caricaArticoloByCodBarre(String cod) {
-
+		String codBarre = txtCodice.getText();
 		if (cod.equalsIgnoreCase(""))
 			return;
-		int id=Integer.parseInt(cod);
 		Articolo a = new Articolo();
 		try {
-			a.caricaDati(id);
-			txtCodice.setText(a.getCodBarre());
+			if (a.findByCodBarre(cod)) {
+				Fornitore f = new Fornitore();
+				f.caricaDati(a.getIdFornitore());
+				cmbProdotti.setSelectedItem(a.getDescrizione());
+				//txtUm.setText(new Integer(a.getUm()).toString());
+				prezzoAcquisto = a.getPrezzoAcquisto();
+				prezzoVendita = a.getPrezzoIngrosso();
+				spinQta.setValue(1);
+				txtCodice.setText(codBarre);
+				iva = a.getIva();
+			}
+		} catch (SQLException e1) {
 
-//			if (a.findByCodBarre(cod)) {
-//				Fornitore f = new Fornitore();
-//				f.caricaDati(a.getIdFornitore());
-//				cmbProdotti.setSelectedItem(a.getDescrizione());
-//				//txtUm.setText(new Integer(a.getUm()).toString());
-//				prezzoAcquisto = a.getPrezzoAcquisto();
-//				prezzoVendita = a.getPrezzoDettaglio();
-//				spinQta.setValue(1);
-//				txtCodice.setText(cod);
-//				iva = a.getIva();
-//			}
+			e1.printStackTrace();
+		} catch (CodiceBarreInesistente e1) {
+			avvisoCodBarreInesistente();
+			e1.printStackTrace();
+		}
+
+	}
+	
+	/**
+	 * 
+	 */
+	private void caricaArticoloByID(int cod) {
+		if ( cod == 0 )
+			return;
+		Articolo a = new Articolo();
+		try {
+			a.caricaDati(cod);
+			prezzoAcquisto = a.getPrezzoAcquisto();
+			prezzoVendita = a.getPrezzoIngrosso();
+			spinQta.setValue(1);
+			txtCodice.setText(a.getCodBarre());
+			iva = a.getIva();
 		} catch (SQLException e1) {
 
 			e1.printStackTrace();
 		}
-//		} catch (CodiceBarreInesistente e1) {
-//			avvisoCodBarreInesistente();
-//			e1.printStackTrace();
-//		}
 
 	}
-
+	
 	private void avvisoCodBarreInesistente() {
 		JOptionPane.showMessageDialog(this,
 				"Codice barre articolo inesistente", "Codice inesistente",
@@ -701,35 +842,30 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes cmbProdotti
-	 *
-	 * @return javax.swing.JComboBox
+	 * This method initializes cmbProdotti	
+	 * 	
+	 * @return javax.swing.JComboBox	
 	 */
 	private JComboBox getCmbProdotti() {
 		if (cmbProdotti == null) {
 			try {
 				cmbProdotti = new IDJComboBox();
 				cmbProdotti.setBounds(new Rectangle(155, 120, 400, 23)); // Generated
-
-				cmbProdotti.addActionListener(new java.awt.event.ActionListener() {
-					public void actionPerformed(java.awt.event.ActionEvent e) {
-						IDJComboBox cmb=(IDJComboBox)e.getSource();
-						if(cmb.getItemCount()>1){
-							String desc=(String)cmb.getSelectedItem();
-							String id=cmb.getIDSelectedItem();
-							caricaArticoloByCodBarre(id);
+				cmbProdotti.getEditor().getEditorComponent().addKeyListener(new java.awt.event.KeyAdapter(){
+					public void keyPressed(java.awt.event.KeyEvent e) {
+						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+							int id = Integer.parseInt(((IDJComboBox)cmbProdotti).getIDSelectedItem());
+							System.out.println("ok");
+							caricaArticoloByID(id);
 						}
-
-
 					}
 				});
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
 			}
 		}
 		return cmbProdotti;
 	}
-
+	
 	private JSpinField getSpinQta() {
 		if( spinQta == null ) {
 			try {
@@ -737,16 +873,15 @@ public class FatturaImmediata extends JFrame{
 				spinQta.setBounds(new Rectangle(555, 120, 40, 23));
 			}
 			catch (java.lang.Throwable e) {
-				// TODO: Something
 			}
 		}
 		return spinQta;
 	}
 
 	/**
-	 * This method initializes btnInserisci
-	 *
-	 * @return javax.swing.JButton
+	 * This method initializes btnInserisci	
+	 * 	
+	 * @return javax.swing.JButton	
 	 */
 	private JButton getBtnInserisci() {
 		if (btnInserisci == null) {
@@ -759,15 +894,53 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes txtUtile
-	 *
-	 * @return javax.swing.JTextField
+	 * This method initializes txtUtile	
+	 * 	
+	 * @return javax.swing.JTextField	
 	 */
 	private JTextField getTxtUtile2() {
 		if (txtUtile == null) {
 			txtUtile = new JTextField();
 			txtUtile.setBounds(new Rectangle(85, 30, 90, 20));
+			txtUtile.setEditable(false);
 		}
 		return txtUtile;
+	}
+	
+	private double utile = 0.00;
+	//private int scontoTotale = 0;
+	private double imponibile = 0.00;
+	private double imposta = 0.00;
+	//private double totale = 0.00;
+	
+	private void azzeraCampi(){
+		utile = 0.00;
+		//scontoTotale = 0;
+		imponibile = 0.00;
+		imposta = 0.00;
+	}
+	
+	private void calcoliBarraInferiore() {
+		azzeraCampi();
+		//for( Vendita v : carrello ) {
+		for (int i = 0; i < carrello.size(); i++ ){
+			Vendita v = (Vendita)carrello.get(i);
+			double prezzoV = 0.00;
+			if(v.getSconto() == 0)
+				prezzoV = v.getPrezzoVendita();
+				//imponibile += v.getPrezzoVendita()*v.getQta();
+			else
+				prezzoV = v.getPrezzoVendita()-(v.getPrezzoVendita()*v.getSconto()/100);
+				//imponibile += (v.getPrezzoVendita()*v.getQta()) - (v.getPrezzoVendita()*v.getQta()*v.getSconto()/100);
+			imponibile += prezzoV*v.getQta();
+			imposta += (prezzoV*v.getQta()*v.getIva())/100;
+			utile += (prezzoV-v.getPrezzoAcquisto())*v.getQta();
+		}
+		//applica sconto
+		
+		txtUtile.setText(ControlloDati.convertDoubleToPrezzo(utile));
+		txtImponibile.setText(ControlloDati.convertDoubleToPrezzo(imponibile));
+		txtImposta.setText(ControlloDati.convertDoubleToPrezzo(imposta));
+		txtTotale.setText(ControlloDati.convertDoubleToPrezzo(imponibile+imposta));
 	}
 }

@@ -59,6 +59,8 @@ import rf.utility.number.Arrays;
  * @author Hunter
  *
  */
+
+// prova update
 public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	class MyActionListener implements ActionListener {
 

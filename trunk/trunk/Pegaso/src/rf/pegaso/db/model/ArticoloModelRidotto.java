@@ -31,6 +31,7 @@ public class ArticoloModelRidotto extends AbstractTableModel implements
 	public ArticoloModelRidotto(DBManager dbm) throws SQLException {
 		this.dbm = dbm;
 		recuperaDati();
+
 	}
 
 	public int getColumnCount() {

@@ -1,20 +1,31 @@
 package rf.pegaso.gui.internalframe;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
+import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
 
+import rf.myswing.security.AdminPropertiesLoginService;
+import rf.pegaso.gui.InitialGUI;
+import rf.pegaso.gui.gestione.RepartiGestione;
 import rf.pegaso.gui.vendita.AlBanco;
 import rf.pegaso.gui.vendita.DocumentoDiTrasporto;
 import rf.pegaso.gui.vendita.Fattura;
 import rf.pegaso.gui.vendita.FatturaImmediata;
+
+import java.awt.Dimension;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+import java.awt.GridBagLayout;
+import javax.swing.JButton;
+
+import org.jdesktop.swingx.JXLoginPanel;
+import org.jdesktop.swingx.auth.JDBCLoginService;
+
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class VenditaInternalFrame extends JInternalFrame {
 

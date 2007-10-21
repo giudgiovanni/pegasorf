@@ -43,11 +43,14 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 
 import org.jdesktop.swingx.JXTable;
 
 import rf.myswing.IDJComboBox;
+import rf.myswing.exception.LunghezzeArrayDiverse;
 import rf.myswing.util.MyTableCellRendererCentral;
 import rf.myswing.util.QuantitaDisponibileEditor;
 import rf.pegaso.db.DBManager;
@@ -63,8 +66,6 @@ import rf.pegaso.db.tabelle.Scarico;
 import rf.pegaso.db.tabelle.exception.IDNonValido;
 import rf.pegaso.gui.utility.ModificaQuantitaRiga;
 import rf.utility.ControlloDati;
-import rf.utility.db.DBEvent;
-import rf.utility.db.DBStateChange;
 import rf.utility.gui.ComboBoxUtil;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompleteTextComponent;
@@ -78,7 +79,7 @@ import com.toedter.calendar.JTextFieldDateEditor;
  * @author Hunter
  *
  */
-public class ScaricoGui extends JFrame implements DBStateChange{
+public class ScaricoGui extends JFrame{
 	class MyButtonListener implements ActionListener {
 
 		/*
@@ -102,6 +103,17 @@ public class ScaricoGui extends JFrame implements DBStateChange{
 			}
 
 		}
+
+	}
+
+	class MyTableModelListener implements TableModelListener{
+
+
+		public void tableChanged(TableModelEvent arg0) {
+			// TODO Auto-generated method stub
+			calcolaTotaliArticoliScaricati();
+		}
+
 
 	}
 
@@ -889,9 +901,12 @@ public class ScaricoGui extends JFrame implements DBStateChange{
 				tblScarico.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				tblScarico.setDefaultEditor(Integer.class, new QuantitaDisponibileEditor());
 				tblScarico.setDefaultRenderer(Object.class, new MyTableCellRendererCentral());
+//				col=tblScarico.getColumnModel().getColumn(4);
+//				col.setCellRenderer(new MyTableCellRendererCentral());
 				tblScarico.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 				tblScarico.packAll();
 				tblScarico.getTableHeader().setReorderingAllowed(false);
+				tblScarico.getModel().addTableModelListener(new MyTableModelListener());
 
 
 			} catch (java.lang.Throwable e) {
@@ -1098,8 +1113,6 @@ public class ScaricoGui extends JFrame implements DBStateChange{
 	 */
 	private void initialize() {
 
-
-	    DBManager.getIstanceSingleton().addDBStateChange(this);
 		Scarico c = new Scarico( );
 		this.idcarico = c.getNewID();
 		this.setResizable(true);  // Generated
@@ -1889,21 +1902,6 @@ public class ScaricoGui extends JFrame implements DBStateChange{
 			}
 		}
 		return pnlBottoni;
-	}
-
-	public String getTableName() {
-	    // TODO Auto-generated method stub
-	    return null;
-	}
-
-	public void stateChange() {
-	    calcolaTotaliArticoliScaricati();
-
-	}
-
-	public void stateChange(DBEvent dbe) {
-	    // TODO Auto-generated method stub
-
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

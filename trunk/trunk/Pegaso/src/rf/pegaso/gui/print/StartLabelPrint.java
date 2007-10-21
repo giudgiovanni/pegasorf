@@ -20,6 +20,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.WindowConstants;
 
 import rf.utility.gui.UtilGUI;
+import javax.swing.JTextField;
 
 /**
  * @author Hunter

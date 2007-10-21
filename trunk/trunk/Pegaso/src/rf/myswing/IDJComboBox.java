@@ -1,6 +1,8 @@
 package rf.myswing;
 
 
+import java.awt.event.KeyListener;
+
 import javax.swing.JComboBox;
 
 import rf.myswing.exception.LunghezzeArrayDiverse;
@@ -40,6 +42,12 @@ public class IDJComboBox extends JComboBox {
 			this.descItem[i]=tmp[1].trim();
 			
 		}
+	}
+
+	@Override
+	public synchronized void addKeyListener(KeyListener arg0) {
+		// TODO Auto-generated method stub
+		super.addKeyListener(arg0);
 	}
 
 	public IDJComboBox() {

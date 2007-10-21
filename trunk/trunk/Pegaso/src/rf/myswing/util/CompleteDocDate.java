@@ -3,9 +3,15 @@ package rf.myswing.util;
 import java.awt.Toolkit;
 
 import javax.swing.JTextField;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.UndoableEditListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.Element;
 import javax.swing.text.PlainDocument;
+import javax.swing.text.Position;
+import javax.swing.text.Segment;
 
 public class CompleteDocDate extends PlainDocument {
 

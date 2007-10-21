@@ -1,5 +1,5 @@
 /**
- *
+ * 
  */
 package rf.pegaso.db.model;
 
@@ -13,14 +13,13 @@ import javax.swing.table.AbstractTableModel;
 
 import rf.pegaso.db.DBManager;
 import rf.utility.db.DBEvent;
-import rf.utility.db.DBObserved;
 import rf.utility.db.DBStateChange;
 
 /**
  * @author Hunter
- *
+ * 
  */
-public class ScaricoModel extends AbstractTableModel implements DBStateChange{
+public class ScaricoModel extends AbstractTableModel implements DBStateChange {
 
 	private DBManager dbm;
 	private int idordine = 0;
@@ -76,7 +75,7 @@ public class ScaricoModel extends AbstractTableModel implements DBStateChange{
 	public String getTableName() {
 		return "articoli";
 	}
-
+	
 	@Override
 	public void setValueAt(Object o, int r, int c) {
 		if(c!=5)
@@ -93,9 +92,9 @@ public class ScaricoModel extends AbstractTableModel implements DBStateChange{
 			pst.setInt(3, idOrdine);
 			pst.executeUpdate();
 			pst.close();
-
+			
 			recuperaDati();
-
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -124,15 +123,15 @@ public class ScaricoModel extends AbstractTableModel implements DBStateChange{
 		}
 		return o;
 	}
-
+	
 	@Override
 	public boolean isCellEditable(int r, int c) {
-
+		
 		if (c != 5)
 			return false;
 		return true;
 	}
-
+	
 	@Override
 	public Class getColumnClass(int c) {
         if(c==5)
@@ -157,7 +156,7 @@ public class ScaricoModel extends AbstractTableModel implements DBStateChange{
 
 	/**
 	 * @throws SQLException
-	 *
+	 * 
 	 */
 	private void recuperaDati() throws SQLException {
 		//this.query = "select codbarre as codice_articolo,descrizione,iva,um,qta,prezzo_ingrosso as prezzo_listino from articoli_scaricati_view where idordine="	+ idordine + " order by codbarre";

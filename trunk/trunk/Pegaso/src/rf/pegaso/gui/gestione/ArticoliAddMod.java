@@ -27,6 +27,7 @@ import java.util.Locale;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -60,7 +61,7 @@ import rf.utility.number.Arrays;
  */
 public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	class MyActionListener implements ActionListener {
-//
+
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == btnChiudi) {
 				dispose();

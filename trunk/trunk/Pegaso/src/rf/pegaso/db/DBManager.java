@@ -58,11 +58,6 @@ public class DBManager implements DBObserved {
 
 	}
 
-	public ConnectionManager getConnectionManager() {
-		return cm;
-	}
-
-
 	public void addDBStateChange(DBStateChange dbChange) {
 		ascoltatori.add(dbChange);
 

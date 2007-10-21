@@ -63,38 +63,6 @@ public class ConnectionManager {
 
 	}
 
-	public String getDriverJdbc() {
-		return driverJdbc;
-	}
-
-	public void setDriverJdbc(String driverJdbc) {
-		this.driverJdbc = driverJdbc;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getUrldb() {
-		return urldb;
-	}
-
-	public void setUrldb(String urldb) {
-		this.urldb = urldb;
-	}
-
-	public String getUser() {
-		return user;
-	}
-
-	public void setUser(String user) {
-		this.user = user;
-	}
-
 	public Connection getConnection() {
 		if (con == null) {
 			try {

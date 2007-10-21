@@ -2,32 +2,36 @@ package rf.pegaso.gui.vendita;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
+
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+
+import rf.pegaso.db.DBManager;
+import rf.pegaso.gui.vendita.AlBanco.MyButtonListener;
+import rf.utility.gui.UtilGUI;
 import java.awt.GridBagLayout;
+import javax.swing.JButton;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EtchedBorder;
+
+import java.awt.GridBagConstraints;
 import java.awt.Rectangle;
+import javax.swing.JLabel;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.WindowConstants;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.EtchedBorder;
-
-import org.jdesktop.swingx.JXTable;
-
-import rf.pegaso.db.DBManager;
-import rf.utility.gui.UtilGUI;
 
 import com.toedter.calendar.JDateChooser;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+
+import org.jdesktop.swingx.JXTable;
+import javax.swing.JComboBox;
 
 public class DocumentoDiTrasporto extends JFrame{
 

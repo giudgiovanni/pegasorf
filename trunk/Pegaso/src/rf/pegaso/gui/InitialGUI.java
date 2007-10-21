@@ -1,5 +1,5 @@
 /**
- *
+ * 
  */
 package rf.pegaso.gui;
 
@@ -36,7 +36,7 @@ import rf.utility.gui.UtilGUI;
 
 /**
  * @author Hunter
- *
+ * 
  */
 public class InitialGUI extends JFrame {
 	class MyActionListener implements ActionListener {
@@ -98,7 +98,7 @@ public class InitialGUI extends JFrame {
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	private void apriArchivio() {
 		if (!archivioInternalFrame.isVisible()) {
@@ -122,7 +122,7 @@ public class InitialGUI extends JFrame {
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	private void apriConfigurazione() {
 		if (!confInternalFrame.isVisible()) {
@@ -146,7 +146,7 @@ public class InitialGUI extends JFrame {
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	private void apriPrimaNota() {
 		// TODO Auto-generated method stub
@@ -154,7 +154,7 @@ public class InitialGUI extends JFrame {
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	private void apriVendita() {
 		if (!venditaInternalFrame.isVisible()) {
@@ -178,7 +178,7 @@ public class InitialGUI extends JFrame {
 
 	/**
 	 * This method initializes archivioInternalFrame
-	 *
+	 * 
 	 * @return rf.pegaso.gui.ArchivioInternalFrame
 	 */
 	private ArchivioInternalFrame getArchivioInternalFrame() {
@@ -196,7 +196,7 @@ public class InitialGUI extends JFrame {
 
 	/**
 	 * This method initializes btnArchivio
-	 *
+	 * 
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnArchivio() {
@@ -216,7 +216,7 @@ public class InitialGUI extends JFrame {
 
 	/**
 	 * This method initializes btnConfigurazione
-	 *
+	 * 
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnConfigurazione() {
@@ -235,7 +235,7 @@ public class InitialGUI extends JFrame {
 
 	/**
 	 * This method initializes btnPrimaNota
-	 *
+	 * 
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnPrimaNota() {
@@ -255,7 +255,7 @@ public class InitialGUI extends JFrame {
 
 	/**
 	 * This method initializes btnVendita
-	 *
+	 * 
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnVendita() {
@@ -274,7 +274,7 @@ public class InitialGUI extends JFrame {
 
 	/**
 	 * This method initializes jContentPane
-	 *
+	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
@@ -290,7 +290,7 @@ public class InitialGUI extends JFrame {
 
 	/**
 	 * This method initializes jDesktopPane
-	 *
+	 * 
 	 * @return javax.swing.JDesktopPane
 	 */
 	private DecoratedDesktopPane getJDesktopPane() {
@@ -319,7 +319,7 @@ public class InitialGUI extends JFrame {
 		}
 		return confInternalFrame;
 	}
-
+	
 	private VenditaInternalFrame getVenditaInternalFrame() {
 		if (venditaInternalFrame == null) {
 			try {
@@ -335,7 +335,7 @@ public class InitialGUI extends JFrame {
 
 	/**
 	 * This method initializes jJToolBarBar
-	 *
+	 * 
 	 * @return javax.swing.JToolBar
 	 */
 	private JToolBar getJJToolBarBar() {
@@ -355,7 +355,7 @@ public class InitialGUI extends JFrame {
 
 	/**
 	 * This method initializes pnlCentro
-	 *
+	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlCentro() {
@@ -373,7 +373,7 @@ public class InitialGUI extends JFrame {
 
 	/**
 	 * This method initializes pnlNord
-	 *
+	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlNord() {
@@ -394,7 +394,7 @@ public class InitialGUI extends JFrame {
 
 	/**
 	 * This method initializes pnlSud
-	 *
+	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlSud() {
@@ -416,7 +416,7 @@ public class InitialGUI extends JFrame {
 
 	/**
 	 * This method initializes this
-	 *
+	 * 
 	 * @return void
 	 */
 	private void initialize() {
@@ -481,8 +481,8 @@ public class InitialGUI extends JFrame {
 		this.setExtendedState(Frame.MAXIMIZED_BOTH);
 		// Centriamo il frame sullo schermo
 		UtilGUI.centraFrame(this);
-
-		//effettuiamo alcune modifiche alla base di dati per adattarla
+		
+		//effettuiamo alcune modifiche alla base di dati per adattarla 
 		File f=new File("modificheok3");
 		if(!f.exists()){
 			//modifichiamo la vista articoli_scaricati_view
@@ -496,7 +496,7 @@ public class InitialGUI extends JFrame {
 				e1.printStackTrace();
 			}
 		}
-
+		
 		//effettuiamo il backup del db all'apertura se impostato si
 		try {
 			UtilityDBManager.getSingleInstance().backupDataBase(UtilityDBManager.OPEN);
@@ -507,12 +507,12 @@ public class InitialGUI extends JFrame {
 			JOptionPane.showMessageDialog(this, "File di configurazione per backup\nmancante o danneggiato", "ERRORE FILE", JOptionPane.ERROR_MESSAGE);
 			e1.printStackTrace();
 		}
-
+		
 
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	private void inizializzaAscoltatori() {
 		myActionListener = new MyActionListener();

@@ -1,5 +1,5 @@
 /**
- *
+ * 
  */
 package rf.pegaso.gui;
 
@@ -15,14 +15,13 @@ import rf.utility.system.SystemPrintStream;
 
 /**
  * @author Hunter
- *
+ * 
  */
 public class StartPegasoGrecoMobili {
 
 	/**
 	 * @param args
 	 */
-
 	public static void main(String[] args) {
 
 		// Carichiamo le configurazioni della connessione

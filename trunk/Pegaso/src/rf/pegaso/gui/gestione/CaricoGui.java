@@ -46,6 +46,7 @@ import net.sf.jasperreports.view.JasperViewer;
 import org.jdesktop.swingx.JXTable;
 
 import rf.myswing.IDJComboBox;
+import rf.myswing.exception.LunghezzeArrayDiverse;
 import rf.myswing.util.DoubleEditor;
 import rf.pegaso.db.DBManager;
 import rf.pegaso.db.UtilityDBManager;
@@ -222,7 +223,7 @@ public class CaricoGui extends JFrame {
 			e1.printStackTrace();
 		}
 		// FINE PUNTO BACKUP
-
+		
 		int riga = tblCarico.getSelectedRow();
 		String codbarre = (String) tblCarico.getValueAt(riga, 0);
 		int id = -1;
@@ -303,7 +304,7 @@ public class CaricoGui extends JFrame {
 			e1.printStackTrace();
 		}
 		// FINE PUNTO BACKUP
-
+		
 		Articolo a = new Articolo();
 		try {
 			a.caricaDatiByCodBarre(codBarre);
@@ -394,7 +395,7 @@ public class CaricoGui extends JFrame {
 //			e.printStackTrace();
 //		}
 //		AutoCompletion.enable(cmbProdotti);
-
+		
 		Articolo f = new Articolo();
 		try {
 			String as[] = (String[]) f.allArticoli();
@@ -440,7 +441,7 @@ public class CaricoGui extends JFrame {
 //					"ERRORE LUNGHEZZA", 0);
 //			e.printStackTrace();
 //		}
-
+		
 		Articolo f = new Articolo();
 		try {
 			String as[] = f.allArticoliByFornitore(idfornitore);
@@ -495,7 +496,7 @@ public class CaricoGui extends JFrame {
 			messaggioErroreCampo("Errore caricamento dati db");
 			e.printStackTrace();
 		}
-
+		
 		cmbTipoDocumento.setSelectedItem(d.getTipo());
 		cmbFornitori.setSelectedItem(f.getNome());
 		ricaricaTableCarico(c.getIdCarico());
@@ -548,7 +549,7 @@ public class CaricoGui extends JFrame {
 //		AutoCompletion.enable(cmbDocumenti);
 		Documento f = new Documento();
 		try {
-
+			
 			String as[] = (String[]) f.allDocumenti();
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
@@ -590,10 +591,10 @@ public class CaricoGui extends JFrame {
 //			e.printStackTrace();
 //		}
 //		AutoCompletion.enable(cmbFornitori);
-
+		
 		Fornitore f = new Fornitore();
 		try {
-
+			
 			String as[] = (String[]) f.allFornitori();
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
@@ -657,7 +658,7 @@ public class CaricoGui extends JFrame {
 			if (ok !=JOptionPane.YES_OPTION)
 				return;
 		}
-
+		
 		// PUNTO DI BACKUP DA ATTIVARE DA CONFIGURAZIONI
 		try {
 			UtilityDBManager.getSingleInstance().backupDataBase(UtilityDBManager.DELETE);
@@ -669,7 +670,7 @@ public class CaricoGui extends JFrame {
 			e1.printStackTrace();
 		}
 		// FINE PUNTO BACKUP
-
+		
 		int riga = tblCarico.getSelectedRow();
 		TableColumn col = tblCarico.getColumn("codice_articolo");
 		int colonna = col.getModelIndex();
@@ -713,7 +714,7 @@ public class CaricoGui extends JFrame {
 			e1.printStackTrace();
 		}
 		// FINE PUNTO BACKUP
-
+		
 		int riga = tblViewCarichi.getSelectedRow();
 		int idcarico = ((Long) tblViewCarichi.getValueAt(riga, 0)).intValue();
 		Carico c = new Carico();
@@ -1114,7 +1115,7 @@ public class CaricoGui extends JFrame {
 						s.setCaretPosition(0);
 					}
 				});
-
+				
 			} catch (Throwable throwable) {
 			}
 		return dataDocumento;
@@ -1226,8 +1227,8 @@ public class CaricoGui extends JFrame {
 		caricaArticoli(cmbProdotti);
 		caricaDocumenti(cmbTipoDocumento);
 		inizializzaListeners();
-
-
+		
+		
 	}
 
 	private void inizializzaListeners() {
@@ -1264,7 +1265,7 @@ public class CaricoGui extends JFrame {
 			e1.printStackTrace();
 		}
 		// FINE PUNTO BACKUP
-
+		
 		if (codBarre.equals("") && tmp.equals("") && tmpPrezzo.equals("")) {
 			salvaFattura();
 			return;
@@ -1361,8 +1362,8 @@ public class CaricoGui extends JFrame {
 					"Errore nell'inserimento dinumeri", "NUMERO ERRATO", 0);
 			e.printStackTrace();
 		}
-
-
+		
+		
 	}
 
 	private void messaggioCampoMancante(String testo) {
@@ -1464,7 +1465,7 @@ public class CaricoGui extends JFrame {
 						s.setCaretPosition(0);
 					}
 				});
-
+				
 			} catch (Throwable throwable) {
 			}
 		return dataCarico;

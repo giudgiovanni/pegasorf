@@ -13,6 +13,8 @@ import java.text.ParseException;
 import javax.swing.table.AbstractTableModel;
 
 import rf.pegaso.db.DBManager;
+import rf.pegaso.db.tabelle.Articolo;
+import rf.pegaso.db.tabelle.exception.IDNonValido;
 import rf.utility.ControlloDati;
 import rf.utility.db.DBEvent;
 import rf.utility.db.DBStateChange;

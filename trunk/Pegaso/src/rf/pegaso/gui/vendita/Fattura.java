@@ -1,45 +1,54 @@
 package rf.pegaso.gui.vendita;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
+
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+
+import rf.myswing.IDJComboBox;
+import rf.myswing.exception.LunghezzeArrayDiverse;
+import rf.pegaso.db.DBManager;
+import rf.pegaso.db.exception.CodiceBarreInesistente;
+import rf.pegaso.db.tabelle.Articolo;
+import rf.pegaso.db.tabelle.Cliente;
+import rf.pegaso.db.tabelle.Fornitore;
+import rf.pegaso.gui.vendita.AlBanco.MyButtonListener;
+import rf.utility.gui.UtilGUI;
+import rf.utility.gui.text.AutoCompleteTextComponent;
+import rf.utility.gui.text.AutoCompletion;
+import rf.utility.gui.text.UpperAutoCompleteDocument;
+
 import java.awt.GridBagLayout;
+import javax.swing.JButton;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
+
+import java.awt.GridBagConstraints;
 import java.awt.Rectangle;
+import javax.swing.JLabel;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.util.Vector;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.WindowConstants;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.EtchedBorder;
-
-import org.jdesktop.swingx.JXTable;
-
-import rf.myswing.IDJComboBox;
-import rf.pegaso.db.DBManager;
-import rf.pegaso.db.exception.CodiceBarreInesistente;
-import rf.pegaso.db.tabelle.Articolo;
-import rf.pegaso.db.tabelle.Cliente;
-import rf.pegaso.db.tabelle.Fornitore;
-import rf.utility.gui.UtilGUI;
-import rf.utility.gui.text.AutoCompleteTextComponent;
-import rf.utility.gui.text.AutoCompletion;
-import rf.utility.gui.text.UpperAutoCompleteDocument;
 
 import com.toedter.calendar.JDateChooser;
 import com.toedter.components.JSpinField;
+
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+
+import org.jdesktop.swingx.JXTable;
+import javax.swing.JComboBox;
 
 public class Fattura extends JFrame{
 

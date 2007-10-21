@@ -10,6 +10,9 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,6 +22,7 @@ import javax.swing.WindowConstants;
 
 import rf.myswing.util.ModalFrameUtil;
 import rf.pegaso.db.DBManager;
+import rf.pegaso.db.tabelle.Scarico;
 import rf.pegaso.gui.gestione.ArticoliGestione;
 import rf.pegaso.gui.gestione.CaricoGui;
 import rf.pegaso.gui.gestione.ClientiGestione;

@@ -19,7 +19,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.TableColumn;
 
@@ -34,6 +33,7 @@ import rf.pegaso.db.model.ClienteModel;
 import rf.pegaso.db.tabelle.Cliente;
 import rf.pegaso.db.tabelle.exception.IDNonValido;
 import rf.utility.gui.UtilGUI;
+import javax.swing.WindowConstants;
 
 /**
  * @author Hunter

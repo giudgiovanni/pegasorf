@@ -5,9 +5,10 @@ import java.util.Vector;
 public class Vendita {
 	
 	private int codiceArticolo;
+	private String codiceBarre;
 	private int codiceVendita;
 	private String descrizione;
-	private int qta;
+	private long qta;
 	private double prezzoAcquisto;
 	private double prezzoVendita;
 	private int iva;
@@ -15,6 +16,7 @@ public class Vendita {
 	
 	public Vendita() {
 		this.codiceArticolo = 0;
+		this.codiceBarre = "";
 		this.codiceVendita = 0;
 		this.descrizione = "";
 		this.qta = 0;
@@ -48,12 +50,12 @@ public class Vendita {
 		this.descrizione = descrizione;
 	}
 
-	public int getQta() {
+	public long getQta() {
 		return qta;
 	}
 
-	public void setQta(int qta) {
-		this.qta = qta;
+	public void setQta(Long long1) {
+		this.qta = long1;
 	}
 
 	public double getPrezzoAcquisto() {
@@ -91,6 +93,7 @@ public class Vendita {
 	public Vector<Object> trasformaInArray() {
 		Vector<Object> v = new Vector<Object>();
 		v.add(codiceArticolo);
+		v.add(codiceBarre);
 		v.add(descrizione);
 		v.add(qta);
 		v.add(prezzoVendita);
@@ -101,6 +104,14 @@ public class Vendita {
 		v.add(sconto);
 		v.add(iva);
 		return v;
+	}
+
+	public String getCodiceBarre() {
+		return codiceBarre;
+	}
+
+	public void setCodiceBarre(String codiceBarre) {
+		this.codiceBarre = codiceBarre;
 	}
 
 }

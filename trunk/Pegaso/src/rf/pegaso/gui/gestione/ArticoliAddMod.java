@@ -1942,6 +1942,13 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
 	 */
 
+
+
+
+
+
+
+
 	public void propertyChange(PropertyChangeEvent e) {
 		Object source = e.getSource();
 		if (source == txtPrezzoListino) {

@@ -60,7 +60,6 @@ import rf.utility.number.Arrays;
  *
  */
 
-// prova update
 public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	class MyActionListener implements ActionListener {
 

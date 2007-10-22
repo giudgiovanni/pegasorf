@@ -61,7 +61,7 @@ import javax.swing.JComboBox;
 public class AlBanco extends JFrame{
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private DBManager dbm = null;
@@ -100,15 +100,15 @@ public class AlBanco extends JFrame{
 	private double prezzoAcquisto = 0.00;
 	private double prezzoVendita = 0.00;
 	private int iva = 0;
-	
+
 	public AlBanco(){
 		this.dbm = DBManager.getIstanceSingleton();
 		initialize();
 	}
-	
+
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 * @return void
 	 */
 	private void initialize() {
@@ -130,11 +130,11 @@ public class AlBanco extends JFrame{
 		});
 		//setExtendedState(MAXIMIZED_BOTH);
 		UtilGUI.centraFrame(this);
-		
+
 		caricaDescrizione();
 		caricaVettoreColonne();
 	}
-	
+
 	class MyButtonListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
@@ -150,21 +150,21 @@ public class AlBanco extends JFrame{
 				deleteArticolo();
 		}
 	}
-	
+
 	class MyTableModelListener implements TableModelListener{
 
-		@Override
+
 		public void tableChanged(TableModelEvent arg0) {
 			calcoliBarraInferiore();
 		}
 
-		
+
 	}
 
 	private void inserisci() {
 		Vendita v  = new Vendita();
 		Articolo a = new Articolo();
-		
+
 		try {
 			a.caricaDatiByCodBarre(txtCodice.getText());
 		} catch (SQLException e) {
@@ -196,10 +196,10 @@ public class AlBanco extends JFrame{
 		DBManager.getIstanceSingleton().notifyDBStateChange();
 		calcoliBarraInferiore();
 	}
-	
+
 	/**
-	 * Questo metodo inizializza il nome delle colonne che compongono la tabella	
-	 * 		
+	 * Questo metodo inizializza il nome delle colonne che compongono la tabella
+	 *
 	 */
 	private void caricaVettoreColonne(){
 		colonne.add("idArticolo");
@@ -211,7 +211,7 @@ public class AlBanco extends JFrame{
 		colonne.add("sconto");
 		colonne.add("iva");
 	}
-	
+
 	private void deleteArticolo(){
 		if (jTable.getSelectedRow() <= -1) {
 			JOptionPane.showMessageDialog(this, "Selezionare un righa",
@@ -236,13 +236,13 @@ public class AlBanco extends JFrame{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	/**
-	 * This method initializes jContentPane	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes jContentPane
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
@@ -256,9 +256,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes jPanelNord	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes jPanelNord
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanelNord() {
 		if (jPanelNord == null) {
@@ -317,9 +317,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnChiudi	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnChiudi
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnChiudi() {
 		if (btnChiudi == null) {
@@ -332,9 +332,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnSalva	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnSalva
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnSalva() {
 		if (btnSalva == null) {
@@ -347,9 +347,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnStampa	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnStampa
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnStampa() {
 		if (btnStampa == null) {
@@ -362,19 +362,19 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes txtNumero	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes txtNumero
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtNumero() {
 		if (txtNumero == null) {
 			txtNumero = new JTextField();
 			txtNumero.setBounds(new Rectangle(190, 10, 100, 20));
-			
+
 		}
 		return txtNumero;
 	}
-	
+
 	private JDateChooser getDataCorrente() {
 		if (dataCorrente == null)
 			try {
@@ -387,9 +387,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes jPanelCentro	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes jPanelCentro
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanelCentro() {
 		if (jPanelCentro == null) {
@@ -405,9 +405,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes jScrollPane	
-	 * 	
-	 * @return javax.swing.JScrollPane	
+	 * This method initializes jScrollPane
+	 *
+	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getJScrollPane() {
 		if (jScrollPane == null) {
@@ -422,10 +422,10 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes jTable	
-	 * 	
-	 * @return javax.swing.JTable	
-	 * @throws SQLException 
+	 * This method initializes jTable
+	 *
+	 * @return javax.swing.JTable
+	 * @throws SQLException
 	 */
 	private JXTable getJTable() throws SQLException {
 		if (jTable == null) {
@@ -444,7 +444,7 @@ public class AlBanco extends JFrame{
 				jTable.packAll();
 				jTable.getTableHeader().setReorderingAllowed(false);
 				jTable.getModel().addTableModelListener(new MyTableModelListener());
-			} 
+			}
 			catch (java.lang.Throwable e) {
 				try {
 					PrintWriter p = new PrintWriter("errore.txt");
@@ -457,11 +457,11 @@ public class AlBanco extends JFrame{
 		}
 		return jTable;
 	}
-	
+
 	private void stampa(){
-		
+
 	}
-	
+
 	private void salva(){
 		//Salviamo i dati della fattura
 		String numero = txtNumero.getText();
@@ -486,8 +486,8 @@ public class AlBanco extends JFrame{
 			pst.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} 
-		
+		}
+
 		//salviamo i dettagli della fattura
 		String insertD = "insert into dettaglio_banco values (?,?,?,?,?)";
 		pst = dbm.getNewPreparedStatement(insertD);
@@ -517,7 +517,7 @@ public class AlBanco extends JFrame{
 	dbm.notifyDBStateChange();
 
 	}
-	
+
 	public void updateArticolo(int idArticolo, int qta)
 	throws SQLException {
 
@@ -542,11 +542,11 @@ public class AlBanco extends JFrame{
 		JOptionPane.showMessageDialog(this, testo, "CAMPO VUOTO",
 				JOptionPane.INFORMATION_MESSAGE);
 	}
-	
+
 	/**
-	 * This method initializes jPanelSud	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes jPanelSud
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanelSud() {
 		if (jPanelSud == null) {
@@ -584,9 +584,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes txtNPezzi	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes txtNPezzi
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtNPezzi() {
 		if (txtPezzi == null) {
@@ -598,9 +598,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes txtTotale	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes txtTotale
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtTotale() {
 		if (txtTotale == null) {
@@ -610,11 +610,11 @@ public class AlBanco extends JFrame{
 		}
 		return txtTotale;
 	}
-	
+
 	/**
-	 * This method initializes cmbPagamento	
-	 * 	
-	 * @return javax.swing.JComboBox	
+	 * This method initializes cmbPagamento
+	 *
+	 * @return javax.swing.JComboBox
 	 */
 	private JComboBox getCmbPagamento() {
 		if (cmbTipoPagamento == null) {
@@ -656,10 +656,10 @@ public class AlBanco extends JFrame{
 //					"ERRORE LUNGHEZZA", 0);
 //			e.printStackTrace();
 //		}
-		
+
 		Articolo a = new Articolo();
 		try {
-			
+
 			String as[] = (String[]) a.allArticoli();
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
@@ -672,11 +672,11 @@ public class AlBanco extends JFrame{
 		AutoCompletion.enable(cmbProdotti);
 	}
 
-	
+
 	/**
-	 * This method initializes txtCodice	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes txtCodice
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtCodice() {
 		if (txtCodice == null) {
@@ -710,15 +710,15 @@ public class AlBanco extends JFrame{
 		}
 		return txtCodice;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private void caricaArticoloByCodBarre(String cod) {
 		if ( cmbTipoPagamento.getSelectedItem().equals("") ){
 			JOptionPane.showMessageDialog(this, "Selezionare il tipo di prezzo da applicare",
 					"AVVISO", JOptionPane.INFORMATION_MESSAGE);
-			
+
 			return;
 		}
 		String codBarre = txtCodice.getText();
@@ -749,9 +749,9 @@ public class AlBanco extends JFrame{
 		}
 
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private void caricaArticoloByID(int cod) {
 		if ( cod == 0 )
@@ -778,7 +778,7 @@ public class AlBanco extends JFrame{
 		}
 
 	}
-	
+
 	private void avvisoCodBarreInesistente() {
 		JOptionPane.showMessageDialog(this,
 				"Codice barre articolo inesistente", "Codice inesistente",
@@ -786,9 +786,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes cmbProdotti	
-	 * 	
-	 * @return javax.swing.JComboBox	
+	 * This method initializes cmbProdotti
+	 *
+	 * @return javax.swing.JComboBox
 	 */
 	private JComboBox getCmbProdotti() {
 		if (cmbProdotti == null) {
@@ -809,7 +809,7 @@ public class AlBanco extends JFrame{
 		}
 		return cmbProdotti;
 	}
-	
+
 	private JSpinField getSpinQta() {
 		if( spinQta == null ) {
 			try {
@@ -823,9 +823,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnInserisci	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnInserisci
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnInserisci() {
 		if (btnInserisci == null) {
@@ -838,9 +838,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes txtUtile	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes txtUtile
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtUtile2() {
 		if (txtUtile == null) {
@@ -850,18 +850,18 @@ public class AlBanco extends JFrame{
 		}
 		return txtUtile;
 	}
-	
+
 	private double utile = 0.00;
 	private double imponibile = 0.00;
 	private double imposta = 0.00;
 	private JButton btnElimina = null;
-	
+
 	private void azzeraCampi(){
 		utile = 0.00;
 		imponibile = 0.00;
 		imposta = 0.00;
 	}
-	
+
 	private void calcoliBarraInferiore() {
 		azzeraCampi();
 		//for( Vendita v : carrello ) {
@@ -879,7 +879,7 @@ public class AlBanco extends JFrame{
 			utile += (prezzoV-v.getPrezzoAcquisto())*v.getQta();
 		}
 		//applica sconto
-		
+
 		txtUtile.setText(ControlloDati.convertDoubleToPrezzo(utile));
 		//txtImponibile.setText(ControlloDati.convertDoubleToPrezzo(imponibile));
 		//txtPezzi.setText(ControlloDati.convertDoubleToPrezzo(imposta));
@@ -887,9 +887,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnElimina	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnElimina
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnElimina() {
 		if (btnElimina == null) {

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.gui.gestione;
 
@@ -57,7 +57,7 @@ import rf.utility.number.Arrays;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	class MyActionListener implements ActionListener {
@@ -91,7 +91,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see java.awt.event.FocusListener#focusGained(java.awt.event.FocusEvent)
 		 */
 		public void focusGained(FocusEvent arg0) {
@@ -101,7 +101,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see java.awt.event.FocusListener#focusLost(java.awt.event.FocusEvent)
 		 */
 		public void focusLost(FocusEvent e) {
@@ -251,7 +251,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		this.modalita = modalita;
 		initialize();
 	}
-	
+
 	public ArticoliAddMod(JFrame owner, int idArticolo,int modalita) {
 		//super(owner, true);
 		this.dbm = DBManager.getIstanceSingleton();
@@ -260,10 +260,10 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		this.modalita = modalita;
 		initialize();
 	}
-	
-	
+
+
 	// in questo metodo costruttore passiamo oltre i vari parametri
-	// che già abbiamo inpostato anche un terzo parametro che 
+	// che già abbiamo inpostato anche un terzo parametro che
 	// ci serve per memorizzare l'ultimo codArticolo lavorato
 	// questo viene particolarmente usato nel caso di un nuovo articolo
 	// quando ci si trova nel carico merce.
@@ -276,9 +276,9 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		initialize();
 		this.ultimoArticolo=codArticolo;
 	}
-	
+
 	// in questo metodo costruttore passiamo oltre i vari parametri
-	// che già abbiamo inpostato anche un quarto parametro che 
+	// che già abbiamo inpostato anche un quarto parametro che
 	// ci serve per memorizzare l'ultimo codArticolo lavorato
 	// questo viene particolarmente usato nel caso di un nuovo articolo
 	// quando ci si trova nel carico merce.
@@ -291,8 +291,8 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		initialize();
 		this.ultimoArticolo=codArticolo;
 	}
-	
-	
+
+
 
 	public void suggerimentoCodice() {
 		// usato per passaggio valore di riferimento
@@ -302,21 +302,21 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		s.setVisible(true);
 		txtCodBarre.setText(codice[0]);
 	}
-	
-	// questo metodo permette di chiudere 
+
+	// questo metodo permette di chiudere
 	// se vero la finestra nel momento in cui si preme
 	// il pulsante OK e viene appunto effettuata la modifica
 	// o l'inserimento di  un articolo.
 	public void setCloseOnOk(boolean close){
 		this.close=close;
 	}
-	
+
 	public boolean getCloseOnOk(){
 		return this.close;
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void calcolaPrezzoPubblico() {
 		int iva = 0;
@@ -372,10 +372,10 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	}
 
-	
+
 
 	/**
-	 * 
+	 *
 	 */
 	public void apriDocCarico() {
 		ViewDocCarico view = new ViewDocCarico(this, dbm, idArticolo);
@@ -384,7 +384,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void apriNuovoFornitore() {
 		FornitoriAdd add = new FornitoriAdd(this, dbm);
@@ -395,7 +395,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void apriNuovaCategoria() {
 		RepartiAdd add = new RepartiAdd(this, dbm);
@@ -406,7 +406,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void apriNuovoUM() {
 		UnitaMisuraAdd add = new UnitaMisuraAdd(this, dbm);
@@ -638,7 +638,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void caricaQtaMagazzino() {
 		int qta = 0;
@@ -709,7 +709,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes btnChiudi
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnChiudi() {
@@ -728,7 +728,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes btnDocCarico
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnDocCarico() {
@@ -746,7 +746,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes btnInsMod
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnInsMod() {
@@ -767,7 +767,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes btnNewFornitore
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnNewFornitore() {
@@ -786,7 +786,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes btnNewReparto
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnNewReparto() {
@@ -805,7 +805,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes btnNewUM
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnNewUM() {
@@ -824,7 +824,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes cmbFornitori
-	 * 
+	 *
 	 * @return javax.swing.JComboBox
 	 */
 	private JComboBox getCmbFornitori() {
@@ -843,7 +843,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes cmbMisura
-	 * 
+	 *
 	 * @return javax.swing.JComboBox
 	 */
 	private JComboBox getCmbMisura() {
@@ -862,7 +862,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes cmbReparto
-	 * 
+	 *
 	 * @return javax.swing.JComboBox
 	 */
 	private JComboBox getCmbReparto() {
@@ -881,7 +881,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes jContentPane
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
@@ -896,7 +896,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes jPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanel() {
@@ -921,7 +921,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes jPanel1
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanel1() {
@@ -950,7 +950,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes jPanel2
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanel2() {
@@ -978,7 +978,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes jScrollPane1
-	 * 
+	 *
 	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getJScrollPane1() {
@@ -996,7 +996,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes jTabbedPane
-	 * 
+	 *
 	 * @return javax.swing.JTabbedPane
 	 */
 	private JTabbedPane getJTabbedPane() {
@@ -1014,7 +1014,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes pnlCentrale
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlCentrale() {
@@ -1032,7 +1032,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes pnlDatiPersonali
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlDatiPersonali() {
@@ -1142,7 +1142,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes txtCaricoIniziale
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtCaricoIniziale() {
@@ -1160,7 +1160,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes txtCodBarre
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtCodBarre() {
@@ -1179,7 +1179,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes txtCodFornitore
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtCodFornitore() {
@@ -1198,7 +1198,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes txtColore
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtColore() {
@@ -1217,7 +1217,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes txtDescrizione
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtDescrizione() {
@@ -1236,7 +1236,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes txtImballo
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtImballo() {
@@ -1255,7 +1255,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes txtIngrosso
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtIngrosso() {
@@ -1287,7 +1287,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes txtIva
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtIva() {
@@ -1309,7 +1309,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes txtNote
-	 * 
+	 *
 	 * @return javax.swing.JTextArea
 	 */
 	private JTextArea getTxtNote() {
@@ -1328,7 +1328,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes txtPeso
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtPeso() {
@@ -1359,7 +1359,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes txtPrezzoAcquisto
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtPrezzoAcquisto() {
@@ -1383,7 +1383,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes txtPrezzoIngrosso
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtPrezzoIngrosso() {
@@ -1412,7 +1412,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes txtQta
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtQta() {
@@ -1431,7 +1431,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes txtRicaricoIngrosso
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtRicaricoIngrosso() {
@@ -1462,7 +1462,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes txtSconto
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtSconto() {
@@ -1484,7 +1484,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes txtScortaMinima
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtScortaMinima() {
@@ -1555,7 +1555,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 * @return void
 	 */
 	private void initialize() {
@@ -1594,7 +1594,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void caricaComboBox() {
 		caricaCmbFornitori();
@@ -1604,7 +1604,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void caricaCmbUnitaDiMisura() {
 		UnitaDiMisura f = new UnitaDiMisura();
@@ -1643,7 +1643,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void caricaCmbCategoria() {
 		Reparto f = new Reparto();
@@ -1681,7 +1681,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void caricaCmbFornitori() {
 
@@ -1744,7 +1744,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		}
 		// ultimo articolo appunto lavorato
 		this.ultimoArticolo[0]=a.getCodBarre();
-		
+
 		// chiusura della finestra se selezionata
 		//opzione closeOnOK
 		if(this.close)
@@ -1779,7 +1779,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private boolean recuperaDatiCampi(Articolo a) {
 
@@ -1910,7 +1910,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void svuotaCampi() {
 		Component[] component = pnlDatiPersonali.getComponents();
@@ -1938,10 +1938,10 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
 	 */
-	@Override
+
 	public void propertyChange(PropertyChangeEvent e) {
 		Object source = e.getSource();
 		if (source == txtPrezzoListino) {
@@ -1959,16 +1959,16 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	}
 
 	/**
-	 * This method initializes btnSuggerimento	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnSuggerimento
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnSuggerimento() {
 		if (btnSuggerimento == null) {
 			try {
 				btnSuggerimento = new JButton();
 				btnSuggerimento.setBounds(new Rectangle(160, 20, 37, 21));  // Generated
-				btnSuggerimento.setText(". . ."); 
+				btnSuggerimento.setText(". . .");
 				btnSuggerimento.addActionListener(new MyActionListener());
 			} catch (java.lang.Throwable e) {
 				// TODO: Something

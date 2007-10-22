@@ -557,6 +557,7 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	private void nuovoCliente(){
+		//da sistemare
 		ClientiAdd add = new ClientiAdd(this, dbm);
 		add.setVisible(true);
 	}

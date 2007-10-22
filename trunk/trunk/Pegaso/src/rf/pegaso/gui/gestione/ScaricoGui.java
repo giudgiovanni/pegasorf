@@ -1,5 +1,5 @@
 /**
- *
+ * 
  */
 package rf.pegaso.gui.gestione;
 
@@ -77,14 +77,14 @@ import com.toedter.calendar.JTextFieldDateEditor;
 
 /**
  * @author Hunter
- *
+ * 
  */
 public class ScaricoGui extends JFrame{
 	class MyButtonListener implements ActionListener {
 
 		/*
 		 * (non-Javadoc)
-		 *
+		 * 
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent e) {
@@ -100,21 +100,21 @@ public class ScaricoGui extends JFrame{
 				elimina();
 			} else if (e.getSource() == btnChiudi) {
 				dispose();
-			}
+			} 
 
 		}
 
 	}
-
+	
 	class MyTableModelListener implements TableModelListener{
 
-
+		@Override
 		public void tableChanged(TableModelEvent arg0) {
 			// TODO Auto-generated method stub
 			calcolaTotaliArticoliScaricati();
 		}
 
-
+		
 	}
 
 	class MyComboBoxListener implements ActionListener {
@@ -310,7 +310,7 @@ public class ScaricoGui extends JFrame{
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	public void azzeraCampi() {
 		txtCodBarre.setText("");
@@ -341,7 +341,7 @@ public class ScaricoGui extends JFrame{
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	public void erroreCaricamentoDatiDB() {
 		JOptionPane.showMessageDialog(this, "Errore caricamento dati db",
@@ -356,7 +356,7 @@ public class ScaricoGui extends JFrame{
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	private void calcoli(int idScarico) {
 		// Calcoliamo tutte le somme e impostiamo i campi
@@ -365,10 +365,10 @@ public class ScaricoGui extends JFrame{
 		double imposta;
 		double tot;
 		int id = idScarico;
-
+		
 		// Calcoliamo ora la parte all'ingrosso
 		try {
-
+			
 			imponibile = Scarico.getTotAcquistoImponibileByOrder( id);
 			imposta = Scarico.getTotAcquistoImpostaByOrder( idScarico);
 			tot = imponibile + imposta;
@@ -384,20 +384,20 @@ public class ScaricoGui extends JFrame{
 					JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
-
+		
 		//calcoliamo i totali di tutti gli articoli scaricati
 		calcolaTotaliArticoliScaricati();
-
-
+		
+		
 
 	}
 
 	private void calcolaTotaliArticoliScaricati() {
 		double imponibile=0,imposta=0,tot=0;
-
+		
 		// Calcoliamo ora la parte totale dello scarico di tutti gli articoli.
 		try {
-
+			
 			imponibile = Scarico.getTotAcquistoImponibileAllOrders( );
 			imposta = Scarico.getTotAcquistoImpostaAllOrders( );
 			tot = imponibile + imposta;
@@ -413,7 +413,7 @@ public class ScaricoGui extends JFrame{
 					JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
-
+		
 	}
 
 	/**
@@ -449,10 +449,10 @@ public class ScaricoGui extends JFrame{
 //			e.printStackTrace();
 //		}
 //		AutoCompletion.enable(cmbProdotti);
-
+		
 		Articolo f = new Articolo();
 		try {
-
+			
 			String as[] = (String[]) f.allArticoli();
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
@@ -468,7 +468,7 @@ public class ScaricoGui extends JFrame{
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	private void caricaArticoloByCodBarre() {
 		String codBarre = txtCodBarre.getText();
@@ -497,7 +497,7 @@ public class ScaricoGui extends JFrame{
 	}
 
 	private void caricaClienti(JComboBox cmbFornitori) {
-
+		
 		// nello scarico manuale usiamo solo il cliente
 		// banco come scarico in quanto il resto si deve fare
 		// dalle vendite.
@@ -507,7 +507,7 @@ public class ScaricoGui extends JFrame{
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	private void caricaDatiArticolo() {
 		int idarticolo = ComboBoxUtil.estraiCodice((String) cmbProdotti
@@ -529,7 +529,7 @@ public class ScaricoGui extends JFrame{
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	private void elimina() {
 		if (tblScarico.getSelectedRow() <= -1) {
@@ -549,7 +549,7 @@ public class ScaricoGui extends JFrame{
 			e1.printStackTrace();
 		}
 		// FINE PUNTO BACKUP
-
+		
 		int riga = tblScarico.getSelectedRow();
 		String codBarre = ((String) tblScarico.getValueAt(riga, 1));
 		Articolo a = new Articolo();
@@ -576,7 +576,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes btnChiudi
-	 *
+	 * 
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnChiudi() {
@@ -594,7 +594,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes btnElimina
-	 *
+	 * 
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnElimina() {
@@ -613,7 +613,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes btnInserisci
-	 *
+	 * 
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnInserisci() {
@@ -632,7 +632,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes chkInsRapido
-	 *
+	 * 
 	 * @return javax.swing.JCheckBox
 	 */
 	private JCheckBox getChkInsRapido() {
@@ -649,7 +649,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes cmbClienti
-	 *
+	 * 
 	 * @return javax.swing.JComboBox
 	 */
 	private JComboBox getCmbClienti() {
@@ -667,7 +667,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes cmbProdotti
-	 *
+	 * 
 	 * @return javax.swing.JComboBox
 	 */
 	private JComboBox getCmbProdotti() {
@@ -685,7 +685,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes jContentPane
-	 *
+	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
@@ -700,7 +700,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes jScrollPane
-	 *
+	 * 
 	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getJScrollPane() {
@@ -718,7 +718,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes jScrollPane1
-	 *
+	 * 
 	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getJScrollPane1() {
@@ -736,7 +736,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes pnlNord
-	 *
+	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlNord() {
@@ -789,7 +789,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes pnlProdotto
-	 *
+	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlProdotto() {
@@ -849,7 +849,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes pnlSud
-	 *
+	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlSud() {
@@ -885,7 +885,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes tblScarico
-	 *
+	 * 
 	 * @return javax.swing.JTable
 	 */
 	private JTable getTblScarico() {
@@ -907,7 +907,7 @@ public class ScaricoGui extends JFrame{
 				tblScarico.packAll();
 				tblScarico.getTableHeader().setReorderingAllowed(false);
 				tblScarico.getModel().addTableModelListener(new MyTableModelListener());
-
+				
 
 			} catch (java.lang.Throwable e) {
 				try {
@@ -925,7 +925,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes txtCodBarre
-	 *
+	 * 
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtCodBarre() {
@@ -965,7 +965,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes txtImponibileIng
-	 *
+	 * 
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtImponibileIng() {
@@ -986,7 +986,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes txtImpostaIng
-	 *
+	 * 
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtImpostaIng() {
@@ -1007,7 +1007,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes txtNote
-	 *
+	 * 
 	 * @return javax.swing.JTextArea
 	 */
 	private JTextArea getTxtNote() {
@@ -1024,7 +1024,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes txtNumeroScarico
-	 *
+	 * 
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtNumeroScarico() {
@@ -1042,7 +1042,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes txtQta
-	 *
+	 * 
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtQta() {
@@ -1069,7 +1069,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes txtTotaleIng
-	 *
+	 * 
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtTotaleIng() {
@@ -1090,7 +1090,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes txtUm
-	 *
+	 * 
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtUm() {
@@ -1108,11 +1108,11 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes this
-	 *
+	 * 
 	 * @return void
 	 */
 	private void initialize() {
-
+		
 		Scarico c = new Scarico( );
 		this.idcarico = c.getNewID();
 		this.setResizable(true);  // Generated
@@ -1120,12 +1120,12 @@ public class ScaricoGui extends JFrame{
 		this.setTitle("Scarico Merce");
 		this.setResizable(true);
 		this.setContentPane(getJContentPane());
-
+		
 		this.setSize(new Dimension(700, 591));
 		UtilGUI.centraFrame(this);
 		//this.setExtendedState(Frame.MAXIMIZED_BOTH);
-
-
+		
+		
 		// inseriamo il carico nel db
 
 		// Imposto il campo codice id che verrà poi inserito
@@ -1137,16 +1137,16 @@ public class ScaricoGui extends JFrame{
 
 		// inizializzo tutti i listener
 		inizializzaListeners();
-
+		
 		//calcoliamo i totali di tutti gli articoli scaricati e
 		//li inseriamo negli appositi textbox
 		calcolaTotaliArticoliScaricati();
-
+		
 
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	private void inizializzaListeners() {
 		myComboBoxListener = new MyComboBoxListener();
@@ -1157,13 +1157,13 @@ public class ScaricoGui extends JFrame{
 		btnInserisci.addActionListener(myButtonListener);
 		btnElimina.addActionListener(myButtonListener);
 		btnChiudi.addActionListener(myButtonListener);
-
+		
 	}
 
 	/**
 	 * @throws SQLException
 	 * @throws NumberFormatException
-	 *
+	 * 
 	 */
 	private void inserisci() {
 
@@ -1184,7 +1184,7 @@ public class ScaricoGui extends JFrame{
 			e1.printStackTrace();
 		}
 		// FINE PUNTO BACKUP
-
+		
 		Scarico c = new Scarico( );
 		try {
 			c.setIdScarico(new Integer(txtNumeroScarico.getText()).intValue());
@@ -1335,7 +1335,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes jTabbedPane
-	 *
+	 * 
 	 * @return javax.swing.JTabbedPane
 	 */
 	private JTabbedPane getJTabbedPane() {
@@ -1357,7 +1357,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes pnlScarico
-	 *
+	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlScarico() {
@@ -1377,7 +1377,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes pnlViewScarichi
-	 *
+	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlViewScarichi() {
@@ -1398,7 +1398,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes btnModifica
-	 *
+	 * 
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnModifica() {
@@ -1436,7 +1436,7 @@ public class ScaricoGui extends JFrame{
 		int riga = tblViewScarichi.getSelectedRow();
 		int idcarico = ((Long) tblViewScarichi.getValueAt(riga, 0)).intValue();
 		Scarico c = new Scarico( );
-
+		 
 		try {
 			c.caricaDati(idcarico);
 			caricaDati(c);
@@ -1459,7 +1459,7 @@ public class ScaricoGui extends JFrame{
 	}
 
 	private void ricaricaTableCarico(int idCarico) {
-
+		
 		try {
 			modello = new ScaricoModel(idCarico);
 		} catch (SQLException e) {
@@ -1478,7 +1478,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes btnEliminaCarico
-	 *
+	 * 
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnEliminaCarico() {
@@ -1525,7 +1525,7 @@ public class ScaricoGui extends JFrame{
 			e1.printStackTrace();
 		}
 		// FINE PUNTO BACKUP
-
+		
 		int riga = tblViewScarichi.getSelectedRow();
 		int idscarico = ((Long) tblViewScarichi.getValueAt(riga, 0)).intValue();
 		Scarico c = new Scarico( );
@@ -1549,7 +1549,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes jScrollPane2
-	 *
+	 * 
 	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getJScrollPane2() {
@@ -1566,7 +1566,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes tblViewCarichi
-	 *
+	 * 
 	 * @return org.jdesktop.swingx.JXTable
 	 */
 	private JXTable getTblViewScarichi() {
@@ -1594,7 +1594,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes btnStampa
-	 *
+	 * 
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnStampa() {
@@ -1612,7 +1612,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes txtNumDocumento
-	 *
+	 * 
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtNumDocumento() {
@@ -1629,13 +1629,13 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes dataDocumento
-	 *
+	 * 
 	 * @return com.toedter.calendar.JDateChooser
 	 */
 	private JDateChooser getDataDocumento() {
 		if (dataDocumento == null) {
 			try {
-
+				
 				dataDocumento=new JDateChooser("dd/MM/yyyy","##/##/##",'_');
 				dataDocumento.setDate(new Date());
 				dataDocumento.setBounds(new Rectangle(328, 60, 117, 21)); // Generated
@@ -1655,7 +1655,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes dataScarico
-	 *
+	 * 
 	 * @return com.toedter.calendar.JDateChooser
 	 */
 	private JDateChooser getDataScarico() {
@@ -1680,7 +1680,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes pnlArticoliScaricati
-	 *
+	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlArticoliScaricati() {
@@ -1700,7 +1700,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes jScrollPane3
-	 *
+	 * 
 	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getJScrollPane3() {
@@ -1719,7 +1719,7 @@ public class ScaricoGui extends JFrame{
 
 	/**
 	 * This method initializes tblArticoliScaricati
-	 *
+	 * 
 	 * @return javax.swing.JTable
 	 */
 	private JXTable getTblArticoliScaricati() {
@@ -1731,7 +1731,7 @@ public class ScaricoGui extends JFrame{
 						.setAutoResizeMode(JXTable.AUTO_RESIZE_ALL_COLUMNS); // Generated
 				tblArticoliScaricati
 						.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Generated
-
+				
 				// scrivere tutta la parte di codice per lo scarico e con il
 				// controllo se la merce è
 				// finita oppure no
@@ -1747,9 +1747,9 @@ public class ScaricoGui extends JFrame{
 	}
 
 	/**
-	 * This method initializes jPanel1
-	 *
-	 * @return javax.swing.JPanel
+	 * This method initializes jPanel1	
+	 * 	
+	 * @return javax.swing.JPanel	
 	 */
 	private JPanel getJPanel1() {
 		if (jPanel1 == null) {
@@ -1814,9 +1814,9 @@ public class ScaricoGui extends JFrame{
 	}
 
 	/**
-	 * This method initializes txtImponibileTot
-	 *
-	 * @return javax.swing.JTextField
+	 * This method initializes txtImponibileTot	
+	 * 	
+	 * @return javax.swing.JTextField	
 	 */
 	private JTextField getTxtImponibileTot() {
 		if (txtImponibileTot == null) {
@@ -1835,9 +1835,9 @@ public class ScaricoGui extends JFrame{
 	}
 
 	/**
-	 * This method initializes txtImpostaTot
-	 *
-	 * @return javax.swing.JTextField
+	 * This method initializes txtImpostaTot	
+	 * 	
+	 * @return javax.swing.JTextField	
 	 */
 	private JTextField getTxtImpostaTot() {
 		if (txtImpostaTot == null) {
@@ -1856,9 +1856,9 @@ public class ScaricoGui extends JFrame{
 	}
 
 	/**
-	 * This method initializes txtTot
-	 *
-	 * @return javax.swing.JTextField
+	 * This method initializes txtTot	
+	 * 	
+	 * @return javax.swing.JTextField	
 	 */
 	private JTextField getTxtTot() {
 		if (txtTot == null) {
@@ -1876,16 +1876,16 @@ public class ScaricoGui extends JFrame{
 		return txtTot;
 	}
 
-
+	
 	public void setModale(){
 		//super.setModale();
 		//addFocusListener(this);
 	}
 
 	/**
-	 * This method initializes pnlBottoni
-	 *
-	 * @return javax.swing.JPanel
+	 * This method initializes pnlBottoni	
+	 * 	
+	 * @return javax.swing.JPanel	
 	 */
 	private JPanel getPnlBottoni() {
 		if (pnlBottoni == null) {

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.gui.gestione;
 
@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -25,12 +26,13 @@ import javax.swing.border.BevelBorder;
 import rf.pegaso.db.DBManager;
 import rf.pegaso.db.tabelle.Cliente;
 import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.pegaso.gui.vendita.FatturaImmediata;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.UpperTextDocument;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class ClientiAdd extends JDialog {
 	class MyActionListener implements ActionListener {
@@ -127,6 +129,8 @@ public class ClientiAdd extends JDialog {
 
 	private JTextField txtWebSite = null;
 
+	private JFrame padre;
+
 	/**
 	 * @param owner
 	 */
@@ -137,9 +141,16 @@ public class ClientiAdd extends JDialog {
 		initialize();
 	}
 
+	public ClientiAdd(JFrame frame, DBManager dbm) {
+		this.dbm=dbm;
+		this.padre=frame;
+		this.idCliente = idCliente;
+		initialize();
+	}
+
 	/**
 	 * This method initializes btnChiudi
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnChiudi() {
@@ -158,7 +169,7 @@ public class ClientiAdd extends JDialog {
 
 	/**
 	 * This method initializes btnInserisci
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnInserisci() {
@@ -176,7 +187,7 @@ public class ClientiAdd extends JDialog {
 
 	/**
 	 * This method initializes jContentPane
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
@@ -191,7 +202,7 @@ public class ClientiAdd extends JDialog {
 
 	/**
 	 * This method initializes jPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanel() {
@@ -215,7 +226,7 @@ public class ClientiAdd extends JDialog {
 
 	/**
 	 * This method initializes jScrollPane
-	 * 
+	 *
 	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getJScrollPane() {
@@ -233,7 +244,7 @@ public class ClientiAdd extends JDialog {
 
 	/**
 	 * This method initializes jTabbedPane
-	 * 
+	 *
 	 * @return javax.swing.JTabbedPane
 	 */
 	private JTabbedPane getJTabbedPane() {
@@ -252,7 +263,7 @@ public class ClientiAdd extends JDialog {
 
 	/**
 	 * This method initializes pnlAltriDati
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlAltriDati() {
@@ -301,7 +312,7 @@ public class ClientiAdd extends JDialog {
 
 	/**
 	 * This method initializes pnlCentrale
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlCentrale() {
@@ -319,7 +330,7 @@ public class ClientiAdd extends JDialog {
 
 	/**
 	 * This method initializes pnlDatiPersonali
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlDatiPersonali() {
@@ -376,7 +387,7 @@ public class ClientiAdd extends JDialog {
 
 	/**
 	 * This method initializes txtCap
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtCap() {
@@ -395,7 +406,7 @@ public class ClientiAdd extends JDialog {
 
 	/**
 	 * This method initializes txtCell
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtCell() {
@@ -414,7 +425,7 @@ public class ClientiAdd extends JDialog {
 
 	/**
 	 * This method initializes txtCitta
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtCitta() {
@@ -433,7 +444,7 @@ public class ClientiAdd extends JDialog {
 
 	/**
 	 * This method initializes txtCodFisc
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtCodFisc() {
@@ -452,7 +463,7 @@ public class ClientiAdd extends JDialog {
 
 	/**
 	 * This method initializes txtCognome
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtCognome() {
@@ -471,7 +482,7 @@ public class ClientiAdd extends JDialog {
 
 	/**
 	 * This method initializes txtEmail
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtEmail() {
@@ -490,7 +501,7 @@ public class ClientiAdd extends JDialog {
 
 	/**
 	 * This method initializes txtFax
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtFax() {
@@ -509,7 +520,7 @@ public class ClientiAdd extends JDialog {
 
 	/**
 	 * This method initializes txtNome
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtNome() {
@@ -528,7 +539,7 @@ public class ClientiAdd extends JDialog {
 
 	/**
 	 * This method initializes txtNote
-	 * 
+	 *
 	 * @return javax.swing.JTextArea
 	 */
 	private JTextArea getTxtNote() {
@@ -546,7 +557,7 @@ public class ClientiAdd extends JDialog {
 
 	/**
 	 * This method initializes txtPiva
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtPiva() {
@@ -565,7 +576,7 @@ public class ClientiAdd extends JDialog {
 
 	/**
 	 * This method initializes txtProvincia
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtProvincia() {
@@ -584,7 +595,7 @@ public class ClientiAdd extends JDialog {
 
 	/**
 	 * This method initializes txtTel
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtTel() {
@@ -603,7 +614,7 @@ public class ClientiAdd extends JDialog {
 
 	/**
 	 * This method initializes txtVia
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtVia() {
@@ -622,7 +633,7 @@ public class ClientiAdd extends JDialog {
 
 	/**
 	 * This method initializes txtWebSite
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtWebSite() {
@@ -641,7 +652,7 @@ public class ClientiAdd extends JDialog {
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 * @return void
 	 */
 	private void initialize() {

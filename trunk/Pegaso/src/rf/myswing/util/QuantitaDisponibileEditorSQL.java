@@ -97,7 +97,7 @@ public class QuantitaDisponibileEditorSQL extends DefaultCellEditor {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (((giacenza - qtaOld)- qtaNew) < 0) {
+		if (((giacenza + qtaOld)- qtaNew) < 0) {
 			return false;
 		}
 		return true;

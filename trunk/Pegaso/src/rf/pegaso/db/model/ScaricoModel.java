@@ -94,7 +94,8 @@ public class ScaricoModel extends AbstractTableModel implements DBStateChange {
 			pst.close();
 
 			recuperaDati();
-
+			dbm.notifyDBStateChange();
+			this.fireTableCellUpdated(r, c);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

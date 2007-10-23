@@ -20,6 +20,7 @@ public class GregorianCalendarFormat extends GregorianCalendar {
 	}
 
 	public String toString() {
+		System.out.println("ciao");
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 		Date d = this.getTime();
 		return format.format(d);

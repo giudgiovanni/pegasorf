@@ -199,6 +199,26 @@ public class FatturaImmediata extends JFrame{
 			e.printStackTrace();
 		}
 		v.setCodiceArticolo(a.getIdArticolo());
+		for ( Vendita v1 : carrello){
+			if ( v1.getCodiceArticolo() == v.getCodiceArticolo() )
+				try{
+					if ( a.getGiacenza() < (spinQta.getValue() + v1.getQta()) ){
+						JOptionPane.showMessageDialog(this,
+								"Quantità richiesta non disponibile\nDisponibilità magazzino = "+a.getGiacenza(), "AVVISO",
+								JOptionPane.INFORMATION_MESSAGE);
+						return;
+					}
+					else{
+						long oldQta = v1.getQta();
+						v1.setQta(oldQta + spinQta.getValue());
+						dbm.notifyDBStateChange();
+						return;
+					}
+				}
+				catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
 		v.setCodiceBarre(txtCodice.getText());
 		v.setCodiceVendita(dbm.getNewID("fattura", "idfattura"));
 		v.setDescrizione(String.valueOf(cmbProdotti.getSelectedItem()));
@@ -612,9 +632,10 @@ public class FatturaImmediata extends JFrame{
 			txtSconto.setBounds(new Rectangle(295, 30, 90, 20));
 			txtSconto.addKeyListener(new java.awt.event.KeyAdapter() {
 				public void keyPressed(java.awt.event.KeyEvent e) {
-					if ( e.getKeyCode() == KeyEvent.VK_ENTER )
+					if ( e.getKeyCode() == KeyEvent.VK_ENTER ){
 						calcoliBarraInferiore();
 					System.out.println("invio");
+					}
 				}
 			});
 		}
@@ -904,7 +925,6 @@ public class FatturaImmediata extends JFrame{
 					public void keyPressed(java.awt.event.KeyEvent e) {
 						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 							int id = Integer.parseInt(((IDJComboBox)cmbProdotti).getIDSelectedItem());
-							System.out.println("ok");
 							caricaArticoloByID(id);
 						}
 					}
@@ -957,7 +977,7 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	private double utile = 0.00;
-	//private int scontoTotale = 0;
+	private int scontoTotale = 0;
 	private double imponibile = 0.00;
 	private double imposta = 0.00;
 	//private double totale = 0.00;
@@ -987,6 +1007,12 @@ public class FatturaImmediata extends JFrame{
 			utile += (prezzoV-v.getPrezzoAcquisto())*v.getQta();
 		}
 		//applica sconto
+		if ( !txtSconto.getText().equals("") ){
+			scontoTotale = Integer.parseInt(txtSconto.getText().trim());
+			utile = utile - (utile*scontoTotale/100);
+			imponibile = imponibile - (imponibile*scontoTotale/100);
+			imposta = imposta - (imposta*scontoTotale/100);
+		}
 
 		txtUtile.setText(ControlloDati.convertDoubleToPrezzo(utile));
 		txtImponibile.setText(ControlloDati.convertDoubleToPrezzo(imponibile));

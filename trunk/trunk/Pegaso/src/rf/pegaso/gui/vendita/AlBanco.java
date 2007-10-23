@@ -185,6 +185,26 @@ public class AlBanco extends JFrame{
 			e.printStackTrace();
 		}
 		v.setCodiceArticolo(a.getIdArticolo());
+		for ( Vendita v1 : carrello){
+			if ( v1.getCodiceArticolo() == v.getCodiceArticolo() )
+				try{
+					if ( a.getGiacenza() < (spinQta.getValue() + v1.getQta()) ){
+						JOptionPane.showMessageDialog(this,
+								"Quantità richiesta non disponibile\nDisponibilità magazzino = "+a.getGiacenza(), "AVVISO",
+								JOptionPane.INFORMATION_MESSAGE);
+						return;
+					}
+					else{
+						long oldQta = v1.getQta();
+						v1.setQta(oldQta + spinQta.getValue());
+						dbm.notifyDBStateChange();
+						return;
+					}
+				}
+				catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
 		v.setCodiceBarre(txtCodice.getText());
 		v.setCodiceVendita(dbm.getNewID("fattura", "idfattura"));
 		v.setDescrizione(String.valueOf(cmbProdotti.getSelectedItem()));

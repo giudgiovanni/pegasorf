@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.db.model;
 
@@ -17,7 +17,7 @@ import rf.utility.db.DBStateChange;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class ScaricoModel extends AbstractTableModel implements DBStateChange {
 
@@ -75,7 +75,7 @@ public class ScaricoModel extends AbstractTableModel implements DBStateChange {
 	public String getTableName() {
 		return "articoli";
 	}
-	
+
 	@Override
 	public void setValueAt(Object o, int r, int c) {
 		if(c!=5)
@@ -92,9 +92,9 @@ public class ScaricoModel extends AbstractTableModel implements DBStateChange {
 			pst.setInt(3, idOrdine);
 			pst.executeUpdate();
 			pst.close();
-			
+
 			recuperaDati();
-			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -108,9 +108,12 @@ public class ScaricoModel extends AbstractTableModel implements DBStateChange {
 
 		Object o = null;
 		try {
-			rs.beforeFirst();
-			rs.absolute(r + 1);
-			o = rs.getObject(c + 1);
+			if(getRowCount()>0){
+				rs.beforeFirst();
+				rs.absolute(r + 1);
+				o = rs.getObject(c + 1);
+			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -123,20 +126,24 @@ public class ScaricoModel extends AbstractTableModel implements DBStateChange {
 		}
 		return o;
 	}
-	
+
 	@Override
 	public boolean isCellEditable(int r, int c) {
-		
+
 		if (c != 5)
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public Class getColumnClass(int c) {
-        if(c==5)
-        	return Integer.class;
-		return getValueAt(0, c).getClass();
+        if(getRowCount()>0){
+        	if(c==5)
+            	return Integer.class;
+    		return getValueAt(0, c).getClass();
+        }
+        return String.class;
+
     }
 
 	public void stateChange() {
@@ -156,7 +163,7 @@ public class ScaricoModel extends AbstractTableModel implements DBStateChange {
 
 	/**
 	 * @throws SQLException
-	 * 
+	 *
 	 */
 	private void recuperaDati() throws SQLException {
 		//this.query = "select codbarre as codice_articolo,descrizione,iva,um,qta,prezzo_ingrosso as prezzo_listino from articoli_scaricati_view where idordine="	+ idordine + " order by codbarre";

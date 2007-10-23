@@ -117,7 +117,7 @@ public class DdtFatturaModel extends AbstractTableModel implements DBStateChange
 	 * 
 	 */
 	private void recuperaDati() throws SQLException {
-		this.query = "select d.idddt,c.cognome,c.nome,d.data_ddt as data from dtt as d,clienti as c where c.idcliente=d.idcliente order by d.data_ddt";
+		this.query = "select d.idddt,c.idcliente,c.cognome,c.nome,d.data_ddt as data from ddt as d,clienti as c where c.idcliente=d.idcliente order by d.data_ddt";
 		pst = dbm.getNewPreparedStatement(query);
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.db.model;
 
@@ -21,15 +21,20 @@ import rf.utility.db.DBStateChange;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class CaricoModel extends AbstractTableModel implements DBStateChange {
 
 	private DBManager dbm;
+
 	private int idcarico = 0;
+
 	private PreparedStatement pst = null;
+
 	private String query = "";
+
 	private ResultSet rs = null;
+
 	private ResultSetMetaData rsmd = null;
 
 	public CaricoModel(DBManager dbm, int idcarico) throws SQLException {
@@ -51,24 +56,28 @@ public class CaricoModel extends AbstractTableModel implements DBStateChange {
 
 	@Override
 	public boolean isCellEditable(int r, int c) {
-		if (c==0||c == 4 || c == 7 )
+		if (c == 0 || c == 4 || c == 7)
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public Class getColumnClass(int c) {
-        if(c==6 || c==7) 
-        	return Double.class;
-		return getValueAt(0, c).getClass();
-    }
+		if (getRowCount() > 0) {
+			if (c == 6 || c == 7)
+				return Double.class;
+			return getValueAt(0, c).getClass();
+		}
+		return String.class;
+
+	}
 
 	@Override
 	public void setValueAt(Object o, int r, int c) {
 		// carichiamo l'articolo in base al codice a barre
-		int idArticolo = ((Long)(getValueAt(r, 0))).intValue();
-		int idCarico=-1;
-		
+		int idArticolo = ((Long) (getValueAt(r, 0))).intValue();
+		int idCarico = -1;
+
 		String query = "";
 		String query2 = "";
 		if (c == 1)
@@ -96,16 +105,16 @@ public class CaricoModel extends AbstractTableModel implements DBStateChange {
 				pst2.executeUpdate();
 				pst2.close();
 			}
-			if(o instanceof String){
-				//portiamo tutte le lettere in grande
-				String s=(String)o;
-				s=s.toUpperCase();
-				
-				//potrebbe essere anche un double in questo caso proviamo
-				//a convertire la stringa in double appunto
-				Double d=null;
+			if (o instanceof String) {
+				// portiamo tutte le lettere in grande
+				String s = (String) o;
+				s = s.toUpperCase();
+
+				// potrebbe essere anche un double in questo caso proviamo
+				// a convertire la stringa in double appunto
+				Double d = null;
 				try {
-					d=ControlloDati.convertPrezzoToDouble((String)o);
+					d = ControlloDati.convertPrezzoToDouble((String) o);
 				} catch (NumberFormatException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -113,19 +122,21 @@ public class CaricoModel extends AbstractTableModel implements DBStateChange {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				//se d==null vuole dire che il valore di o
-				//è una stringa quindi procediamo di conseguenza
-				if(d!=null){
+				// se d==null vuole dire che il valore di o
+				// è una stringa quindi procediamo di conseguenza
+				if (d != null) {
 					pst.setObject(1, d);
-				}else pst.setObject(1, s);
-				
-			}else pst.setObject(1, o);
+				} else
+					pst.setObject(1, s);
+
+			} else
+				pst.setObject(1, o);
 			pst.setInt(2, idArticolo);
 			pst.executeUpdate();
 			pst.close();
-			
+
 			recuperaDati();
-			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -170,9 +181,11 @@ public class CaricoModel extends AbstractTableModel implements DBStateChange {
 
 		Object o = null;
 		try {
-			rs.beforeFirst();
-			rs.absolute(r + 1);
-			o = rs.getObject(c + 1);
+			if (getRowCount() > 0) {
+				rs.beforeFirst();
+				rs.absolute(r + 1);
+				o = rs.getObject(c + 1);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -203,7 +216,7 @@ public class CaricoModel extends AbstractTableModel implements DBStateChange {
 
 	/**
 	 * @throws SQLException
-	 * 
+	 *
 	 */
 	private void recuperaDati() throws SQLException {
 		this.query = "select idarticolo,codbarre AS codice_articolo,descrizione,iva,um,qta,prezzo_acquisto, (qta*prezzo_acquisto) as totale from articoli_caricati_view where idcarico="

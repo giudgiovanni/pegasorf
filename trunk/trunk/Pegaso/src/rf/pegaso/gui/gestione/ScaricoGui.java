@@ -79,7 +79,7 @@ import com.toedter.calendar.JTextFieldDateEditor;
  * @author Hunter
  *
  */
-public class ScaricoGui extends JFrame{
+public class ScaricoGui extends JFrame implements TableModelListener{
 	class MyButtonListener implements ActionListener {
 
 		/*
@@ -106,16 +106,7 @@ public class ScaricoGui extends JFrame{
 
 	}
 
-	class MyTableModelListener implements TableModelListener{
 
-
-		public void tableChanged(TableModelEvent arg0) {
-			// TODO Auto-generated method stub
-			calcolaTotaliArticoliScaricati();
-		}
-
-
-	}
 
 	class MyComboBoxListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
@@ -892,6 +883,7 @@ public class ScaricoGui extends JFrame{
 		if (tblScarico == null) {
 			try {
 				modello = new ScaricoModel(this.idcarico);
+				modello.addTableModelListener(this);
 				dbm.addDBStateChange(modello);
 				tblScarico = new JXTable(modello);
 				TableColumn col=tblScarico.getColumnModel().getColumn(0);
@@ -899,12 +891,15 @@ public class ScaricoGui extends JFrame{
 				col.setMaxWidth(0);
 				col.setPreferredWidth(0);
 				tblScarico.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				// impostiamo l'editor di default per il controllo sulla quantità
 				tblScarico.setDefaultEditor(Integer.class, new QuantitaDisponibileEditorSQL());
+				// impostiamo il cell renderer per una impostazione centrale
 				tblScarico.setDefaultRenderer(Object.class, new MyTableCellRendererCentral());
 				tblScarico.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 				tblScarico.packAll();
+				// per evitare che si possano spostare le colonne dalla posizione originaria
 				tblScarico.getTableHeader().setReorderingAllowed(false);
-				tblScarico.getModel().addTableModelListener(new MyTableModelListener());
+
 
 
 			} catch (java.lang.Throwable e) {
@@ -1893,6 +1888,11 @@ public class ScaricoGui extends JFrame{
 			}
 		}
 		return pnlBottoni;
+	}
+
+	public void tableChanged(TableModelEvent arg0) {
+		// TODO Auto-generated method stub
+		calcolaTotaliArticoliScaricati();
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

@@ -76,7 +76,7 @@ public class QuantitaDisponibileEditor extends DefaultCellEditor {
 							ftf.commitEdit(); // così lo usiamo.
 							ftf.postActionEvent(); // e fermiamo l'azione
 						}
-						
+
 					} catch (java.text.ParseException exc) {
 					}
 			}
@@ -97,12 +97,12 @@ public class QuantitaDisponibileEditor extends DefaultCellEditor {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (((giacenza+qtaOld) - qtaNew) < 0) {
+		if ((giacenza - qtaNew) < 0) {
 			return false;
 		}
 		return true;
 	}
- 
+
 	// Override to invoke setValue on the formatted text field.
 	public Component getTableCellEditorComponent(JTable table, Object value,
 			boolean isSelected, int row, int column) {
@@ -174,7 +174,7 @@ public class QuantitaDisponibileEditor extends DefaultCellEditor {
 		}
 		return false;
 	}
-	
+
 	protected boolean userSaysRevertQuantita(Long oldValue) {
 		Toolkit.getDefaultToolkit().beep();
 		ftf.selectAll();

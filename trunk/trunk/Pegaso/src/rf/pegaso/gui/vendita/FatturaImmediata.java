@@ -14,6 +14,7 @@ import javax.swing.WindowConstants;
 import rf.myswing.IDJComboBox;
 import rf.myswing.util.MyTableCellRendererCentral;
 import rf.myswing.util.QuantitaDisponibileEditor;
+import rf.myswing.util.QuantitaDisponibileEditorSQL;
 import rf.pegaso.db.DBManager;
 import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.pegaso.db.model.VenditeModel;

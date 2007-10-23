@@ -52,7 +52,7 @@ import org.jdesktop.swingx.JXTable;
 import rf.myswing.IDJComboBox;
 import rf.myswing.exception.LunghezzeArrayDiverse;
 import rf.myswing.util.MyTableCellRendererCentral;
-import rf.myswing.util.QuantitaDisponibileEditor;
+import rf.myswing.util.QuantitaDisponibileEditorSQL;
 import rf.pegaso.db.DBManager;
 import rf.pegaso.db.UtilityDBManager;
 import rf.pegaso.db.exception.CodiceBarreInesistente;
@@ -899,7 +899,7 @@ public class ScaricoGui extends JFrame{
 				col.setMaxWidth(0);
 				col.setPreferredWidth(0);
 				tblScarico.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				tblScarico.setDefaultEditor(Integer.class, new QuantitaDisponibileEditor());
+				tblScarico.setDefaultEditor(Integer.class, new QuantitaDisponibileEditorSQL());
 				tblScarico.setDefaultRenderer(Object.class, new MyTableCellRendererCentral());
 //				col=tblScarico.getColumnModel().getColumn(4);
 //				col.setCellRenderer(new MyTableCellRendererCentral());

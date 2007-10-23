@@ -13,7 +13,7 @@ import javax.swing.WindowConstants;
 
 import rf.myswing.IDJComboBox;
 import rf.myswing.util.MyTableCellRendererCentral;
-import rf.myswing.util.QuantitaDisponibileEditor;
+import rf.myswing.util.QuantitaDisponibileEditorSQL;
 import rf.pegaso.db.DBManager;
 import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.pegaso.db.model.VenditeModel;
@@ -422,7 +422,7 @@ public class AlBanco extends JFrame{
 				col.setMaxWidth(0);
 				col.setPreferredWidth(0);
 				jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				jTable.setDefaultEditor(Long.class, new QuantitaDisponibileEditor());
+				jTable.setDefaultEditor(Long.class, new QuantitaDisponibileEditorSQL());
 				jTable.setDefaultRenderer(Object.class, new MyTableCellRendererCentral());
 				jTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 				jTable.packAll();

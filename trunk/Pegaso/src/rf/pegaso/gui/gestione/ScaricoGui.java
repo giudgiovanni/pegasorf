@@ -1894,9 +1894,9 @@ public class ScaricoGui extends JFrame{
 				flowLayout.setAlignment(FlowLayout.LEFT);  // Generated
 				pnlBottoni = new JPanel();
 				pnlBottoni.setLayout(flowLayout);  // Generated
+				pnlBottoni.add(getBtnModifica(), null);
 				pnlBottoni.add(getBtnStampa(), null);  // Generated
 				pnlBottoni.add(getBtnEliminaCarico(), null);  // Generated
-				pnlBottoni.add(getBtnModifica(), null);  // Generated
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}

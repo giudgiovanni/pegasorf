@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.myswing;
 
@@ -9,10 +9,12 @@ import java.util.GregorianCalendar;
 
 /**
  * @author Hunter
- * 
+ *
  */
+
 public class GregorianCalendarFormat extends GregorianCalendar {
 
+	private int i=0;
 	public GregorianCalendarFormat() {
 		super();
 	}
@@ -22,7 +24,7 @@ public class GregorianCalendarFormat extends GregorianCalendar {
 		Date d = this.getTime();
 		return format.format(d);
 	}
-	
+
 	public String getOra() {
 		SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss");
 		Date d = this.getTime();

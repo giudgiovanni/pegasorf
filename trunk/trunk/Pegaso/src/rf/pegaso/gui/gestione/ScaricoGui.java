@@ -901,8 +901,6 @@ public class ScaricoGui extends JFrame{
 				tblScarico.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				tblScarico.setDefaultEditor(Integer.class, new QuantitaDisponibileEditorSQL());
 				tblScarico.setDefaultRenderer(Object.class, new MyTableCellRendererCentral());
-//				col=tblScarico.getColumnModel().getColumn(4);
-//				col.setCellRenderer(new MyTableCellRendererCentral());
 				tblScarico.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 				tblScarico.packAll();
 				tblScarico.getTableHeader().setReorderingAllowed(false);
@@ -910,14 +908,7 @@ public class ScaricoGui extends JFrame{
 
 
 			} catch (java.lang.Throwable e) {
-				try {
-					PrintWriter p = new PrintWriter("errore.txt");
-					e.printStackTrace(p);
-					p.flush();
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				e.printStackTrace();
 			}
 		}
 		return tblScarico;

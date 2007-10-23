@@ -243,24 +243,8 @@ public class Fattura extends JFrame{
 			return;
 		}
 		int riga = jTable.getSelectedRow();
-//		Vendita v = new Vendita();
-//		v.setCodiceArticolo((Integer)jTable.getValueAt(riga, 0));
-//		v.setCodiceBarre((String)jTable.getValueAt(riga, 1));
-//		v.setCodiceVendita((Integer)jTable.getValueAt(riga, 2));
-//		v.setDescrizione((String)jTable.getValueAt(riga, 3));
-//		v.setQta((Long)jTable.getValueAt(riga, 4));
-//		v.setPrezzoAcquisto(prezzoAcquisto);
-//		v.setPrezzoVendita(prezzoVendita);
-//		v.setIva(iva);
 		carrello.remove(riga);
-		try {
-			model = new VenditeModel(carrello, colonne);
-			jTable.setModel(model);
-			calcoliBarraInferiore();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
+		dbm.notifyDBStateChange();
 	}
 
 	/**
@@ -1082,6 +1066,14 @@ public class Fattura extends JFrame{
 			try {
 				ddtModel = new DdtFatturaModel(dbm);
 				jTableDdt = new JXTable(ddtModel);
+				TableColumn col=jTableDdt.getColumnModel().getColumn(0);
+				col.setMinWidth(0);
+				col.setMaxWidth(0);
+				col.setPreferredWidth(0);
+				col = jTableDdt.getColumnModel().getColumn(1);
+				col.setMinWidth(0);
+				col.setMaxWidth(0);
+				col.setPreferredWidth(0);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

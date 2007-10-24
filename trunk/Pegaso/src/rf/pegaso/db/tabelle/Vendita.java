@@ -113,5 +113,4 @@ public class Vendita {
 	public void setCodiceBarre(String codiceBarre) {
 		this.codiceBarre = codiceBarre;
 	}
-
 }

@@ -111,6 +111,15 @@ public class DdtFatturaModel extends AbstractTableModel implements DBStateChange
 		stateChange();
 
 	}
+	
+	public Class<?> getColumnClass(int columnIndex) {
+		if ( columnIndex == 0 || columnIndex == 1 )
+			return Integer.class;
+		else if ( columnIndex == 2 || columnIndex == 3 )
+			return String.class;
+		else 
+			return java.sql.Date.class;
+	}
 
 	/**
 	 * @throws SQLException

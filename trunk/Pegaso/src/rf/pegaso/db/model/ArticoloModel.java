@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.db.model;
 
@@ -17,7 +17,7 @@ import rf.utility.db.DBStateChange;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class ArticoloModel extends AbstractTableModel implements DBStateChange {
 
@@ -114,10 +114,14 @@ public class ArticoloModel extends AbstractTableModel implements DBStateChange {
 
 	/**
 	 * @throws SQLException
-	 * 
+	 *
 	 */
 	private void recuperaDati() throws SQLException {
-		this.query = "select a.idArticolo,a.codbarre as codice,a.descrizione,a.prezzo_acquisto,a.prezzo_ingrosso as prezzo_listino, ((prezzo_ingrosso - prezzo_acquisto) / CASE prezzo_acquisto WHEN 0 THEN NULL ELSE prezzo_acquisto END) * 100 as ricario_listino,f.nome as fornitore from articoli a, fornitori f where a.idfornitore=f.idfornitore order by codice";
+		// questa query è disabilitata per non visualizzare il ricarico listino.
+		//this.query = "select a.idArticolo,a.codbarre as codice,a.descrizione,a.prezzo_acquisto,a.prezzo_ingrosso as prezzo_listino, ((prezzo_ingrosso - prezzo_acquisto) / CASE prezzo_acquisto WHEN 0 THEN NULL ELSE prezzo_acquisto END) * 100 as ricario_listino,f.nome as fornitore from articoli a, fornitori f where a.idfornitore=f.idfornitore order by codice";
+		//
+		// la sostituiamo con questa che elimina quella colonna.
+		this.query = "select a.idArticolo,a.codbarre as codice,a.descrizione,a.prezzo_acquisto,a.prezzo_ingrosso as prezzo_listino, f.nome as fornitore from articoli a, fornitori f where a.idfornitore=f.idfornitore order by codice";
 		pst = dbm.getNewPreparedStatement(query);
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();

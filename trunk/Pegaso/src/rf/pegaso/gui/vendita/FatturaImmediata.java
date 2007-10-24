@@ -502,13 +502,12 @@ public class FatturaImmediata extends JFrame{
 		java.sql.Time t = new Time(dataCorrente.getDate().getTime());
 		try {
 			pst.setInt(1, idfattura);
-			pst.setString(2, num_fattura);
-			pst.setDate(3, d);
-			pst.setTime(4, t);
-			pst.setInt(5, 1);
-			System.out.println((String)cmbClienti.getIDSelectedItem());
-			pst.setString(6, (String)cmbPagamento.getSelectedItem());
-
+			pst.setDate(2, d);
+			pst.setTime(3, t);
+			pst.setInt(4, 1);
+			pst.setString(5, (String)cmbPagamento.getSelectedItem());
+			pst.setString(6, num_fattura);
+			
 			pst.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

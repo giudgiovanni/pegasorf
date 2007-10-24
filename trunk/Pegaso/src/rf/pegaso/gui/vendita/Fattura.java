@@ -12,7 +12,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 
 import rf.myswing.IDJComboBox;
-import rf.myswing.util.MyTableCellRendererCentral;
+import rf.myswing.util.MyTableCellRendererAlignment;
 import rf.myswing.util.QuantitaDisponibileEditorSQL;
 import rf.pegaso.db.DBManager;
 import rf.pegaso.db.exception.CodiceBarreInesistente;
@@ -537,7 +537,7 @@ public class Fattura extends JFrame{
 				col.setPreferredWidth(0);
 				jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				jTable.setDefaultEditor(Long.class, new QuantitaDisponibileEditorSQL());
-				jTable.setDefaultRenderer(Object.class, new MyTableCellRendererCentral());
+				jTable.setDefaultRenderer(Object.class, new MyTableCellRendererAlignment());
 				jTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 				jTable.packAll();
 				jTable.getTableHeader().setReorderingAllowed(false);

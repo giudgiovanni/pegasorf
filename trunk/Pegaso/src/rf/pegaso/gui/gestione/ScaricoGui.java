@@ -45,13 +45,14 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import org.jdesktop.swingx.JXTable;
 
 import rf.myswing.IDJComboBox;
 import rf.myswing.exception.LunghezzeArrayDiverse;
-import rf.myswing.util.MyTableCellRendererCentral;
+import rf.myswing.util.MyTableCellRendererAlignment;
 import rf.myswing.util.QuantitaDisponibileEditorSQL;
 import rf.pegaso.db.DBManager;
 import rf.pegaso.db.UtilityDBManager;
@@ -66,6 +67,8 @@ import rf.pegaso.db.tabelle.Scarico;
 import rf.pegaso.db.tabelle.exception.IDNonValido;
 import rf.pegaso.gui.utility.ModificaQuantitaRiga;
 import rf.utility.ControlloDati;
+import rf.utility.db.DBEvent;
+import rf.utility.db.DBStateChange;
 import rf.utility.gui.ComboBoxUtil;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompleteTextComponent;
@@ -886,15 +889,59 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 				modello.addTableModelListener(this);
 				dbm.addDBStateChange(modello);
 				tblScarico = new JXTable(modello);
-				TableColumn col=tblScarico.getColumnModel().getColumn(0);
-				col.setMinWidth(0);
-				col.setMaxWidth(0);
-				col.setPreferredWidth(0);
 				tblScarico.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				// impostiamo l'editor di default per il controllo sulla quantità
 				tblScarico.setDefaultEditor(Integer.class, new QuantitaDisponibileEditorSQL());
 				// impostiamo il cell renderer per una impostazione centrale
-				tblScarico.setDefaultRenderer(Object.class, new MyTableCellRendererCentral());
+				//tblScarico.setDefaultRenderer(String.class, new MyTableCellRendererAlignment());
+
+				// impostiamo le varie colonne
+				TableColumn col=tblScarico.getColumnModel().getColumn(0);
+				col.setMinWidth(0);
+				col.setMaxWidth(0);
+				col.setPreferredWidth(0);
+
+				col = tblScarico.getColumn("codice");
+				DefaultTableCellRenderer colFormatoRenderer = new DefaultTableCellRenderer();
+				colFormatoRenderer.setHorizontalAlignment(JLabel.LEFT);
+				col.setCellRenderer(colFormatoRenderer);
+
+
+				col = tblScarico.getColumn("descrizione");
+				DefaultTableCellRenderer ColTipoRenderer = new DefaultTableCellRenderer();
+				ColTipoRenderer.setHorizontalAlignment(JLabel.LEFT);
+				col.setCellRenderer(ColTipoRenderer);
+
+				col = tblScarico.getColumn("iva");
+				DefaultTableCellRenderer ivaColumnRenderer = new DefaultTableCellRenderer();
+				ivaColumnRenderer.setHorizontalAlignment(JLabel.CENTER);
+				col.setCellRenderer(ivaColumnRenderer);
+				col.setPreferredWidth(40);
+
+				col = tblScarico.getColumn("um");
+				DefaultTableCellRenderer umColumnRenderer = new DefaultTableCellRenderer();
+				umColumnRenderer.setHorizontalAlignment(JLabel.CENTER);
+				col.setCellRenderer(umColumnRenderer);
+				col.setPreferredWidth(40);
+
+				col = tblScarico.getColumn("qta");
+				DefaultTableCellRenderer qtaColumnRenderer = new DefaultTableCellRenderer();
+				qtaColumnRenderer.setHorizontalAlignment(JLabel.CENTER);
+				col.setCellRenderer(qtaColumnRenderer);
+				col.setPreferredWidth(40);
+
+				col = tblScarico.getColumn("disponibili");
+				DefaultTableCellRenderer dispColumnRenderer = new DefaultTableCellRenderer();
+				dispColumnRenderer.setHorizontalAlignment(JLabel.CENTER);
+				col.setCellRenderer(dispColumnRenderer);
+				col.setPreferredWidth(40);
+
+				col = tblScarico.getColumn("prezzo_acquisto");
+				DefaultTableCellRenderer prezzoColumnRenderer = new DefaultTableCellRenderer();
+				prezzoColumnRenderer.setHorizontalAlignment(JLabel.RIGHT);
+				col.setCellRenderer(prezzoColumnRenderer);
+				col.setPreferredWidth(40);
+
 				tblScarico.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 				tblScarico.packAll();
 				// per evitare che si possano spostare le colonne dalla posizione originaria
@@ -1408,7 +1455,7 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 
 	protected void modifica() {
 		if (tblViewScarichi.getSelectedRow() <= -1) {
-			JOptionPane.showMessageDialog(this, "Selezionare un righa",
+			JOptionPane.showMessageDialog(this, "Selezionare uno scarico da modificare",
 					"AVVISO", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
@@ -1447,17 +1494,17 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 	private void ricaricaTableCarico(int idCarico) {
 
 		try {
-			modello = new ScaricoModel(idCarico);
+			modello.reloadModel(idCarico);
 		} catch (SQLException e) {
 			messaggioErroreCampo("Errore caricamento dati dal db");
 			e.printStackTrace();
 		}
 		dbm.addDBStateChange(modello);
 		tblScarico.setModel(modello);
-		TableColumn col=tblScarico.getColumnModel().getColumn(0);
-		col.setMinWidth(0);
-		col.setMaxWidth(0);
-		col.setPreferredWidth(0);
+//		TableColumn col=tblScarico.getColumnModel().getColumn(0);
+//		col.setMinWidth(0);
+//		col.setMaxWidth(0);
+//		col.setPreferredWidth(0);
 		tblScarico.packAll();
 
 	}
@@ -1892,7 +1939,9 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 
 	public void tableChanged(TableModelEvent arg0) {
 		// TODO Auto-generated method stub
-		calcolaTotaliArticoliScaricati();
+		calcoli(this.idcarico);
 	}
+
+
 
 } // @jve:decl-index=0:visual-constraint="10,10"

@@ -37,8 +37,8 @@ public class CaricoModel extends AbstractTableModel implements DBStateChange {
 
 	private ResultSetMetaData rsmd = null;
 
-	public CaricoModel(DBManager dbm, int idcarico) throws SQLException {
-		this.dbm = dbm;
+	public CaricoModel(int idcarico) throws SQLException {
+		this.dbm = DBManager.getIstanceSingleton();
 		this.idcarico = idcarico;
 		recuperaDati();
 
@@ -219,11 +219,18 @@ public class CaricoModel extends AbstractTableModel implements DBStateChange {
 	 *
 	 */
 	private void recuperaDati() throws SQLException {
-		this.query = "select idarticolo,codbarre AS codice_articolo,descrizione,iva,um,qta,prezzo_acquisto, (qta*prezzo_acquisto) as totale from articoli_caricati_view where idcarico="
-				+ idcarico + " order by codice_articolo";
+		this.query = "select idarticolo,codbarre AS codice,descrizione,iva,um,qta,prezzo_acquisto, (qta*prezzo_acquisto) as totale from articoli_caricati_view where idcarico="
+				+ idcarico + " order by codice";
 		pst = dbm.getNewPreparedStatement(query);
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();
+		fireTableDataChanged();
+
+	}
+
+	public void reloadModel(int idCarico) throws SQLException {
+		this.idcarico=idCarico;
+		recuperaDati();
 
 	}
 

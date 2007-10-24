@@ -37,6 +37,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import net.sf.jasperreports.engine.JRException;
@@ -223,7 +224,7 @@ public class CaricoGui extends JFrame {
 			e1.printStackTrace();
 		}
 		// FINE PUNTO BACKUP
-		
+
 		int riga = tblCarico.getSelectedRow();
 		String codbarre = (String) tblCarico.getValueAt(riga, 0);
 		int id = -1;
@@ -304,7 +305,7 @@ public class CaricoGui extends JFrame {
 			e1.printStackTrace();
 		}
 		// FINE PUNTO BACKUP
-		
+
 		Articolo a = new Articolo();
 		try {
 			a.caricaDatiByCodBarre(codBarre);
@@ -395,7 +396,7 @@ public class CaricoGui extends JFrame {
 //			e.printStackTrace();
 //		}
 //		AutoCompletion.enable(cmbProdotti);
-		
+
 		Articolo f = new Articolo();
 		try {
 			String as[] = (String[]) f.allArticoli();
@@ -441,7 +442,7 @@ public class CaricoGui extends JFrame {
 //					"ERRORE LUNGHEZZA", 0);
 //			e.printStackTrace();
 //		}
-		
+
 		Articolo f = new Articolo();
 		try {
 			String as[] = f.allArticoliByFornitore(idfornitore);
@@ -496,7 +497,7 @@ public class CaricoGui extends JFrame {
 			messaggioErroreCampo("Errore caricamento dati db");
 			e.printStackTrace();
 		}
-		
+
 		cmbTipoDocumento.setSelectedItem(d.getTipo());
 		cmbFornitori.setSelectedItem(f.getNome());
 		ricaricaTableCarico(c.getIdCarico());
@@ -549,7 +550,7 @@ public class CaricoGui extends JFrame {
 //		AutoCompletion.enable(cmbDocumenti);
 		Documento f = new Documento();
 		try {
-			
+
 			String as[] = (String[]) f.allDocumenti();
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
@@ -591,10 +592,10 @@ public class CaricoGui extends JFrame {
 //			e.printStackTrace();
 //		}
 //		AutoCompletion.enable(cmbFornitori);
-		
+
 		Fornitore f = new Fornitore();
 		try {
-			
+
 			String as[] = (String[]) f.allFornitori();
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
@@ -658,7 +659,7 @@ public class CaricoGui extends JFrame {
 			if (ok !=JOptionPane.YES_OPTION)
 				return;
 		}
-		
+
 		// PUNTO DI BACKUP DA ATTIVARE DA CONFIGURAZIONI
 		try {
 			UtilityDBManager.getSingleInstance().backupDataBase(UtilityDBManager.DELETE);
@@ -670,7 +671,7 @@ public class CaricoGui extends JFrame {
 			e1.printStackTrace();
 		}
 		// FINE PUNTO BACKUP
-		
+
 		int riga = tblCarico.getSelectedRow();
 		TableColumn col = tblCarico.getColumn("codice_articolo");
 		int colonna = col.getModelIndex();
@@ -714,7 +715,7 @@ public class CaricoGui extends JFrame {
 			e1.printStackTrace();
 		}
 		// FINE PUNTO BACKUP
-		
+
 		int riga = tblViewCarichi.getSelectedRow();
 		int idcarico = ((Long) tblViewCarichi.getValueAt(riga, 0)).intValue();
 		Carico c = new Carico();
@@ -1025,16 +1026,60 @@ public class CaricoGui extends JFrame {
 	private JTable getTblCarico() {
 		if (tblCarico == null)
 			try {
-				caricoModel = new CaricoModel(dbm, idcarico);
+				caricoModel = new CaricoModel(idcarico);
 				dbm.addDBStateChange(caricoModel);
 				tblCarico = new JXTable();
 				tblCarico.setDefaultEditor(Double.class, new DoubleEditor());
 				tblCarico.setSelectionMode(0);
 				tblCarico.setModel(caricoModel);
-				TableColumn col = tblCarico.getColumnModel().getColumn(0);
+
+				// impostiamo le varie colonne
+				TableColumn col=tblCarico.getColumnModel().getColumn(0);
 				col.setMinWidth(0);
 				col.setMaxWidth(0);
 				col.setPreferredWidth(0);
+
+				col = tblCarico.getColumn("codice");
+				DefaultTableCellRenderer colFormatoRenderer = new DefaultTableCellRenderer();
+				colFormatoRenderer.setHorizontalAlignment(JLabel.LEFT);
+				col.setCellRenderer(colFormatoRenderer);
+
+
+				col = tblCarico.getColumn("descrizione");
+				DefaultTableCellRenderer ColTipoRenderer = new DefaultTableCellRenderer();
+				ColTipoRenderer.setHorizontalAlignment(JLabel.LEFT);
+				col.setCellRenderer(ColTipoRenderer);
+
+				col = tblCarico.getColumn("iva");
+				DefaultTableCellRenderer ivaColumnRenderer = new DefaultTableCellRenderer();
+				ivaColumnRenderer.setHorizontalAlignment(JLabel.CENTER);
+				col.setCellRenderer(ivaColumnRenderer);
+				col.setPreferredWidth(40);
+
+				col = tblCarico.getColumn("um");
+				DefaultTableCellRenderer umColumnRenderer = new DefaultTableCellRenderer();
+				umColumnRenderer.setHorizontalAlignment(JLabel.CENTER);
+				col.setCellRenderer(umColumnRenderer);
+				col.setPreferredWidth(40);
+
+				col = tblCarico.getColumn("qta");
+				DefaultTableCellRenderer qtaColumnRenderer = new DefaultTableCellRenderer();
+				qtaColumnRenderer.setHorizontalAlignment(JLabel.CENTER);
+				col.setCellRenderer(qtaColumnRenderer);
+				col.setPreferredWidth(40);
+
+				col = tblCarico.getColumn("prezzo_acquisto");
+				DefaultTableCellRenderer prezzoColumnRenderer = new DefaultTableCellRenderer();
+				prezzoColumnRenderer.setHorizontalAlignment(JLabel.RIGHT);
+				col.setCellRenderer(prezzoColumnRenderer);
+				col.setPreferredWidth(40);
+
+				col = tblCarico.getColumn("totale");
+				DefaultTableCellRenderer totaleColumnRenderer = new DefaultTableCellRenderer();
+				totaleColumnRenderer.setHorizontalAlignment(JLabel.RIGHT);
+				col.setCellRenderer(totaleColumnRenderer);
+				col.setPreferredWidth(40);
+
 				tblCarico.setAutoResizeMode(4);
 				tblCarico.packAll();
 				tblCarico.getTableHeader().setReorderingAllowed(false);
@@ -1115,7 +1160,7 @@ public class CaricoGui extends JFrame {
 						s.setCaretPosition(0);
 					}
 				});
-				
+
 			} catch (Throwable throwable) {
 			}
 		return dataDocumento;
@@ -1227,8 +1272,8 @@ public class CaricoGui extends JFrame {
 		caricaArticoli(cmbProdotti);
 		caricaDocumenti(cmbTipoDocumento);
 		inizializzaListeners();
-		
-		
+
+
 	}
 
 	private void inizializzaListeners() {
@@ -1265,7 +1310,7 @@ public class CaricoGui extends JFrame {
 			e1.printStackTrace();
 		}
 		// FINE PUNTO BACKUP
-		
+
 		if (codBarre.equals("") && tmp.equals("") && tmpPrezzo.equals("")) {
 			salvaFattura();
 			return;
@@ -1362,8 +1407,8 @@ public class CaricoGui extends JFrame {
 					"Errore nell'inserimento dinumeri", "NUMERO ERRATO", 0);
 			e.printStackTrace();
 		}
-		
-		
+
+
 	}
 
 	private void messaggioCampoMancante(String testo) {
@@ -1410,9 +1455,9 @@ public class CaricoGui extends JFrame {
 	}
 
 	private void ricaricaTableCarico(int idCarico) {
-		caricoModel = null;
+
 		try {
-			caricoModel = new CaricoModel(dbm, idCarico);
+			caricoModel.reloadModel(idCarico);
 		} catch (SQLException e) {
 			messaggioErroreCampo("Errore caricamento dati dal db");
 			e.printStackTrace();
@@ -1465,7 +1510,7 @@ public class CaricoGui extends JFrame {
 						s.setCaretPosition(0);
 					}
 				});
-				
+
 			} catch (Throwable throwable) {
 			}
 		return dataCarico;

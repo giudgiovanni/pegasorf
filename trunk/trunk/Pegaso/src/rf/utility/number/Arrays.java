@@ -34,10 +34,12 @@ public class Arrays {
 			String k = array[pos];
 			if (k.equals(e)) {
 				trovato = true;
+				// lo abbiamo trovato e ritorniamo l'indice
+				return pos;
 			}
 		}// fine for
-		if (trovato)
-			return pos;
+		// se siamo qui è perchè non ha trovato 
+		// nessun elemento nell'array
 		return -1;
 	}
 

@@ -79,8 +79,6 @@ public class VenditeModel extends AbstractTableModel implements DBStateChange {
 
 	}
 
-	
-	@Override
 	public Class<?> getColumnClass(int columnIndex) {
 		if ( columnIndex == 4 || columnIndex == 5 )
 			return Double.class;
@@ -91,7 +89,6 @@ public class VenditeModel extends AbstractTableModel implements DBStateChange {
 		else return String.class;
 	}
 
-	@Override
 	public void setValueAt(Object o, int r, int c) {
 		Vendita v = vendita.get(r);
 		switch(c) {

@@ -8,8 +8,12 @@ import javax.swing.JComboBox;
 import rf.myswing.exception.LunghezzeArrayDiverse;
 import rf.utility.number.Arrays;
 
-public class IDJComboBox extends JComboBox {
+public class IDJComboBox extends JComboBox{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String codId[];  //  @jve:decl-index=0:
 	private String descItem[];  //  @jve:decl-index=0:
 	
@@ -46,7 +50,6 @@ public class IDJComboBox extends JComboBox {
 
 	@Override
 	public synchronized void addKeyListener(KeyListener arg0) {
-		// TODO Auto-generated method stub
 		super.addKeyListener(arg0);
 	}
 

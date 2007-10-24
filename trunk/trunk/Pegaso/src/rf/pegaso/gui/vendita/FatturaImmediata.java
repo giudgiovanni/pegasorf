@@ -14,7 +14,6 @@ import javax.swing.WindowConstants;
 import rf.myswing.IDJComboBox;
 import rf.myswing.util.MyTableCellRendererCentral;
 import rf.myswing.util.QuantitaDisponibileEditor;
-import rf.myswing.util.QuantitaDisponibileEditorSQL;
 import rf.pegaso.db.DBManager;
 import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.pegaso.db.model.VenditeModel;
@@ -504,7 +503,7 @@ public class FatturaImmediata extends JFrame{
 			pst.setInt(1, idfattura);
 			pst.setDate(2, d);
 			pst.setTime(3, t);
-			pst.setInt(4, 1);
+			pst.setInt(4, Integer.parseInt(cmbClienti.getIDSelectedItem()));
 			pst.setString(5, (String)cmbPagamento.getSelectedItem());
 			pst.setString(6, num_fattura);
 			
@@ -525,9 +524,10 @@ public class FatturaImmediata extends JFrame{
 				pst.setDouble(5, v.getPrezzoVendita());
 
 				pst.executeUpdate();
-				//Articolo c = new Articolo();
-				//c.caricaDati(v.getCodiceArticolo());
-				updateArticolo(v.getCodiceArticolo(), (int) v.getQta());
+				Articolo c = new Articolo();
+				c.caricaDati(v.getCodiceArticolo());
+				int newQta = c.getGiacenza() - (int)v.getQta();
+				updateArticolo(v.getCodiceArticolo(), newQta);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -546,7 +546,7 @@ public class FatturaImmediata extends JFrame{
 	public void updateArticolo(int idArticolo, int qta)
 	throws SQLException {
 
-		String query = "update articoli set qta=? where idarticolo=?";
+		String query = "update dettaglio_carichi set qta=? where idarticolo=?";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 
 		pst.setInt(1, qta);

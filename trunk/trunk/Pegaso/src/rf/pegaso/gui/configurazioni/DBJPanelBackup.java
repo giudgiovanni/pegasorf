@@ -124,6 +124,9 @@ public class DBJPanelBackup extends JPanel {
 	    try {
 		// ricarichiamo la lista dei backup effettuati
 		DefaultListModel model=new DefaultListModel();
+		// ritardiamo di 1sec per far si che prima vengano calcellati i file del tutto
+		// altrimenti visualizza alcuni dati che poi effettivamente ancano.
+		Thread.sleep(1000);
 		String nf[]=UtilityDBManager.getSingleInstance().elencoFileBackup();
 		for(String tmp : nf){
 		    model.addElement(tmp);
@@ -135,7 +138,10 @@ public class DBJPanelBackup extends JPanel {
 	    } catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
-	    }
+	    } catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 

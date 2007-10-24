@@ -157,7 +157,6 @@ public class UtilityDBManager {
 				n[i].delete();
 			}
 		}
-
 	}
 
 	public File[] getAllFile() {

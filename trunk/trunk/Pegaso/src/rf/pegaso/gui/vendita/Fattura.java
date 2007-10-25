@@ -113,6 +113,7 @@ public class Fattura extends JFrame{
 	private JTextField txtUtile = null;
 	private Vector<Vendita> carrello = null;
 	private Vector<String> colonne = null;  //  @jve:decl-index=0:
+	private Vector<Long> ddt = null;
 	private VenditeModel model = null;
 	private double prezzoAcquisto = 0.00;
 	private double prezzoVendita = 0.00;
@@ -132,6 +133,7 @@ public class Fattura extends JFrame{
 	private void initialize() {
 		carrello = new Vector<Vendita>();
 		colonne = new Vector<String>();
+		ddt = new Vector<Long>();
 		caricaVettoreColonne();
 		this.setSize(new Dimension(800, 600));
 		this.setTitle("Fattura");
@@ -159,8 +161,10 @@ public class Fattura extends JFrame{
 		public void actionPerformed(ActionEvent e) {
 			if ( e.getSource() == btnChiudi )
 				dispose();
-			else if ( e.getSource() == btnSalva )
+			else if ( e.getSource() == btnSalva ){
 				salva();
+				deleteDdt();
+			}
 			else if ( e.getSource() == btnStampa )
 				stampa();
 			else if ( e.getSource() == btnInserisci )
@@ -175,7 +179,6 @@ public class Fattura extends JFrame{
 				try {
 					inserisciDdt();
 				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 		}
@@ -197,6 +200,7 @@ public class Fattura extends JFrame{
 		}
 		int riga = jTableDdt.getSelectedRow();
 		Long idDdt = (Long) jTableDdt.getValueAt(riga, 0);
+		ddt.add(idDdt);
 		Statement st = null;
 		ResultSet rs = null;
 		String query = "select * from dettaglio_ddt where idddt=" + idDdt;
@@ -223,24 +227,26 @@ public class Fattura extends JFrame{
 		
 	}
 	
-//	public void caricaDati(int id) throws SQLException {
-//		Statement st = null;
-//		ResultSet rs = null;
-//		String query = "select * from dettaglio_ddt where idddt=" + id;
-//		st = dbm.getNewStatement();
-//		rs = st.executeQuery(query);
-//		while ( rs.next() ){
-//			Vendita v = new Vendita();
-//			v.setCodiceArticolo(rs.getInt(1));
-//			v.setCodiceVendita(rs.getInt(2));
-//			v.setQta(rs.getLong(3));
-//			v.setPrezzoAcquisto(rs.getDouble(4));
-//			v.setPrezzoVendita(rs.getDouble(5));
-//			carrello.add(v);
-//		}
-//		if (st != null)
-//			st.close();
-//	}
+	private void deleteDdt(){
+		Statement st = dbm.getNewStatement();
+		for(Long l : ddt){
+			String query = "DELETE FROM dettaglio_ddt WHERE idddt=" + l;
+			String query2 = "DELETE FROM ddt WHERE idddt=" + l;
+			try {
+				st.executeUpdate(query);
+				st.executeUpdate(query2);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		try {
+			if (st != null)
+				st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbm.notifyDBStateChange();
+	}
 
 	/**
 	 * Questo metodo inscerisce gli articoli all'interno del carrello
@@ -510,6 +516,7 @@ public class Fattura extends JFrame{
 	private JScrollPane getJScrollPane() {
 		if (jScrollPane == null) {
 			jScrollPane = new JScrollPane();
+			jScrollPane.setPreferredSize(new Dimension(500, 379));
 			try {
 				jScrollPane.setViewportView(getJTable());
 			} catch (SQLException e) {
@@ -575,12 +582,11 @@ public class Fattura extends JFrame{
 		java.sql.Time t = new Time(dataCorrente.getDate().getTime());
 		try {
 			pst.setInt(1, idfattura);
-			pst.setString(2, num_fattura);
-			pst.setDate(3, d);
-			pst.setTime(4, t);
-			pst.setInt(5, 1);
-			System.out.println((String)cmbClienti.getIDSelectedItem());
-			pst.setString(6, (String)cmbPagamento.getSelectedItem());
+			pst.setDate(2, d);
+			pst.setTime(3, t);
+			pst.setInt(4, Integer.parseInt(cmbClienti.getIDSelectedItem()));
+			pst.setString(5, (String)cmbPagamento.getSelectedItem());
+			pst.setString(6, num_fattura);
 
 			pst.executeUpdate();
 		} catch (SQLException e) {
@@ -1145,6 +1151,7 @@ public class Fattura extends JFrame{
 	private JScrollPane getJScrollPane1() {
 		if (jScrollPane1 == null) {
 			jScrollPane1 = new JScrollPane();
+			jScrollPane1.setPreferredSize(new Dimension(200, 379));
 			jScrollPane1.setViewportView(getJTableDdt());
 		}
 		return jScrollPane1;
@@ -1160,6 +1167,7 @@ public class Fattura extends JFrame{
 			try {
 				ddtModel = new DdtFatturaModel(dbm);
 				jTableDdt = new JXTable(ddtModel);
+				jTableDdt.setBounds(new Rectangle(0, 0, 300, 317));
 				TableColumn col=jTableDdt.getColumnModel().getColumn(0);
 				col.setMinWidth(0);
 				col.setMaxWidth(0);
@@ -1185,7 +1193,9 @@ public class Fattura extends JFrame{
 		if (jPanelCentro == null) {
 			jPanelCentro = new JPanel();
 			jPanelCentro.setLayout(null);
-			jPanelCentro.setPreferredSize(new Dimension(100,200));
+			//jPanelCentro.setPreferredSize(new Dimension(100, 0));
+			jPanelCentro.setBounds(new Rectangle(100, 0, 50, 200));
+			jPanelCentro.setPreferredSize(new Dimension(100, 0));
 			jPanelCentro.add(getBtnInserisciDdt(), null);
 		}
 		return jPanelCentro;

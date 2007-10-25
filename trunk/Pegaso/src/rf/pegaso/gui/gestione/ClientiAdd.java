@@ -142,6 +142,7 @@ public class ClientiAdd extends JDialog {
 	}
 
 	public ClientiAdd(JFrame frame, DBManager dbm) {
+		super(frame, true);
 		this.dbm=dbm;
 		this.padre=frame;
 		this.idCliente = idCliente;

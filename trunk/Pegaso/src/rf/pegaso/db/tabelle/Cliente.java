@@ -371,7 +371,7 @@ public class Cliente {
 		String[] o = null;
 		ResultSet rs = null;
 		Statement pst = null;
-		String query = "select idCliente || ' - ' || nome from clienti order by nome";
+		String query = "select idCliente || ' - ' || nome || ' ' ||cognome from clienti order by nome";
 		pst = dbm.getNewStatement();
 		rs = pst.executeQuery(query);
 		rs.last();

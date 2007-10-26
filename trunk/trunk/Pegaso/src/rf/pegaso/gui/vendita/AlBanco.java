@@ -1,6 +1,7 @@
 package rf.pegaso.gui.vendita;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
@@ -13,6 +14,7 @@ import javax.swing.WindowConstants;
 
 import rf.myswing.IDJComboBox;
 import rf.myswing.util.MyTableCellRendererAlignment;
+import rf.myswing.util.MyTableCellRendererProva;
 import rf.myswing.util.QuantitaDisponibileEditorSQL;
 import rf.pegaso.db.DBManager;
 import rf.pegaso.db.exception.CodiceBarreInesistente;
@@ -32,7 +34,10 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 import java.awt.GridBagConstraints;
 import java.awt.Rectangle;
@@ -113,6 +118,8 @@ public class AlBanco extends JFrame{
 	 */
 	private void initialize() {
 		carrello = new Vector<Vendita>();
+		Vendita v = new Vendita();
+		carrello.add(v);
 		colonne = new Vector<String>();
 		caricaVettoreColonne();
 		this.setSize(new Dimension(800, 600));
@@ -133,6 +140,7 @@ public class AlBanco extends JFrame{
 
 		caricaDescrizione();
 		caricaVettoreColonne();
+		txtNumero.setText(String.valueOf(dbm.getNewID("banco", "idvendita")));
 	}
 
 	class MyButtonListener implements ActionListener {
@@ -374,6 +382,7 @@ public class AlBanco extends JFrame{
 		if (txtNumero == null) {
 			txtNumero = new JTextField();
 			txtNumero.setBounds(new Rectangle(190, 10, 100, 20));
+			txtNumero.setEditable(false);
 
 		}
 		return txtNumero;
@@ -441,9 +450,28 @@ public class AlBanco extends JFrame{
 				col.setMinWidth(0);
 				col.setMaxWidth(0);
 				col.setPreferredWidth(0);
+				col = jTable.getColumnModel().getColumn(1);
+				col.setCellRenderer((TableCellRenderer) txtCodice);
 				jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				jTable.setDefaultEditor(Long.class, new QuantitaDisponibileEditorSQL());
-				jTable.setDefaultRenderer(Object.class, new MyTableCellRendererAlignment());
+				jTable.setDefaultRenderer(String.class, new MyTableCellRendererProva());
+				//esperimento
+//				jTable.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
+//					public Component getTableCellRendererComponent (JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) 
+//					{
+//					Component cell = super.getTableCellRendererComponent (table, value, isSelected, hasFocus, row, column);
+//					if( column == 1 ){
+//						cell = getTxtCodice();
+//					}
+//					else if ( column == 2 )
+//						cell = getCmbProdotti();
+//					return cell;
+//
+//					}});
+				//fine esperimento
+				//esperimento 2
+				
+				//fine esperimento 2
 				jTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 				jTable.packAll();
 				jTable.getTableHeader().setReorderingAllowed(false);
@@ -537,6 +565,13 @@ public class AlBanco extends JFrame{
 		if (pst != null)
 			pst.close();
 		dbm.notifyDBStateChange();
+		resetCampi();
+	}
+	
+	private void resetCampi(){
+		txtNumero.setText(String.valueOf(dbm.getNewID("banco", "idvendita")));
+		carrello.removeAllElements();
+		calcoliBarraInferiore();
 	}
 
 	/**

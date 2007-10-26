@@ -65,9 +65,10 @@ public class VenditeModel extends AbstractTableModel implements DBStateChange {
 	}
 	
 	public boolean isCellEditable(int r, int c) {
-		if ( c == 3 || c == 4 || c == 6 )
-			return true;
-		return false;
+//		if ( c == 3 || c == 4 || c == 6 )
+//			return true;
+//		return false;
+		return true;
 	}
 
 	public void stateChange() {

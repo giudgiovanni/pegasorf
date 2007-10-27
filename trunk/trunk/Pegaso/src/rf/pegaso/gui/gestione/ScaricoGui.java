@@ -12,11 +12,14 @@ import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -25,10 +28,15 @@ import java.sql.Time;
 import java.text.ParseException;
 import java.util.Date;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
+import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -38,6 +46,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
@@ -52,6 +61,7 @@ import org.jdesktop.swingx.JXTable;
 
 import rf.myswing.IDJComboBox;
 import rf.myswing.exception.LunghezzeArrayDiverse;
+import rf.myswing.util.ModalFrameUtil;
 import rf.myswing.util.MyTableCellRendererAlignment;
 import rf.myswing.util.QuantitaDisponibileEditorSQL;
 import rf.pegaso.db.DBManager;
@@ -82,7 +92,8 @@ import com.toedter.calendar.JTextFieldDateEditor;
  * @author Hunter
  *
  */
-public class ScaricoGui extends JFrame implements TableModelListener{
+public class ScaricoGui extends JFrame implements TableModelListener {
+
 	class MyButtonListener implements ActionListener {
 
 		/*
@@ -103,13 +114,13 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 				elimina();
 			} else if (e.getSource() == btnChiudi) {
 				dispose();
+			} else if (e.getSource() == btnApriArticoli) {
+				apriGestioneArticoli();
 			}
 
 		}
 
 	}
-
-
 
 	class MyComboBoxListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
@@ -159,6 +170,7 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 	private JLabel lblIngImposta = null;
 
 	private JLabel lblInsRapido = null;
+
 	private JLabel lblNote = null;
 
 	private JLabel lblNumeroCarico = null;
@@ -169,7 +181,7 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 
 	private JLabel lblUm = null;
 
-	private MyButtonListener myButtonListener;
+	private MyButtonListener myButtonListener; // @jve:decl-index=0:
 
 	private MyComboBoxListener myComboBoxListener;
 
@@ -257,13 +269,15 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 
 	private JPanel pnlBottoni = null;
 
+	private JButton btnApriArticoli = null;
+
 	/**
 	 * @param frame
 	 * @param dbm
 	 */
 	public ScaricoGui() {
 		super();
-		//setModale();
+		// setModale();
 		this.dbm = DBManager.getIstanceSingleton();
 		initialize();
 
@@ -286,7 +300,7 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 		Articolo a = new Articolo();
 		try {
 			a.caricaDatiByCodBarre(codBarre);
-			Scarico c = new Scarico( );
+			Scarico c = new Scarico();
 			c.caricaDati(new Integer(txtNumeroScarico.getText()).intValue());
 
 			c.updateArticolo(a.getIdArticolo(), qta[0], 0);
@@ -299,7 +313,7 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 		}
 
 		// effettuiamo i calcoli
-		calcoli(Scarico.getMaxID( ));
+		calcoli(Scarico.getMaxID());
 
 	}
 
@@ -363,8 +377,8 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 		// Calcoliamo ora la parte all'ingrosso
 		try {
 
-			imponibile = Scarico.getTotAcquistoImponibileByOrder( id);
-			imposta = Scarico.getTotAcquistoImpostaByOrder( idScarico);
+			imponibile = Scarico.getTotAcquistoImponibileByOrder(id);
+			imposta = Scarico.getTotAcquistoImpostaByOrder(idScarico);
 			tot = imponibile + imposta;
 
 			// impostiamo i campi
@@ -379,21 +393,19 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 			e.printStackTrace();
 		}
 
-		//calcoliamo i totali di tutti gli articoli scaricati
+		// calcoliamo i totali di tutti gli articoli scaricati
 		calcolaTotaliArticoliScaricati();
-
-
 
 	}
 
 	private void calcolaTotaliArticoliScaricati() {
-		double imponibile=0,imposta=0,tot=0;
+		double imponibile = 0, imposta = 0, tot = 0;
 
 		// Calcoliamo ora la parte totale dello scarico di tutti gli articoli.
 		try {
 
-			imponibile = Scarico.getTotAcquistoImponibileAllOrders( );
-			imposta = Scarico.getTotAcquistoImpostaAllOrders( );
+			imponibile = Scarico.getTotAcquistoImponibileAllOrders();
+			imposta = Scarico.getTotAcquistoImpostaAllOrders();
 			tot = imponibile + imposta;
 
 			// impostiamo i campi
@@ -414,35 +426,35 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 	 * @param cmbProdotti2
 	 */
 	private void caricaArticoli(JComboBox cmbProdotti) {
-//		Articolo f = new Articolo();
-//		String tmpArticoli[] = null;
-//		String tmpCodici[] = null;
-//		try {
-//			cmbProdotti.removeAllItems();
-//			cmbProdotti.addItem("");
-//			String as[] = (String[]) f.allArticoli();
-//			tmpArticoli = new String[as.length];
-//			tmpCodici = new String[as.length];
-//			// carichiamo tutti i dati in due array
-//			// da passre al combobox
-//			for (int i = 0; i < as.length; i++) {
-//				String tmp[] = as[i].split("-",2);
-//				tmpArticoli[i] = tmp[1].trim();
-//				tmpCodici[i] = tmp[0].trim();
-//			}
-//			((IDJComboBox) cmbProdotti).caricaIDAndOggetti(tmpCodici,
-//					tmpArticoli);
-//
-//		} catch (SQLException e) {
-//			JOptionPane.showMessageDialog(this,
-//					"Errore caricamento articoli nel combobox", "ERRORE", 0);
-//			e.printStackTrace();
-//		} catch (LunghezzeArrayDiverse e) {
-//			JOptionPane.showMessageDialog(this, "Errore lunghezza array",
-//					"ERRORE LUNGHEZZA", 0);
-//			e.printStackTrace();
-//		}
-//		AutoCompletion.enable(cmbProdotti);
+		// Articolo f = new Articolo();
+		// String tmpArticoli[] = null;
+		// String tmpCodici[] = null;
+		// try {
+		// cmbProdotti.removeAllItems();
+		// cmbProdotti.addItem("");
+		// String as[] = (String[]) f.allArticoli();
+		// tmpArticoli = new String[as.length];
+		// tmpCodici = new String[as.length];
+		// // carichiamo tutti i dati in due array
+		// // da passre al combobox
+		// for (int i = 0; i < as.length; i++) {
+		// String tmp[] = as[i].split("-",2);
+		// tmpArticoli[i] = tmp[1].trim();
+		// tmpCodici[i] = tmp[0].trim();
+		// }
+		// ((IDJComboBox) cmbProdotti).caricaIDAndOggetti(tmpCodici,
+		// tmpArticoli);
+		//
+		// } catch (SQLException e) {
+		// JOptionPane.showMessageDialog(this,
+		// "Errore caricamento articoli nel combobox", "ERRORE", 0);
+		// e.printStackTrace();
+		// } catch (LunghezzeArrayDiverse e) {
+		// JOptionPane.showMessageDialog(this, "Errore lunghezza array",
+		// "ERRORE LUNGHEZZA", 0);
+		// e.printStackTrace();
+		// }
+		// AutoCompletion.enable(cmbProdotti);
 
 		Articolo f = new Articolo();
 		try {
@@ -534,12 +546,21 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 
 		// PUNTO DI BACKUP DA ATTIVARE DA CONFIGURAZIONI
 		try {
-			UtilityDBManager.getSingleInstance().backupDataBase(UtilityDBManager.DELETE);
+			UtilityDBManager.getSingleInstance().backupDataBase(
+					UtilityDBManager.DELETE);
 		} catch (FileNotFoundException e1) {
-			JOptionPane.showMessageDialog(this, "File di configurazione per backup\nmancante o danneggiato", "ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"File di configurazione per backup\nmancante o danneggiato",
+							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
 			e1.printStackTrace();
 		} catch (IOException e1) {
-			JOptionPane.showMessageDialog(this, "File di configurazione per backup\nmancante o danneggiato", "ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"File di configurazione per backup\nmancante o danneggiato",
+							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
 			e1.printStackTrace();
 		}
 		// FINE PUNTO BACKUP
@@ -556,7 +577,7 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		Scarico c = new Scarico( );
+		Scarico c = new Scarico();
 		c.setIdScarico(new Integer(txtNumeroScarico.getText()).intValue());
 		try {
 			c.deleteArticolo(a.getIdArticolo());
@@ -577,8 +598,8 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 		if (btnChiudi == null) {
 			try {
 				btnChiudi = new JButton();
-				btnChiudi.setBounds(new Rectangle(528, 4, 101, 29)); // Generated
-				btnChiudi.setText("Chiudi"); // Generated
+				btnChiudi.setBounds(new Rectangle(528, 4, 108, 29)); // Generated
+				btnChiudi.setText("Chiudi (ESC)"); // Generated
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -595,7 +616,7 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 		if (btnElimina == null) {
 			try {
 				btnElimina = new JButton();
-				btnElimina.setBounds(new Rectangle(556, 65, 106, 26)); // Generated
+				btnElimina.setBounds(new Rectangle(535, 103, 126, 26)); // Generated
 				btnElimina.setText("Elimina");
 				// btnElimina.addActionListener(myButtonListener);
 			} catch (java.lang.Throwable e) {
@@ -614,7 +635,7 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 		if (btnInserisci == null) {
 			try {
 				btnInserisci = new JButton();
-				btnInserisci.setBounds(new Rectangle(556, 36, 106, 26)); // Generated
+				btnInserisci.setBounds(new Rectangle(535, 37, 126, 26)); // Generated
 				btnInserisci.setText("Inserisci"); // Generated
 				// btnInserisci.addActionListener(myButtonListener);
 			} catch (java.lang.Throwable e) {
@@ -668,7 +689,7 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 		if (cmbProdotti == null) {
 			try {
 				cmbProdotti = new IDJComboBox();
-				cmbProdotti.setBounds(new Rectangle(148, 40, 397, 21)); // Generated
+				cmbProdotti.setBounds(new Rectangle(148, 40, 378, 21)); // Generated
 				// cmbProdotti.addActionListener(new MyComboBoxListener());
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -834,6 +855,7 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 				pnlProdotto.add(lblNote, null); // Generated
 				pnlProdotto.add(getChkInsRapido(), null); // Generated
 				pnlProdotto.add(lblInsRapido, null); // Generated
+				pnlProdotto.add(getBtnApriArticoli(), null);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -889,14 +911,18 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 				modello.addTableModelListener(this);
 				dbm.addDBStateChange(modello);
 				tblScarico = new JXTable(modello);
-				tblScarico.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				// impostiamo l'editor di default per il controllo sulla quantità
-				tblScarico.setDefaultEditor(Integer.class, new QuantitaDisponibileEditorSQL());
+				tblScarico
+						.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				// impostiamo l'editor di default per il controllo sulla
+				// quantità
+				tblScarico.setDefaultEditor(Integer.class,
+						new QuantitaDisponibileEditorSQL());
 				// impostiamo il cell renderer per una impostazione centrale
-				//tblScarico.setDefaultRenderer(String.class, new MyTableCellRendererAlignment());
+				// tblScarico.setDefaultRenderer(String.class, new
+				// MyTableCellRendererAlignment());
 
 				// impostiamo le varie colonne
-				TableColumn col=tblScarico.getColumnModel().getColumn(0);
+				TableColumn col = tblScarico.getColumnModel().getColumn(0);
 				col.setMinWidth(0);
 				col.setMaxWidth(0);
 				col.setPreferredWidth(0);
@@ -905,7 +931,6 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 				DefaultTableCellRenderer colFormatoRenderer = new DefaultTableCellRenderer();
 				colFormatoRenderer.setHorizontalAlignment(JLabel.LEFT);
 				col.setCellRenderer(colFormatoRenderer);
-
 
 				col = tblScarico.getColumn("descrizione");
 				DefaultTableCellRenderer ColTipoRenderer = new DefaultTableCellRenderer();
@@ -944,10 +969,9 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 
 				tblScarico.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 				tblScarico.packAll();
-				// per evitare che si possano spostare le colonne dalla posizione originaria
+				// per evitare che si possano spostare le colonne dalla
+				// posizione originaria
 				tblScarico.getTableHeader().setReorderingAllowed(false);
-
-
 
 			} catch (java.lang.Throwable e) {
 				e.printStackTrace();
@@ -989,6 +1013,7 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 						}
 					}
 				});
+
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -1146,9 +1171,30 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 	 */
 	private void initialize() {
 
-		Scarico c = new Scarico( );
+		// impostiamo la finestra per ascoltare i tasti funzione da F1 in su
+		// ed altri pulsanti
+		InputMap im = this.getRootPane().getInputMap(
+				JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), "F1");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "ESC");
+
+		this.getRootPane().getActionMap().put("F1", new AbstractAction() {
+			public void actionPerformed(ActionEvent a) {
+				apriGestioneArticoli();
+			}
+
+		});
+		this.getRootPane().getActionMap().put("ESC", new AbstractAction() {
+			public void actionPerformed(ActionEvent a) {
+				dispose();
+			}
+
+		});
+
+
+		Scarico c = new Scarico();
 		this.idcarico = c.getNewID();
-		this.setResizable(true);  // Generated
+		this.setResizable(true); // Generated
 		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE); // Generated
 		this.setTitle("Scarico Merce");
 		this.setResizable(true);
@@ -1156,10 +1202,6 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 
 		this.setSize(new Dimension(700, 591));
 		UtilGUI.centraFrame(this);
-		//this.setExtendedState(Frame.MAXIMIZED_BOTH);
-
-
-		// inseriamo il carico nel db
 
 		// Imposto il campo codice id che verrà poi inserito
 		txtNumeroScarico.setText(new Integer(idcarico).toString());
@@ -1171,10 +1213,9 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 		// inizializzo tutti i listener
 		inizializzaListeners();
 
-		//calcoliamo i totali di tutti gli articoli scaricati e
-		//li inseriamo negli appositi textbox
+		// calcoliamo i totali di tutti gli articoli scaricati e
+		// li inseriamo negli appositi textbox
 		calcolaTotaliArticoliScaricati();
-
 
 	}
 
@@ -1190,6 +1231,7 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 		btnInserisci.addActionListener(myButtonListener);
 		btnElimina.addActionListener(myButtonListener);
 		btnChiudi.addActionListener(myButtonListener);
+		btnApriArticoli.addActionListener(myButtonListener);
 
 	}
 
@@ -1208,17 +1250,26 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 
 		// PUNTO DI BACKUP DA ATTIVARE DA CONFIGURAZIONI
 		try {
-			UtilityDBManager.getSingleInstance().backupDataBase(UtilityDBManager.INSERT);
+			UtilityDBManager.getSingleInstance().backupDataBase(
+					UtilityDBManager.INSERT);
 		} catch (FileNotFoundException e1) {
-			JOptionPane.showMessageDialog(this, "File di configurazione per backup\nmancante o danneggiato", "ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"File di configurazione per backup\nmancante o danneggiato",
+							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
 			e1.printStackTrace();
 		} catch (IOException e1) {
-			JOptionPane.showMessageDialog(this, "File di configurazione per backup\nmancante o danneggiato", "ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"File di configurazione per backup\nmancante o danneggiato",
+							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
 			e1.printStackTrace();
 		}
 		// FINE PUNTO BACKUP
 
-		Scarico c = new Scarico( );
+		Scarico c = new Scarico();
 		try {
 			c.setIdScarico(new Integer(txtNumeroScarico.getText()).intValue());
 			c.setIdCliente(new Integer(ComboBoxUtil
@@ -1252,8 +1303,8 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 				e.printStackTrace();
 			}
 			c.setIdScarico(new Integer(txtNumeroScarico.getText()).intValue());
-			if (Scarico.codiceBarrePresenteInScarico( txtCodBarre.getText(), Integer.parseInt(txtNumeroScarico
-							.getText()))) {
+			if (Scarico.codiceBarrePresenteInScarico(txtCodBarre.getText(),
+					Integer.parseInt(txtNumeroScarico.getText()))) {
 				c
 						.caricaDati(new Integer(txtNumeroScarico.getText())
 								.intValue());
@@ -1277,7 +1328,8 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 				int qta1 = Integer.parseInt(txtQta.getText());
 				if ((giacenza - qta1) < 0) {
 					JOptionPane.showMessageDialog(this,
-							"Quantità richiesta non disponibile\nDisponibilità magazzino = "+giacenza, "AVVISO",
+							"Quantità richiesta non disponibile\nDisponibilità magazzino = "
+									+ giacenza, "AVVISO",
 							JOptionPane.INFORMATION_MESSAGE);
 					return;
 				} else {
@@ -1401,6 +1453,7 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 				pnlScarico.add(getPnlSud(), BorderLayout.SOUTH); // Generated
 				pnlScarico.add(getJScrollPane(), BorderLayout.CENTER); // Generated
 				pnlScarico.add(getPnlNord(), BorderLayout.NORTH); // Generated
+
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -1420,8 +1473,8 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 				pnlViewScarichi.setLayout(new BorderLayout()); // Generated
 				pnlViewScarichi.setBorder(BorderFactory
 						.createBevelBorder(BevelBorder.RAISED)); // Generated
-				pnlViewScarichi.add(getJScrollPane2(), BorderLayout.CENTER);  // Generated
-				pnlViewScarichi.add(getPnlBottoni(), BorderLayout.NORTH);  // Generated
+				pnlViewScarichi.add(getJScrollPane2(), BorderLayout.CENTER); // Generated
+				pnlViewScarichi.add(getPnlBottoni(), BorderLayout.NORTH); // Generated
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -1455,8 +1508,9 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 
 	protected void modifica() {
 		if (tblViewScarichi.getSelectedRow() <= -1) {
-			JOptionPane.showMessageDialog(this, "Selezionare uno scarico da modificare",
-					"AVVISO", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(this,
+					"Selezionare uno scarico da modificare", "AVVISO",
+					JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
 
@@ -1468,7 +1522,7 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 			return;
 		int riga = tblViewScarichi.getSelectedRow();
 		int idcarico = ((Long) tblViewScarichi.getValueAt(riga, 0)).intValue();
-		Scarico c = new Scarico( );
+		Scarico c = new Scarico();
 
 		try {
 			c.caricaDati(idcarico);
@@ -1501,10 +1555,10 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 		}
 		dbm.addDBStateChange(modello);
 		tblScarico.setModel(modello);
-//		TableColumn col=tblScarico.getColumnModel().getColumn(0);
-//		col.setMinWidth(0);
-//		col.setMaxWidth(0);
-//		col.setPreferredWidth(0);
+		// TableColumn col=tblScarico.getColumnModel().getColumn(0);
+		// col.setMinWidth(0);
+		// col.setMaxWidth(0);
+		// col.setPreferredWidth(0);
 		tblScarico.packAll();
 
 	}
@@ -1549,19 +1603,28 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 
 		// PUNTO DI BACKUP DA ATTIVARE DA CONFIGURAZIONI
 		try {
-			UtilityDBManager.getSingleInstance().backupDataBase(UtilityDBManager.DELETE);
+			UtilityDBManager.getSingleInstance().backupDataBase(
+					UtilityDBManager.DELETE);
 		} catch (FileNotFoundException e1) {
-			JOptionPane.showMessageDialog(this, "File di configurazione per backup\nmancante o danneggiato", "ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"File di configurazione per backup\nmancante o danneggiato",
+							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
 			e1.printStackTrace();
 		} catch (IOException e1) {
-			JOptionPane.showMessageDialog(this, "File di configurazione per backup\nmancante o danneggiato", "ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"File di configurazione per backup\nmancante o danneggiato",
+							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
 			e1.printStackTrace();
 		}
 		// FINE PUNTO BACKUP
 
 		int riga = tblViewScarichi.getSelectedRow();
 		int idscarico = ((Long) tblViewScarichi.getValueAt(riga, 0)).intValue();
-		Scarico c = new Scarico( );
+		Scarico c = new Scarico();
 
 		try {
 			c.caricaDati(idscarico);
@@ -1669,13 +1732,15 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 		if (dataDocumento == null) {
 			try {
 
-				dataDocumento=new JDateChooser("dd/MM/yyyy","##/##/##",'_');
+				dataDocumento = new JDateChooser("dd/MM/yyyy", "##/##/##", '_');
 				dataDocumento.setDate(new Date());
 				dataDocumento.setBounds(new Rectangle(328, 60, 117, 21)); // Generated
-				JTextFieldDateEditor f=(JTextFieldDateEditor) dataDocumento.getDateEditor();
+				JTextFieldDateEditor f = (JTextFieldDateEditor) dataDocumento
+						.getDateEditor();
 				f.addFocusListener(new java.awt.event.FocusAdapter() {
 					public void focusGained(java.awt.event.FocusEvent e) {
-						JTextFieldDateEditor s=(JTextFieldDateEditor) dataDocumento.getDateEditor();
+						JTextFieldDateEditor s = (JTextFieldDateEditor) dataDocumento
+								.getDateEditor();
 						s.setCaretPosition(0);
 					}
 				});
@@ -1694,13 +1759,15 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 	private JDateChooser getDataScarico() {
 		if (dataScarico == null) {
 			try {
-				dataScarico=new JDateChooser("dd/MM/yyyy","##/##/##",'_');
+				dataScarico = new JDateChooser("dd/MM/yyyy", "##/##/##", '_');
 				dataScarico.setDate(new Date());
 				dataScarico.setBounds(new Rectangle(232, 8, 121, 25)); // Generated
-				JTextFieldDateEditor f=(JTextFieldDateEditor) dataScarico.getDateEditor();
+				JTextFieldDateEditor f = (JTextFieldDateEditor) dataScarico
+						.getDateEditor();
 				f.addFocusListener(new java.awt.event.FocusAdapter() {
 					public void focusGained(java.awt.event.FocusEvent e) {
-						JTextFieldDateEditor s=(JTextFieldDateEditor) dataScarico.getDateEditor();
+						JTextFieldDateEditor s = (JTextFieldDateEditor) dataScarico
+								.getDateEditor();
 						s.setCaretPosition(0);
 					}
 				});
@@ -1721,9 +1788,11 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 			try {
 				pnlArticoliScaricati = new JPanel();
 				pnlArticoliScaricati.setLayout(new BorderLayout()); // Generated
-				pnlArticoliScaricati.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));  // Generated
-				pnlArticoliScaricati.add(getJScrollPane3(), BorderLayout.CENTER);  // Generated
-				pnlArticoliScaricati.add(getJPanel1(), BorderLayout.SOUTH);  // Generated
+				pnlArticoliScaricati.setBorder(BorderFactory.createEmptyBorder(
+						0, 0, 0, 0)); // Generated
+				pnlArticoliScaricati
+						.add(getJScrollPane3(), BorderLayout.CENTER); // Generated
+				pnlArticoliScaricati.add(getJPanel1(), BorderLayout.SOUTH); // Generated
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -1740,8 +1809,9 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 		if (jScrollPane3 == null) {
 			try {
 				jScrollPane3 = new JScrollPane();
-				jScrollPane3.setPreferredSize(new Dimension(100, 100));  // Generated
-				jScrollPane3.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));  // Generated
+				jScrollPane3.setPreferredSize(new Dimension(100, 100)); // Generated
+				jScrollPane3.setBorder(BorderFactory.createEmptyBorder(0, 0, 0,
+						0)); // Generated
 				jScrollPane3.setViewportView(getTblArticoliScaricati()); // Generated
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -1788,57 +1858,58 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 		if (jPanel1 == null) {
 			try {
 				GridBagConstraints gridBagConstraints5 = new GridBagConstraints();
-				gridBagConstraints5.anchor = GridBagConstraints.WEST;  // Generated
-				gridBagConstraints5.gridx = 5;  // Generated
-				gridBagConstraints5.gridy = 0;  // Generated
-				gridBagConstraints5.weightx = 1.0;  // Generated
-				gridBagConstraints5.weighty = 0.0;  // Generated
-				gridBagConstraints5.fill = GridBagConstraints.VERTICAL;  // Generated
+				gridBagConstraints5.anchor = GridBagConstraints.WEST; // Generated
+				gridBagConstraints5.gridx = 5; // Generated
+				gridBagConstraints5.gridy = 0; // Generated
+				gridBagConstraints5.weightx = 1.0; // Generated
+				gridBagConstraints5.weighty = 0.0; // Generated
+				gridBagConstraints5.fill = GridBagConstraints.VERTICAL; // Generated
 				GridBagConstraints gridBagConstraints4 = new GridBagConstraints();
-				gridBagConstraints4.anchor = GridBagConstraints.CENTER;  // Generated
-				gridBagConstraints4.gridx = 4;  // Generated
-				gridBagConstraints4.gridy = 0;  // Generated
-				gridBagConstraints4.insets = new Insets(0, 20, 0, 0);  // Generated
+				gridBagConstraints4.anchor = GridBagConstraints.CENTER; // Generated
+				gridBagConstraints4.gridx = 4; // Generated
+				gridBagConstraints4.gridy = 0; // Generated
+				gridBagConstraints4.insets = new Insets(0, 20, 0, 0); // Generated
 				lblTot = new JLabel();
-				lblTot.setText("Totale €.");  // Generated
+				lblTot.setText("Totale €."); // Generated
 				GridBagConstraints gridBagConstraints3 = new GridBagConstraints();
-				gridBagConstraints3.anchor = GridBagConstraints.WEST;  // Generated
-				gridBagConstraints3.insets = new Insets(0, 2, 0, 0);  // Generated
-				gridBagConstraints3.gridx = 3;  // Generated
-				gridBagConstraints3.gridy = 0;  // Generated
-				gridBagConstraints3.weightx = 0.0;  // Generated
-				gridBagConstraints3.fill = GridBagConstraints.NONE;  // Generated
+				gridBagConstraints3.anchor = GridBagConstraints.WEST; // Generated
+				gridBagConstraints3.insets = new Insets(0, 2, 0, 0); // Generated
+				gridBagConstraints3.gridx = 3; // Generated
+				gridBagConstraints3.gridy = 0; // Generated
+				gridBagConstraints3.weightx = 0.0; // Generated
+				gridBagConstraints3.fill = GridBagConstraints.NONE; // Generated
 				GridBagConstraints gridBagConstraints2 = new GridBagConstraints();
-				gridBagConstraints2.anchor = GridBagConstraints.WEST;  // Generated
-				gridBagConstraints2.gridx = 2;  // Generated
-				gridBagConstraints2.gridy = 0;  // Generated
-				gridBagConstraints2.insets = new Insets(0, 20, 0, 0);  // Generated
+				gridBagConstraints2.anchor = GridBagConstraints.WEST; // Generated
+				gridBagConstraints2.gridx = 2; // Generated
+				gridBagConstraints2.gridy = 0; // Generated
+				gridBagConstraints2.insets = new Insets(0, 20, 0, 0); // Generated
 				lblImpostaTot = new JLabel();
-				lblImpostaTot.setText("Imposta tot. €.");  // Generated
+				lblImpostaTot.setText("Imposta tot. €."); // Generated
 				GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
-				gridBagConstraints1.anchor = GridBagConstraints.WEST;  // Generated
-				gridBagConstraints1.insets = new Insets(0, 2, 0, 0);  // Generated
-				gridBagConstraints1.gridx = 1;  // Generated
-				gridBagConstraints1.gridy = 0;  // Generated
-				gridBagConstraints1.ipadx = 0;  // Generated
-				gridBagConstraints1.weightx = 0.0;  // Generated
-				gridBagConstraints1.fill = GridBagConstraints.VERTICAL;  // Generated
+				gridBagConstraints1.anchor = GridBagConstraints.WEST; // Generated
+				gridBagConstraints1.insets = new Insets(0, 2, 0, 0); // Generated
+				gridBagConstraints1.gridx = 1; // Generated
+				gridBagConstraints1.gridy = 0; // Generated
+				gridBagConstraints1.ipadx = 0; // Generated
+				gridBagConstraints1.weightx = 0.0; // Generated
+				gridBagConstraints1.fill = GridBagConstraints.VERTICAL; // Generated
 				GridBagConstraints gridBagConstraints = new GridBagConstraints();
-				gridBagConstraints.gridx = 0;  // Generated
-				gridBagConstraints.insets = new Insets(0, 10, 0, 0);  // Generated
-				gridBagConstraints.gridy = 0;  // Generated
+				gridBagConstraints.gridx = 0; // Generated
+				gridBagConstraints.insets = new Insets(0, 10, 0, 0); // Generated
+				gridBagConstraints.gridy = 0; // Generated
 				lblImponibile = new JLabel();
-				lblImponibile.setText("Imponibile tot. €.");  // Generated
+				lblImponibile.setText("Imponibile tot. €."); // Generated
 				jPanel1 = new JPanel();
-				jPanel1.setLayout(new GridBagLayout());  // Generated
-				jPanel1.setPreferredSize(new Dimension(0, 50));  // Generated
-				jPanel1.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));  // Generated
-				jPanel1.add(lblImponibile, gridBagConstraints);  // Generated
-				jPanel1.add(getTxtImponibileTot(), gridBagConstraints1);  // Generated
-				jPanel1.add(lblImpostaTot, gridBagConstraints2);  // Generated
-				jPanel1.add(getTxtImpostaTot(), gridBagConstraints3);  // Generated
-				jPanel1.add(lblTot, gridBagConstraints4);  // Generated
-				jPanel1.add(getTxtTot(), gridBagConstraints5);  // Generated
+				jPanel1.setLayout(new GridBagLayout()); // Generated
+				jPanel1.setPreferredSize(new Dimension(0, 50)); // Generated
+				jPanel1.setBorder(BorderFactory
+						.createBevelBorder(BevelBorder.RAISED)); // Generated
+				jPanel1.add(lblImponibile, gridBagConstraints); // Generated
+				jPanel1.add(getTxtImponibileTot(), gridBagConstraints1); // Generated
+				jPanel1.add(lblImpostaTot, gridBagConstraints2); // Generated
+				jPanel1.add(getTxtImpostaTot(), gridBagConstraints3); // Generated
+				jPanel1.add(lblTot, gridBagConstraints4); // Generated
+				jPanel1.add(getTxtTot(), gridBagConstraints5); // Generated
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -1855,11 +1926,11 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 		if (txtImponibileTot == null) {
 			try {
 				txtImponibileTot = new JTextField();
-				txtImponibileTot.setPreferredSize(new Dimension(100, 20));  // Generated
-				txtImponibileTot.setFont(new Font("Dialog", Font.BOLD, 12));  // Generated
-				txtImponibileTot.setEnabled(false);  // Generated
-				txtImponibileTot.setDisabledTextColor(Color.black);  // Generated
-				txtImponibileTot.setEditable(false);  // Generated
+				txtImponibileTot.setPreferredSize(new Dimension(100, 20)); // Generated
+				txtImponibileTot.setFont(new Font("Dialog", Font.BOLD, 12)); // Generated
+				txtImponibileTot.setEnabled(false); // Generated
+				txtImponibileTot.setDisabledTextColor(Color.black); // Generated
+				txtImponibileTot.setEditable(false); // Generated
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -1876,11 +1947,11 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 		if (txtImpostaTot == null) {
 			try {
 				txtImpostaTot = new JTextField();
-				txtImpostaTot.setPreferredSize(new Dimension(100, 20));  // Generated
-				txtImpostaTot.setFont(new Font("Dialog", Font.BOLD, 12));  // Generated
-				txtImpostaTot.setEnabled(false);  // Generated
-				txtImpostaTot.setDisabledTextColor(Color.black);  // Generated
-				txtImpostaTot.setEditable(false);  // Generated
+				txtImpostaTot.setPreferredSize(new Dimension(100, 20)); // Generated
+				txtImpostaTot.setFont(new Font("Dialog", Font.BOLD, 12)); // Generated
+				txtImpostaTot.setEnabled(false); // Generated
+				txtImpostaTot.setDisabledTextColor(Color.black); // Generated
+				txtImpostaTot.setEditable(false); // Generated
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -1897,11 +1968,11 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 		if (txtTot == null) {
 			try {
 				txtTot = new JTextField();
-				txtTot.setPreferredSize(new Dimension(100, 20));  // Generated
-				txtTot.setFont(new Font("Dialog", Font.BOLD, 12));  // Generated
-				txtTot.setEnabled(false);  // Generated
-				txtTot.setDisabledTextColor(Color.red);  // Generated
-				txtTot.setEditable(false);  // Generated
+				txtTot.setPreferredSize(new Dimension(100, 20)); // Generated
+				txtTot.setFont(new Font("Dialog", Font.BOLD, 12)); // Generated
+				txtTot.setEnabled(false); // Generated
+				txtTot.setDisabledTextColor(Color.red); // Generated
+				txtTot.setEditable(false); // Generated
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -1909,10 +1980,9 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 		return txtTot;
 	}
 
-
-	public void setModale(){
-		//super.setModale();
-		//addFocusListener(this);
+	public void setModale() {
+		// super.setModale();
+		// addFocusListener(this);
 	}
 
 	/**
@@ -1924,12 +1994,12 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 		if (pnlBottoni == null) {
 			try {
 				FlowLayout flowLayout = new FlowLayout();
-				flowLayout.setAlignment(FlowLayout.LEFT);  // Generated
+				flowLayout.setAlignment(FlowLayout.LEFT); // Generated
 				pnlBottoni = new JPanel();
-				pnlBottoni.setLayout(flowLayout);  // Generated
+				pnlBottoni.setLayout(flowLayout); // Generated
 				pnlBottoni.add(getBtnModifica(), null);
-				pnlBottoni.add(getBtnStampa(), null);  // Generated
-				pnlBottoni.add(getBtnEliminaCarico(), null);  // Generated
+				pnlBottoni.add(getBtnStampa(), null); // Generated
+				pnlBottoni.add(getBtnEliminaCarico(), null); // Generated
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -1942,6 +2012,24 @@ public class ScaricoGui extends JFrame implements TableModelListener{
 		calcoli(this.idcarico);
 	}
 
+	private void apriGestioneArticoli() {
+		ArticoliGestione ag = new ArticoliGestione();
+		ag.setVisible(true);
 
+	}
+
+	/**
+	 * This method initializes btnApriArticoli
+	 *
+	 * @return javax.swing.JButton
+	 */
+	private JButton getBtnApriArticoli() {
+		if (btnApriArticoli == null) {
+			btnApriArticoli = new JButton();
+			btnApriArticoli.setBounds(new Rectangle(535, 70, 126, 26));
+			btnApriArticoli.setText("Vis. Articoli (F1)");
+		}
+		return btnApriArticoli;
+	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

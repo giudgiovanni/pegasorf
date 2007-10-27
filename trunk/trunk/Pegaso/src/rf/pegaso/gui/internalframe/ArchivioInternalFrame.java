@@ -144,7 +144,8 @@ public class ArchivioInternalFrame extends JInternalFrame {
 		ArticoliGestione cg = new ArticoliGestione();
 		//Apriamo la finestra in modo modale e 
 		//la massimizziamo
-		ModalFrameUtil.showAsModal(cg, padre);
+		//ModalFrameUtil.showAsModal(cg, padre);
+		cg.setVisible(true);
 		cg.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
 	}

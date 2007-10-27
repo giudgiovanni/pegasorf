@@ -23,10 +23,13 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.text.DecimalFormat;
 
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
+import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -37,6 +40,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
@@ -737,8 +741,8 @@ public class CaricoGui extends JFrame {
 		if (btnAzzera == null)
 			try {
 				btnAzzera = new JButton();
-				btnAzzera.setBounds(new Rectangle(540, 40, 89, 29));
-				btnAzzera.setText("Azzera");
+				btnAzzera.setBounds(new Rectangle(526, 40, 103, 29));
+				btnAzzera.setText("Azzera (F1)");
 				btnAzzera.addActionListener(new MyButtonListener());
 			} catch (Throwable throwable) {
 			}
@@ -749,8 +753,8 @@ public class CaricoGui extends JFrame {
 		if (btnChiudi == null)
 			try {
 				btnChiudi = new JButton();
-				btnChiudi.setBounds(new Rectangle(540, 8, 89, 29));
-				btnChiudi.setText("Chiudi");
+				btnChiudi.setBounds(new Rectangle(525, 8, 104, 29));
+				btnChiudi.setText("Chiudi (ESC)");
 			} catch (Throwable throwable) {
 			}
 		return btnChiudi;
@@ -760,8 +764,8 @@ public class CaricoGui extends JFrame {
 		if (btnElimina == null)
 			try {
 				btnElimina = new JButton();
-				btnElimina.setBounds(new Rectangle(504, 156, 116, 26));
-				btnElimina.setText("Elimina Art.");
+				btnElimina.setBounds(new Rectangle(495, 155, 126, 26));
+				btnElimina.setText("Elimina Art. (F4)");
 				btnElimina.addActionListener(myButtonListener);
 			} catch (Throwable throwable) {
 			}
@@ -783,7 +787,7 @@ public class CaricoGui extends JFrame {
 		if (btnInserisci == null)
 			try {
 				btnInserisci = new JButton();
-				btnInserisci.setBounds(new Rectangle(384, 124, 116, 26));
+				btnInserisci.setBounds(new Rectangle(370, 125, 121, 26));
 				btnInserisci.setText("Inserisci");
 			} catch (Throwable throwable) {
 			}
@@ -805,7 +809,7 @@ public class CaricoGui extends JFrame {
 		if (chkInsRapido == null)
 			try {
 				chkInsRapido = new JCheckBox();
-				chkInsRapido.setBounds(new Rectangle(232, 105, 18, 19));
+				chkInsRapido.setBounds(new Rectangle(222, 106, 18, 19));
 			} catch (Throwable throwable) {
 			}
 		return chkInsRapido;
@@ -866,7 +870,7 @@ public class CaricoGui extends JFrame {
 		if (jScrollPane1 == null)
 			try {
 				jScrollPane1 = new JScrollPane();
-				jScrollPane1.setBounds(new Rectangle(8, 128, 371, 56));
+				jScrollPane1.setBounds(new Rectangle(8, 128, 356, 56));
 				jScrollPane1.setViewportView(getTxtNote());
 			} catch (Throwable throwable) {
 			}
@@ -944,7 +948,7 @@ public class CaricoGui extends JFrame {
 				lblTipoDocumento.setBounds(new Rectangle(8, 48, 97, 25));
 				lblTipoDocumento.setHorizontalAlignment(2);
 				lblInsRapido = new JLabel();
-				lblInsRapido.setBounds(new Rectangle(257, 103, 121, 21));
+				lblInsRapido.setBounds(new Rectangle(243, 103, 121, 21));
 				lblInsRapido.setText("Inserimento Rapido");
 				lblNote = new JLabel();
 				lblNote.setBounds(new Rectangle(8, 108, 111, 20));
@@ -1248,6 +1252,43 @@ public class CaricoGui extends JFrame {
 	}
 
 	private void initialize() {
+//		 impostiamo la finestra per ascoltare i tasti funzione da F1 in su
+		// ed altri pulsanti
+		InputMap im = this.getRootPane().getInputMap(
+				JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), "F1");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), "F2");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "F3");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0), "F4");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "ESC");
+
+		this.getRootPane().getActionMap().put("F1", new AbstractAction() {
+			public void actionPerformed(ActionEvent a) {
+				azzeraTuttiCampi();
+			}
+		});
+		this.getRootPane().getActionMap().put("F2", new AbstractAction() {
+			public void actionPerformed(ActionEvent a) {
+				newArticolo();
+			}
+		});
+		this.getRootPane().getActionMap().put("F3", new AbstractAction() {
+			public void actionPerformed(ActionEvent a) {
+				visualizzaArticoli();
+			}
+		});
+		this.getRootPane().getActionMap().put("F4", new AbstractAction() {
+			public void actionPerformed(ActionEvent a) {
+				eliminaArticolo();
+			}
+		});
+		this.getRootPane().getActionMap().put("ESC", new AbstractAction() {
+			public void actionPerformed(ActionEvent a) {
+				dispose();
+			}
+		});
+
+
 		Carico c = new Carico();
 		idcarico = c.getNewID();
 		setSize(650, 530);
@@ -1475,8 +1516,8 @@ public class CaricoGui extends JFrame {
 		if (btnNewArticolo == null)
 			try {
 				btnNewArticolo = new JButton();
-				btnNewArticolo.setBounds(new Rectangle(504, 124, 116, 26));
-				btnNewArticolo.setText("Nuovo Art.");
+				btnNewArticolo.setBounds(new Rectangle(495, 125, 126, 26));
+				btnNewArticolo.setText("Nuovo Art. (F2)");
 				btnNewArticolo.addActionListener(new ActionListener() {
 
 					public void actionPerformed(ActionEvent e) {
@@ -1531,8 +1572,8 @@ public class CaricoGui extends JFrame {
 		if (btnVisualizzaArt == null)
 			try {
 				btnVisualizzaArt = new JButton();
-				btnVisualizzaArt.setBounds(new Rectangle(384, 156, 116, 26));
-				btnVisualizzaArt.setText("Elenco Art.");
+				btnVisualizzaArt.setBounds(new Rectangle(370, 155, 121, 26));
+				btnVisualizzaArt.setText("Elenco Art. (F3)");
 				btnVisualizzaArt.addActionListener(new ActionListener() {
 
 					public void actionPerformed(ActionEvent e) {

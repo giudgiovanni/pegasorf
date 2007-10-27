@@ -258,6 +258,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		this.idArticolo = idArticolo;
 		this.idCliente = idCliente;
 		this.modalita = modalita;
+		this.ultimoArticolo=new String[1];
 		initialize();
 	}
 
@@ -1542,15 +1543,15 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		// cerchiamo la pos del codice nell'array fornitori
 		int pos = Arrays.ricercaLineare(codFornitori, new Integer(f
 				.getIdFornitore()).toString());
-		this.cmbFornitori.setSelectedIndex(pos);
+		this.cmbFornitori.setSelectedIndex(pos+1);
 		// cerchiamo la pos del codice nell'array unità di misura
 		pos = Arrays.ricercaLineare(codUnitaDiMisura, new Integer(um.getIdUm())
 				.toString());
-		this.cmbMisura.setSelectedIndex(pos);
+		this.cmbMisura.setSelectedIndex(pos+1);
 		// cerchiamo la pos del codice nell'array reparti
 		pos = Arrays.ricercaLineare(codReparti, new Integer(r.getIdReparto())
 				.toString());
-		this.cmbReparto.setSelectedIndex(pos);
+		this.cmbReparto.setSelectedIndex(pos+1);
 	}
 
 	/**
@@ -1575,6 +1576,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			Articolo c = new Articolo();
 			try {
 				c.caricaDati(this.idArticolo);
+				ultimoArticolo[0]=c.getCodBarre();
 				impostaCampi(c);
 				calcoloPercentualeRicarico();
 				calcolaPrezzoListinoByPrezzoAcquisto();
@@ -1742,8 +1744,6 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			}
 			svuotaCampi();
 		}
-		// ultimo articolo appunto lavorato
-		this.ultimoArticolo[0]=a.getCodBarre();
 
 		// chiusura della finestra se selezionata
 		//opzione closeOnOK

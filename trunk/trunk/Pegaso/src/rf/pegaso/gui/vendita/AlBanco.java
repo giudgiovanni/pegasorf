@@ -1,10 +1,10 @@
 package rf.pegaso.gui.vendita;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -14,7 +14,6 @@ import javax.swing.WindowConstants;
 
 import rf.myswing.IDJComboBox;
 import rf.myswing.util.MyTableCellRendererAlignment;
-import rf.myswing.util.MyTableCellRendererProva;
 import rf.myswing.util.QuantitaDisponibileEditorSQL;
 import rf.pegaso.db.DBManager;
 import rf.pegaso.db.exception.CodiceBarreInesistente;
@@ -34,10 +33,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 
 import java.awt.GridBagConstraints;
 import java.awt.Rectangle;
@@ -56,7 +52,6 @@ import java.util.Vector;
 import javax.swing.JTextField;
 
 import com.toedter.calendar.JDateChooser;
-import com.toedter.components.JSpinField;
 
 import javax.swing.JScrollPane;
 
@@ -90,13 +85,8 @@ public class AlBanco extends JFrame{
 	private JLabel lblTotale = null;
 	private JLabel lblTipoPrezzo = null;
 	private JComboBox cmbTipoPagamento = null;
-	private JLabel lblCodice = null;
 	private JTextField txtCodice = null;
 	private JComboBox cmbProdotti = null;
-	private JLabel lblDescrizione = null;
-	private JLabel lblQta = null;
-	private JSpinField spinQta = null;
-	private JButton btnInserisci = null;
 	private JLabel lblUtile = null;
 	private JTextField txtUtile = null;
 	private Vector<Vendita> carrello = null;
@@ -152,8 +142,6 @@ public class AlBanco extends JFrame{
 				salva();
 			else if ( e.getSource() == btnStampa )
 				stampa();
-			else if ( e.getSource() == btnInserisci )
-				inserisci();
 			else if ( e.getSource() == btnElimina )
 				deleteArticolo();
 		}
@@ -172,6 +160,7 @@ public class AlBanco extends JFrame{
 	private void inserisci() {
 		Vendita v  = new Vendita();
 		Articolo a = new Articolo();
+		int spinQta = 1;
 
 		try {
 			a.caricaDatiByCodBarre(txtCodice.getText());
@@ -182,7 +171,7 @@ public class AlBanco extends JFrame{
 			e.printStackTrace();
 		}
 		try{
-			if ( a.getGiacenza() < spinQta.getValue() ){
+			if ( a.getGiacenza() < spinQta ){
 				JOptionPane.showMessageDialog(this,
 						"Quantità richiesta non disponibile\nDisponibilità magazzino = "+a.getGiacenza(), "AVVISO",
 						JOptionPane.INFORMATION_MESSAGE);
@@ -196,7 +185,7 @@ public class AlBanco extends JFrame{
 		for ( Vendita v1 : carrello){
 			if ( v1.getCodiceArticolo() == v.getCodiceArticolo() )
 				try{
-					if ( a.getGiacenza() < (spinQta.getValue() + v1.getQta()) ){
+					if ( a.getGiacenza() < (spinQta + v1.getQta()) ){
 						JOptionPane.showMessageDialog(this,
 								"Quantità richiesta non disponibile\nDisponibilità magazzino = "+a.getGiacenza(), "AVVISO",
 								JOptionPane.INFORMATION_MESSAGE);
@@ -204,7 +193,7 @@ public class AlBanco extends JFrame{
 					}
 					else{
 						long oldQta = v1.getQta();
-						v1.setQta(oldQta + spinQta.getValue());
+						v1.setQta(oldQta + spinQta);
 						dbm.notifyDBStateChange();
 						return;
 					}
@@ -215,8 +204,8 @@ public class AlBanco extends JFrame{
 		}
 		v.setCodiceBarre(txtCodice.getText());
 		v.setCodiceVendita(dbm.getNewID("fattura", "idfattura"));
-		v.setDescrizione(String.valueOf(cmbProdotti.getSelectedItem()));
-		v.setQta(Long.valueOf(spinQta.getValue()));
+		v.setDescrizione(a.getDescrizione());//String.valueOf(cmbProdotti.getSelectedItem()));
+		v.setQta(Long.valueOf(spinQta));
 		v.setPrezzoAcquisto(prezzoAcquisto);
 		v.setPrezzoVendita(prezzoVendita);
 		v.setIva(iva);
@@ -274,22 +263,6 @@ public class AlBanco extends JFrame{
 	 */
 	private JPanel getJPanelNord() {
 		if (jPanelNord == null) {
-			lblQta = new JLabel();
-			lblQta.setBounds(new Rectangle(555, 55, 55, 16));
-			lblQta.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-			lblQta.setText("Quantita'");
-			lblDescrizione = new JLabel();
-			lblDescrizione.setBounds(new Rectangle(155, 55, 75, 16));
-			lblDescrizione.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-			lblDescrizione.setText("Descrizione");
-			lblCodice = new JLabel();
-			lblCodice.setBounds(new Rectangle(15, 55, 45, 16));
-			lblCodice.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-			lblCodice.setText("Codice");
-			lblTipoPrezzo = new JLabel();
-			lblTipoPrezzo.setBounds(new Rectangle(505, 55, 70, 16));
-			lblTipoPrezzo.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-			lblTipoPrezzo.setText("Pagamento");
 			lblData = new JLabel();
 			lblData.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 			lblData.setBounds(new Rectangle(310, 12, 30, 16));
@@ -305,25 +278,16 @@ public class AlBanco extends JFrame{
 			lblFattura.setText("BANCO");
 			jPanelNord = new JPanel();
 			jPanelNord.setLayout(null);
-			jPanelNord.setPreferredSize(new Dimension(0, 125)); // Generated
+			jPanelNord.setPreferredSize(new Dimension(0, 50)); // Generated
 			jPanelNord.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 			jPanelNord.add(getBtnChiudi(), null);
 			jPanelNord.add(getBtnSalva(), null);
 			jPanelNord.add(getBtnStampa(), null);
-			jPanelNord.add(lblCodice, null);
 			jPanelNord.add(lblFattura, null);
 			jPanelNord.add(lblNumero, null);
 			jPanelNord.add(getTxtNumero(), null);
 			jPanelNord.add(lblData, null);
 			jPanelNord.add(getDataCorrente(), null);
-			//jPanelNord.add(lblTipoPrezzo, null);
-			//jPanelNord.add(getCmbPagamento(), null);
-			jPanelNord.add(getTxtCodice(), null);
-			jPanelNord.add(getCmbProdotti(), null);
-			jPanelNord.add(lblDescrizione, null);
-			jPanelNord.add(lblQta, null);
-			jPanelNord.add(getSpinQta(), null);
-			jPanelNord.add(getBtnInserisci(), null);
 		}
 		return jPanelNord;
 	}
@@ -450,28 +414,13 @@ public class AlBanco extends JFrame{
 				col.setMinWidth(0);
 				col.setMaxWidth(0);
 				col.setPreferredWidth(0);
-				col = jTable.getColumnModel().getColumn(1);
-				col.setCellRenderer((TableCellRenderer) txtCodice);
+				TableColumn column = jTable.getColumnModel().getColumn(2);
+				column.setCellEditor(new DefaultCellEditor(getCmbProdotti()));
+				column = jTable.getColumnModel().getColumn(1);
+				column.setCellEditor(new DefaultCellEditor(getTxtCodice()));
 				jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				jTable.setDefaultEditor(Long.class, new QuantitaDisponibileEditorSQL());
-				jTable.setDefaultRenderer(String.class, new MyTableCellRendererProva());
-				//esperimento
-//				jTable.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
-//					public Component getTableCellRendererComponent (JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) 
-//					{
-//					Component cell = super.getTableCellRendererComponent (table, value, isSelected, hasFocus, row, column);
-//					if( column == 1 ){
-//						cell = getTxtCodice();
-//					}
-//					else if ( column == 2 )
-//						cell = getCmbProdotti();
-//					return cell;
-//
-//					}});
-				//fine esperimento
-				//esperimento 2
-				
-				//fine esperimento 2
+				jTable.setDefaultRenderer(String.class, new MyTableCellRendererAlignment());
 				jTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 				jTable.packAll();
 				jTable.getTableHeader().setReorderingAllowed(false);
@@ -496,11 +445,6 @@ public class AlBanco extends JFrame{
 
 	private void salva(){
 		//Salviamo i dati della fattura
-		String numero = txtNumero.getText();
-		if (numero.equalsIgnoreCase("")) {
-			messaggioCampoMancante("Numero non presente.");
-			return;
-		}
 		PreparedStatement pst = null;
 		int idvendita = dbm.getNewID("banco", "idvendita");
 		String insertF = "insert into banco values (?,?,?,?)";
@@ -509,10 +453,8 @@ public class AlBanco extends JFrame{
 		java.sql.Time t = new Time(dataCorrente.getDate().getTime());
 		try {
 			pst.setInt(1, idvendita);
-			//pst.setString(2, num_fattura);
 			pst.setDate(2, d);
 			pst.setTime(3, t);
-			//pst.setInt(5, 1);
 			pst.setString(4, (String)cmbTipoPagamento.getSelectedItem());
 
 			pst.executeUpdate();
@@ -523,6 +465,7 @@ public class AlBanco extends JFrame{
 		//salviamo i dettagli della fattura
 		String insertD = "insert into dettaglio_banco values (?,?,?,?,?)";
 		pst = dbm.getNewPreparedStatement(insertD);
+		carrello.remove(0);
 		try {
 			for (Vendita v : carrello) {
 				pst.setInt(1, v.getCodiceArticolo());
@@ -532,9 +475,8 @@ public class AlBanco extends JFrame{
 				pst.setDouble(5, v.getPrezzoVendita());
 
 				pst.executeUpdate();
-				//Articolo c = new Articolo();
-				//c.caricaDati(v.getCodiceArticolo());
 				updateArticolo(v.getCodiceArticolo(), (int) v.getQta());
+				carrello.remove(v);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -553,7 +495,7 @@ public class AlBanco extends JFrame{
 	public void updateArticolo(int idArticolo, int qta)
 	throws SQLException {
 
-		String query = "update articoli set qta=? where idarticolo=?";
+		String query = "update dettaglio_carichi set qta=? where idarticolo=?";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 
 		pst.setInt(1, qta);
@@ -570,16 +512,9 @@ public class AlBanco extends JFrame{
 	
 	private void resetCampi(){
 		txtNumero.setText(String.valueOf(dbm.getNewID("banco", "idvendita")));
-		carrello.removeAllElements();
+		Vendita v = new Vendita();
+		carrello.add(v);
 		calcoliBarraInferiore();
-	}
-
-	/**
-	 * @param string
-	 */
-	private void messaggioCampoMancante(String testo) {
-		JOptionPane.showMessageDialog(this, testo, "CAMPO VUOTO",
-				JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	/**
@@ -668,34 +603,6 @@ public class AlBanco extends JFrame{
 	}
 
 	private void caricaDescrizione(){
-//		Articolo a = new Articolo();
-//		String tmpArticoli[] = null;
-//		String tmpCodici[] = null;
-//		try {
-//			cmbProdotti.removeAllItems();
-//			cmbProdotti.addItem("");
-//			String as[] = (String[]) a.allArticoli();
-//			tmpArticoli = new String[as.length];
-//			tmpCodici = new String[as.length];
-//			// carichiamo tutti i dati in due array
-//			// da passre al combobox
-//			for (int i = 0; i < as.length; i++) {
-//				String tmp[] = as[i].split("-",2);
-//				tmpArticoli[i] = tmp[1].trim();
-//				tmpCodici[i] = tmp[0].trim();
-//			}
-//			((IDJComboBox) cmbProdotti).caricaIDAndOggetti(tmpCodici,
-//					tmpArticoli);
-//		} catch (SQLException e) {
-//			JOptionPane.showMessageDialog(this,
-//					"Errore caricamento fornitori nel combobox", "ERRORE", 0);
-//			e.printStackTrace();
-//		} catch (LunghezzeArrayDiverse e) {
-//			JOptionPane.showMessageDialog(this, "Errore lunghezza array",
-//					"ERRORE LUNGHEZZA", 0);
-//			e.printStackTrace();
-//		}
-
 		Articolo a = new Articolo();
 		try {
 
@@ -724,17 +631,17 @@ public class AlBanco extends JFrame{
 				AutoCompleteTextComponent complete = new AutoCompleteTextComponent(
 						txtCodice, dbm, "articoli", "codbarre");
 				dbm.addDBStateChange(complete);
-
 				txtCodice.setDocument(new UpperAutoCompleteDocument(complete,
 						true));
 				txtCodice.setBounds(new Rectangle(15, 80, 140, 24)); // Generated
-				txtCodice.addFocusListener(new java.awt.event.FocusAdapter() {
-					@Override
-					public void focusLost(java.awt.event.FocusEvent e) {
-						caricaArticoloByCodBarre(txtCodice.getText());
-
-					}
-				});
+//				txtCodice.addFocusListener(new java.awt.event.FocusAdapter() {
+//					@Override
+//					public void focusLost(java.awt.event.FocusEvent e) {
+//						caricaArticoloByCodBarre(txtCodice.getText());
+//						System.out.println("1");
+//
+//					}
+//				});
 				txtCodice.addKeyListener(new java.awt.event.KeyAdapter() {
 					@Override
 					public void keyPressed(java.awt.event.KeyEvent e) {
@@ -766,18 +673,14 @@ public class AlBanco extends JFrame{
 		Articolo a = new Articolo();
 		try {
 			if (a.findByCodBarre(cod)) {
-				//Fornitore f = new Fornitore();
-				//f.caricaDati(a.getIdFornitore());
-				cmbProdotti.setSelectedItem(a.getDescrizione());
-				//txtUm.setText(new Integer(a.getUm()).toString());
 				prezzoAcquisto = a.getPrezzoAcquisto();
 				if ( cmbTipoPagamento.getSelectedItem().equals("Ingrosso") )
 					prezzoVendita = a.getPrezzoIngrosso();
 				else
 					prezzoVendita = a.getPrezzoDettaglio();
-				spinQta.setValue(1);
 				txtCodice.setText(codBarre);
 				iva = a.getIva();
+				inserisci();
 			}
 		} catch (SQLException e1) {
 
@@ -808,9 +711,9 @@ public class AlBanco extends JFrame{
 				prezzoVendita = a.getPrezzoIngrosso();
 			else
 				prezzoVendita = a.getPrezzoDettaglio();
-			spinQta.setValue(1);
 			txtCodice.setText(a.getCodBarre());
 			iva = a.getIva();
+			inserisci();
 		} catch (SQLException e1) {
 
 			e1.printStackTrace();
@@ -834,46 +737,27 @@ public class AlBanco extends JFrame{
 			try {
 				cmbProdotti = new IDJComboBox();
 				cmbProdotti.setBounds(new Rectangle(155, 80, 400, 23)); // Generated
+				//cmbProdotti.setVisible(false);
 				cmbProdotti.getEditor().getEditorComponent().addKeyListener(new java.awt.event.KeyAdapter(){
 					public void keyPressed(java.awt.event.KeyEvent e) {
 						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 							int id = Integer.parseInt(((IDJComboBox)cmbProdotti).getIDSelectedItem());
-							System.out.println("ok");
 							caricaArticoloByID(id);
 						}
+					}
+				});
+				cmbProdotti.getEditor().getEditorComponent().addFocusListener(new java.awt.event.FocusAdapter() {
+					@Override
+					public void focusLost(java.awt.event.FocusEvent e) {
+						int id = Integer.parseInt(((IDJComboBox)cmbProdotti).getIDSelectedItem());
+						caricaArticoloByID(id);
+
 					}
 				});
 			} catch (java.lang.Throwable e) {
 			}
 		}
 		return cmbProdotti;
-	}
-
-	private JSpinField getSpinQta() {
-		if( spinQta == null ) {
-			try {
-				spinQta = new JSpinField();
-				spinQta.setBounds(new Rectangle(555, 80, 40, 23));
-			}
-			catch (java.lang.Throwable e) {
-			}
-		}
-		return spinQta;
-	}
-
-	/**
-	 * This method initializes btnInserisci
-	 *
-	 * @return javax.swing.JButton
-	 */
-	private JButton getBtnInserisci() {
-		if (btnInserisci == null) {
-			btnInserisci = new JButton();
-			btnInserisci.setBounds(new Rectangle(637, 78, 90, 26));
-			btnInserisci.setText("Inserisci");
-			btnInserisci.addActionListener(new MyButtonListener());
-		}
-		return btnInserisci;
 	}
 
 	/**
@@ -894,11 +778,13 @@ public class AlBanco extends JFrame{
 	private double imponibile = 0.00;
 	private double imposta = 0.00;
 	private JButton btnElimina = null;
+	private int qta = 0;
 
 	private void azzeraCampi(){
 		utile = 0.00;
 		imponibile = 0.00;
 		imposta = 0.00;
+		qta = 0;
 	}
 
 	private void calcoliBarraInferiore() {
@@ -906,6 +792,7 @@ public class AlBanco extends JFrame{
 		//for( Vendita v : carrello ) {
 		for (int i = 0; i < carrello.size(); i++ ){
 			Vendita v = (Vendita)carrello.get(i);
+			qta += v.getQta();
 			double prezzoV = 0.00;
 			if(v.getSconto() == 0)
 				prezzoV = v.getPrezzoVendita();
@@ -921,7 +808,7 @@ public class AlBanco extends JFrame{
 
 		txtUtile.setText(ControlloDati.convertDoubleToPrezzo(utile));
 		//txtImponibile.setText(ControlloDati.convertDoubleToPrezzo(imponibile));
-		//txtPezzi.setText(ControlloDati.convertDoubleToPrezzo(imposta));
+		txtPezzi.setText(String.valueOf(qta));
 		txtTotale.setText(ControlloDati.convertDoubleToPrezzo(imponibile+imposta));
 	}
 

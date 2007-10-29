@@ -93,7 +93,7 @@ public class UtilityDBManager {
 		this.open = props.getProperty("open", "N");
 
 		// creiamo se non esiste la cartella per i backup
-		File f = new File(folderBackup);
+		File f = new File(this.userDir+File.separator+folderBackup);
 		if (!f.exists())
 			f.mkdir();
 	}
@@ -142,10 +142,8 @@ public class UtilityDBManager {
 		String cmd = pathCommand + cmdBackup + "\"" + userDir + "\\"
 				+ folderBackup + time + "-" + nameDb + ".sql\" " + nameDb;
 		Runtime r = Runtime.getRuntime();
-
 		r.exec(cmd);
 		checkFileInFolder();
-
 	}
 
 	private void checkFileInFolder() {
@@ -160,7 +158,7 @@ public class UtilityDBManager {
 	}
 
 	public File[] getAllFile() {
-		File f = new File(this.folderBackup);
+		File f = new File(this.userDir+File.separator+this.folderBackup);
 		return f.listFiles();
 	}
 

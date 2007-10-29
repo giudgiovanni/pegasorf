@@ -109,9 +109,10 @@ public class ConfigurazioneInternalFrame extends JInternalFrame {
 		if (stato == JXLoginPanel.Status.SUCCEEDED) {
 			System.out.println("ok");
 			RootConfigGUI root=new RootConfigGUI();
-			ModalFrameUtil.showAsModal(root, padre);
-			
-			
+			//ModalFrameUtil.showAsModal(root, padre);
+			root.setVisible(true);
+
+
 		}
 
 	}

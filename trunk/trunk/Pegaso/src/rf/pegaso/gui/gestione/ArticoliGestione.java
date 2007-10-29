@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.gui.gestione;
 
@@ -15,6 +15,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -22,6 +23,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import net.sf.jasperreports.engine.JRException;
@@ -38,7 +40,7 @@ import rf.utility.gui.UtilGUI;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class ArticoliGestione extends JFrame {
 	class MyActionListener implements ActionListener {
@@ -215,7 +217,7 @@ public class ArticoliGestione extends JFrame {
 
 	/**
 	 * This method initializes btnChiudi
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnChiudi() {
@@ -234,7 +236,7 @@ public class ArticoliGestione extends JFrame {
 
 	/**
 	 * This method initializes btnElimina
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnElimina() {
@@ -254,7 +256,7 @@ public class ArticoliGestione extends JFrame {
 
 	/**
 	 * This method initializes btnModifica
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnModifica() {
@@ -273,7 +275,7 @@ public class ArticoliGestione extends JFrame {
 
 	/**
 	 * This method initializes btnNuovo
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnNuovo() {
@@ -294,7 +296,7 @@ public class ArticoliGestione extends JFrame {
 
 	/**
 	 * This method initializes jContentPane
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
@@ -309,7 +311,7 @@ public class ArticoliGestione extends JFrame {
 
 	/**
 	 * This method initializes jScrollPane
-	 * 
+	 *
 	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getJScrollPane() {
@@ -326,7 +328,7 @@ public class ArticoliGestione extends JFrame {
 
 	/**
 	 * This method initializes jSeparator
-	 * 
+	 *
 	 * @return javax.swing.JSeparator
 	 */
 	private JSeparator getJSeparator() {
@@ -343,7 +345,7 @@ public class ArticoliGestione extends JFrame {
 
 	/**
 	 * This method initializes pnlCentrale
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlCentrale() {
@@ -361,7 +363,7 @@ public class ArticoliGestione extends JFrame {
 
 	/**
 	 * This method initializes pnlNord
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlNord() {
@@ -388,7 +390,7 @@ public class ArticoliGestione extends JFrame {
 
 	/**
 	 * This method initializes tblArticoli
-	 * 
+	 *
 	 * @return javax.swing.JTable
 	 */
 	private JTable getTblArticoli() {
@@ -402,10 +404,40 @@ public class ArticoliGestione extends JFrame {
 				tblArticoli.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 				tblArticoli.packAll();
 				tblArticoli.getTableHeader().setReorderingAllowed(false);
+
+
+//				 impostiamo le varie colonne
 				TableColumn col = tblArticoli.getColumnModel().getColumn(0);
 				col.setMinWidth(0);
 				col.setMaxWidth(0);
 				col.setPreferredWidth(0);
+
+				col = tblArticoli.getColumn("codice");
+				DefaultTableCellRenderer colFormatoRenderer = new DefaultTableCellRenderer();
+				colFormatoRenderer.setHorizontalAlignment(JLabel.LEFT);
+				col.setCellRenderer(colFormatoRenderer);
+
+				col = tblArticoli.getColumn("descrizione");
+				DefaultTableCellRenderer ColTipoRenderer = new DefaultTableCellRenderer();
+				ColTipoRenderer.setHorizontalAlignment(JLabel.LEFT);
+				col.setCellRenderer(ColTipoRenderer);
+
+				col = tblArticoli.getColumn("prezzo_acquisto");
+				DefaultTableCellRenderer prezzoColumnRenderer = new DefaultTableCellRenderer();
+				prezzoColumnRenderer.setHorizontalAlignment(JLabel.RIGHT);
+				col.setCellRenderer(prezzoColumnRenderer);
+				col.setPreferredWidth(40);
+
+				col = tblArticoli.getColumn("prezzo_listino");
+				DefaultTableCellRenderer prezzoListinoColumnRenderer = new DefaultTableCellRenderer();
+				prezzoListinoColumnRenderer.setHorizontalAlignment(JLabel.RIGHT);
+				col.setCellRenderer(prezzoListinoColumnRenderer);
+				col.setPreferredWidth(40);
+
+				col = tblArticoli.getColumn("fornitore");
+				DefaultTableCellRenderer fornitoreRenderer = new DefaultTableCellRenderer();
+				fornitoreRenderer.setHorizontalAlignment(JLabel.CENTER);
+				col.setCellRenderer(fornitoreRenderer);
 			} catch (java.lang.Throwable e) {
 				e.printStackTrace();
 			}
@@ -415,7 +447,7 @@ public class ArticoliGestione extends JFrame {
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 * @return void
 	 */
 	private void initialize() {
@@ -438,7 +470,7 @@ public class ArticoliGestione extends JFrame {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void modificaArticolo() {
 		// Apre la Dialog delegata alla modifica
@@ -457,7 +489,7 @@ public class ArticoliGestione extends JFrame {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void nuovoArticolo() {
 		// Apre la finestra delegata all'inserimento
@@ -469,7 +501,7 @@ public class ArticoliGestione extends JFrame {
 
 	/**
 	 * This method initializes btnDuplica
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnDuplica() {
@@ -488,7 +520,7 @@ public class ArticoliGestione extends JFrame {
 
 	/**
 	 * This method initializes btnStampa
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnStampa() {

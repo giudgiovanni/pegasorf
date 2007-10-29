@@ -617,7 +617,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 			try {
 				btnElimina = new JButton();
 				btnElimina.setBounds(new Rectangle(535, 103, 126, 26)); // Generated
-				btnElimina.setText("Elimina");
+				btnElimina.setText("Elimina (F3)");
 				// btnElimina.addActionListener(myButtonListener);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -636,7 +636,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 			try {
 				btnInserisci = new JButton();
 				btnInserisci.setBounds(new Rectangle(535, 37, 126, 26)); // Generated
-				btnInserisci.setText("Inserisci"); // Generated
+				btnInserisci.setText("Inserisci (F1)"); // Generated
 				// btnInserisci.addActionListener(myButtonListener);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -1176,11 +1176,25 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 		InputMap im = this.getRootPane().getInputMap(
 				JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), "F1");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), "F2");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "F3");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "ESC");
 
 		this.getRootPane().getActionMap().put("F1", new AbstractAction() {
 			public void actionPerformed(ActionEvent a) {
+				inserisci();
+			}
+
+		});
+		this.getRootPane().getActionMap().put("F2", new AbstractAction() {
+			public void actionPerformed(ActionEvent a) {
 				apriGestioneArticoli();
+			}
+
+		});
+		this.getRootPane().getActionMap().put("F3", new AbstractAction() {
+			public void actionPerformed(ActionEvent a) {
+				elimina();
 			}
 
 		});
@@ -2027,7 +2041,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 		if (btnApriArticoli == null) {
 			btnApriArticoli = new JButton();
 			btnApriArticoli.setBounds(new Rectangle(535, 70, 126, 26));
-			btnApriArticoli.setText("Vis. Articoli (F1)");
+			btnApriArticoli.setText("Vis. Articoli (F2)");
 		}
 		return btnApriArticoli;
 	}

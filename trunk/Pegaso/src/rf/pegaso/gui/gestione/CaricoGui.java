@@ -765,7 +765,7 @@ public class CaricoGui extends JFrame {
 			try {
 				btnElimina = new JButton();
 				btnElimina.setBounds(new Rectangle(495, 155, 126, 26));
-				btnElimina.setText("Elimina Art. (F4)");
+				btnElimina.setText("Elimina Art. (F5)");
 				btnElimina.addActionListener(myButtonListener);
 			} catch (Throwable throwable) {
 			}
@@ -788,7 +788,7 @@ public class CaricoGui extends JFrame {
 			try {
 				btnInserisci = new JButton();
 				btnInserisci.setBounds(new Rectangle(370, 125, 121, 26));
-				btnInserisci.setText("Inserisci");
+				btnInserisci.setText("Inserisci (F2)");
 			} catch (Throwable throwable) {
 			}
 		return btnInserisci;
@@ -819,7 +819,7 @@ public class CaricoGui extends JFrame {
 		if (cmbFornitori == null)
 			try {
 				cmbFornitori = new IDJComboBox();
-				cmbFornitori.setBounds(new Rectangle(68, 108, 561, 25));
+				cmbFornitori.setBounds(new Rectangle(68, 108, 436, 25));
 			} catch (Throwable throwable) {
 			}
 		return cmbFornitori;
@@ -935,6 +935,7 @@ public class CaricoGui extends JFrame {
 				pnlNord.add(getDateChooserDocumento(), null);
 				pnlNord.add(lblDataDocumento, null);
 				pnlNord.add(getDataCarico(), null);
+				pnlNord.add(getBtnNuovoForn(), null);
 			} catch (Throwable throwable) {
 			}
 		return pnlNord;
@@ -1260,6 +1261,7 @@ public class CaricoGui extends JFrame {
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), "F2");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "F3");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0), "F4");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0), "F5");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "ESC");
 
 		this.getRootPane().getActionMap().put("F1", new AbstractAction() {
@@ -1267,19 +1269,24 @@ public class CaricoGui extends JFrame {
 				azzeraTuttiCampi();
 			}
 		});
-		this.getRootPane().getActionMap().put("F2", new AbstractAction() {
+		this.getRootPane().getActionMap().put("F3", new AbstractAction() {
 			public void actionPerformed(ActionEvent a) {
 				newArticolo();
 			}
 		});
-		this.getRootPane().getActionMap().put("F3", new AbstractAction() {
+		this.getRootPane().getActionMap().put("F4", new AbstractAction() {
 			public void actionPerformed(ActionEvent a) {
 				visualizzaArticoli();
 			}
 		});
-		this.getRootPane().getActionMap().put("F4", new AbstractAction() {
+		this.getRootPane().getActionMap().put("F5", new AbstractAction() {
 			public void actionPerformed(ActionEvent a) {
 				eliminaArticolo();
+			}
+		});
+		this.getRootPane().getActionMap().put("F2", new AbstractAction() {
+			public void actionPerformed(ActionEvent a) {
+				inserisci();
 			}
 		});
 		this.getRootPane().getActionMap().put("ESC", new AbstractAction() {
@@ -1517,7 +1524,7 @@ public class CaricoGui extends JFrame {
 			try {
 				btnNewArticolo = new JButton();
 				btnNewArticolo.setBounds(new Rectangle(495, 125, 126, 26));
-				btnNewArticolo.setText("Nuovo Art. (F2)");
+				btnNewArticolo.setText("Nuovo Art. (F3)");
 				btnNewArticolo.addActionListener(new ActionListener() {
 
 					public void actionPerformed(ActionEvent e) {
@@ -1573,7 +1580,7 @@ public class CaricoGui extends JFrame {
 			try {
 				btnVisualizzaArt = new JButton();
 				btnVisualizzaArt.setBounds(new Rectangle(370, 155, 121, 26));
-				btnVisualizzaArt.setText("Elenco Art. (F3)");
+				btnVisualizzaArt.setText("Elenco Art. (F4)");
 				btnVisualizzaArt.addActionListener(new ActionListener() {
 
 					public void actionPerformed(ActionEvent e) {
@@ -1673,5 +1680,30 @@ public class CaricoGui extends JFrame {
 	private JButton btnVisualizzaArt;
 	private JPanel pnlNord1;
 	private JPanel pnlCentro;
+	private JButton btnNuovoForn = null;
+	/**
+	 * This method initializes btnNuovoForn	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnNuovoForn() {
+		if (btnNuovoForn == null) {
+			btnNuovoForn = new JButton();
+			btnNuovoForn.setBounds(new Rectangle(514, 109, 71, 22));
+			btnNuovoForn.setText("Nuovo");
+			btnNuovoForn.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					nuovoFornitore();
+				}
+			});
+		}
+		return btnNuovoForn;
+	}
+
+	protected void nuovoFornitore() {
+		FornitoriAdd add=new FornitoriAdd(this,DBManager.getIstanceSingleton());
+		add.setVisible(true);
+		
+	}
 
 }

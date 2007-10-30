@@ -1,9 +1,11 @@
 package rf.pegaso.gui.vendita;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -20,7 +22,6 @@ import rf.pegaso.db.model.DdtFatturaModel;
 import rf.pegaso.db.model.VenditeModel;
 import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.Cliente;
-import rf.pegaso.db.tabelle.Fornitore;
 import rf.pegaso.db.tabelle.Vendita;
 import rf.pegaso.db.tabelle.exception.IDNonValido;
 import rf.pegaso.gui.gestione.ClientiAdd;
@@ -57,7 +58,6 @@ import java.util.Vector;
 import javax.swing.JTextField;
 
 import com.toedter.calendar.JDateChooser;
-import com.toedter.components.JSpinField;
 
 import javax.swing.JScrollPane;
 
@@ -102,13 +102,8 @@ public class Fattura extends JFrame{
 	private JButton btnNuovoCliente = null;
 	private JLabel lblPagamento = null;
 	private JComboBox cmbPagamento = null;
-	private JLabel lblCodice = null;
 	private JTextField txtCodice = null;
 	private JComboBox cmbProdotti = null;
-	private JLabel lblDescrizione = null;
-	private JLabel lblQta = null;
-	private JSpinField spinQta = null;
-	private JButton btnInserisci = null;
 	private JLabel lblUtile = null;
 	private JTextField txtUtile = null;
 	private Vector<Vendita> carrello = null;
@@ -132,6 +127,8 @@ public class Fattura extends JFrame{
 	 */
 	private void initialize() {
 		carrello = new Vector<Vendita>();
+		Vendita v = new Vendita();
+		carrello.add(v);
 		colonne = new Vector<String>();
 		ddt = new Vector<Long>();
 		caricaVettoreColonne();
@@ -167,14 +164,14 @@ public class Fattura extends JFrame{
 			}
 			else if ( e.getSource() == btnStampa )
 				stampa();
-			else if ( e.getSource() == btnInserisci )
-				inserisci();
 			else if ( e.getSource() == btnElimina )
 				deleteArticolo();
 			else if ( e.getSource() == btnNuovoCliente ){
 				nuovoCliente();
 				caricaClienti();
 			}
+			else if ( e.getSource() == btnRimuoviDdt )
+				rimuoviDdt();
 			else if ( e.getSource() == btnInserisciDdt )
 				try {
 					inserisciDdt();
@@ -192,6 +189,11 @@ public class Fattura extends JFrame{
 		}
 	}
 
+	/**
+	 * 
+	 *Questo metodo si occupa dell'inserimento dei ddt all'interno della fattura
+	 * @throws SQLException
+	 */
 	private void inserisciDdt() throws SQLException{
 		if (jTableDdt.getSelectedRow() <= -1) {
 			JOptionPane.showMessageDialog(this, "Selezionare la righa da inserire",
@@ -227,6 +229,16 @@ public class Fattura extends JFrame{
 		
 	}
 	
+	/**
+	 * Questo metodo serve a rimuovere il ddt dalla tabella dei ddt selezioanti
+	 */
+	private void rimuoviDdt(){
+		
+	}
+	
+	/**
+	 * questo metodo rimuove il ddt dal db quando si effettua la registrazione della fattura
+	 */
 	private void deleteDdt(){
 		Statement st = dbm.getNewStatement();
 		for(Long l : ddt){
@@ -255,7 +267,7 @@ public class Fattura extends JFrame{
 	private void inserisci() {
 		Vendita v  = new Vendita();
 		Articolo a = new Articolo();
-
+		int spinQta = 1;
 		try {
 			a.caricaDatiByCodBarre(txtCodice.getText());
 		} catch (SQLException e) {
@@ -265,7 +277,7 @@ public class Fattura extends JFrame{
 			e.printStackTrace();
 		}
 		try{
-			if ( a.getGiacenza() < spinQta.getValue() ){
+			if ( a.getGiacenza() < spinQta ){
 				JOptionPane.showMessageDialog(this,
 						"Quantità richiesta non disponibile\nDisponibilità magazzino = "+a.getGiacenza(), "AVVISO",
 						JOptionPane.INFORMATION_MESSAGE);
@@ -279,7 +291,7 @@ public class Fattura extends JFrame{
 		for ( Vendita v1 : carrello){
 			if ( v1.getCodiceArticolo() == v.getCodiceArticolo() )
 				try{
-					if ( a.getGiacenza() < (spinQta.getValue() + v1.getQta()) ){
+					if ( a.getGiacenza() < (spinQta + v1.getQta()) ){
 						JOptionPane.showMessageDialog(this,
 								"Quantità richiesta non disponibile\nDisponibilità magazzino = "+a.getGiacenza(), "AVVISO",
 								JOptionPane.INFORMATION_MESSAGE);
@@ -287,7 +299,7 @@ public class Fattura extends JFrame{
 					}
 					else{
 						long oldQta = v1.getQta();
-						v1.setQta(oldQta + spinQta.getValue());
+						v1.setQta(oldQta + spinQta);
 						dbm.notifyDBStateChange();
 						return;
 					}
@@ -298,8 +310,8 @@ public class Fattura extends JFrame{
 		}
 		v.setCodiceBarre(txtCodice.getText());
 		v.setCodiceVendita(dbm.getNewID("fattura", "idfattura"));
-		v.setDescrizione(String.valueOf(cmbProdotti.getSelectedItem()));
-		v.setQta(Long.valueOf(spinQta.getValue()));
+		v.setDescrizione(a.getDescrizione());//String.valueOf(cmbProdotti.getSelectedItem()));
+		v.setQta(Long.valueOf(spinQta));
 		v.setPrezzoAcquisto(prezzoAcquisto);
 		v.setPrezzoVendita(prezzoVendita);
 		v.setIva(iva);
@@ -347,7 +359,6 @@ public class Fattura extends JFrame{
 			jContentPane.add(getJPanelEst(), BorderLayout.EAST);
 			jContentPane.add(getJPanelSud(), BorderLayout.SOUTH);
 			jContentPane.add(getJPanelOvest(), BorderLayout.WEST);
-			jContentPane.add(getJPanelCentro(), BorderLayout.CENTER);
 		}
 		return jContentPane;
 	}
@@ -359,18 +370,6 @@ public class Fattura extends JFrame{
 	 */
 	private JPanel getJPanelNord() {
 		if (jPanelNord == null) {
-			lblQta = new JLabel();
-			lblQta.setBounds(new Rectangle(555, 100, 55, 16));
-			lblQta.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-			lblQta.setText("Quantita'");
-			lblDescrizione = new JLabel();
-			lblDescrizione.setBounds(new Rectangle(155, 100, 75, 16));
-			lblDescrizione.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-			lblDescrizione.setText("Descrizione");
-			lblCodice = new JLabel();
-			lblCodice.setBounds(new Rectangle(15, 100, 45, 16));
-			lblCodice.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-			lblCodice.setText("Codice");
 			lblPagamento = new JLabel();
 			lblPagamento.setBounds(new Rectangle(505, 55, 70, 16));
 			lblPagamento.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
@@ -394,12 +393,11 @@ public class Fattura extends JFrame{
 			lblFattura.setText("FATTURA");
 			jPanelNord = new JPanel();
 			jPanelNord.setLayout(null);
-			jPanelNord.setPreferredSize(new Dimension(0, 170)); // Generated
+			jPanelNord.setPreferredSize(new Dimension(0, 100)); // Generated
 			jPanelNord.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 			jPanelNord.add(getBtnChiudi(), null);
 			jPanelNord.add(getBtnSalva(), null);
 			jPanelNord.add(getBtnStampa(), null);
-			jPanelNord.add(lblCodice, null);
 			jPanelNord.add(lblFattura, null);
 			jPanelNord.add(lblNumero, null);
 			jPanelNord.add(getTxtNumero(), null);
@@ -410,12 +408,6 @@ public class Fattura extends JFrame{
 			jPanelNord.add(getBtnNuovoCliente(), null);
 			jPanelNord.add(lblPagamento, null);
 			jPanelNord.add(getCmbPagamento(), null);
-			jPanelNord.add(getTxtCodice(), null);
-			jPanelNord.add(getCmbProdotti(), null);
-			jPanelNord.add(lblDescrizione, null);
-			jPanelNord.add(lblQta, null);
-			jPanelNord.add(getSpinQta(), null);
-			jPanelNord.add(getBtnInserisci(), null);
 		}
 		return jPanelNord;
 	}
@@ -516,7 +508,7 @@ public class Fattura extends JFrame{
 	private JScrollPane getJScrollPane() {
 		if (jScrollPane == null) {
 			jScrollPane = new JScrollPane();
-			jScrollPane.setPreferredSize(new Dimension(500, 379));
+			jScrollPane.setPreferredSize(new Dimension(500, 440));
 			try {
 				jScrollPane.setViewportView(getJTable());
 			} catch (SQLException e) {
@@ -542,6 +534,10 @@ public class Fattura extends JFrame{
 				col.setMinWidth(0);
 				col.setMaxWidth(0);
 				col.setPreferredWidth(0);
+				TableColumn column = jTable.getColumnModel().getColumn(2);
+				column.setCellEditor(new DefaultCellEditor(getCmbProdotti()));
+				column = jTable.getColumnModel().getColumn(1);
+				column.setCellEditor(new DefaultCellEditor(getTxtCodice()));
 				jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				jTable.setDefaultEditor(Long.class, new QuantitaDisponibileEditorSQL());
 				jTable.setDefaultRenderer(Object.class, new MyTableCellRendererAlignment());
@@ -596,6 +592,7 @@ public class Fattura extends JFrame{
 		//salviamo i dettagli della fattura
 		String insertD = "insert into dettaglio_fattura values (?,?,?,?,?)";
 		pst = dbm.getNewPreparedStatement(insertD);
+		carrello.remove(0);
 		try {
 			for (Vendita v : carrello) {
 				pst.setInt(1, v.getCodiceArticolo());
@@ -605,9 +602,8 @@ public class Fattura extends JFrame{
 				pst.setDouble(5, v.getPrezzoVendita());
 
 				pst.executeUpdate();
-				//Articolo c = new Articolo();
-				//c.caricaDati(v.getCodiceArticolo());
 				updateArticolo(v.getCodiceArticolo(), (int) v.getQta());
+				carrello.remove(v);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -626,7 +622,7 @@ public class Fattura extends JFrame{
 	public void updateArticolo(int idArticolo, int qta)
 	throws SQLException {
 
-		String query = "update articoli set qta=? where idarticolo=?";
+		String query = "update dettaglio_carichi set qta=? where idarticolo=?";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 
 		pst.setInt(1, qta);
@@ -638,6 +634,13 @@ public class Fattura extends JFrame{
 		if (pst != null)
 			pst.close();
 		dbm.notifyDBStateChange();
+		resetCampi();
+	}
+	
+	private void resetCampi(){
+		Vendita v = new Vendita();
+		carrello.add(v);
+		calcoliBarraInferiore();
 	}
 
 	private void nuovoCliente(){
@@ -856,34 +859,6 @@ public class Fattura extends JFrame{
 	}
 
 	private void caricaDescrizione(){
-//		Articolo a = new Articolo();
-//		String tmpArticoli[] = null;
-//		String tmpCodici[] = null;
-//		try {
-//			cmbProdotti.removeAllItems();
-//			cmbProdotti.addItem("");
-//			String as[] = (String[]) a.allArticoli();
-//			tmpArticoli = new String[as.length];
-//			tmpCodici = new String[as.length];
-//			// carichiamo tutti i dati in due array
-//			// da passre al combobox
-//			for (int i = 0; i < as.length; i++) {
-//				String tmp[] = as[i].split("-",2);
-//				tmpArticoli[i] = tmp[1].trim();
-//				tmpCodici[i] = tmp[0].trim();
-//			}
-//			((IDJComboBox) cmbProdotti).caricaIDAndOggetti(tmpCodici,
-//					tmpArticoli);
-//		} catch (SQLException e) {
-//			JOptionPane.showMessageDialog(this,
-//					"Errore caricamento fornitori nel combobox", "ERRORE", 0);
-//			e.printStackTrace();
-//		} catch (LunghezzeArrayDiverse e) {
-//			JOptionPane.showMessageDialog(this, "Errore lunghezza array",
-//					"ERRORE LUNGHEZZA", 0);
-//			e.printStackTrace();
-//		}
-
 		Articolo a = new Articolo();
 		try {
 
@@ -916,13 +891,13 @@ public class Fattura extends JFrame{
 				txtCodice.setDocument(new UpperAutoCompleteDocument(complete,
 						true));
 				txtCodice.setBounds(new Rectangle(15, 120, 140, 24)); // Generated
-				txtCodice.addFocusListener(new java.awt.event.FocusAdapter() {
-					@Override
-					public void focusLost(java.awt.event.FocusEvent e) {
-						caricaArticoloByCodBarre(txtCodice.getText());
-
-					}
-				});
+//				txtCodice.addFocusListener(new java.awt.event.FocusAdapter() {
+//					@Override
+//					public void focusLost(java.awt.event.FocusEvent e) {
+//						caricaArticoloByCodBarre(txtCodice.getText());
+//
+//					}
+//				});
 				txtCodice.addKeyListener(new java.awt.event.KeyAdapter() {
 					@Override
 					public void keyPressed(java.awt.event.KeyEvent e) {
@@ -948,15 +923,11 @@ public class Fattura extends JFrame{
 		Articolo a = new Articolo();
 		try {
 			if (a.findByCodBarre(cod)) {
-				Fornitore f = new Fornitore();
-				f.caricaDati(a.getIdFornitore());
-				cmbProdotti.setSelectedItem(a.getDescrizione());
-				//txtUm.setText(new Integer(a.getUm()).toString());
 				prezzoAcquisto = a.getPrezzoAcquisto();
 				prezzoVendita = a.getPrezzoIngrosso();
-				spinQta.setValue(1);
 				txtCodice.setText(codBarre);
 				iva = a.getIva();
+				inserisci();
 			}
 		} catch (SQLException e1) {
 
@@ -979,9 +950,9 @@ public class Fattura extends JFrame{
 			a.caricaDati(cod);
 			prezzoAcquisto = a.getPrezzoAcquisto();
 			prezzoVendita = a.getPrezzoIngrosso();
-			spinQta.setValue(1);
-			txtCodice.setText(a.getCodBarre());
+			//txtCodice.setText(a.getCodBarre());
 			iva = a.getIva();
+			inserisci();
 		} catch (SQLException e1) {
 
 			e1.printStackTrace();
@@ -1014,37 +985,17 @@ public class Fattura extends JFrame{
 						}
 					}
 				});
+				cmbProdotti.getEditor().getEditorComponent().addFocusListener(new java.awt.event.FocusAdapter() {
+					@Override
+					public void focusLost(java.awt.event.FocusEvent e) {
+						int id = Integer.parseInt(((IDJComboBox)cmbProdotti).getIDSelectedItem());
+						caricaArticoloByID(id);
+					}
+				});
 			} catch (java.lang.Throwable e) {
 			}
 		}
 		return cmbProdotti;
-	}
-
-	private JSpinField getSpinQta() {
-		if( spinQta == null ) {
-			try {
-				spinQta = new JSpinField();
-				spinQta.setBounds(new Rectangle(555, 120, 40, 23));
-			}
-			catch (java.lang.Throwable e) {
-			}
-		}
-		return spinQta;
-	}
-
-	/**
-	 * This method initializes btnInserisci
-	 *
-	 * @return javax.swing.JButton
-	 */
-	private JButton getBtnInserisci() {
-		if (btnInserisci == null) {
-			btnInserisci = new JButton();
-			btnInserisci.setBounds(new Rectangle(637, 118, 90, 26));
-			btnInserisci.setText("Inserisci");
-			btnInserisci.addActionListener(new MyButtonListener());
-		}
-		return btnInserisci;
 	}
 
 	/**
@@ -1070,8 +1021,10 @@ public class Fattura extends JFrame{
 	private JPanel jPanelOvest = null;
 	private JScrollPane jScrollPane1 = null;
 	private JXTable jTableDdt = null;
-	private JPanel jPanelCentro = null;
 	private JButton btnInserisciDdt = null;
+	private JScrollPane jScrollPane2 = null;
+	private JTable jTableDdtIns = null;
+	private JButton btnRimuoviDdt = null;
 
 	private void azzeraCampi(){
 		utile = 0.00;
@@ -1132,13 +1085,14 @@ public class Fattura extends JFrame{
 	 */
 	private JPanel getJPanelOvest() {
 		if (jPanelOvest == null) {
-			GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
-			gridBagConstraints1.fill = GridBagConstraints.BOTH;
-			gridBagConstraints1.weighty = 1.0;
-			gridBagConstraints1.weightx = 1.0;
 			jPanelOvest = new JPanel();
-			jPanelOvest.setLayout(new GridBagLayout());
-			jPanelOvest.add(getJScrollPane1(), gridBagConstraints1);
+			jPanelOvest.setLayout(null);
+			jPanelOvest.setPreferredSize(new Dimension(290, 440));
+			jPanelOvest.add(getJScrollPane1(), null);
+			jPanelOvest.add(getJScrollPane2(), null);
+			jPanelOvest.setBounds(new Rectangle(0, 0, 290, 440));
+			jPanelOvest.add(getBtnInserisciDdt(), null);
+			jPanelOvest.add(getBtnRimuoviDdt(), null);
 		}
 		return jPanelOvest;
 	}
@@ -1151,7 +1105,9 @@ public class Fattura extends JFrame{
 	private JScrollPane getJScrollPane1() {
 		if (jScrollPane1 == null) {
 			jScrollPane1 = new JScrollPane();
-			jScrollPane1.setPreferredSize(new Dimension(200, 379));
+			jScrollPane1.setBounds(new Rectangle(0, 0, 290, 180));
+			jScrollPane1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(0), "Documenti di Trasporto", 0,
+			0, new Font("Dialog", 1, 12), new Color(51, 51, 51)));
 			jScrollPane1.setViewportView(getJTableDdt());
 		}
 		return jScrollPane1;
@@ -1167,7 +1123,7 @@ public class Fattura extends JFrame{
 			try {
 				ddtModel = new DdtFatturaModel(dbm);
 				jTableDdt = new JXTable(ddtModel);
-				jTableDdt.setBounds(new Rectangle(0, 0, 300, 317));
+				//jTableDdt.setBounds(new Rectangle(0, 0, 300, 317));
 				TableColumn col=jTableDdt.getColumnModel().getColumn(0);
 				col.setMinWidth(0);
 				col.setMaxWidth(0);
@@ -1177,28 +1133,10 @@ public class Fattura extends JFrame{
 				col.setMaxWidth(0);
 				col.setPreferredWidth(0);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		return jTableDdt;
-	}
-
-	/**
-	 * This method initializes jPanelCentro
-	 *
-	 * @return javax.swing.JPanel
-	 */
-	private JPanel getJPanelCentro() {
-		if (jPanelCentro == null) {
-			jPanelCentro = new JPanel();
-			jPanelCentro.setLayout(null);
-			//jPanelCentro.setPreferredSize(new Dimension(100, 0));
-			jPanelCentro.setBounds(new Rectangle(100, 0, 50, 200));
-			jPanelCentro.setPreferredSize(new Dimension(100, 0));
-			jPanelCentro.add(getBtnInserisciDdt(), null);
-		}
-		return jPanelCentro;
 	}
 
 	/**
@@ -1210,10 +1148,66 @@ public class Fattura extends JFrame{
 		if (btnInserisciDdt == null) {
 			btnInserisciDdt = new JButton();
 			btnInserisciDdt.setPreferredSize(new Dimension(90,26));
-			btnInserisciDdt.setBounds(new Rectangle(0, 176, 90, 26));
+			btnInserisciDdt.setBounds(new Rectangle(35, 188, 90, 26));
 			btnInserisciDdt.setText("Aggiungi");
 			btnInserisciDdt.addActionListener(new MyButtonListener());
 		}
 		return btnInserisciDdt;
+	}
+
+	/**
+	 * This method initializes jScrollPane2	
+	 * 	
+	 * @return javax.swing.JScrollPane	
+	 */
+	private JScrollPane getJScrollPane2() {
+		if (jScrollPane2 == null) {
+			jScrollPane2 = new JScrollPane();
+			jScrollPane2.setViewportView(getJTableDdtIns());
+			jScrollPane2.setBounds(new Rectangle(0, 225, 290, 180));
+			jScrollPane2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(0), "Documenti di Trasporto Selezionati", 0,
+					0, new Font("Dialog", 1, 12), new Color(51, 51, 51)));
+		}
+		return jScrollPane2;
+	}
+
+	/**
+	 * This method initializes jTableDdtIns	
+	 * 	
+	 * @return javax.swing.JTable	
+	 */
+	private JTable getJTableDdtIns() {
+		if (jTableDdtIns == null) {
+			try{
+				ddtModel = new DdtFatturaModel(dbm);
+				jTableDdtIns = new JXTable(ddtModel);
+				TableColumn col=jTableDdtIns.getColumnModel().getColumn(0);
+				col.setMinWidth(0);
+				col.setMaxWidth(0);
+				col.setPreferredWidth(0);
+				col = jTableDdtIns.getColumnModel().getColumn(1);
+				col.setMinWidth(0);
+				col.setMaxWidth(0);
+				col.setPreferredWidth(0);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return jTableDdtIns;
+	}
+
+	/**
+	 * This method initializes btnRimuoviDdt	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnRimuoviDdt() {
+		if (btnRimuoviDdt == null) {
+			btnRimuoviDdt = new JButton();
+			btnRimuoviDdt.setBounds(new Rectangle(165, 188, 90, 26));
+			btnRimuoviDdt.setText("Rimuovi");
+			btnRimuoviDdt.addActionListener(new MyButtonListener());
+		}
+		return btnRimuoviDdt;
 	}
 }

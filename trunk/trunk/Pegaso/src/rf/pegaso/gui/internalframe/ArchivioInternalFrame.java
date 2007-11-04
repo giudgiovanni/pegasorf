@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.gui.internalframe;
 
@@ -23,6 +23,7 @@ import javax.swing.WindowConstants;
 import rf.myswing.util.ModalFrameUtil;
 import rf.pegaso.db.DBManager;
 import rf.pegaso.db.tabelle.Scarico;
+import rf.pegaso.gui.UpdateIndici;
 import rf.pegaso.gui.gestione.ArticoliGestione;
 import rf.pegaso.gui.gestione.CaricoGui;
 import rf.pegaso.gui.gestione.ClientiGestione;
@@ -39,7 +40,7 @@ import rf.utility.ConversioneForn;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class ArchivioInternalFrame extends JInternalFrame {
 	class MyActionListener implements ActionListener {
@@ -70,7 +71,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 		}
 
 		/**
-		 * 
+		 *
 		 */
 		private void apriDocumenti() {
 			DocumentiGestione documenti = new DocumentiGestione(padre);
@@ -95,6 +96,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	private MyActionListener myActionListener; // @jve:decl-index=0:
 	private JFrame padre;
 	private JPanel pnlCentrale = null;
+	private JButton jButton = null;
 
 	/**
 	 * This is the xxx default constructor
@@ -107,7 +109,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void apriGiacenze() {
 		GiacenzeGUI inventario = new GiacenzeGUI(padre);
@@ -116,7 +118,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void apriScaricoMerce() {
 		ScaricoGui ordine = new ScaricoGui();
@@ -127,7 +129,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void apriStampe() {
 		StampeGestione stampe = new StampeGestione(padre);
@@ -135,14 +137,14 @@ public class ArchivioInternalFrame extends JInternalFrame {
 
 	}
 
-	
+
 
 	/**
-	 * 
+	 *
 	 */
 	private void apriArticoli() {
 		ArticoliGestione cg = new ArticoliGestione();
-		//Apriamo la finestra in modo modale e 
+		//Apriamo la finestra in modo modale e
 		//la massimizziamo
 		//ModalFrameUtil.showAsModal(cg, padre);
 		cg.setVisible(true);
@@ -151,7 +153,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void apriCaricoMerce() {
 		CaricoGui carico = new CaricoGui(padre);
@@ -160,7 +162,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void apriClienti() {
 		ClientiGestione cg = new ClientiGestione(padre);
@@ -169,7 +171,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void apriFornitori() {
 		FornitoriGestione cg = new FornitoriGestione(padre);
@@ -187,7 +189,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void apriRicerche() {
 		RicercheArchivio ric = new RicercheArchivio(this.padre);
@@ -196,7 +198,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void apriUnitadiMisura() {
 		UnitaDiMisuraGestione rg = new UnitaDiMisuraGestione(padre);
@@ -205,7 +207,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void conversioneArchivio() {
 		ConversioneArt c = new ConversioneArt(padre);
@@ -214,7 +216,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void conversioneArchivioForn() {
 		ConversioneForn c = new ConversioneForn(padre);
@@ -224,7 +226,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 
 	/**
 	 * This method initializes btnArticoli
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnArticoli() {
@@ -243,7 +245,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 
 	/**
 	 * This method initializes btnCarico
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnCarico() {
@@ -262,7 +264,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 
 	/**
 	 * This method initializes btnClienti
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnClienti() {
@@ -281,7 +283,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 
 	/**
 	 * This method initializes btnDocumento
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnDocumento() {
@@ -300,7 +302,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 
 	/**
 	 * This method initializes btnFornitori
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnFornitori() {
@@ -319,7 +321,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 
 	/**
 	 * This method initializes btnInventario
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnInventario() {
@@ -338,7 +340,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 
 	/**
 	 * This method initializes btnReparti
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnReparti() {
@@ -357,7 +359,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 
 	/**
 	 * This method initializes btnRicerche
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnRicerche() {
@@ -376,7 +378,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 
 	/**
 	 * This method initializes btnScarico
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnScarico() {
@@ -395,7 +397,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 
 	/**
 	 * This method initializes btnStampe
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnStampe() {
@@ -414,7 +416,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 
 	/**
 	 * This method initializes btnUnitaMisura
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnUnitaMisura() {
@@ -433,7 +435,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 
 	/**
 	 * This method initializes jContentPane
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
@@ -447,12 +449,15 @@ public class ArchivioInternalFrame extends JInternalFrame {
 
 	/**
 	 * This method initializes pnlCentrale
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlCentrale() {
 		if (pnlCentrale == null) {
 			try {
+				GridBagConstraints gridBagConstraints14 = new GridBagConstraints();
+				gridBagConstraints14.gridx = 4;
+				gridBagConstraints14.gridy = 2;
 				GridBagConstraints gridBagConstraints18 = new GridBagConstraints();
 				gridBagConstraints18.gridx = 3; // Generated
 				gridBagConstraints18.gridy = 2; // Generated
@@ -512,6 +517,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				pnlCentrale.add(getBtnDocumento(), gridBagConstraints13); // Generated
 				pnlCentrale.add(getBtnStampe(), gridBagConstraints17); // Generated
 				pnlCentrale.add(getBtnRicerche(), gridBagConstraints18); // Generated
+				pnlCentrale.add(getJButton(), gridBagConstraints14);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -521,7 +527,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 * @return void
 	 */
 	private void initialize() {
@@ -540,10 +546,34 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void inizializeAscoltatori() {
 		myActionListener = new MyActionListener();
+
+	}
+
+	/**
+	 * This method initializes jButton
+	 *
+	 * @return javax.swing.JButton
+	 */
+	private JButton getJButton() {
+		if (jButton == null) {
+			jButton = new JButton();
+			jButton.setText("Update ID");
+			jButton.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					apriUpdateID();
+				}
+			});
+		}
+		return jButton;
+	}
+
+	protected void apriUpdateID() {
+		UpdateIndici up=new UpdateIndici();
+		up.setVisible(true);
 
 	}
 

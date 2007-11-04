@@ -436,7 +436,7 @@ public class ArticoliGestione extends JFrame {
 
 				col = tblArticoli.getColumn("fornitore");
 				DefaultTableCellRenderer fornitoreRenderer = new DefaultTableCellRenderer();
-				fornitoreRenderer.setHorizontalAlignment(JLabel.CENTER);
+				fornitoreRenderer.setHorizontalAlignment(JLabel.LEFT);
 				col.setCellRenderer(fornitoreRenderer);
 			} catch (java.lang.Throwable e) {
 				e.printStackTrace();

@@ -23,7 +23,7 @@ import javax.swing.WindowConstants;
 import rf.myswing.util.ModalFrameUtil;
 import rf.pegaso.db.DBManager;
 import rf.pegaso.db.tabelle.Scarico;
-import rf.pegaso.gui.UpdateIndiciCarichi;
+import rf.pegaso.gui.UpdateIndici;
 import rf.pegaso.gui.gestione.ArticoliGestione;
 import rf.pegaso.gui.gestione.CaricoGui;
 import rf.pegaso.gui.gestione.ClientiGestione;
@@ -572,7 +572,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	}
 
 	protected void apriUpdateID() {
-		UpdateIndiciCarichi up=new UpdateIndiciCarichi();
+		UpdateIndici up=new UpdateIndici();
 		up.setVisible(true);
 
 	}

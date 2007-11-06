@@ -463,18 +463,19 @@ public class AlBanco extends JFrame{
 		}
 
 		//salviamo i dettagli della fattura
-		String insertD = "insert into dettaglio_banco values (?,?,?,?,?)";
-		pst = dbm.getNewPreparedStatement(insertD);
+//		String insertD = "insert into dettaglio_banco values (?,?,?,?,?)";
+//		pst = dbm.getNewPreparedStatement(insertD);
 		carrello.remove(0);
 		try {
 			for (Vendita v : carrello) {
-				pst.setInt(1, v.getCodiceArticolo());
-				pst.setInt(2, idvendita);
-				pst.setLong(3, v.getQta());
-				pst.setDouble(4, v.getPrezzoAcquisto());
-				pst.setDouble(5, v.getPrezzoVendita());
-
-				pst.executeUpdate();
+//				pst.setInt(1, v.getCodiceArticolo());
+//				pst.setInt(2, idvendita);
+//				pst.setLong(3, v.getQta());
+//				pst.setDouble(4, v.getPrezzoAcquisto());
+//				pst.setDouble(5, v.getPrezzoVendita());
+//
+//				pst.executeUpdate();
+				v.inserisciAlBanco(idvendita);
 				updateArticolo(v.getCodiceArticolo(), (int) v.getQta());
 				carrello.remove(v);
 			}

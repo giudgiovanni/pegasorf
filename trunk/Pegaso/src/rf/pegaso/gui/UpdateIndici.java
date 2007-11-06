@@ -209,7 +209,7 @@ public class UpdateIndici extends JFrame {
 		ResultSet rs=null;
 
 		PreparedStatement pst=DBManager.getIstanceSingleton().getNewPreparedStatement(q1);
-		
+
 		try {
 			pst.setString(1, "VOGUE DISTRIBUZIONE SELEZIONATA OGGETTI D'ARTE");
 			pst.execute();
@@ -220,13 +220,13 @@ public class UpdateIndici extends JFrame {
 		Connection con=DBManager.getIstanceSingleton().getConnessione();
 
 		try {
-			
+
 			rs=st.executeQuery(query);
 			con.setAutoCommit(false);
 			pst=con.prepareStatement("update carichi set idfornitore=?, iddocumento=? where idcarico=?",
 					ResultSet.TYPE_SCROLL_INSENSITIVE,
 					ResultSet.CONCUR_UPDATABLE);
-			
+
 			int k=0;
 			while(rs.next()){
 				// impostiamo prima il fornitore

@@ -229,36 +229,41 @@ public class UpdateIndici extends JFrame {
 
 			int k=0;
 			while(rs.next()){
-				// impostiamo prima il fornitore
-				String nFornitore=rs.getString("nome");
-				cmbFornitori.setSelectedItem(nFornitore);
-				int pos=cmbFornitori.getSelectedIndex();
-				pos--;
-				cmbFornitori.setSelectedIndex(pos);
-				pst.setInt(1, new Integer(cmbFornitori.getIDSelectedItem()).intValue());
+				try{
+//					 impostiamo prima il fornitore
+					String nFornitore=rs.getString("nome");
+					cmbFornitori.setSelectedItem(nFornitore);
+					int pos=cmbFornitori.getSelectedIndex();
+					pos--;
+					cmbFornitori.setSelectedIndex(pos);
+					pst.setInt(1, new Integer(cmbFornitori.getIDSelectedItem()).intValue());
 
-//				 impostiamo il codice documento
-				String nDocumento=rs.getString("tipo");
-				cmbDocumenti.setSelectedItem(nDocumento);
-				pos=cmbDocumenti.getSelectedIndex();
-				cmbDocumenti.setSelectedIndex(--pos);
-				pst.setInt(2, new Integer(cmbDocumenti.getIDSelectedItem()).intValue());
+//					 impostiamo il codice documento
+					String nDocumento=rs.getString("tipo");
+					cmbDocumenti.setSelectedItem(nDocumento);
+					pos=cmbDocumenti.getSelectedIndex();
+					cmbDocumenti.setSelectedIndex(--pos);
+					pst.setInt(2, new Integer(cmbDocumenti.getIDSelectedItem()).intValue());
 
-				pst.setInt(3, rs.getInt(1));
-				//pst.addBatch();
-				pst.execute();
-				k++;
-				System.out.println(k);
+					pst.setInt(3, rs.getInt(1));
+					//pst.addBatch();
+					pst.execute();
+					k++;
+					if(k==289){
+						int h=0;
+					}
+					System.out.println(k+" codice :"+rs.getInt(1));
+					Thread.sleep(50);
+				}catch(SQLException ex){
+					System.out.println("Errore sul carico con id: "+rs.getInt(1));
+					ex.printStackTrace();
+
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
 			}
-			System.out.println(k);
-//			int [] numUpdates=pst.executeBatch();
-//			  for (int i=0; i < numUpdates.length; i++) {
-//			    if (numUpdates[i] == -2)
-//			      System.out.println("Execution " + i +
-//			        ": unknown number of rows updated");
-//			    else
-//			      System.out.println("Execution " + i + "successful: " +numUpdates[i] + " rows updated");
-//			  }
 			  con.commit();
 
 			  if(rs!=null)

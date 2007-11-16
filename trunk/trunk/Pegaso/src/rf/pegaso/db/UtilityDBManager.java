@@ -108,13 +108,14 @@ public class UtilityDBManager {
 	}
 
 	public void backupDataBase(int modalita) throws IOException {
+		
 		GregorianCalendar c = new GregorianCalendar();
 		// formattiamo la data
 		SimpleDateFormat format = new SimpleDateFormat("ddMMyyyy_hhmmss");
 		Date d = c.getTime();
 		String time = format.format(d);
 		// creazione del comando con tutti i parametri
-		String cmd = pathCommand + cmdBackup + "\"" + userDir + "\\"
+		String cmd = pathCommand + cmdBackup + " \"" + userDir + "\\"
 				+ folderBackup + time + "-" + nameDb + ".sql\" " + nameDb;
 		Runtime r = Runtime.getRuntime();
 		// controlla se una delle modalità è selezionate

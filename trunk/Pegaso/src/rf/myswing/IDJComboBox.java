@@ -53,6 +53,23 @@ public class IDJComboBox extends JComboBox{
 		super.addKeyListener(arg0);
 	}
 
+
+	public void setSelectedItem(Object o){
+		super.setSelectedItem(o);
+	}
+
+	public void setSelectedItemByID(int id){
+		String codId=new Integer(id).toString();
+		int pos=ricercaLineare(this.codId, codId);
+		
+		//se il combo contiene la prima riga vuota allora 
+		//facciamo pos + 1 altrimenti solo pos
+		String tmp=(String)getItemAt(0);
+		if(tmp.equals("")){
+			setSelectedIndex(pos+1);
+		}else setSelectedIndex(pos);
+	}
+
 	public IDJComboBox() {
 		super();
 		this.codId=new String[0];

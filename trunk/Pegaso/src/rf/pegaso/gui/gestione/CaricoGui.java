@@ -503,7 +503,8 @@ public class CaricoGui extends JFrame {
 		}
 
 		cmbTipoDocumento.setSelectedItem(d.getTipo());
-		cmbFornitori.setSelectedItem(f.getNome());
+		//cmbFornitori.setSelectedItem(f.getNome());
+		cmbFornitori.setSelectedItemByID(f.getIdFornitore());
 		ricaricaTableCarico(c.getIdCarico());
 		tbp.setSelectedIndex(0);
 	}
@@ -1682,9 +1683,9 @@ public class CaricoGui extends JFrame {
 	private JPanel pnlCentro;
 	private JButton btnNuovoForn = null;
 	/**
-	 * This method initializes btnNuovoForn	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnNuovoForn
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnNuovoForn() {
 		if (btnNuovoForn == null) {
@@ -1703,7 +1704,7 @@ public class CaricoGui extends JFrame {
 	protected void nuovoFornitore() {
 		FornitoriAdd add=new FornitoriAdd(this,DBManager.getIstanceSingleton());
 		add.setVisible(true);
-		
+
 	}
 
 }

@@ -7,7 +7,8 @@ import java.sql.SQLException;
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
-import rf.pegaso.db.tabelle.Vendita;
+
+import rf.pegaso.db.tabelle.DettaglioVendita;
 import rf.utility.db.DBEvent;
 import rf.utility.db.DBStateChange;
 
@@ -21,10 +22,10 @@ public class VenditeModel extends AbstractTableModel implements DBStateChange {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Vector<Vendita> vendita = null;
+	private Vector<DettaglioVendita> vendita = null;
 	private Vector<String> colonne = null;
 
-	public VenditeModel(Vector<Vendita> vendita, Vector<String> colonne) throws SQLException {
+	public VenditeModel(Vector<DettaglioVendita> vendita, Vector<String> colonne) throws SQLException {
 		this.vendita = vendita;
 		this.colonne = colonne;
 	}
@@ -49,7 +50,7 @@ public class VenditeModel extends AbstractTableModel implements DBStateChange {
 	public Object getValueAt(int r, int c) {
 		if ( vendita.size() == 0 )
 			return -1;
-		Vendita v = vendita.get(r);
+		DettaglioVendita v = vendita.get(r);
 		Vector<Object> v1 = v.trasformaInArray();
 		Object o = null;
 		o = (Object)v1.get(c);
@@ -65,10 +66,9 @@ public class VenditeModel extends AbstractTableModel implements DBStateChange {
 	}
 	
 	public boolean isCellEditable(int r, int c) {
-//		if ( c == 3 || c == 4 || c == 6 )
-//			return true;
-//		return false;
-		return true;
+		if ( c == 1 || c == 2 || c == 4 || c == 7 )
+			return true;
+		return false;
 	}
 
 	public void stateChange() {
@@ -81,29 +81,29 @@ public class VenditeModel extends AbstractTableModel implements DBStateChange {
 	}
 
 	public Class<?> getColumnClass(int columnIndex) {
-		if ( columnIndex == 4 || columnIndex == 5 )
+		if ( columnIndex == 5 || columnIndex == 6 )
 			return Double.class;
-		else if ( columnIndex == 0 || columnIndex == 6 || columnIndex == 7 )
+		else if ( columnIndex == 0 || columnIndex == 4 || columnIndex == 7 || columnIndex == 8 )
 			return Integer.class;
-		else if ( columnIndex == 3 )
-			return Long.class;
+//		else if ( columnIndex == 4 )
+//			return Long.class;
 		else return String.class;
 	}
 
 	public void setValueAt(Object o, int r, int c) {
-		Vendita v = vendita.get(r);
+		DettaglioVendita v = vendita.get(r);
 		switch(c) {
-			case 3 :{
-				if( o instanceof Long) 
-					v.setQta((Long)o);
-				else
-					v.setQta(new Long((Integer)o));
+			case 4 :{
+//				if( o instanceof Long) 
+//					v.setQta(new Integer(o));
+//				else
+					v.setQta((Integer)o);
 				break;
 			}
-			case 4 :
+			case 5 :
 				v.setPrezzoVendita((Double)o);
 				break;
-			case 6 :
+			case 7 :
 				v.setSconto((Integer)o);
 				break;
 		}

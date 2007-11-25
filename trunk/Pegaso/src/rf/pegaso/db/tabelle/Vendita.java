@@ -2,288 +2,464 @@ package rf.pegaso.db.tabelle;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Time;
-import java.util.Vector;
 
 import rf.pegaso.db.DBManager;
+import rf.pegaso.db.tabelle.exception.IDNonValido;
 
 public class Vendita {
 	
-	private int codiceArticolo;
-	private String codiceBarre;
-	private int codiceVendita;
-	private String descrizione;
-	private long qta;
-	private double prezzoAcquisto;
-	private double prezzoVendita;
-	private int iva;
-	private int sconto;
-	private int idPagamento;
-	private int idCausale;
+	private int idVendita;
+	private String numVendita;
+	private Date data_vendita;
+	private Time ora_vendita;
+	private int cliente;
+	private String destinazione;
 	private double speseIncasso;
 	private double speseTrasporto;
 	private Date dataTrasporto;
 	private Time oraTrasporto;
 	private int n_colli;
 	private double peso;
+	private int idPagamento;
+	private int idCausale;
+	private int aspetto;
 	private String consegna;
 	private String porto;
-	private String diversaDest;
-	private int aspetto;
+	private int sconto;
+	private String tipo_prezzo;
 	private DBManager dbm;
 	
 	
 	public Vendita() {
-		this.codiceArticolo = 0;
-		this.codiceBarre = "";
-		this.codiceVendita = 0;
-		this.descrizione = "";
-		this.qta = 0;
-		this.prezzoAcquisto = 0.0;
-		this.prezzoVendita = 0.0;
-		this.iva = 0;
-		this.sconto = 0;
-		this.idPagamento = 0;
-		this.idCausale = 0;
+		idVendita = 0;
+		this.numVendita = "";
+		this.cliente = 0;
+		this.destinazione = "";
 		this.speseIncasso = 0.0;
 		this.speseTrasporto = 0.0;
-	//	this.dataTrasporto;
-	//	this.oraTrasporto;
 		this.n_colli = 0;
-		this.peso = 0.0;
+		this.peso= 0.0; 
+		this.idPagamento = 0;
+		this.idCausale = 0;
+		this.aspetto = 0;
 		this.consegna = "";
 		this.porto = "";
-		this.diversaDest = "";
-		this.aspetto = 0;
+		this.sconto = 0;
+		this.tipo_prezzo = "";
 		this.dbm = DBManager.getIstanceSingleton();
 	}
 
-	public int getCodiceArticolo() {
-		return codiceArticolo;
-	}
-
-	public void setCodiceArticolo(int codice) {
-		this.codiceArticolo = codice;
-	}
-	
-	public int getCodiceVendita() {
-		return codiceVendita;
-	}
-
-	public void setCodiceVendita(int codice) {
-		this.codiceVendita = codice;
-	}
-
-	public String getDescrizione() {
-		return descrizione;
-	}
-
-	public void setDescrizione(String descrizione) {
-		this.descrizione = descrizione;
-	}
-
-	public long getQta() {
-		return qta;
-	}
-
-	public void setQta(Long long1) {
-		this.qta = long1;
-	}
-
-	public double getPrezzoAcquisto() {
-		return prezzoAcquisto;
-	}
-
-	public void setPrezzoAcquisto(double prezzoAcquisto) {
-		this.prezzoAcquisto = prezzoAcquisto;
-	}
-
-	public double getPrezzoVendita() {
-		return prezzoVendita;
-	}
-
-	public void setPrezzoVendita(double prezzoVendita) {
-		this.prezzoVendita = prezzoVendita;
+	public void caricaDatiDaFattura(int idFattura){
+		Statement st = null;
+		ResultSet rs = null;
+		String query = "select * from fattura where idfattura =" + idFattura;
+		st = dbm.getNewStatement();
+		try {
+			rs = st.executeQuery(query);
+			while ( rs.next() ){
+				idVendita = idFattura;
+				data_vendita = rs.getDate(2);
+				ora_vendita = rs.getTime(3);
+				cliente = rs.getInt(4);
+				idPagamento = rs.getInt(5);
+				numVendita = rs.getString(6);
+				idCausale = rs.getInt(7);
+				speseIncasso = rs.getDouble(8);
+				speseTrasporto = rs.getDouble(9);
+				dataTrasporto = rs.getDate(10);
+				oraTrasporto = rs.getTime(11);
+				n_colli = rs.getInt(12);
+				peso = rs.getDouble(13);
+				consegna = rs.getString(14);
+				porto = rs.getString(15);
+				destinazione = rs.getString(16);				
+				aspetto = rs.getInt(17);
+				//sconto = rs.getInt(18);
+			}			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public int getSconto() {
-		return sconto;
-	}
+	public int salvaDatiInFattura(){
+		PreparedStatement pst = null;
+		String insert = "insert into fattura values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		try{
+			pst = dbm.getNewPreparedStatement(insert);
+			pst.setInt(1, idVendita);
+			pst.setDate(2, data_vendita);
+			pst.setTime(3, ora_vendita);
+			pst.setInt(4, cliente);
+			pst.setInt(5, idPagamento);
+			pst.setString(6, numVendita);
+			pst.setInt(7, idCausale);
+			pst.setDouble(8, speseIncasso);
+			pst.setDouble(9, speseTrasporto);
+			pst.setDate(10, dataTrasporto);
+			pst.setTime(11, oraTrasporto);
+			pst.setInt(12, n_colli);
+			pst.setDouble(13, peso);
+			pst.setString(14, consegna);
+			pst.setString(15, porto);
+			pst.setString(16, destinazione);
+			pst.setInt(17, aspetto);
+			//pst.setInt(18, sconto);
 
-	public void setSconto(int sconto) {
-		this.sconto = sconto;
+			pst.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			return -1;
+		}
+		return 1;
 	}
 	
-	public int getIva() {
-		return iva;
+	public void caricaDatiDaDdt(int idddt){
+		Statement st = null;
+		ResultSet rs = null;
+		String query = "select * from ddt where idddt =" + idddt;
+		st = dbm.getNewStatement();
+		try {
+			rs = st.executeQuery(query);
+			while ( rs.next() ){
+				idVendita = idddt;
+				numVendita = rs.getString(2);
+				data_vendita = rs.getDate(3);
+				ora_vendita = rs.getTime(4);
+				cliente = rs.getInt(5);
+				destinazione = rs.getString(6);
+				peso = rs.getDouble(7);
+				dataTrasporto = rs.getDate(8);
+				oraTrasporto = rs.getTime(9);
+				idCausale = rs.getInt(10);
+				consegna = rs.getString(11);
+				n_colli = rs.getInt(12);
+				aspetto = rs.getInt(13);
+				//sconto = rs.getInt(14);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public int salvaDatiInDdt(){
+		PreparedStatement pst = null;
+		String insert = "insert into ddt values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		try{
+			pst = dbm.getNewPreparedStatement(insert);
+			pst.setInt(1, idVendita);
+			pst.setString(2, numVendita);
+			pst.setDate(3, data_vendita);
+			pst.setTime(4, ora_vendita);
+			pst.setInt(5, cliente);
+			pst.setString(6, destinazione);
+			pst.setDouble(7, peso);
+			pst.setDate(8, dataTrasporto);
+			pst.setTime(9, oraTrasporto);
+			pst.setInt(10, idCausale);
+			pst.setString(11, consegna);
+			pst.setInt(12, n_colli);
+			pst.setInt(13, aspetto);
+			//pst.setInt(14, sconto);	
+			pst.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			return -1;
+		}
+		return 1;
+	}
+	
+	public void caricaDatiDaBanco(int idBanco){
+		Statement st = null;
+		ResultSet rs = null;
+		String query = "select * from banco where idvendita =" + idBanco;
+		st = dbm.getNewStatement();
+		try {
+			rs = st.executeQuery(query);
+			while ( rs.next() ){
+				idVendita = idBanco;
+				data_vendita = rs.getDate(2);
+				ora_vendita = rs.getTime(3);
+				tipo_prezzo = rs.getString(4);
+			}			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public int salvaDatiInBanco(){
+		PreparedStatement pst = null;
+		String insert = "insert into banco values (?,?,?,?)";
+		try{
+			pst = dbm.getNewPreparedStatement(insert);
+			pst.setInt(1, idVendita);
+			pst.setDate(2, data_vendita);
+			pst.setTime(3, ora_vendita);
+			pst.setString(4, tipo_prezzo);
+			
+			pst.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			return -1;
+		}
+		return 1;
+	}
+	
+	public int rimuoviDaDb(String tabella, String colonna)throws IDNonValido{
+		String delete = "";
+		Statement st = dbm.getNewStatement();
+		int cancellati = 0;
+		if (idVendita <= -1)
+			throw new IDNonValido();
+		delete = "DELETE FROM "+tabella+" WHERE "+colonna+"=" + idVendita;
+
+		try {
+			cancellati = st.executeUpdate(delete);
+			dbm.notifyDBStateChange();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (st != null)
+					st.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return cancellati;
+	}
+	
+	public int getIdVendita() {
+		return idVendita;
 	}
 
-	public void setIva(int iva) {
-		this.iva = iva;
+
+
+	public void setIdVendita(int idVendita) {
+		this.idVendita = idVendita;
 	}
 
-	public String getCodiceBarre() {
-		return codiceBarre;
+
+
+	public String getNumVendita() {
+		return numVendita;
 	}
 
-	public void setCodiceBarre(String codiceBarre) {
-		this.codiceBarre = codiceBarre;
+
+
+	public void setNumVendita(String numVendita) {
+		this.numVendita = numVendita;
 	}
 
-	public int getIdPagamento() {
-		return idPagamento;
+
+
+	public Date getData_vendita() {
+		return data_vendita;
 	}
 
-	public void setIdPagamento(int idPagamento) {
-		this.idPagamento = idPagamento;
+
+
+	public void setData_vendita(Date data_vendita) {
+		this.data_vendita = data_vendita;
 	}
 
-	public int getIdCausale() {
-		return idCausale;
+
+
+	public Time getOra_vendita() {
+		return ora_vendita;
 	}
 
-	public void setIdCausale(int idCausale) {
-		this.idCausale = idCausale;
+
+
+	public void setOra_vendita(Time ora_vendita) {
+		this.ora_vendita = ora_vendita;
 	}
+
+
+
+	public int getCliente() {
+		return cliente;
+	}
+
+
+
+	public void setCliente(int cliente) {
+		this.cliente = cliente;
+	}
+
+
+
+	public String getDestinazione() {
+		return destinazione;
+	}
+
+
+
+	public void setDestinazione(String destinazione) {
+		this.destinazione = destinazione;
+	}
+
+
 
 	public double getSpeseIncasso() {
 		return speseIncasso;
 	}
 
+
+
 	public void setSpeseIncasso(double speseIncasso) {
 		this.speseIncasso = speseIncasso;
 	}
+
+
 
 	public double getSpeseTrasporto() {
 		return speseTrasporto;
 	}
 
+
+
 	public void setSpeseTrasporto(double speseTrasporto) {
 		this.speseTrasporto = speseTrasporto;
 	}
+
+
 
 	public Date getDataTrasporto() {
 		return dataTrasporto;
 	}
 
+
+
 	public void setDataTrasporto(Date dataTrasporto) {
 		this.dataTrasporto = dataTrasporto;
 	}
+
+
 
 	public Time getOraTrasporto() {
 		return oraTrasporto;
 	}
 
+
+
 	public void setOraTrasporto(Time oraTrasporto) {
 		this.oraTrasporto = oraTrasporto;
 	}
+
+
 
 	public int getN_colli() {
 		return n_colli;
 	}
 
+
+
 	public void setN_colli(int n_colli) {
 		this.n_colli = n_colli;
 	}
+
+
 
 	public double getPeso() {
 		return peso;
 	}
 
+
+
 	public void setPeso(double peso) {
 		this.peso = peso;
 	}
+
+
+
+	public int getIdPagamento() {
+		return idPagamento;
+	}
+
+
+
+	public void setIdPagamento(int idPagamento) {
+		this.idPagamento = idPagamento;
+	}
+
+
+
+	public int getIdCausale() {
+		return idCausale;
+	}
+
+
+
+	public void setIdCausale(int idCausale) {
+		this.idCausale = idCausale;
+	}
+
+
+
+	public int getAspetto() {
+		return aspetto;
+	}
+
+
+
+	public void setAspetto(int aspetto) {
+		this.aspetto = aspetto;
+	}
+
+
 
 	public String getConsegna() {
 		return consegna;
 	}
 
+
+
 	public void setConsegna(String consegna) {
 		this.consegna = consegna;
 	}
+
+
 
 	public String getPorto() {
 		return porto;
 	}
 
+
+
 	public void setPorto(String porto) {
 		this.porto = porto;
 	}
 
-	public String getDiversaDest() {
-		return diversaDest;
+
+
+	public int getSconto() {
+		return sconto;
 	}
 
-	public void setDiversaDest(String diversaDest) {
-		this.diversaDest = diversaDest;
+
+
+	public void setSconto(int sconto) {
+		this.sconto = sconto;
 	}
 
-	public void setQta(long qta) {
-		this.qta = qta;
-	}
-	
-	public int getAspetto() {
-		return aspetto;
+	public String getTipo_prezzo() {
+		return tipo_prezzo;
 	}
 
-	public void setAspetto(int aspetto) {
-		this.aspetto = aspetto;
-	}
-	
-	public Vector<Object> trasformaInArray() {
-		Vector<Object> v = new Vector<Object>();
-		v.add(codiceArticolo);
-		v.add(codiceBarre);
-		v.add(descrizione);
-		v.add(qta);
-		v.add(prezzoVendita);
-		if ( sconto == 0)
-			v.add(prezzoVendita*qta);
-		else
-			v.add((prezzoVendita*qta)-(((prezzoVendita*qta)/100)*sconto));
-		v.add(sconto);
-		v.add(iva);
-		return v;
-	}
-	
-	public void inserisciInDdt(){
-		
-	}
-	
-	public void inserisciInFattura(int idFattura){
-		PreparedStatement pst = null;
-		String insertD = "insert into dettaglio_fattura values (?,?,?,?,?)";
-		pst = dbm.getNewPreparedStatement(insertD);
-		try{
-			pst.setInt(1, getCodiceArticolo());
-			pst.setInt(2, idFattura);
-			pst.setLong(3, getQta());
-			pst.setDouble(4, getPrezzoAcquisto());
-			pst.setDouble(5, getPrezzoVendita());
-
-			pst.executeUpdate();
-		}
-		catch(SQLException e){
-			e.printStackTrace();
-		}
-	}
-	
-	public void inserisciAlBanco(int idvendita){
-		PreparedStatement pst = null;
-		String insertD = "insert into dettaglio_banco values (?,?,?,?,?)";
-		pst = dbm.getNewPreparedStatement(insertD);
-		try {
-			pst.setInt(1, getCodiceArticolo());
-			pst.setInt(2, idvendita);
-			pst.setLong(3, getQta());
-			pst.setDouble(4, getPrezzoAcquisto());
-			pst.setDouble(5, getPrezzoVendita());
-
-			pst.executeUpdate();
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		} 
+	public void setTipo_prezzo(String tipo_prezzo) {
+		this.tipo_prezzo = tipo_prezzo;
 	}
 }

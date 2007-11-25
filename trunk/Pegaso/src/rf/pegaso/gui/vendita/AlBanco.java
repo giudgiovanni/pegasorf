@@ -16,11 +16,11 @@ import rf.myswing.IDJComboBox;
 import rf.myswing.util.MyTableCellRendererAlignment;
 import rf.myswing.util.QuantitaDisponibileEditorSQL;
 import rf.pegaso.db.DBManager;
-import rf.pegaso.db.exception.CodiceBarreInesistente;
+import rf.pegaso.db.model.BancoViewModel;
 import rf.pegaso.db.model.VenditeModel;
 import rf.pegaso.db.tabelle.Articolo;
+import rf.pegaso.db.tabelle.DettaglioVendita;
 import rf.pegaso.db.tabelle.Vendita;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
 import rf.utility.ControlloDati;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompleteTextComponent;
@@ -44,7 +44,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.Vector;
@@ -57,6 +56,8 @@ import javax.swing.JScrollPane;
 
 import org.jdesktop.swingx.JXTable;
 import javax.swing.JComboBox;
+import javax.swing.JTabbedPane;
+import java.awt.FlowLayout;
 
 public class AlBanco extends JFrame{
 
@@ -89,12 +90,24 @@ public class AlBanco extends JFrame{
 	private JComboBox cmbProdotti = null;
 	private JLabel lblUtile = null;
 	private JTextField txtUtile = null;
-	private Vector<Vendita> carrello = null;
+	private Vector<DettaglioVendita> carrello = null;
 	private Vector<String> colonne = null;  //  @jve:decl-index=0:
 	private VenditeModel model = null;
-	private double prezzoAcquisto = 0.00;
-	private double prezzoVendita = 0.00;
-	private int iva = 0;
+	private double utile = 0.00;
+	private double imponibile = 0.00;
+	private double imposta = 0.00;
+	private JButton btnElimina = null;
+	private int qta = 0;
+	private Vendita vendita = null;
+	private JTabbedPane jTabbedPane = null;
+	private JPanel pnlVendita = null;
+	private JPanel pnlViewVendita = null;
+	private JPanel pnlPulsanti = null;
+	private JButton btnModifica = null;
+	private JButton btnStampaFattura = null;
+	private JButton btnEliminaFattura = null;
+	private JScrollPane jScrollPane1 = null;
+	private JTable tblViewFatture = null;
 
 	public AlBanco(){
 		this.dbm = DBManager.getIstanceSingleton();
@@ -107,9 +120,10 @@ public class AlBanco extends JFrame{
 	 * @return void
 	 */
 	private void initialize() {
-		carrello = new Vector<Vendita>();
-		Vendita v = new Vendita();
+		carrello = new Vector<DettaglioVendita>();
+		DettaglioVendita v = new DettaglioVendita();
 		carrello.add(v);
+		vendita = new Vendita();
 		colonne = new Vector<String>();
 		caricaVettoreColonne();
 		this.setSize(new Dimension(800, 600));
@@ -157,61 +171,66 @@ public class AlBanco extends JFrame{
 
 	}
 
-	private void inserisci() {
-		Vendita v  = new Vendita();
-		Articolo a = new Articolo();
-		int spinQta = 1;
-
-		try {
-			a.caricaDatiByCodBarre(txtCodice.getText());
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		catch (IDNonValido e) {
-			e.printStackTrace();
-		}
-		try{
-			if ( a.getGiacenza() < spinQta ){
-				JOptionPane.showMessageDialog(this,
-						"Quantità richiesta non disponibile\nDisponibilità magazzino = "+a.getGiacenza(), "AVVISO",
-						JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		v.setCodiceArticolo(a.getIdArticolo());
-		for ( Vendita v1 : carrello){
-			if ( v1.getCodiceArticolo() == v.getCodiceArticolo() )
-				try{
-					if ( a.getGiacenza() < (spinQta + v1.getQta()) ){
-						JOptionPane.showMessageDialog(this,
-								"Quantità richiesta non disponibile\nDisponibilità magazzino = "+a.getGiacenza(), "AVVISO",
-								JOptionPane.INFORMATION_MESSAGE);
-						return;
-					}
-					else{
-						long oldQta = v1.getQta();
-						v1.setQta(oldQta + spinQta);
-						dbm.notifyDBStateChange();
-						return;
-					}
-				}
-				catch (SQLException e) {
-					e.printStackTrace();
-				}
-		}
-		v.setCodiceBarre(txtCodice.getText());
-		v.setCodiceVendita(dbm.getNewID("fattura", "idfattura"));
-		v.setDescrizione(a.getDescrizione());//String.valueOf(cmbProdotti.getSelectedItem()));
-		v.setQta(Long.valueOf(spinQta));
-		v.setPrezzoAcquisto(prezzoAcquisto);
-		v.setPrezzoVendita(prezzoVendita);
-		v.setIva(iva);
-		carrello.add(v);
+	private void inserisci(DettaglioVendita dv) {
+		dv.setIdVendita(dbm.getNewID("banco", "idvendita"));
+		carrello.add(dv);
 		DBManager.getIstanceSingleton().notifyDBStateChange();
 		calcoliBarraInferiore();
+		
+//		Vendita v  = new Vendita();
+//		Articolo a = new Articolo();
+//		int spinQta = 1;
+//
+//		try {
+//			a.caricaDatiByCodBarre(txtCodice.getText());
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		catch (IDNonValido e) {
+//			e.printStackTrace();
+//		}
+//		try{
+//			if ( a.getGiacenza() < spinQta ){
+//				JOptionPane.showMessageDialog(this,
+//						"Quantità richiesta non disponibile\nDisponibilità magazzino = "+a.getGiacenza(), "AVVISO",
+//						JOptionPane.INFORMATION_MESSAGE);
+//				return;
+//			}
+//		}
+//		catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		v.setCodiceArticolo(a.getIdArticolo());
+//		for ( Vendita v1 : carrello){
+//			if ( v1.getCodiceArticolo() == v.getCodiceArticolo() )
+//				try{
+//					if ( a.getGiacenza() < (spinQta + v1.getQta()) ){
+//						JOptionPane.showMessageDialog(this,
+//								"Quantità richiesta non disponibile\nDisponibilità magazzino = "+a.getGiacenza(), "AVVISO",
+//								JOptionPane.INFORMATION_MESSAGE);
+//						return;
+//					}
+//					else{
+//						long oldQta = v1.getQta();
+//						v1.setQta(oldQta + spinQta);
+//						dbm.notifyDBStateChange();
+//						return;
+//					}
+//				}
+//				catch (SQLException e) {
+//					e.printStackTrace();
+//				}
+//		}
+//		v.setCodiceBarre(txtCodice.getText());
+//		v.setCodiceVendita(dbm.getNewID("fattura", "idfattura"));
+//		v.setDescrizione(a.getDescrizione());//String.valueOf(cmbProdotti.getSelectedItem()));
+//		v.setQta(Long.valueOf(spinQta));
+//		v.setPrezzoAcquisto(prezzoAcquisto);
+//		v.setPrezzoVendita(prezzoVendita);
+//		v.setIva(iva);
+//		carrello.add(v);
+//		DBManager.getIstanceSingleton().notifyDBStateChange();
+//		calcoliBarraInferiore();
 	}
 
 	/**
@@ -222,6 +241,7 @@ public class AlBanco extends JFrame{
 		colonne.add("idArticolo");
 		colonne.add("codice");
 		colonne.add("descrizione");
+		colonne.add("um");
 		colonne.add("quantita'");
 		colonne.add("prezzo");
 		colonne.add("importo");
@@ -249,9 +269,10 @@ public class AlBanco extends JFrame{
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getJPanelNord(), BorderLayout.NORTH);
-			jContentPane.add(getJPanelCentro(), BorderLayout.CENTER);
-			jContentPane.add(getJPanelSud(), BorderLayout.SOUTH);
+//			jContentPane.add(getJPanelNord(), BorderLayout.NORTH);
+//			jContentPane.add(getJPanelCentro(), BorderLayout.CENTER);
+//			jContentPane.add(getJPanelSud(), BorderLayout.SOUTH);
+			jContentPane.add(getJTabbedPane(), BorderLayout.CENTER);
 		}
 		return jContentPane;
 	}
@@ -445,75 +466,25 @@ public class AlBanco extends JFrame{
 
 	private void salva(){
 		//Salviamo i dati della fattura
-		PreparedStatement pst = null;
-		int idvendita = dbm.getNewID("banco", "idvendita");
-		String insertF = "insert into banco values (?,?,?,?)";
-		pst = dbm.getNewPreparedStatement(insertF);
-		java.sql.Date d = new java.sql.Date(dataCorrente.getDate().getTime());
-		java.sql.Time t = new Time(dataCorrente.getDate().getTime());
-		try {
-			pst.setInt(1, idvendita);
-			pst.setDate(2, d);
-			pst.setTime(3, t);
-			pst.setString(4, (String)cmbTipoPagamento.getSelectedItem());
-
-			pst.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
+		vendita.setIdVendita(dbm.getNewID("banco", "idvendita"));
+		vendita.setData_vendita( new java.sql.Date(dataCorrente.getDate().getTime()));
+		vendita.setOra_vendita(new Time(dataCorrente.getDate().getTime()));
+		vendita.setTipo_prezzo((String)cmbTipoPagamento.getSelectedItem());
+		vendita.salvaDatiInBanco();
+		
 		//salviamo i dettagli della fattura
-//		String insertD = "insert into dettaglio_banco values (?,?,?,?,?)";
-//		pst = dbm.getNewPreparedStatement(insertD);
 		carrello.remove(0);
-		try {
-			for (Vendita v : carrello) {
-//				pst.setInt(1, v.getCodiceArticolo());
-//				pst.setInt(2, idvendita);
-//				pst.setLong(3, v.getQta());
-//				pst.setDouble(4, v.getPrezzoAcquisto());
-//				pst.setDouble(5, v.getPrezzoVendita());
-//
-//				pst.executeUpdate();
-				v.inserisciAlBanco(idvendita);
-				updateArticolo(v.getCodiceArticolo(), (int) v.getQta());
-				carrello.remove(v);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-		try {
-			if (pst != null)
-				pst.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
+		for (DettaglioVendita dv : carrello) {
+			dv.salvaInDb("dettaglio_banco");
 		}
-	}
-	dbm.notifyDBStateChange();
-
-	}
-
-	public void updateArticolo(int idArticolo, int qta)
-	throws SQLException {
-
-		String query = "update dettaglio_carichi set qta=? where idarticolo=?";
-		PreparedStatement pst = dbm.getNewPreparedStatement(query);
-
-		pst.setInt(1, qta);
-		pst.setInt(2, idArticolo);
-
-		// inserimento
-		pst.executeUpdate();
-
-		if (pst != null)
-			pst.close();
-		dbm.notifyDBStateChange();
 		resetCampi();
+		dbm.notifyDBStateChange();
 	}
 	
 	private void resetCampi(){
 		txtNumero.setText(String.valueOf(dbm.getNewID("banco", "idvendita")));
-		Vendita v = new Vendita();
+		carrello.removeAllElements();
+		DettaglioVendita v = new DettaglioVendita();
 		carrello.add(v);
 		calcoliBarraInferiore();
 	}
@@ -647,8 +618,15 @@ public class AlBanco extends JFrame{
 					@Override
 					public void keyPressed(java.awt.event.KeyEvent e) {
 						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-							caricaArticoloByCodBarre(txtCodice.getText());
-								//inserisci();
+							DettaglioVendita dv = new DettaglioVendita();
+							dv.caricaDatiByCodiceBarre(txtCodice.getText());
+							int er = dv.caricaDatiByCodiceBarre(txtCodice.getText());
+							if ( er == 0 )
+								messaggioCampoMancante("Articolo non disponibile", "AVVISO");
+							else if ( er == -1 )
+								messaggioCampoMancante("Articolo non trovato", "AVVISO");
+							else
+								inserisci(dv);
 						}
 					}
 				});
@@ -661,72 +639,72 @@ public class AlBanco extends JFrame{
 	/**
 	 *
 	 */
-	private void caricaArticoloByCodBarre(String cod) {
-		if ( cmbTipoPagamento.getSelectedItem().equals("") ){
-			JOptionPane.showMessageDialog(this, "Selezionare il tipo di prezzo da applicare",
-					"AVVISO", JOptionPane.INFORMATION_MESSAGE);
-
-			return;
-		}
-		String codBarre = txtCodice.getText();
-		if (cod.equalsIgnoreCase(""))
-			return;
-		Articolo a = new Articolo();
-		try {
-			if (a.findByCodBarre(cod)) {
-				prezzoAcquisto = a.getPrezzoAcquisto();
-				if ( cmbTipoPagamento.getSelectedItem().equals("Ingrosso") )
-					prezzoVendita = a.getPrezzoIngrosso();
-				else
-					prezzoVendita = a.getPrezzoDettaglio();
-				txtCodice.setText(codBarre);
-				iva = a.getIva();
-				inserisci();
-			}
-		} catch (SQLException e1) {
-
-			e1.printStackTrace();
-		} catch (CodiceBarreInesistente e1) {
-			avvisoCodBarreInesistente();
-			e1.printStackTrace();
-		}
-
-	}
+//	private void caricaArticoloByCodBarre(String cod) {
+//		if ( cmbTipoPagamento.getSelectedItem().equals("") ){
+//			JOptionPane.showMessageDialog(this, "Selezionare il tipo di prezzo da applicare",
+//					"AVVISO", JOptionPane.INFORMATION_MESSAGE);
+//
+//			return;
+//		}
+//		String codBarre = txtCodice.getText();
+//		if (cod.equalsIgnoreCase(""))
+//			return;
+//		Articolo a = new Articolo();
+//		try {
+//			if (a.findByCodBarre(cod)) {
+//				prezzoAcquisto = a.getPrezzoAcquisto();
+//				if ( cmbTipoPagamento.getSelectedItem().equals("Ingrosso") )
+//					prezzoVendita = a.getPrezzoIngrosso();
+//				else
+//					prezzoVendita = a.getPrezzoDettaglio();
+//				txtCodice.setText(codBarre);
+//				iva = a.getIva();
+//				inserisci();
+//			}
+//		} catch (SQLException e1) {
+//
+//			e1.printStackTrace();
+//		} catch (CodiceBarreInesistente e1) {
+//			avvisoCodBarreInesistente();
+//			e1.printStackTrace();
+//		}
+//
+//	}
 
 	/**
 	 *
 	 */
-	private void caricaArticoloByID(int cod) {
-		if ( cod == 0 )
-			return;
-		if ( cmbTipoPagamento.getSelectedItem().equals("") ){
-			JOptionPane.showMessageDialog(this, "Selezionare il tipo di prezzo da applicare",
-					"AVVISO", JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}
-		Articolo a = new Articolo();
-		try {
-			a.caricaDati(cod);
-			prezzoAcquisto = a.getPrezzoAcquisto();
-			if ( cmbTipoPagamento.getSelectedItem().equals("Ingrosso") )
-				prezzoVendita = a.getPrezzoIngrosso();
-			else
-				prezzoVendita = a.getPrezzoDettaglio();
-			txtCodice.setText(a.getCodBarre());
-			iva = a.getIva();
-			inserisci();
-		} catch (SQLException e1) {
-
-			e1.printStackTrace();
-		}
-
-	}
-
-	private void avvisoCodBarreInesistente() {
-		JOptionPane.showMessageDialog(this,
-				"Codice barre articolo inesistente", "Codice inesistente",
-				JOptionPane.INFORMATION_MESSAGE);
-	}
+//	private void caricaArticoloByID(int cod) {
+//		if ( cod == 0 )
+//			return;
+//		if ( cmbTipoPagamento.getSelectedItem().equals("") ){
+//			JOptionPane.showMessageDialog(this, "Selezionare il tipo di prezzo da applicare",
+//					"AVVISO", JOptionPane.INFORMATION_MESSAGE);
+//			return;
+//		}
+//		Articolo a = new Articolo();
+//		try {
+//			a.caricaDati(cod);
+//			prezzoAcquisto = a.getPrezzoAcquisto();
+//			if ( cmbTipoPagamento.getSelectedItem().equals("Ingrosso") )
+//				prezzoVendita = a.getPrezzoIngrosso();
+//			else
+//				prezzoVendita = a.getPrezzoDettaglio();
+//			txtCodice.setText(a.getCodBarre());
+//			iva = a.getIva();
+//			inserisci();
+//		} catch (SQLException e1) {
+//
+//			e1.printStackTrace();
+//		}
+//
+//	}
+//
+//	private void avvisoCodBarreInesistente() {
+//		JOptionPane.showMessageDialog(this,
+//				"Codice barre articolo inesistente", "Codice inesistente",
+//				JOptionPane.INFORMATION_MESSAGE);
+//	}
 
 	/**
 	 * This method initializes cmbProdotti
@@ -743,7 +721,14 @@ public class AlBanco extends JFrame{
 					public void keyPressed(java.awt.event.KeyEvent e) {
 						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 							int id = Integer.parseInt(((IDJComboBox)cmbProdotti).getIDSelectedItem());
-							caricaArticoloByID(id);
+							DettaglioVendita dv = new DettaglioVendita();
+							int er = dv.caricaDatiById(id);
+							if ( er == 0 )
+								messaggioCampoMancante("Articolo non disponibile", "AVVISO");
+							else if ( er == -1 )
+								messaggioCampoMancante("Articolo non trovato", "AVVISO");
+							else
+								inserisci(dv);
 						}
 					}
 				});
@@ -751,8 +736,14 @@ public class AlBanco extends JFrame{
 					@Override
 					public void focusLost(java.awt.event.FocusEvent e) {
 						int id = Integer.parseInt(((IDJComboBox)cmbProdotti).getIDSelectedItem());
-						caricaArticoloByID(id);
-
+						DettaglioVendita dv = new DettaglioVendita();
+						int er = dv.caricaDatiById(id);
+						if ( er == 0 )
+							messaggioCampoMancante("Articolo non disponibile", "AVVISO");
+						else if ( er == -1 )
+							messaggioCampoMancante("Articolo non trovato", "AVVISO");
+						else
+							inserisci(dv);
 					}
 				});
 			} catch (java.lang.Throwable e) {
@@ -775,12 +766,6 @@ public class AlBanco extends JFrame{
 		return txtUtile;
 	}
 
-	private double utile = 0.00;
-	private double imponibile = 0.00;
-	private double imposta = 0.00;
-	private JButton btnElimina = null;
-	private int qta = 0;
-
 	private void azzeraCampi(){
 		utile = 0.00;
 		imponibile = 0.00;
@@ -790,9 +775,7 @@ public class AlBanco extends JFrame{
 
 	private void calcoliBarraInferiore() {
 		azzeraCampi();
-		//for( Vendita v : carrello ) {
-		for (int i = 0; i < carrello.size(); i++ ){
-			Vendita v = (Vendita)carrello.get(i);
+		for( DettaglioVendita v : carrello ) {
 			qta += v.getQta();
 			double prezzoV = 0.00;
 			if(v.getSconto() == 0)
@@ -812,6 +795,14 @@ public class AlBanco extends JFrame{
 		txtPezzi.setText(String.valueOf(qta));
 		txtTotale.setText(ControlloDati.convertDoubleToPrezzo(imponibile+imposta));
 	}
+	
+	/**
+	 * @param string
+	 */
+	private void messaggioCampoMancante(String testo, String tipo) {
+		JOptionPane.showMessageDialog(this, testo, tipo,
+				JOptionPane.INFORMATION_MESSAGE);
+	}
 
 	/**
 	 * This method initializes btnElimina
@@ -826,5 +817,146 @@ public class AlBanco extends JFrame{
 			btnElimina.addActionListener(new MyButtonListener());
 		}
 		return btnElimina;
+	}
+
+	/**
+	 * This method initializes jTabbedPane	
+	 * 	
+	 * @return javax.swing.JTabbedPane	
+	 */
+	private JTabbedPane getJTabbedPane() {
+		if (jTabbedPane == null) {
+			jTabbedPane = new JTabbedPane();
+			jTabbedPane.addTab(null, null, getPnlVendita(), null);
+			jTabbedPane.addTab(null, null, getPnlViewVendita(), null);
+			jTabbedPane.addTab("Registra Vendita", null, getPnlVendita(), null);
+			jTabbedPane.addTab("Visualizza Vendita", null, getPnlViewVendita(), null);
+		}
+		return jTabbedPane;
+	}
+
+	/**
+	 * This method initializes pnlVendita	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPnlVendita() {
+		if (pnlVendita == null) {
+			pnlVendita = new JPanel();
+			pnlVendita.setLayout(new BorderLayout());
+			pnlVendita.add(getJPanelNord(), BorderLayout.NORTH);
+			pnlVendita.add(getJPanelCentro(), BorderLayout.CENTER);
+			pnlVendita.add(getJPanelSud(), BorderLayout.SOUTH);
+		}
+		return pnlVendita;
+	}
+
+	/**
+	 * This method initializes pnlViewVendita	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPnlViewVendita() {
+		if (pnlViewVendita == null) {
+			pnlViewVendita = new JPanel();
+			pnlViewVendita.setLayout(new BorderLayout());
+			pnlViewVendita.add(getPnlPulsanti(), BorderLayout.NORTH);
+			pnlViewVendita.add(getJScrollPane1(), BorderLayout.CENTER);
+		}
+		return pnlViewVendita;
+	}
+
+	/**
+	 * This method initializes pnlPulsanti	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPnlPulsanti() {
+		if (pnlPulsanti == null) {
+			FlowLayout flowLayout = new FlowLayout();
+			flowLayout.setAlignment(FlowLayout.LEFT);
+			pnlPulsanti = new JPanel();
+			pnlPulsanti.setLayout(flowLayout);
+			pnlPulsanti.add(getBtnModifica(), null);
+			pnlPulsanti.add(getBtnStampaFattura(), null);
+			pnlPulsanti.add(getBtnEliminaFattura(), null);
+		}
+		return pnlPulsanti;
+	}
+
+	/**
+	 * This method initializes btnModifica	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnModifica() {
+		if (btnModifica == null) {
+			btnModifica = new JButton();
+			btnModifica.setText("Modifica");
+		}
+		return btnModifica;
+	}
+
+	/**
+	 * This method initializes btnStampaFattura	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnStampaFattura() {
+		if (btnStampaFattura == null) {
+			btnStampaFattura = new JButton();
+			btnStampaFattura.setEnabled(false);
+			btnStampaFattura.setText("Stampa");
+		}
+		return btnStampaFattura;
+	}
+
+	/**
+	 * This method initializes btnEliminaFattura	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnEliminaFattura() {
+		if (btnEliminaFattura == null) {
+			btnEliminaFattura = new JButton();
+			btnEliminaFattura.setText("Elimina");
+		}
+		return btnEliminaFattura;
+	}
+
+	/**
+	 * This method initializes jScrollPane1	
+	 * 	
+	 * @return javax.swing.JScrollPane	
+	 */
+	private JScrollPane getJScrollPane1() {
+		if (jScrollPane1 == null) {
+			jScrollPane1 = new JScrollPane();
+			jScrollPane1.setViewportView(getTblViewFatture());
+		}
+		return jScrollPane1;
+	}
+
+	/**
+	 * This method initializes tblViewFatture	
+	 * 	
+	 * @return javax.swing.JTable	
+	 */
+	private JTable getTblViewFatture() {
+		if (tblViewFatture == null) {
+			BancoViewModel modelView;
+			try {
+				modelView = new BancoViewModel(dbm);
+				tblViewFatture = new JTable(modelView);
+				DBManager.getIstanceSingleton().addDBStateChange(modelView);
+				TableColumn col=tblViewFatture.getColumnModel().getColumn(0);
+				col.setMinWidth(0);
+				col.setMaxWidth(0);
+				col.setPreferredWidth(0);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return tblViewFatture;
 	}
 }

@@ -5,7 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
-import javax.swing.DefaultCellEditor;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -17,19 +17,16 @@ import rf.myswing.IDJComboBox;
 import rf.myswing.util.MyTableCellRendererAlignment;
 import rf.myswing.util.QuantitaDisponibileEditorSQL;
 import rf.pegaso.db.DBManager;
-import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.pegaso.db.model.DdtFatturaModel;
 import rf.pegaso.db.model.VenditeModel;
-import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.Cliente;
+import rf.pegaso.db.tabelle.DettaglioVendita;
+import rf.pegaso.db.tabelle.Pagamento;
 import rf.pegaso.db.tabelle.Vendita;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
 import rf.pegaso.gui.gestione.ClientiAdd;
 import rf.utility.ControlloDati;
 import rf.utility.gui.UtilGUI;
-import rf.utility.gui.text.AutoCompleteTextComponent;
 import rf.utility.gui.text.AutoCompletion;
-import rf.utility.gui.text.UpperAutoCompleteDocument;
 
 import java.awt.GridBagLayout;
 import javax.swing.JButton;
@@ -48,11 +45,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.Vector;
 
 import javax.swing.JTextField;
@@ -62,7 +59,9 @@ import com.toedter.calendar.JDateChooser;
 import javax.swing.JScrollPane;
 
 import org.jdesktop.swingx.JXTable;
-import javax.swing.JComboBox;
+import javax.swing.JTabbedPane;
+import java.awt.FlowLayout;
+import rf.pegaso.db.model.FatturaViewModel;
 
 /**
  * @author Administrator
@@ -101,19 +100,34 @@ public class Fattura extends JFrame{
 	private IDJComboBox cmbClienti = null;
 	private JButton btnNuovoCliente = null;
 	private JLabel lblPagamento = null;
-	private JComboBox cmbPagamento = null;
-	private JTextField txtCodice = null;
-	private JComboBox cmbProdotti = null;
+	private IDJComboBox cmbPagamento = null;
 	private JLabel lblUtile = null;
 	private JTextField txtUtile = null;
-	private Vector<Vendita> carrello = null;
+	private Vector<DettaglioVendita> carrello = null;  //  @jve:decl-index=0:
 	private Vector<String> colonne = null;  //  @jve:decl-index=0:
-	private Vector<Long> ddt = null;
 	private VenditeModel model = null;
-	private double prezzoAcquisto = 0.00;
-	private double prezzoVendita = 0.00;
-	private int iva = 0;
 	private DdtFatturaModel ddtModel = null;
+	private double utile = 0.00;
+	private int scontoTotale = 0;
+	private double imponibile = 0.00;
+	private double imposta = 0.00;
+	private JPanel jPanelOvest = null;
+	private JScrollPane jScrollPane1 = null;
+	private JXTable jTableDdt = null;
+	private JLabel lblSpeseIncasso = null;
+	private JFormattedTextField txtSpeseIncasso = null;
+	private JLabel lblSpeseTr = null;
+	private JFormattedTextField txtSpeseTr = null;
+	private int id_ddt = 0;
+	private Vendita vendita = null;
+	private JTabbedPane jTabbedPane = null;
+	private JPanel pnlViewFattura = null;
+	private JPanel pnlPulsanti = null;
+	private JButton btnModifica = null;
+	private JButton btnStampaFattura = null;
+	private JButton btnEliminaFattura = null;
+	private JTable tblViewFatture = null;
+	private JPanel pnlFattura = null;
 
 	public Fattura(){
 		this.dbm = DBManager.getIstanceSingleton();
@@ -126,12 +140,10 @@ public class Fattura extends JFrame{
 	 * @return void
 	 */
 	private void initialize() {
-		carrello = new Vector<Vendita>();
-		Vendita v = new Vendita();
-		carrello.add(v);
+		carrello = new Vector<DettaglioVendita>();
 		colonne = new Vector<String>();
-		ddt = new Vector<Long>();
 		caricaVettoreColonne();
+		vendita = new Vendita();
 		this.setSize(new Dimension(800, 600));
 		this.setTitle("Fattura");
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); // Generated
@@ -147,10 +159,15 @@ public class Fattura extends JFrame{
 		});
 		//setExtendedState(MAXIMIZED_BOTH);
 		UtilGUI.centraFrame(this);
-
+		operazioniIniziali();
+	}
+	
+	private void operazioniIniziali(){
+		
 		caricaClienti();
-		caricaDescrizione();
+		caricaPagamento();
 		caricaVettoreColonne();
+		txtNumero.setText(String.valueOf(dbm.getNewID("fattura", "idfattura")));
 	}
 
 	class MyButtonListener implements ActionListener {
@@ -159,25 +176,18 @@ public class Fattura extends JFrame{
 			if ( e.getSource() == btnChiudi )
 				dispose();
 			else if ( e.getSource() == btnSalva ){
-				salva();
-				deleteDdt();
+				int er = salva();
+				if ( er == 1 )
+					deleteDdt();
+				else if( er == 0 )
+					messaggioCampoMancante("Si è verificato un errore durante il salvataggio. Riprovare.", "ERRORE");
 			}
 			else if ( e.getSource() == btnStampa )
 				stampa();
-			else if ( e.getSource() == btnElimina )
-				deleteArticolo();
 			else if ( e.getSource() == btnNuovoCliente ){
 				nuovoCliente();
 				caricaClienti();
 			}
-			else if ( e.getSource() == btnRimuoviDdt )
-				rimuoviDdt();
-			else if ( e.getSource() == btnInserisciDdt )
-				try {
-					inserisciDdt();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
 		}
 	}
 
@@ -188,69 +198,21 @@ public class Fattura extends JFrame{
 			calcoliBarraInferiore();
 		}
 	}
-
-	/**
-	 * 
-	 *Questo metodo si occupa dell'inserimento dei ddt all'interno della fattura
-	 * @throws SQLException
-	 */
-	private void inserisciDdt() throws SQLException{
-		if (jTableDdt.getSelectedRow() <= -1) {
-			JOptionPane.showMessageDialog(this, "Selezionare la righa da inserire",
-					"AVVISO", JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}
-		int riga = jTableDdt.getSelectedRow();
-		Long idDdt = (Long) jTableDdt.getValueAt(riga, 0);
-		ddt.add(idDdt);
-		Statement st = null;
-		ResultSet rs = null;
-		String query = "select * from dettaglio_ddt where idddt=" + idDdt;
-		st = dbm.getNewStatement();
-		rs = st.executeQuery(query);
-		while ( rs.next() ){
-			Vendita v = new Vendita();
-			Articolo a = new Articolo();
-			a.caricaDati(rs.getInt(1));
-			v.setCodiceArticolo(rs.getInt(1));
-			v.setCodiceVendita(rs.getInt(2));
-			v.setQta(rs.getLong(3));
-			v.setPrezzoAcquisto(rs.getDouble(4));
-			v.setPrezzoVendita(rs.getDouble(5));
-			v.setIva(a.getIva());
-			v.setDescrizione(a.getDescrizione());
-			v.setCodiceBarre(a.getCodBarre());
-			carrello.add(v);
-			DBManager.getIstanceSingleton().notifyDBStateChange();
-			calcoliBarraInferiore();
-		}
-		if (st != null)
-			st.close();
-		
-	}
-	
-	/**
-	 * Questo metodo serve a rimuovere il ddt dalla tabella dei ddt selezioanti
-	 */
-	private void rimuoviDdt(){
-		
-	}
 	
 	/**
 	 * questo metodo rimuove il ddt dal db quando si effettua la registrazione della fattura
 	 */
 	private void deleteDdt(){
 		Statement st = dbm.getNewStatement();
-		for(Long l : ddt){
-			String query = "DELETE FROM dettaglio_ddt WHERE idddt=" + l;
-			String query2 = "DELETE FROM ddt WHERE idddt=" + l;
-			try {
-				st.executeUpdate(query);
-				st.executeUpdate(query2);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+		String query = "DELETE FROM dettaglio_ddt WHERE idddt=" + id_ddt;
+		String query2 = "DELETE FROM ddt WHERE idddt=" + id_ddt;
+		try {
+			st.executeUpdate(query);
+			st.executeUpdate(query2);
+		} catch (SQLException e) {
+			e.printStackTrace();			
 		}
+		
 		try {
 			if (st != null)
 				st.close();
@@ -259,65 +221,37 @@ public class Fattura extends JFrame{
 		}
 		dbm.notifyDBStateChange();
 	}
-
-	/**
-	 * Questo metodo inscerisce gli articoli all'interno del carrello
-	 *
-	 */
-	private void inserisci() {
-		Vendita v  = new Vendita();
-		Articolo a = new Articolo();
-		int spinQta = 1;
+	
+	private void visualizzaDdt(){
+		int riga = jTableDdt.getSelectedRow();
+		if ( riga == -1 ){
+			messaggioCampoMancante("Selezionare la riga da visualizzare", "AVVISO");
+			return;
+		}
+		id_ddt = (Integer)jTableDdt.getValueAt(riga, 0);
+		carrello.removeAllElements();
+		azzeraCampi();
+		vendita.caricaDatiDaDdt(id_ddt);
+		visualizzaVendita();
+		DettaglioVendita dv = new DettaglioVendita();
 		try {
-			a.caricaDatiByCodBarre(txtCodice.getText());
+			//Vector<DettaglioVendita> vdv = (Vector<DettaglioVendita>)dv.caricaDatiByDB(id_ddt, "dettaglio_ddt", "idddt");
+			carrello.removeAllElements();
+			for ( DettaglioVendita d : dv.caricaDatiByDB(id_ddt, "dettaglio_ddt", "idddt") ){
+				carrello.add(d);
+			}
+			DBManager.getIstanceSingleton().notifyDBStateChange();
+			calcoliBarraInferiore();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		catch (IDNonValido e) {
-			e.printStackTrace();
-		}
-		try{
-			if ( a.getGiacenza() < spinQta ){
-				JOptionPane.showMessageDialog(this,
-						"Quantità richiesta non disponibile\nDisponibilità magazzino = "+a.getGiacenza(), "AVVISO",
-						JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		v.setCodiceArticolo(a.getIdArticolo());
-		for ( Vendita v1 : carrello){
-			if ( v1.getCodiceArticolo() == v.getCodiceArticolo() )
-				try{
-					if ( a.getGiacenza() < (spinQta + v1.getQta()) ){
-						JOptionPane.showMessageDialog(this,
-								"Quantità richiesta non disponibile\nDisponibilità magazzino = "+a.getGiacenza(), "AVVISO",
-								JOptionPane.INFORMATION_MESSAGE);
-						return;
-					}
-					else{
-						long oldQta = v1.getQta();
-						v1.setQta(oldQta + spinQta);
-						dbm.notifyDBStateChange();
-						return;
-					}
-				}
-				catch (SQLException e) {
-					e.printStackTrace();
-				}
-		}
-		v.setCodiceBarre(txtCodice.getText());
-		v.setCodiceVendita(dbm.getNewID("fattura", "idfattura"));
-		v.setDescrizione(a.getDescrizione());//String.valueOf(cmbProdotti.getSelectedItem()));
-		v.setQta(Long.valueOf(spinQta));
-		v.setPrezzoAcquisto(prezzoAcquisto);
-		v.setPrezzoVendita(prezzoVendita);
-		v.setIva(iva);
-		carrello.add(v);
-		DBManager.getIstanceSingleton().notifyDBStateChange();
-		calcoliBarraInferiore();
+	}
+	
+	private void visualizzaVendita(){
+		//txtNumero.setText(vendita.getNumVendita());
+		dataCorrente.setDate(vendita.getData_vendita());
+		cmbClienti.setSelectedItemByID(vendita.getCliente());
 	}
 
 	/**
@@ -328,22 +262,12 @@ public class Fattura extends JFrame{
 		colonne.add("idArticolo");
 		colonne.add("codice");
 		colonne.add("descrizione");
+		colonne.add("UM");
 		colonne.add("quantita'");
 		colonne.add("prezzo");
 		colonne.add("importo");
 		colonne.add("sconto");
 		colonne.add("iva");
-	}
-
-	private void deleteArticolo(){
-		if (jTable.getSelectedRow() <= -1) {
-			JOptionPane.showMessageDialog(this, "Selezionare un righa",
-					"AVVISO", JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}
-		int riga = jTable.getSelectedRow();
-		carrello.remove(riga);
-		dbm.notifyDBStateChange();
 	}
 
 	/**
@@ -355,10 +279,7 @@ public class Fattura extends JFrame{
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getJPanelNord(), BorderLayout.NORTH);
-			jContentPane.add(getJPanelEst(), BorderLayout.EAST);
-			jContentPane.add(getJPanelSud(), BorderLayout.SOUTH);
-			jContentPane.add(getJPanelOvest(), BorderLayout.WEST);
+			jContentPane.add(getJTabbedPane(), BorderLayout.CENTER);
 		}
 		return jContentPane;
 	}
@@ -370,8 +291,16 @@ public class Fattura extends JFrame{
 	 */
 	private JPanel getJPanelNord() {
 		if (jPanelNord == null) {
+			lblSpeseTr = new JLabel();
+			lblSpeseTr.setBounds(new Rectangle(225, 98, 100, 16));
+			lblSpeseTr.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+			lblSpeseTr.setText("Spese Trasporto");
+			lblSpeseIncasso = new JLabel();
+			lblSpeseIncasso.setBounds(new Rectangle(10, 98, 95, 16));
+			lblSpeseIncasso.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+			lblSpeseIncasso.setText(" Spese Incasso");
 			lblPagamento = new JLabel();
-			lblPagamento.setBounds(new Rectangle(505, 55, 70, 16));
+			lblPagamento.setBounds(new Rectangle(445, 98, 70, 16));
 			lblPagamento.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 			lblPagamento.setText("Pagamento");
 			lblCliente = new JLabel();
@@ -393,7 +322,7 @@ public class Fattura extends JFrame{
 			lblFattura.setText("FATTURA");
 			jPanelNord = new JPanel();
 			jPanelNord.setLayout(null);
-			jPanelNord.setPreferredSize(new Dimension(0, 100)); // Generated
+			jPanelNord.setPreferredSize(new Dimension(0, 130)); // Generated
 			jPanelNord.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 			jPanelNord.add(getBtnChiudi(), null);
 			jPanelNord.add(getBtnSalva(), null);
@@ -408,6 +337,10 @@ public class Fattura extends JFrame{
 			jPanelNord.add(getBtnNuovoCliente(), null);
 			jPanelNord.add(lblPagamento, null);
 			jPanelNord.add(getCmbPagamento(), null);
+			jPanelNord.add(lblSpeseIncasso, null);
+			jPanelNord.add(getTxtSpeseIncasso(), null);
+			jPanelNord.add(lblSpeseTr, null);
+			jPanelNord.add(getTxtSpeseTr(), null);
 		}
 		return jPanelNord;
 	}
@@ -534,16 +467,17 @@ public class Fattura extends JFrame{
 				col.setMinWidth(0);
 				col.setMaxWidth(0);
 				col.setPreferredWidth(0);
-				TableColumn column = jTable.getColumnModel().getColumn(2);
-				column.setCellEditor(new DefaultCellEditor(getCmbProdotti()));
-				column = jTable.getColumnModel().getColumn(1);
-				column.setCellEditor(new DefaultCellEditor(getTxtCodice()));
+//				TableColumn column = jTable.getColumnModel().getColumn(2);
+//				column.setCellEditor(new DefaultCellEditor(getCmbProdotti()));
+//				column = jTable.getColumnModel().getColumn(1);
+//				column.setCellEditor(new DefaultCellEditor(getTxtCodice()));
 				jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				jTable.setDefaultEditor(Long.class, new QuantitaDisponibileEditorSQL());
 				jTable.setDefaultRenderer(Object.class, new MyTableCellRendererAlignment());
 				jTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 				jTable.packAll();
 				jTable.getTableHeader().setReorderingAllowed(false);
+				jTable.setEditable(false);
 				jTable.getModel().addTableModelListener(new MyTableModelListener());
 			}
 			catch (java.lang.Throwable e) {
@@ -563,85 +497,86 @@ public class Fattura extends JFrame{
 
 	}
 
-	private void salva(){
-		//Salviamo i dati della fattura
-		String num_fattura = txtNumero.getText();
-		if (num_fattura.equalsIgnoreCase("")) {
-			messaggioCampoMancante("Numero Fattura non presente.");
-			return;
-		}
-		PreparedStatement pst = null;
-		int idfattura = dbm.getNewID("fattura", "idfattura");
-		String insertF = "insert into fattura values (?,?,?,?,?,?)";
-		pst = dbm.getNewPreparedStatement(insertF);
-		java.sql.Date d = new java.sql.Date(dataCorrente.getDate().getTime());
-		java.sql.Time t = new Time(dataCorrente.getDate().getTime());
+	private int salva(){
 		try {
-			pst.setInt(1, idfattura);
-			pst.setDate(2, d);
-			pst.setTime(3, t);
-			pst.setInt(4, Integer.parseInt(cmbClienti.getIDSelectedItem()));
-			pst.setString(5, (String)cmbPagamento.getSelectedItem());
-			pst.setString(6, num_fattura);
-
-			pst.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		//salviamo i dettagli della fattura
-		String insertD = "insert into dettaglio_fattura values (?,?,?,?,?)";
-		pst = dbm.getNewPreparedStatement(insertD);
-		carrello.remove(0);
-		try {
-			for (Vendita v : carrello) {
-				pst.setInt(1, v.getCodiceArticolo());
-				pst.setInt(2, idfattura);
-				pst.setLong(3, v.getQta());
-				pst.setDouble(4, v.getPrezzoAcquisto());
-				pst.setDouble(5, v.getPrezzoVendita());
-
-				pst.executeUpdate();
-				updateArticolo(v.getCodiceArticolo(), (int) v.getQta());
-				carrello.remove(v);
+			//Salviamo i dati della fattura
+			Vendita v = new Vendita();
+			String num_fattura = txtNumero.getText();
+			if (num_fattura.equalsIgnoreCase("")) {
+				messaggioCampoMancante("Numero DDT non presente.", "CAMPO VUOTO");
+				return -1;
 			}
-		} catch (SQLException e) {
+			if ( carrello.size() == 0 ){
+				messaggioCampoMancante("Selezionare il documento da salvare.", "AVVISO");
+				return -1;
+			}
+			//PreparedStatement pst = null;
+			v.setIdVendita(dbm.getNewID("fattura", "idfattura"));
+			v.setNumVendita(txtNumero.getText());
+			v.setData_vendita(new java.sql.Date(dataCorrente.getDate().getTime()));
+			v.setOra_vendita(new Time(dataCorrente.getDate().getTime()));
+			int idCliente = 0;
+			if ( cmbClienti.getIDSelectedItem() != null )
+				idCliente = Integer.parseInt(cmbClienti.getIDSelectedItem());
+			double speseInc = 0.00;
+			if ( !txtSpeseIncasso.getText().equals("") )	
+				speseInc = ControlloDati.convertPrezzoToDouble(txtSpeseIncasso.getText());
+			double speseTr = 0.00;
+			if ( !txtSpeseTr.getText().equals("") )
+				speseTr = ControlloDati.convertPrezzoToDouble(txtSpeseTr.getText());
+			int idPagamento = 0;
+			if ( cmbPagamento.getIDSelectedItem() != null )
+				idPagamento = Integer.parseInt(cmbPagamento.getIDSelectedItem());
+			v.setCliente(idCliente);
+			v.setDestinazione(vendita.getDestinazione());
+			v.setSpeseIncasso(speseInc);
+			v.setSpeseTrasporto(speseTr);
+			v.setDataTrasporto(vendita.getDataTrasporto());
+			v.setOraTrasporto(vendita.getOraTrasporto());
+			v.setN_colli(vendita.getN_colli());
+			v.setPeso(vendita.getPeso());
+			v.setIdPagamento(idPagamento);
+			v.setIdCausale(vendita.getIdCausale());
+			v.setAspetto(vendita.getAspetto());
+			v.setConsegna(vendita.getConsegna());
+			v.setPorto(vendita.getPorto());
+			v.setSconto(vendita.getSconto());
+			v.salvaDatiInFattura();
+			
+			//salviamo i dettagli della fattura
+			carrello.remove(0);
+			for (DettaglioVendita dettaglio : carrello) {
+				dettaglio.salvaInDb("dettaglio_fattura");
+				carrello.remove(dettaglio);
+			}
+		} catch (NumberFormatException e) {
 			e.printStackTrace();
-		} finally {
-		try {
-			if (pst != null)
-				pst.close();
-		} catch (SQLException e) {
+		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-	}
-	dbm.notifyDBStateChange();
-
-	}
-
-	public void updateArticolo(int idArticolo, int qta)
-	throws SQLException {
-
-		String query = "update dettaglio_carichi set qta=? where idarticolo=?";
-		PreparedStatement pst = dbm.getNewPreparedStatement(query);
-
-		pst.setInt(1, qta);
-		pst.setInt(2, idArticolo);
-
-		// inserimento
-		pst.executeUpdate();
-
-		if (pst != null)
-			pst.close();
 		dbm.notifyDBStateChange();
-		resetCampi();
+		txtSpeseIncasso.setText("");
+		txtSpeseTr.setText("");
+		return 1;
 	}
-	
-	private void resetCampi(){
-		Vendita v = new Vendita();
-		carrello.add(v);
-		calcoliBarraInferiore();
-	}
+
+//	public void updateArticolo(int idArticolo, int qta)
+//	throws SQLException {
+//
+//		String query = "update dettaglio_carichi set qta=? where idarticolo=?";
+//		PreparedStatement pst = dbm.getNewPreparedStatement(query);
+//
+//		pst.setInt(1, qta);
+//		pst.setInt(2, idArticolo);
+//
+//		// inserimento
+//		pst.executeUpdate();
+//
+//		if (pst != null)
+//			pst.close();
+//		dbm.notifyDBStateChange();
+//		calcoliBarraInferiore();
+//	}
 
 	private void nuovoCliente(){
 		//prendiamo l'id dell'ultimo cliente inserito
@@ -657,8 +592,8 @@ public class Fattura extends JFrame{
 	/**
 	 * @param string
 	 */
-	private void messaggioCampoMancante(String testo) {
-		JOptionPane.showMessageDialog(this, testo, "CAMPO VUOTO",
+	private void messaggioCampoMancante(String testo, String tipo) {
+		JOptionPane.showMessageDialog(this, testo, tipo,
 				JOptionPane.INFORMATION_MESSAGE);
 	}
 
@@ -703,7 +638,6 @@ public class Fattura extends JFrame{
 			jPanelSud.add(lblTotale, null);
 			jPanelSud.add(lblUtile, null);
 			jPanelSud.add(getTxtUtile2(), null);
-			jPanelSud.add(getBtnElimina(), null);
 		}
 		return jPanelSud;
 	}
@@ -801,15 +735,10 @@ public class Fattura extends JFrame{
 	 *
 	 * @return javax.swing.JComboBox
 	 */
-	private JComboBox getCmbPagamento() {
+	private IDJComboBox getCmbPagamento() {
 		if (cmbPagamento == null) {
-			Vector<String> v = new Vector<String>();
-			v.add("");
-			v.add("Per Contanti");
-			v.add("Assegno Circolare");
-			v.add("Assegno Post-Datato");
-			cmbPagamento = new JComboBox(v);
-			cmbPagamento.setBounds(new Rectangle(595, 50, 140, 26));
+			cmbPagamento = new IDJComboBox();
+			cmbPagamento.setBounds(new Rectangle(535, 93, 140, 26));
 		}
 		return cmbPagamento;
 	}
@@ -851,151 +780,25 @@ public class Fattura extends JFrame{
 			// da passre al combobox
 			((IDJComboBox) cmbClienti).caricaNewValueComboBox(as, true);
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(this,
-					"Errore caricamento fornitori nel combobox", "ERRORE", 0);
+			messaggioCampoMancante("Errore caricamento fornitori nel combobox", "ERRORE");
 			e.printStackTrace();
 		}
 		AutoCompletion.enable(cmbClienti);
 	}
-
-	private void caricaDescrizione(){
-		Articolo a = new Articolo();
+	
+	private void caricaPagamento(){
+		Pagamento p = new Pagamento();
 		try {
 
-			String as[] = (String[]) a.allArticoli();
+			String ps[] = (String[]) p.allPagamenti();
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
-			((IDJComboBox) cmbProdotti).caricaNewValueComboBox(as, true);
+			((IDJComboBox) cmbPagamento).caricaNewValueComboBox(ps, true);
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(this,
-					"Errore caricamento fornitori nel combobox", "ERRORE", 0);
+			messaggioCampoMancante("Errore caricamento dati pagamento nel combobox", "ERRORE");
 			e.printStackTrace();
 		}
-		AutoCompletion.enable(cmbProdotti);
-	}
-
-
-	/**
-	 * This method initializes txtCodice
-	 *
-	 * @return javax.swing.JTextField
-	 */
-	private JTextField getTxtCodice() {
-		if (txtCodice == null) {
-			try {
-				txtCodice = new JTextField();
-				AutoCompleteTextComponent complete = new AutoCompleteTextComponent(
-						txtCodice, dbm, "articoli", "codbarre");
-				dbm.addDBStateChange(complete);
-
-				txtCodice.setDocument(new UpperAutoCompleteDocument(complete,
-						true));
-				txtCodice.setBounds(new Rectangle(15, 120, 140, 24)); // Generated
-//				txtCodice.addFocusListener(new java.awt.event.FocusAdapter() {
-//					@Override
-//					public void focusLost(java.awt.event.FocusEvent e) {
-//						caricaArticoloByCodBarre(txtCodice.getText());
-//
-//					}
-//				});
-				txtCodice.addKeyListener(new java.awt.event.KeyAdapter() {
-					@Override
-					public void keyPressed(java.awt.event.KeyEvent e) {
-						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-							caricaArticoloByCodBarre(txtCodice.getText());
-								//inserisci();
-						}
-					}
-				});
-			} catch (java.lang.Throwable e) {
-			}
-		}
-		return txtCodice;
-	}
-
-	/**
-	 *
-	 */
-	private void caricaArticoloByCodBarre(String cod) {
-		String codBarre = txtCodice.getText();
-		if (cod.equalsIgnoreCase(""))
-			return;
-		Articolo a = new Articolo();
-		try {
-			if (a.findByCodBarre(cod)) {
-				prezzoAcquisto = a.getPrezzoAcquisto();
-				prezzoVendita = a.getPrezzoIngrosso();
-				txtCodice.setText(codBarre);
-				iva = a.getIva();
-				inserisci();
-			}
-		} catch (SQLException e1) {
-
-			e1.printStackTrace();
-		} catch (CodiceBarreInesistente e1) {
-			avvisoCodBarreInesistente();
-			e1.printStackTrace();
-		}
-
-	}
-
-	/**
-	 *
-	 */
-	private void caricaArticoloByID(int cod) {
-		if ( cod == 0 )
-			return;
-		Articolo a = new Articolo();
-		try {
-			a.caricaDati(cod);
-			prezzoAcquisto = a.getPrezzoAcquisto();
-			prezzoVendita = a.getPrezzoIngrosso();
-			//txtCodice.setText(a.getCodBarre());
-			iva = a.getIva();
-			inserisci();
-		} catch (SQLException e1) {
-
-			e1.printStackTrace();
-		}
-
-	}
-
-	private void avvisoCodBarreInesistente() {
-		JOptionPane.showMessageDialog(this,
-				"Codice barre articolo inesistente", "Codice inesistente",
-				JOptionPane.INFORMATION_MESSAGE);
-	}
-
-	/**
-	 * This method initializes cmbProdotti
-	 *
-	 * @return javax.swing.JComboBox
-	 */
-	private JComboBox getCmbProdotti() {
-		if (cmbProdotti == null) {
-			try {
-				cmbProdotti = new IDJComboBox();
-				cmbProdotti.setBounds(new Rectangle(155, 120, 400, 23)); // Generated
-				cmbProdotti.getEditor().getEditorComponent().addKeyListener(new java.awt.event.KeyAdapter(){
-					public void keyPressed(java.awt.event.KeyEvent e) {
-						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-							int id = Integer.parseInt(((IDJComboBox)cmbProdotti).getIDSelectedItem());
-							System.out.println("ok");
-							caricaArticoloByID(id);
-						}
-					}
-				});
-				cmbProdotti.getEditor().getEditorComponent().addFocusListener(new java.awt.event.FocusAdapter() {
-					@Override
-					public void focusLost(java.awt.event.FocusEvent e) {
-						int id = Integer.parseInt(((IDJComboBox)cmbProdotti).getIDSelectedItem());
-						caricaArticoloByID(id);
-					}
-				});
-			} catch (java.lang.Throwable e) {
-			}
-		}
-		return cmbProdotti;
+		AutoCompletion.enable(cmbPagamento);
 	}
 
 	/**
@@ -1012,20 +815,6 @@ public class Fattura extends JFrame{
 		return txtUtile;
 	}
 
-	private double utile = 0.00;
-	private int scontoTotale = 0;
-	private double imponibile = 0.00;
-	private double imposta = 0.00;
-	//private double totale = 0.00;
-	private JButton btnElimina = null;
-	private JPanel jPanelOvest = null;
-	private JScrollPane jScrollPane1 = null;
-	private JXTable jTableDdt = null;
-	private JButton btnInserisciDdt = null;
-	private JScrollPane jScrollPane2 = null;
-	private JTable jTableDdtIns = null;
-	private JButton btnRimuoviDdt = null;
-
 	private void azzeraCampi(){
 		utile = 0.00;
 		//scontoTotale = 0;
@@ -1036,8 +825,8 @@ public class Fattura extends JFrame{
 	private void calcoliBarraInferiore() {
 		azzeraCampi();
 		//for( Vendita v : carrello ) {
-		for (int i = 0; i < carrello.size(); i++ ){
-			Vendita v = (Vendita)carrello.get(i);
+//		for (int i = 0; i < carrello.size(); i++ ){
+		for ( DettaglioVendita v : carrello ) {
 			double prezzoV = 0.00;
 			if(v.getSconto() == 0)
 				prezzoV = v.getPrezzoVendita();
@@ -1064,21 +853,6 @@ public class Fattura extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnElimina
-	 *
-	 * @return javax.swing.JButton
-	 */
-	private JButton getBtnElimina() {
-		if (btnElimina == null) {
-			btnElimina = new JButton();
-			btnElimina.setBounds(new Rectangle(13, 10, 82, 26));
-			btnElimina.setText("Elimina");
-			btnElimina.addActionListener(new MyButtonListener());
-		}
-		return btnElimina;
-	}
-
-	/**
 	 * This method initializes jPanelOvest
 	 *
 	 * @return javax.swing.JPanel
@@ -1089,10 +863,7 @@ public class Fattura extends JFrame{
 			jPanelOvest.setLayout(null);
 			jPanelOvest.setPreferredSize(new Dimension(290, 440));
 			jPanelOvest.add(getJScrollPane1(), null);
-			jPanelOvest.add(getJScrollPane2(), null);
 			jPanelOvest.setBounds(new Rectangle(0, 0, 290, 440));
-			jPanelOvest.add(getBtnInserisciDdt(), null);
-			jPanelOvest.add(getBtnRimuoviDdt(), null);
 		}
 		return jPanelOvest;
 	}
@@ -1105,7 +876,8 @@ public class Fattura extends JFrame{
 	private JScrollPane getJScrollPane1() {
 		if (jScrollPane1 == null) {
 			jScrollPane1 = new JScrollPane();
-			jScrollPane1.setBounds(new Rectangle(0, 0, 290, 180));
+			//jScrollPane1.setPreferredSize(new Dimension(500, 440));
+			jScrollPane1.setBounds(new Rectangle(0, 0, 290, 440));
 			jScrollPane1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(0), "Documenti di Trasporto", 0,
 			0, new Font("Dialog", 1, 12), new Color(51, 51, 51)));
 			jScrollPane1.setViewportView(getJTableDdt());
@@ -1123,7 +895,12 @@ public class Fattura extends JFrame{
 			try {
 				ddtModel = new DdtFatturaModel(dbm);
 				jTableDdt = new JXTable(ddtModel);
-				//jTableDdt.setBounds(new Rectangle(0, 0, 300, 317));
+				DBManager.getIstanceSingleton().addDBStateChange(ddtModel);
+				jTableDdt.addMouseListener(new java.awt.event.MouseAdapter() {
+					public void mouseClicked(java.awt.event.MouseEvent e) {
+						visualizzaDdt();
+					}
+				});
 				TableColumn col=jTableDdt.getColumnModel().getColumn(0);
 				col.setMinWidth(0);
 				col.setMaxWidth(0);
@@ -1140,52 +917,147 @@ public class Fattura extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnInserisciDdt
-	 *
-	 * @return javax.swing.JButton
+	 * This method initializes txtSpeseIncasso	
+	 * 	
+	 * @return javax.swing.JTextField	
 	 */
-	private JButton getBtnInserisciDdt() {
-		if (btnInserisciDdt == null) {
-			btnInserisciDdt = new JButton();
-			btnInserisciDdt.setPreferredSize(new Dimension(90,26));
-			btnInserisciDdt.setBounds(new Rectangle(35, 188, 90, 26));
-			btnInserisciDdt.setText("Aggiungi");
-			btnInserisciDdt.addActionListener(new MyButtonListener());
+	private JFormattedTextField getTxtSpeseIncasso() {
+		if (txtSpeseIncasso == null) {
+			DecimalFormat notaz = new DecimalFormat( "#,##0.00");
+			txtSpeseIncasso = new JFormattedTextField(notaz);
+			txtSpeseIncasso.setBounds(new Rectangle(125, 96, 60, 20));
 		}
-		return btnInserisciDdt;
+		return txtSpeseIncasso;
 	}
 
 	/**
-	 * This method initializes jScrollPane2	
+	 * This method initializes txtSpeseTr	
+	 * 	
+	 * @return javax.swing.JTextField	
+	 */
+	private JFormattedTextField getTxtSpeseTr() {
+		if (txtSpeseTr == null) {
+			DecimalFormat notaz = new DecimalFormat( "#,##0.00");
+			txtSpeseTr = new JFormattedTextField(notaz);
+			txtSpeseTr.setBounds(new Rectangle(345, 96, 60, 20));
+		}
+		return txtSpeseTr;
+	}
+
+	/**
+	 * This method initializes jTabbedPane	
+	 * 	
+	 * @return javax.swing.JTabbedPane	
+	 */
+	private JTabbedPane getJTabbedPane() {
+		if (jTabbedPane == null) {
+			jTabbedPane = new JTabbedPane();
+			jTabbedPane.addTab(null, null, getPnlFattura(), null);
+			jTabbedPane.addTab("Registra Fatture", null, getPnlFattura(), null);
+			jTabbedPane.addTab("Visualizza Fatture", null, getPnlViewFattura(), null);
+		}
+		return jTabbedPane;
+	}
+
+	/**
+	 * This method initializes pnlViewFattura	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPnlViewFattura() {
+		if (pnlViewFattura == null) {
+			pnlViewFattura = new JPanel();
+			pnlViewFattura.setLayout(new BorderLayout());
+			pnlViewFattura.add(getPnlPulsanti(), java.awt.BorderLayout.NORTH);
+			pnlViewFattura.add(getJScrollPane2(), BorderLayout.CENTER);
+		}
+		return pnlViewFattura;
+	}
+
+	/**
+	 * This method initializes pnlPulsanti	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPnlPulsanti() {
+		if (pnlPulsanti == null) {
+			FlowLayout flowLayout = new FlowLayout();
+			flowLayout.setAlignment(FlowLayout.LEFT);
+			pnlPulsanti = new JPanel();
+			pnlPulsanti.setLayout(flowLayout);
+			pnlPulsanti.add(getBtnModifica(), null);
+			pnlPulsanti.add(getBtnStampaFattura(), null);
+			pnlPulsanti.add(getBtnEliminaFattura(), null);
+		}
+		return pnlPulsanti;
+	}
+
+	/**
+	 * This method initializes btnModifica	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnModifica() {
+		if (btnModifica == null) {
+			btnModifica = new JButton();
+			btnModifica.setText("Modifica");
+			btnModifica.addActionListener(new MyButtonListener());
+		}
+		return btnModifica;
+	}
+
+	/**
+	 * This method initializes btnStampaFattura	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnStampaFattura() {
+		if (btnStampaFattura == null) {
+			btnStampaFattura = new JButton();
+			btnStampaFattura.setEnabled(false);
+			btnStampaFattura.setText("Stampa");
+		}
+		return btnStampaFattura;
+	}
+
+	/**
+	 * This method initializes btnEliminaFattura	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnEliminaFattura() {
+		if (btnEliminaFattura == null) {
+			btnEliminaFattura = new JButton();
+			btnEliminaFattura.setText("Elimina");
+		}
+		return btnEliminaFattura;
+	}
+
+	/**
+	 * This method initializes jScrollPane1	
 	 * 	
 	 * @return javax.swing.JScrollPane	
 	 */
 	private JScrollPane getJScrollPane2() {
-		if (jScrollPane2 == null) {
-			jScrollPane2 = new JScrollPane();
-			jScrollPane2.setViewportView(getJTableDdtIns());
-			jScrollPane2.setBounds(new Rectangle(0, 225, 290, 180));
-			jScrollPane2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(0), "Documenti di Trasporto Selezionati", 0,
-					0, new Font("Dialog", 1, 12), new Color(51, 51, 51)));
+		if (jScrollPane1 == null) {
+			jScrollPane1 = new JScrollPane();
+			jScrollPane1.setViewportView(getTblViewFatture());
 		}
-		return jScrollPane2;
+		return jScrollPane1;
 	}
 
 	/**
-	 * This method initializes jTableDdtIns	
+	 * This method initializes tblViewFatture	
 	 * 	
 	 * @return javax.swing.JTable	
 	 */
-	private JTable getJTableDdtIns() {
-		if (jTableDdtIns == null) {
-			try{
-				ddtModel = new DdtFatturaModel(dbm);
-				jTableDdtIns = new JXTable(ddtModel);
-				TableColumn col=jTableDdtIns.getColumnModel().getColumn(0);
-				col.setMinWidth(0);
-				col.setMaxWidth(0);
-				col.setPreferredWidth(0);
-				col = jTableDdtIns.getColumnModel().getColumn(1);
+	private JTable getTblViewFatture() {
+		if (tblViewFatture == null) {
+			try {
+				FatturaViewModel modelView = new FatturaViewModel(dbm, 1);
+				tblViewFatture = new JTable(modelView);
+				DBManager.getIstanceSingleton().addDBStateChange(modelView);
+				TableColumn col=tblViewFatture.getColumnModel().getColumn(0);
 				col.setMinWidth(0);
 				col.setMaxWidth(0);
 				col.setPreferredWidth(0);
@@ -1193,21 +1065,22 @@ public class Fattura extends JFrame{
 				e.printStackTrace();
 			}
 		}
-		return jTableDdtIns;
+		return tblViewFatture;
 	}
-
 	/**
-	 * This method initializes btnRimuoviDdt	
+	 * This method initializes pnlFattura	
 	 * 	
-	 * @return javax.swing.JButton	
+	 * @return javax.swing.JPanel	
 	 */
-	private JButton getBtnRimuoviDdt() {
-		if (btnRimuoviDdt == null) {
-			btnRimuoviDdt = new JButton();
-			btnRimuoviDdt.setBounds(new Rectangle(165, 188, 90, 26));
-			btnRimuoviDdt.setText("Rimuovi");
-			btnRimuoviDdt.addActionListener(new MyButtonListener());
+	private JPanel getPnlFattura() {
+		if (pnlFattura == null) {
+			pnlFattura = new JPanel();
+			pnlFattura.setLayout(new GridBagLayout());
+			pnlFattura.add(getJPanelNord(), BorderLayout.NORTH);
+			pnlFattura.add(getJPanelEst(), BorderLayout.EAST);
+			pnlFattura.add(getJPanelSud(), BorderLayout.SOUTH);
+			pnlFattura.add(getJPanelOvest(), BorderLayout.WEST);
 		}
-		return btnRimuoviDdt;
+		return pnlFattura;
 	}
 }

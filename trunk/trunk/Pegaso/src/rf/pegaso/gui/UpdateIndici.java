@@ -45,6 +45,7 @@ public class UpdateIndici extends JFrame {
 	 * @return void
 	 */
 	private void initialize() {
+		updateFirst();
 		this.setSize(646, 200);
 		this.setContentPane(getJContentPane());
 		this.setTitle("Update Indici");
@@ -202,14 +203,9 @@ public class UpdateIndici extends JFrame {
 		return jButton;
 	}
 
-	protected void update() {
+	protected void updateFirst(){
 		String q1="update fornitori set nome=? where idfornitore=234";
-		String query="select idcarico, carichi.idfornitore, fornitori.nome, carichi.iddocumento, documento.tipo from carichi, documento, fornitori where carichi.iddocumento=documento.iddocumento and carichi.idfornitore=fornitori.idfornitore";
-		Statement st=DBManager.getIstanceSingleton().getNewStatement();
-		ResultSet rs=null;
-
 		PreparedStatement pst=DBManager.getIstanceSingleton().getNewPreparedStatement(q1);
-
 		try {
 			pst.setString(1, "VOGUE DISTRIBUZIONE SELEZIONATA OGGETTI D'ARTE");
 			pst.execute();
@@ -217,6 +213,13 @@ public class UpdateIndici extends JFrame {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+	}
+	protected void update() {
+		
+		String query="select idcarico, carichi.idfornitore, fornitori.nome, carichi.iddocumento, documento.tipo from carichi, documento, fornitori where carichi.iddocumento=documento.iddocumento and carichi.idfornitore=fornitori.idfornitore";
+		Statement st=DBManager.getIstanceSingleton().getNewStatement();
+		ResultSet rs=null;
+		PreparedStatement pst=null;
 		Connection con=DBManager.getIstanceSingleton().getConnessione();
 
 		try {
@@ -249,18 +252,15 @@ public class UpdateIndici extends JFrame {
 					//pst.addBatch();
 					pst.execute();
 					k++;
-					if(k==289){
-						int h=0;
-					}
 					System.out.println(k+" codice :"+rs.getInt(1));
-					Thread.sleep(50);
+					if(k==413){
+						break;
+					}
+					
 				}catch(SQLException ex){
 					System.out.println("Errore sul carico con id: "+rs.getInt(1));
 					ex.printStackTrace();
 
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
 
 			}

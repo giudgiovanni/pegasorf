@@ -1530,9 +1530,10 @@ public class FatturaImmediata extends JFrame{
 	private JPanel getPnlPulsanti() {
 		if (pnlPulsanti == null) {
 			pnlPulsanti = new JPanel();
-			FlowLayout flowLayout = new FlowLayout();
-			flowLayout.setAlignment(FlowLayout.LEFT); // Generated
-			pnlPulsanti.setLayout(flowLayout); // Generated
+//			FlowLayout flowLayout = new FlowLayout();
+//			flowLayout.setAlignment(FlowLayout.LEFT); // Generated
+//			pnlPulsanti.setLayout(flowLayout); // Generated
+			pnlPulsanti.setLayout(new BorderLayout());
 			pnlPulsanti.add(getBtnModifica(), null);
 			pnlPulsanti.add(getBtnStampaFattura(), null); // Generated
 			pnlPulsanti.add(getBtnEliminaFattura(), null); // Generated

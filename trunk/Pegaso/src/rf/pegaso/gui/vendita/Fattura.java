@@ -144,6 +144,7 @@ public class Fattura extends JFrame{
 		carrello = new Vector<DettaglioVendita>();
 		colonne = new Vector<String>();
 		caricaVettoreColonne();
+
 		vendita = new Vendita();
 		this.setSize(new Dimension(800, 600));
 		this.setTitle("Fattura");
@@ -162,9 +163,9 @@ public class Fattura extends JFrame{
 		UtilGUI.centraFrame(this);
 		operazioniIniziali();
 	}
-	
+
 	private void operazioniIniziali(){
-		
+
 		caricaClienti();
 		caricaPagamento();
 		caricaVettoreColonne();
@@ -199,7 +200,7 @@ public class Fattura extends JFrame{
 			calcoliBarraInferiore();
 		}
 	}
-	
+
 	/**
 	 * questo metodo rimuove il ddt dal db quando si effettua la registrazione della fattura
 	 */
@@ -211,9 +212,9 @@ public class Fattura extends JFrame{
 			st.executeUpdate(query);
 			st.executeUpdate(query2);
 		} catch (SQLException e) {
-			e.printStackTrace();			
+			e.printStackTrace();
 		}
-		
+
 		try {
 			if (st != null)
 				st.close();
@@ -222,7 +223,7 @@ public class Fattura extends JFrame{
 		}
 		dbm.notifyDBStateChange();
 	}
-	
+
 	private void visualizzaDdt(){
 		int riga = jTableDdt.getSelectedRow();
 		if ( riga == -1 ){
@@ -248,7 +249,7 @@ public class Fattura extends JFrame{
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void visualizzaVendita(){
 		//txtNumero.setText(vendita.getNumVendita());
 		dataCorrente.setDate(vendita.getData_vendita());
@@ -423,7 +424,7 @@ public class Fattura extends JFrame{
 	 */
 	private JPanel getJPanelEst() {
 		if (jPanelEst == null) {
-			
+
 			jPanelEst = new JPanel();
 			jPanelEst.setLayout(new BorderLayout());
 			jPanelEst.setPreferredSize(new Dimension(500, 3));
@@ -517,7 +518,7 @@ public class Fattura extends JFrame{
 			if ( cmbClienti.getIDSelectedItem() != null )
 				idCliente = Integer.parseInt(cmbClienti.getIDSelectedItem());
 			double speseInc = 0.00;
-			if ( !txtSpeseIncasso.getText().equals("") )	
+			if ( !txtSpeseIncasso.getText().equals("") )
 				speseInc = ControlloDati.convertPrezzoToDouble(txtSpeseIncasso.getText());
 			double speseTr = 0.00;
 			if ( !txtSpeseTr.getText().equals("") )
@@ -540,7 +541,7 @@ public class Fattura extends JFrame{
 			v.setPorto(vendita.getPorto());
 			v.setSconto(vendita.getSconto());
 			v.salvaDatiInFattura();
-			
+
 			//salviamo i dettagli della fattura
 			carrello.remove(0);
 			for (DettaglioVendita dettaglio : carrello) {
@@ -783,7 +784,7 @@ public class Fattura extends JFrame{
 		}
 		AutoCompletion.enable(cmbClienti);
 	}
-	
+
 	private void caricaPagamento(){
 		Pagamento p = new Pagamento();
 		try {
@@ -914,9 +915,9 @@ public class Fattura extends JFrame{
 	}
 
 	/**
-	 * This method initializes txtSpeseIncasso	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes txtSpeseIncasso
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JFormattedTextField getTxtSpeseIncasso() {
 		if (txtSpeseIncasso == null) {
@@ -928,9 +929,9 @@ public class Fattura extends JFrame{
 	}
 
 	/**
-	 * This method initializes txtSpeseTr	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes txtSpeseTr
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JFormattedTextField getTxtSpeseTr() {
 		if (txtSpeseTr == null) {
@@ -942,9 +943,9 @@ public class Fattura extends JFrame{
 	}
 
 	/**
-	 * This method initializes jTabbedPane	
-	 * 	
-	 * @return javax.swing.JTabbedPane	
+	 * This method initializes jTabbedPane
+	 *
+	 * @return javax.swing.JTabbedPane
 	 */
 	private JTabbedPane getJTabbedPane() {
 		if (jTabbedPane == null) {
@@ -957,9 +958,9 @@ public class Fattura extends JFrame{
 	}
 
 	/**
-	 * This method initializes pnlViewFattura	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes pnlViewFattura
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlViewFattura() {
 		if (pnlViewFattura == null) {
@@ -972,9 +973,9 @@ public class Fattura extends JFrame{
 	}
 
 	/**
-	 * This method initializes pnlPulsanti	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes pnlPulsanti
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlPulsanti() {
 		if (pnlPulsanti == null) {
@@ -990,9 +991,9 @@ public class Fattura extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnModifica	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnModifica
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnModifica() {
 		if (btnModifica == null) {
@@ -1004,9 +1005,9 @@ public class Fattura extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnStampaFattura	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnStampaFattura
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnStampaFattura() {
 		if (btnStampaFattura == null) {
@@ -1018,9 +1019,9 @@ public class Fattura extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnEliminaFattura	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnEliminaFattura
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnEliminaFattura() {
 		if (btnEliminaFattura == null) {
@@ -1031,9 +1032,9 @@ public class Fattura extends JFrame{
 	}
 
 	/**
-	 * This method initializes jScrollPane1	
-	 * 	
-	 * @return javax.swing.JScrollPane	
+	 * This method initializes jScrollPane1
+	 *
+	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getJScrollPane2() {
 		if (jScrollPane2 == null) {
@@ -1044,9 +1045,9 @@ public class Fattura extends JFrame{
 	}
 
 	/**
-	 * This method initializes tblViewFatture	
-	 * 	
-	 * @return javax.swing.JTable	
+	 * This method initializes tblViewFatture
+	 *
+	 * @return javax.swing.JTable
 	 */
 	private JTable getTblViewFatture() {
 		if (tblViewFatture == null) {
@@ -1065,9 +1066,9 @@ public class Fattura extends JFrame{
 		return tblViewFatture;
 	}
 	/**
-	 * This method initializes pnlFattura	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes pnlFattura
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlFattura() {
 		if (pnlFattura == null) {

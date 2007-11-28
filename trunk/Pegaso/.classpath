@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre1.6.0_03"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/jcalendar-1.3.2.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/jxl.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/kunststoffTheme.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/looks-2.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/postgresql-8.2-504.jdbc4.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/shiftone-jrat.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/swing-worker-1.1.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/swingx-2007_10_14.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/jasper/ant-1.5.1.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/jasper/commons-beanutils-1.5.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/jasper/commons-collections-2.1.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/jasper/commons-digester-1.7.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/jasper/commons-logging-1.0.2.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/jasper/commons-logging-api-1.0.2.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/jasper/hibernate3.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/jasper/hsqldb-1.7.1.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/jasper/itext-1.3.1.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/jasper/jasperreports-1.2.0.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/jasper/jasperreports-1.2.0-applet.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/jasper/jcommon-1.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/jasper/jdt-compiler-3.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/jasper/jfreechart-1.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/jasper/poi-2.0-final-20040126.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/jasper/servlet.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/jasper/xalan.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/jasper/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="C:/progetti/Pegaso Greco Mobili/lib/jasper/xml-apis.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

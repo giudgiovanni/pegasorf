@@ -113,6 +113,7 @@ public class Fattura extends JFrame{
 	private double imposta = 0.00;
 	private JPanel jPanelOvest = null;
 	private JScrollPane jScrollPane1 = null;
+	private JScrollPane jScrollPane2 = null;
 	private JXTable jTableDdt = null;
 	private JLabel lblSpeseIncasso = null;
 	private JFormattedTextField txtSpeseIncasso = null;
@@ -859,11 +860,16 @@ public class Fattura extends JFrame{
 	 */
 	private JPanel getJPanelOvest() {
 		if (jPanelOvest == null) {
+			
+			GridBagConstraints gridBagConstraints = new GridBagConstraints();
+			gridBagConstraints.fill = GridBagConstraints.BOTH;
+			gridBagConstraints.weighty = 1.0;
+			gridBagConstraints.weightx = 1.0;
 			jPanelOvest = new JPanel();
-			jPanelOvest.setLayout(null);
-			jPanelOvest.setPreferredSize(new Dimension(290, 440));
-			jPanelOvest.add(getJScrollPane1(), null);
-			jPanelOvest.setBounds(new Rectangle(0, 0, 290, 440));
+			jPanelOvest.setLayout(new GridBagLayout());
+			jPanelOvest.add(getJScrollPane1(), gridBagConstraints);
+			jPanelOvest.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(0), "Documenti di Trasporto", 0,
+					0, new Font("Dialog", 1, 12), new Color(51, 51, 51)));
 		}
 		return jPanelOvest;
 	}
@@ -876,10 +882,9 @@ public class Fattura extends JFrame{
 	private JScrollPane getJScrollPane1() {
 		if (jScrollPane1 == null) {
 			jScrollPane1 = new JScrollPane();
-			//jScrollPane1.setPreferredSize(new Dimension(500, 440));
 			jScrollPane1.setBounds(new Rectangle(0, 0, 290, 440));
-			jScrollPane1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(0), "Documenti di Trasporto", 0,
-			0, new Font("Dialog", 1, 12), new Color(51, 51, 51)));
+//			jScrollPane1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(0), "Documenti di Trasporto", 0,
+//			0, new Font("Dialog", 1, 12), new Color(51, 51, 51)));
 			jScrollPane1.setViewportView(getJTableDdt());
 		}
 		return jScrollPane1;
@@ -1039,11 +1044,11 @@ public class Fattura extends JFrame{
 	 * @return javax.swing.JScrollPane	
 	 */
 	private JScrollPane getJScrollPane2() {
-		if (jScrollPane1 == null) {
-			jScrollPane1 = new JScrollPane();
-			jScrollPane1.setViewportView(getTblViewFatture());
+		if (jScrollPane2 == null) {
+			jScrollPane2 = new JScrollPane();
+			jScrollPane2.setViewportView(getTblViewFatture());
 		}
-		return jScrollPane1;
+		return jScrollPane2;
 	}
 
 	/**
@@ -1075,7 +1080,7 @@ public class Fattura extends JFrame{
 	private JPanel getPnlFattura() {
 		if (pnlFattura == null) {
 			pnlFattura = new JPanel();
-			pnlFattura.setLayout(new GridBagLayout());
+			pnlFattura.setLayout(new BorderLayout());
 			pnlFattura.add(getJPanelNord(), BorderLayout.NORTH);
 			pnlFattura.add(getJPanelEst(), BorderLayout.EAST);
 			pnlFattura.add(getJPanelSud(), BorderLayout.SOUTH);

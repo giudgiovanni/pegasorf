@@ -423,13 +423,11 @@ public class Fattura extends JFrame{
 	 */
 	private JPanel getJPanelEst() {
 		if (jPanelEst == null) {
-			GridBagConstraints gridBagConstraints = new GridBagConstraints();
-			gridBagConstraints.fill = GridBagConstraints.BOTH;
-			gridBagConstraints.weighty = 1.0;
-			gridBagConstraints.weightx = 1.0;
+			
 			jPanelEst = new JPanel();
-			jPanelEst.setLayout(new GridBagLayout());
-			jPanelEst.add(getJScrollPane(), gridBagConstraints);
+			jPanelEst.setLayout(new BorderLayout());
+			jPanelEst.setPreferredSize(new Dimension(500, 3));
+			jPanelEst.add(getJScrollPane(), BorderLayout.CENTER);
 		}
 		return jPanelEst;
 	}
@@ -442,7 +440,6 @@ public class Fattura extends JFrame{
 	private JScrollPane getJScrollPane() {
 		if (jScrollPane == null) {
 			jScrollPane = new JScrollPane();
-			jScrollPane.setPreferredSize(new Dimension(500, 440));
 			try {
 				jScrollPane.setViewportView(getJTable());
 			} catch (SQLException e) {
@@ -860,14 +857,9 @@ public class Fattura extends JFrame{
 	 */
 	private JPanel getJPanelOvest() {
 		if (jPanelOvest == null) {
-			
-			GridBagConstraints gridBagConstraints = new GridBagConstraints();
-			gridBagConstraints.fill = GridBagConstraints.BOTH;
-			gridBagConstraints.weighty = 1.0;
-			gridBagConstraints.weightx = 1.0;
 			jPanelOvest = new JPanel();
-			jPanelOvest.setLayout(new GridBagLayout());
-			jPanelOvest.add(getJScrollPane1(), gridBagConstraints);
+			jPanelOvest.setLayout(new BorderLayout());
+			jPanelOvest.add(getJScrollPane1(), BorderLayout.CENTER);
 			jPanelOvest.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(0), "Documenti di Trasporto", 0,
 					0, new Font("Dialog", 1, 12), new Color(51, 51, 51)));
 		}
@@ -882,7 +874,7 @@ public class Fattura extends JFrame{
 	private JScrollPane getJScrollPane1() {
 		if (jScrollPane1 == null) {
 			jScrollPane1 = new JScrollPane();
-			jScrollPane1.setBounds(new Rectangle(0, 0, 290, 440));
+			//jScrollPane1.setBounds(new Rectangle(0, 0, 290, 440));
 //			jScrollPane1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(0), "Documenti di Trasporto", 0,
 //			0, new Font("Dialog", 1, 12), new Color(51, 51, 51)));
 			jScrollPane1.setViewportView(getJTableDdt());
@@ -1082,7 +1074,7 @@ public class Fattura extends JFrame{
 			pnlFattura = new JPanel();
 			pnlFattura.setLayout(new BorderLayout());
 			pnlFattura.add(getJPanelNord(), BorderLayout.NORTH);
-			pnlFattura.add(getJPanelEst(), BorderLayout.EAST);
+			pnlFattura.add(getJPanelEst(), BorderLayout.CENTER);
 			pnlFattura.add(getJPanelSud(), BorderLayout.SOUTH);
 			pnlFattura.add(getJPanelOvest(), BorderLayout.WEST);
 		}

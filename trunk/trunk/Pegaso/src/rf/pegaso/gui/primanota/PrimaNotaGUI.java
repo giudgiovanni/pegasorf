@@ -157,7 +157,7 @@ public class PrimaNotaGUI extends JFrame {
 	private JButton getBtnInserisci() {
 		if (btnInserisci == null) {
 			btnInserisci = new JButton();
-			btnInserisci.setText("Inserisci (Enter)");
+			btnInserisci.setText("Inserisci (Invio)");
 		}
 		return btnInserisci;
 	}
@@ -196,7 +196,7 @@ public class PrimaNotaGUI extends JFrame {
 	private JButton getBtnEsci() {
 		if (btnEsci == null) {
 			btnEsci = new JButton();
-			btnEsci.setText("Esci");
+			btnEsci.setText("Esci (Esc)");
 		}
 		return btnEsci;
 	}

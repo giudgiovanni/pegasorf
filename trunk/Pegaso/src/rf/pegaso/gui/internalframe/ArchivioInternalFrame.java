@@ -23,7 +23,6 @@ import javax.swing.WindowConstants;
 import rf.myswing.util.ModalFrameUtil;
 import rf.pegaso.db.DBManager;
 import rf.pegaso.db.tabelle.Scarico;
-import rf.pegaso.gui.UpdateIndici;
 import rf.pegaso.gui.gestione.ArticoliGestione;
 import rf.pegaso.gui.gestione.CaricoGui;
 import rf.pegaso.gui.gestione.ClientiGestione;
@@ -516,8 +515,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				pnlCentrale.add(getBtnInventario(), gridBagConstraints21); // Generated
 				pnlCentrale.add(getBtnDocumento(), gridBagConstraints13); // Generated
 				pnlCentrale.add(getBtnStampe(), gridBagConstraints17); // Generated
-				pnlCentrale.add(getBtnRicerche(), gridBagConstraints18); // Generated
-				pnlCentrale.add(getJButton(), gridBagConstraints14);
+				pnlCentrale.add(getBtnRicerche(), gridBagConstraints18);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -550,30 +548,6 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	 */
 	private void inizializeAscoltatori() {
 		myActionListener = new MyActionListener();
-
-	}
-
-	/**
-	 * This method initializes jButton
-	 *
-	 * @return javax.swing.JButton
-	 */
-	private JButton getJButton() {
-		if (jButton == null) {
-			jButton = new JButton();
-			jButton.setText("Update ID");
-			jButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					apriUpdateID();
-				}
-			});
-		}
-		return jButton;
-	}
-
-	protected void apriUpdateID() {
-		UpdateIndici up=new UpdateIndici();
-		up.setVisible(true);
 
 	}
 

@@ -62,6 +62,7 @@ import org.jdesktop.swingx.JXTable;
 import javax.swing.JTabbedPane;
 import java.awt.FlowLayout;
 import rf.pegaso.db.model.FatturaViewModel;
+import javax.swing.border.TitledBorder;
 
 /**
  * @author Administrator
@@ -428,6 +429,7 @@ public class Fattura extends JFrame{
 			jPanelEst = new JPanel();
 			jPanelEst.setLayout(new BorderLayout());
 			jPanelEst.setPreferredSize(new Dimension(500, 3));
+			jPanelEst.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED), "Dettaglio Documento", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Dialog", Font.BOLD, 12), new Color(51, 51, 51)));
 			jPanelEst.add(getJScrollPane(), BorderLayout.CENTER);
 		}
 		return jPanelEst;

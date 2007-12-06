@@ -30,7 +30,7 @@ import rf.pegaso.gui.gestione.DocumentiGestione;
 import rf.pegaso.gui.gestione.FornitoriGestione;
 import rf.pegaso.gui.gestione.RepartiGestione;
 import rf.pegaso.gui.gestione.ScaricoGui;
-import rf.pegaso.gui.gestione.StampeGestione;
+import rf.pegaso.gui.gestione.StampeEtichette;
 import rf.pegaso.gui.gestione.UnitaDiMisuraGestione;
 import rf.pegaso.gui.viste.GiacenzeGUI;
 import rf.pegaso.gui.viste.RicercheArchivio;
@@ -131,7 +131,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	 *
 	 */
 	public void apriStampe() {
-		StampeGestione stampe = new StampeGestione(padre);
+		StampeEtichette stampe = new StampeEtichette(padre);
 		stampe.setVisible(true);
 
 	}

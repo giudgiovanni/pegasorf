@@ -78,7 +78,7 @@ public class Vendita {
 				porto = rs.getString(15);
 				destinazione = rs.getString(16);				
 				aspetto = rs.getInt(17);
-				//sconto = rs.getInt(18);
+				sconto = rs.getInt(18);
 			}			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -87,7 +87,7 @@ public class Vendita {
 	
 	public int salvaDatiInFattura(){
 		PreparedStatement pst = null;
-		String insert = "insert into fattura values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String insert = "insert into fattura values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		try{
 			pst = dbm.getNewPreparedStatement(insert);
 			pst.setInt(1, idVendita);
@@ -107,7 +107,7 @@ public class Vendita {
 			pst.setString(15, porto);
 			pst.setString(16, destinazione);
 			pst.setInt(17, aspetto);
-			//pst.setInt(18, sconto);
+			pst.setInt(18, sconto);
 
 			pst.executeUpdate();
 		} catch (SQLException e) {
@@ -141,7 +141,7 @@ public class Vendita {
 				consegna = rs.getString(11);
 				n_colli = rs.getInt(12);
 				aspetto = rs.getInt(13);
-				//sconto = rs.getInt(14);
+				sconto = rs.getInt(14);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -150,7 +150,7 @@ public class Vendita {
 	
 	public int salvaDatiInDdt(){
 		PreparedStatement pst = null;
-		String insert = "insert into ddt values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String insert = "insert into ddt values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		try{
 			pst = dbm.getNewPreparedStatement(insert);
 			pst.setInt(1, idVendita);
@@ -166,7 +166,7 @@ public class Vendita {
 			pst.setString(11, consegna);
 			pst.setInt(12, n_colli);
 			pst.setInt(13, aspetto);
-			//pst.setInt(14, sconto);	
+			pst.setInt(14, sconto);	
 			pst.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

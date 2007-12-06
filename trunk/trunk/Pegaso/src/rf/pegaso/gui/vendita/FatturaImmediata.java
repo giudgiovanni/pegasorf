@@ -1,8 +1,8 @@
 package rf.pegaso.gui.vendita;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
@@ -89,6 +89,8 @@ public class FatturaImmediata extends JFrame{
 	private JTextField txtNumero = null;
 	private JLabel lblData = null;
 	private JDateChooser dataCorrente = null;
+	private JDateChooser dataRicercaDa = null;
+	private JDateChooser dataRicercaA = null;
 	private JPanel jPanelCentro = null;
 	private JScrollPane jScrollPane = null;
 	private JXTable jTable = null;
@@ -103,9 +105,11 @@ public class FatturaImmediata extends JFrame{
 	private JLabel lblTotale = null;
 	private JLabel lblCliente = null;
 	private IDJComboBox cmbClienti = null;
+	private IDJComboBox cmbClientiR = null;
 	private JButton btnNuovoCliente = null;
 	private JLabel lblPagamento = null;
 	private IDJComboBox cmbPagamento = null;
+	private IDJComboBox cmbPagamentoR = null;
 	private JTextField txtCodice = null;
 	private JComboBox cmbProdotti = null;
 	private JLabel lblUtile = null;
@@ -148,13 +152,23 @@ public class FatturaImmediata extends JFrame{
 	private JTabbedPane jTabbedPane = null;
 	private JPanel pnlFattura = null;
 	private JPanel pnlViewFattura = null;
-	private JPanel pnlPulsanti = null;
+	private JPanel pnlRicerca = null;
 	private JButton btnModifica = null;
 	private JButton btnEliminaFattura = null;
 	private JButton btnStampaFattura = null;
 	private JScrollPane jScrollPane1 = null;
 	private JTable tblViewFatture = null;
 	private Vendita vendita = null;  //  @jve:decl-index=0:
+	private JLabel lblRicerca = null;
+	private JLabel lblDa = null;
+	private JLabel lblA = null;
+	private JPanel pnlRicercaData = null;
+	private JPanel pnlRicercaCliente = null;
+	private JPanel pnlRicercaPagamento = null;
+	private JButton btnRicercaData = null;
+	private JButton btnRicercaCliente = null;
+	private JButton btnRicercaPagamento = null;
+	private JPanel pnlPulsanti = null;
 
 	public FatturaImmediata(){
 		this.dbm = DBManager.getIstanceSingleton();
@@ -235,75 +249,55 @@ public class FatturaImmediata extends JFrame{
 				visualizzaFattura();
 				stampa();
 			}
+			else if ( e.getSource() == btnRicercaData ){
+				try {
+					FatturaViewModel modelView = new FatturaViewModel(dbm, new java.sql.Date(dataRicercaDa.getDate().getTime()), new java.sql.Date(dataRicercaA.getDate().getTime()), 2);
+					tblViewFatture.setModel(modelView);
+					DBManager.getIstanceSingleton().addDBStateChange(modelView);
+					TableColumn col=tblViewFatture.getColumnModel().getColumn(0);
+					col.setMinWidth(0);
+					col.setMaxWidth(0);
+					col.setPreferredWidth(0);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+			else if ( e.getSource() == btnRicercaCliente ){
+				try {
+					int cliente = Integer.parseInt(cmbClientiR.getIDSelectedItem());
+					FatturaViewModel modelView = new FatturaViewModel(dbm, "idcliente", cliente, 1);
+					tblViewFatture.setModel(modelView);
+					DBManager.getIstanceSingleton().addDBStateChange(modelView);
+					TableColumn col=tblViewFatture.getColumnModel().getColumn(0);
+					col.setMinWidth(0);
+					col.setMaxWidth(0);
+					col.setPreferredWidth(0);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+			else if ( e.getSource() == btnRicercaPagamento ){
+				try {
+					int pagamento = Integer.parseInt(cmbPagamentoR.getIDSelectedItem());
+					FatturaViewModel modelView = new FatturaViewModel(dbm, "pagamento", pagamento, 1);
+					tblViewFatture.setModel(modelView);
+					DBManager.getIstanceSingleton().addDBStateChange(modelView);
+					TableColumn col=tblViewFatture.getColumnModel().getColumn(0);
+					col.setMinWidth(0);
+					col.setMaxWidth(0);
+					col.setPreferredWidth(0);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
 		}
 	}
-
+	
 	class MyTableModelListener implements TableModelListener{
-
-
 		public void tableChanged(TableModelEvent arg0) {
 			calcoliBarraInferiore();
 		}
-
-
 	}
-
-//	private void inserisci() {
-//		Vendita v  = new Vendita();
-//		Articolo a = new Articolo();
-//		int spinQta = 1;
-//		try {
-//			a.caricaDatiByCodBarre(txtCodice.getText());
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		catch (IDNonValido e) {
-//			e.printStackTrace();
-//		}
-//		try{
-//			if ( a.getGiacenza() < spinQta ){
-//				JOptionPane.showMessageDialog(this,
-//						"Quantità richiesta non disponibile\nDisponibilità magazzino = "+a.getGiacenza(), "AVVISO",
-//						JOptionPane.INFORMATION_MESSAGE);
-//				return;
-//			}
-//		}
-//		catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		v.setCodiceArticolo(a.getIdArticolo());
-//		for ( Vendita v1 : carrello){
-//			if ( v1.getCodiceArticolo() == v.getCodiceArticolo() )
-//				try{
-//					if ( a.getGiacenza() < (spinQta + v1.getQta()) ){
-//						JOptionPane.showMessageDialog(this,
-//								"Quantità richiesta non disponibile\nDisponibilità magazzino = "+a.getGiacenza(), "AVVISO",
-//								JOptionPane.INFORMATION_MESSAGE);
-//						return;
-//					}
-//					else{
-//						long oldQta = v1.getQta();
-//						v1.setQta(oldQta + spinQta);
-//						dbm.notifyDBStateChange();
-//						return;
-//					}
-//				}
-//				catch (SQLException e) {
-//					e.printStackTrace();
-//				}
-//		}
-//		v.setCodiceBarre(txtCodice.getText());
-//		v.setCodiceVendita(dbm.getNewID("fattura", "idfattura"));
-//		v.setDescrizione(a.getDescrizione());//String.valueOf(cmbProdotti.getSelectedItem()));
-//		v.setQta(Long.valueOf(spinQta));
-//		v.setPrezzoAcquisto(prezzoAcquisto);
-//		v.setPrezzoVendita(prezzoVendita);
-//		v.setIva(iva);
-//		carrello.add(v);
-//		
-//		DBManager.getIstanceSingleton().notifyDBStateChange();
-//		calcoliBarraInferiore();
-//	}
 	
 	private void inserisci(DettaglioVendita dv){
 		dv.setIdVendita(dbm.getNewID("fattura", "idfattura"));
@@ -642,7 +636,8 @@ public class FatturaImmediata extends JFrame{
 				column = jTable.getColumnModel().getColumn(1);
 				column.setCellEditor(new DefaultCellEditor(getTxtCodice()));
 				jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				jTable.setDefaultEditor(Long.class, new QuantitaDisponibileEditor());
+				column = jTable.getColumnModel().getColumn(4);
+				column.setCellEditor(new QuantitaDisponibileEditor());
 				jTable.setDefaultRenderer(Object.class, new MyTableCellRendererAlignment());
 				jTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 				jTable.packAll();
@@ -926,6 +921,17 @@ public class FatturaImmediata extends JFrame{
 		return cmbClienti;
 	}
 
+	private IDJComboBox getCmbClientiRicerca(){
+		if ( cmbClientiR == null )
+			try {
+				cmbClientiR = new IDJComboBox();
+				cmbClientiR.setBounds(new Rectangle(8, 36, 200, 26));
+			} catch (Throwable throwable) {
+			}
+		return cmbClientiR;
+	}
+
+	
 	/**
 	 * This method initializes btnNuovoCliente
 	 *
@@ -953,36 +959,21 @@ public class FatturaImmediata extends JFrame{
 		}
 		return cmbPagamento;
 	}
+	
+	/**
+	 * This method initializes cmbPagamentoR
+	 *
+	 * @return javax.swing.JComboBox
+	 */
+	private JComboBox getCmbPagamentoRicerca() {
+		if (cmbPagamentoR == null) {
+			cmbPagamentoR = new IDJComboBox();
+			cmbPagamentoR.setBounds(new Rectangle(8, 36, 200, 26));
+		}
+		return cmbPagamentoR;
+	}
 
 	private void caricaClienti(){
-//		Cliente c = new Cliente();
-//		String tmpClienti[] = null;
-//		String tmpCodici[] = null;
-//		try {
-//			cmbClienti.removeAllItems();
-//			cmbClienti.addItem("");
-//			String as[] = (String[]) c.allClienti();
-//			tmpClienti = new String[as.length];
-//			tmpCodici = new String[as.length];
-//			// carichiamo tutti i dati in due array
-//			// da passre al combobox
-//			for (int i = 0; i < as.length; i++) {
-//				String tmp[] = as[i].split("-",2);
-//				tmpClienti[i] = tmp[1].trim();
-//				tmpCodici[i] = tmp[0].trim();
-//			}
-//			((IDJComboBox) cmbClienti).caricaIDAndOggetti(tmpCodici,
-//					tmpClienti);
-//		} catch (SQLException e) {
-//			JOptionPane.showMessageDialog(this,
-//					"Errore caricamento fornitori nel combobox", "ERRORE", 0);
-//			e.printStackTrace();
-//		} catch (LunghezzeArrayDiverse e) {
-//			JOptionPane.showMessageDialog(this, "Errore lunghezza array",
-//					"ERRORE LUNGHEZZA", 0);
-//			e.printStackTrace();
-//		}
-
 		Cliente c = new Cliente();
 		try {
 
@@ -990,11 +981,13 @@ public class FatturaImmediata extends JFrame{
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
 			((IDJComboBox) cmbClienti).caricaNewValueComboBox(as, true);
+			((IDJComboBox) cmbClientiR).caricaNewValueComboBox(as, true);
 		} catch (SQLException e) {
-			messaggioCampoMancante("Errore caricamento fornitori nel combobox", "ERRORE");
+			messaggioCampoMancante("Errore caricamento clienti nel combobox", "ERRORE");
 			e.printStackTrace();
 		}
 		AutoCompletion.enable(cmbClienti);
+		AutoCompletion.enable(cmbClientiR);
 	}
 
 	private void caricaDescrizione(){
@@ -1020,11 +1013,13 @@ public class FatturaImmediata extends JFrame{
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
 			((IDJComboBox) cmbPagamento).caricaNewValueComboBox(as, true);
+			((IDJComboBox) cmbPagamentoR).caricaNewValueComboBox(as, true);
 		} catch (SQLException e) {
 			messaggioCampoMancante("Errore caricamento pagamenti nel combobox", "ERRORE");
 			e.printStackTrace();
 		}
 		AutoCompletion.enable(cmbPagamento);
+		AutoCompletion.enable(cmbPagamentoR);
 	}
 
 	private void caricaCausale(){
@@ -1516,29 +1511,41 @@ public class FatturaImmediata extends JFrame{
 			pnlViewFattura = new JPanel();
 			pnlViewFattura.setLayout(new BorderLayout());
 			pnlViewFattura.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED)); // Generated
-			pnlViewFattura.add(getPnlPulsanti(), BorderLayout.NORTH);
+			pnlViewFattura.add(getPnlRicerca(), BorderLayout.NORTH);
 			pnlViewFattura.add(getJScrollPane1(), BorderLayout.CENTER);
+			pnlViewFattura.add(getPnlPulsanti(), BorderLayout.SOUTH);
 		}
 		return pnlViewFattura;
 	}
 
 	/**
-	 * This method initializes pnlPulsanti	
+	 * This method initializes pnlRicerca	
 	 * 	
 	 * @return javax.swing.JPanel	
 	 */
-	private JPanel getPnlPulsanti() {
-		if (pnlPulsanti == null) {
-			pnlPulsanti = new JPanel();
-//			FlowLayout flowLayout = new FlowLayout();
-//			flowLayout.setAlignment(FlowLayout.LEFT); // Generated
-//			pnlPulsanti.setLayout(flowLayout); // Generated
-			pnlPulsanti.setLayout(new BorderLayout());
-			pnlPulsanti.add(getBtnModifica(), null);
-			pnlPulsanti.add(getBtnStampaFattura(), null); // Generated
-			pnlPulsanti.add(getBtnEliminaFattura(), null); // Generated
+	private JPanel getPnlRicerca() {
+		if (pnlRicerca == null) {
+			lblA = new JLabel();
+			lblA.setText("a");
+			lblA.setBounds(new Rectangle(125, 20, 38, 16));
+			lblDa = new JLabel();
+			lblDa.setText("da");
+			lblDa.setBounds(new Rectangle(5, 20, 20, 16));
+			lblRicerca = new JLabel();
+			lblRicerca.setBounds(new Rectangle(8, 8, 80, 16));
+			lblRicerca.setText("Ricerca per..");
+			pnlRicerca = new JPanel();
+			pnlRicerca.setLayout(null);
+			pnlRicerca.setPreferredSize(new Dimension(0,110));
+//			pnlRicerca.add(getBtnModifica(), BorderLayout.EAST);
+//			pnlRicerca.add(getBtnStampaFattura(), BorderLayout.CENTER); // Generated
+//			pnlRicerca.add(getBtnEliminaFattura(), BorderLayout.WEST); // Generated
+			pnlRicerca.add(lblRicerca, null);
+			pnlRicerca.add(getPnlRicercaData(), null);
+			pnlRicerca.add(getPnlRicercaCliente(), null);
+			pnlRicerca.add(getPnlRicercaPagamento(), null);
 		}
-		return pnlPulsanti;
+		return pnlRicerca;
 	}
 	
 	/**
@@ -1688,18 +1695,152 @@ public class FatturaImmediata extends JFrame{
 	 */
 	private JTable getTblViewFatture() {
 		if (tblViewFatture == null) {
-			try {
-				FatturaViewModel modelView = new FatturaViewModel(dbm, 1);
-				tblViewFatture = new JTable(modelView);
-				DBManager.getIstanceSingleton().addDBStateChange(modelView);
-				TableColumn col=tblViewFatture.getColumnModel().getColumn(0);
-				col.setMinWidth(0);
-				col.setMaxWidth(0);
-				col.setPreferredWidth(0);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			tblViewFatture = new JTable();
 		}
 		return tblViewFatture;
+	}
+	
+	private JDateChooser getDataRicercaDa() {
+		if (dataRicercaDa == null)
+			try {
+				dataRicercaDa = new JDateChooser("dd/MM/yyyy", "##/##/##", '_');
+				dataRicercaDa.setDate(new java.util.Date());
+				dataRicercaDa.setBounds(new Rectangle(5, 38, 112, 24));
+				dataRicercaDa.setName("Da");
+			} catch (Throwable throwable) {
+			}
+		return dataRicercaDa;
+	}
+	
+	private JDateChooser getDataRicercaA() {
+		if (dataRicercaA == null)
+			try {
+				dataRicercaA = new JDateChooser("dd/MM/yyyy", "##/##/##", '_');
+				dataRicercaA.setDate(new java.util.Date());
+				dataRicercaA.setBounds(new Rectangle(125, 38, 112, 24));
+			} catch (Throwable throwable) {
+			}
+		return dataRicercaA;
+	}
+
+	/**
+	 * This method initializes pnlRicercaData	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPnlRicercaData() {
+		if (pnlRicercaData == null) {
+			pnlRicercaData = new JPanel();
+			pnlRicercaData.setLayout(null);
+			pnlRicercaData.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(0), "Data", 0,
+					0, new Font("Dialog", 1, 12), new Color(51, 51, 51)));
+			pnlRicercaData.setBounds(new Rectangle(5, 30, 275, 70));
+			pnlRicercaData.add(getDataRicercaA(), null);
+			pnlRicercaData.add(getDataRicercaDa(), null);
+			pnlRicercaData.add(lblA, null);
+			pnlRicercaData.add(lblDa, null);
+			pnlRicercaData.add(getBtnRicercaData(), null);
+		}
+		return pnlRicercaData;
+	}
+
+	/**
+	 * This method initializes pnlRicercaCliente	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPnlRicercaCliente() {
+		if (pnlRicercaCliente == null) {
+			pnlRicercaCliente = new JPanel();
+			pnlRicercaCliente.setLayout(null);
+			pnlRicercaCliente.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(0), "Cliente", 0,
+					0, new Font("Dialog", 1, 12), new Color(51, 51, 51)));
+			pnlRicercaCliente.setBounds(new Rectangle(285, 30, 245, 70));
+			pnlRicercaCliente.add(getCmbClientiRicerca(), null);
+			pnlRicercaCliente.add(getBtnRicercaCliente(), null);
+		}
+		return pnlRicercaCliente;
+	}
+
+	/**
+	 * This method initializes pnlRicercaPagamento	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPnlRicercaPagamento() {
+		if (pnlRicercaPagamento == null) {
+			pnlRicercaPagamento = new JPanel();
+			pnlRicercaPagamento.setLayout(null);
+			pnlRicercaPagamento.setBounds(new Rectangle(535, 30, 245, 70));
+			pnlRicercaPagamento.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(0), "Tipo Pagamento", 0,
+					0, new Font("Dialog", 1, 12), new Color(51, 51, 51)));
+			pnlRicercaPagamento.add(getCmbPagamentoRicerca(), null);
+			pnlRicercaPagamento.add(getBtnRicercaPagamento(), null);
+		}
+		return pnlRicercaPagamento;
+	}
+
+	/**
+	 * This method initializes btnRicercaData	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnRicercaData() {
+		if (btnRicercaData == null) {
+			btnRicercaData = new JButton();
+			btnRicercaData.setBounds(new Rectangle(245, 38, 20, 24));
+			btnRicercaData.setText("...");
+			btnRicercaData.setToolTipText("Ricerca");
+			btnRicercaData.addActionListener(new MyButtonListener());
+		}
+		return btnRicercaData;
+	}
+
+	/**
+	 * This method initializes btnRicercaCliente	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnRicercaCliente() {
+		if (btnRicercaCliente == null) {
+			btnRicercaCliente = new JButton();
+			btnRicercaCliente.setBounds(new Rectangle(215, 36, 20, 26));
+			btnRicercaCliente.setText("...");
+			btnRicercaCliente.setToolTipText("Ricerca");
+			btnRicercaCliente.addActionListener(new MyButtonListener());
+		}
+		return btnRicercaCliente;
+	}
+
+	/**
+	 * This method initializes btnRicercaPagamento	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnRicercaPagamento() {
+		if (btnRicercaPagamento == null) {
+			btnRicercaPagamento = new JButton();
+			btnRicercaPagamento.setBounds(new Rectangle(215, 36, 20, 26));
+			btnRicercaPagamento.setText("...");
+			btnRicercaPagamento.setToolTipText("Ricerca");
+			btnRicercaPagamento.addActionListener(new MyButtonListener());
+		}
+		return btnRicercaPagamento;
+	}
+
+	/**
+	 * This method initializes pnlPulsanti	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPnlPulsanti() {
+		if (pnlPulsanti == null) {
+			pnlPulsanti = new JPanel();
+			pnlPulsanti.setLayout(new GridBagLayout());
+			pnlPulsanti.add(getBtnEliminaFattura(),null);
+			pnlPulsanti.add(getBtnModifica(), null);
+			pnlPulsanti.add(getBtnStampaFattura(), null);
+		}
+		return pnlPulsanti;
 	}
 }

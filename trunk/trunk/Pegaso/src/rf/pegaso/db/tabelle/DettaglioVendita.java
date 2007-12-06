@@ -142,7 +142,6 @@ public class DettaglioVendita {
 
 			e1.printStackTrace();
 		} catch (CodiceBarreInesistente e1) {
-			//avvisoCodBarreInesistente();
 			e1.printStackTrace();
 		}
 		return 1;
@@ -191,7 +190,8 @@ public class DettaglioVendita {
 			a.caricaDati(dv.getIdArticolo());
 			dv.setDescrizione(a.getDescrizione());
 			dv.setCodiceBarre(a.getCodBarre());
-			//dv.setSconto(rs.getInt(6));
+			if ( !tabella.equals("banco") )
+				dv.setSconto(rs.getInt(6));
 			dv.setIva(a.getIva());
 			UnitaDiMisura udm = new UnitaDiMisura();
 			udm.caricaDati(a.getUm());
@@ -206,13 +206,16 @@ public class DettaglioVendita {
 		PreparedStatement pst = null;
 		try{
 			String insert = "insert into "+tabella+" values (?,?,?,?,?)";
+			if ( !tabella.equals("banco") )
+				insert = "insert into "+tabella+" values (?,?,?,?,?,?)";
 			pst = dbm.getNewPreparedStatement(insert);
 			pst.setInt(1, idArticolo);
 			pst.setInt(2, idVendita);
 			pst.setLong(3, qta);
 			pst.setDouble(4, prezzoAcquisto);
 			pst.setDouble(5, prezzoVendita);
-			//pst.setInt(6, sconto);
+			if ( !tabella.equals("banco") )
+				pst.setInt(6, sconto);
 
 			pst.executeUpdate();
 			updateArticolo();

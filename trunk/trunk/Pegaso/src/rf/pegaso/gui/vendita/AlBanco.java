@@ -14,9 +14,10 @@ import javax.swing.WindowConstants;
 
 import rf.myswing.IDJComboBox;
 import rf.myswing.util.MyTableCellRendererAlignment;
-import rf.myswing.util.QuantitaDisponibileEditorSQL;
+import rf.myswing.util.QuantitaDisponibileEditor;
 import rf.pegaso.db.DBManager;
 import rf.pegaso.db.model.BancoViewModel;
+import rf.pegaso.db.model.FatturaViewModel;
 import rf.pegaso.db.model.VenditeModel;
 import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.DettaglioVendita;
@@ -58,6 +59,8 @@ import org.jdesktop.swingx.JXTable;
 import javax.swing.JComboBox;
 import javax.swing.JTabbedPane;
 import java.awt.FlowLayout;
+import java.util.Date;
+import java.awt.Color;
 
 public class AlBanco extends JFrame{
 
@@ -107,8 +110,19 @@ public class AlBanco extends JFrame{
 	private JButton btnStampaFattura = null;
 	private JButton btnEliminaFattura = null;
 	private JScrollPane jScrollPane1 = null;
-	private JTable tblViewFatture = null;
-
+	private JXTable tblViewFatture = null;
+	private JPanel pnlRicerca = null;
+	private JLabel lblRicerca = null;
+	private JPanel pnlRicercaData = null;
+	private JDateChooser dataRicercaA = null;
+	private JDateChooser dataRicercaDa = null;
+	private JLabel lblA = null;
+	private JLabel lblDa = null;
+	private JButton btnRicercaData = null;
+	private JPanel pnlDettaglioVendita = null;
+	private JScrollPane jScrollPane2 = null;
+	private JXTable tblDettaglioVendita = null;
+	private JPanel pnlVendite = null;
 	public AlBanco(){
 		this.dbm = DBManager.getIstanceSingleton();
 		initialize();
@@ -158,6 +172,15 @@ public class AlBanco extends JFrame{
 				stampa();
 			else if ( e.getSource() == btnElimina )
 				deleteArticolo();
+			else if ( e.getSource() == btnRicercaData ){
+				try {
+					FatturaViewModel modelView = new FatturaViewModel(dbm, new java.sql.Date(dataRicercaDa.getDate().getTime()), new java.sql.Date(dataRicercaA.getDate().getTime()), 5);
+					tblViewFatture.setModel(modelView);
+					DBManager.getIstanceSingleton().addDBStateChange(modelView);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
 		}
 	}
 
@@ -440,7 +463,9 @@ public class AlBanco extends JFrame{
 				column = jTable.getColumnModel().getColumn(1);
 				column.setCellEditor(new DefaultCellEditor(getTxtCodice()));
 				jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				jTable.setDefaultEditor(Long.class, new QuantitaDisponibileEditorSQL());
+				column = jTable.getColumnModel().getColumn(4);
+				column.setCellEditor(new QuantitaDisponibileEditor());
+				//jTable.setDefaultEditor(Long.class, new QuantitaDisponibileEditorSQL());
 				jTable.setDefaultRenderer(String.class, new MyTableCellRendererAlignment());
 				jTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 				jTable.packAll();
@@ -860,8 +885,10 @@ public class AlBanco extends JFrame{
 		if (pnlViewVendita == null) {
 			pnlViewVendita = new JPanel();
 			pnlViewVendita.setLayout(new BorderLayout());
-			pnlViewVendita.add(getPnlPulsanti(), BorderLayout.NORTH);
-			pnlViewVendita.add(getJScrollPane1(), BorderLayout.CENTER);
+			pnlViewVendita.add(getPnlPulsanti(), BorderLayout.SOUTH);
+			pnlViewVendita.add(getPnlRicerca(), BorderLayout.NORTH);
+			pnlViewVendita.add(getPnlDettaglioVendita(), BorderLayout.CENTER);
+			pnlViewVendita.add(getPnlVendite(), BorderLayout.WEST);
 		}
 		return pnlViewVendita;
 	}
@@ -944,19 +971,162 @@ public class AlBanco extends JFrame{
 	 */
 	private JTable getTblViewFatture() {
 		if (tblViewFatture == null) {
-			BancoViewModel modelView;
-			try {
-				modelView = new BancoViewModel(dbm);
-				tblViewFatture = new JTable(modelView);
-				DBManager.getIstanceSingleton().addDBStateChange(modelView);
-				TableColumn col=tblViewFatture.getColumnModel().getColumn(0);
-				col.setMinWidth(0);
-				col.setMaxWidth(0);
-				col.setPreferredWidth(0);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+//			try {
+//				BancoViewModel bancoModel = new BancoViewModel(dbm);
+//				tblViewFatture = new JXTable(bancoModel);
+//				DBManager.getIstanceSingleton().addDBStateChange(bancoModel);
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			}
+			tblViewFatture = new JXTable();
 		}
 		return tblViewFatture;
+	}
+
+	/**
+	 * This method initializes pnlRicerca	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPnlRicerca() {
+		if (pnlRicerca == null) {
+			lblRicerca = new JLabel();
+			lblRicerca.setBounds(new Rectangle(8, 8, 80, 16));
+			lblRicerca.setText("Ricerca per..");
+			pnlRicerca = new JPanel();
+			pnlRicerca.setLayout(null);
+			pnlRicerca.setPreferredSize(new Dimension(0, 110));
+			pnlRicerca.add(lblRicerca, null);
+			pnlRicerca.add(getPnlRicercaData(), null);
+		}
+		return pnlRicerca;
+	}
+
+	/**
+	 * This method initializes pnlRicercaData	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPnlRicercaData() {
+		if (pnlRicercaData == null) {
+			lblDa = new JLabel();
+			lblDa.setBounds(new Rectangle(5, 20, 20, 16));
+			lblDa.setText("da");
+			lblA = new JLabel();
+			lblA.setBounds(new Rectangle(125, 20, 38, 16));
+			lblA.setText("a");
+			pnlRicercaData = new JPanel();
+			pnlRicercaData.setLayout(null);
+			pnlRicercaData.setBounds(new Rectangle(5, 30, 275, 70));
+			pnlRicercaData.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(0), "Data", 0, 0, new Font("Dialog", 1, 12), new Color(51, 51, 51)));
+			pnlRicercaData.add(getDataRicercaA(), null);
+			pnlRicercaData.add(getDataRicercaDa(), null);
+			pnlRicercaData.add(lblA, null);
+			pnlRicercaData.add(lblDa, null);
+			pnlRicercaData.add(getBtnRicercaData(), null);
+		}
+		return pnlRicercaData;
+	}
+
+	/**
+	 * This method initializes dataRicercaA	
+	 * 	
+	 * @return com.toedter.calendar.JDateChooser	
+	 */
+	private JDateChooser getDataRicercaA() {
+		if (dataRicercaA == null) {
+			dataRicercaA = new JDateChooser("dd/MM/yyyy", "##/##/##", '_');
+			dataRicercaA.setBounds(new Rectangle(125, 38, 112, 24));
+			dataRicercaA.setDate(new Date());
+		}
+		return dataRicercaA;
+	}
+
+	/**
+	 * This method initializes dataRicercaDa	
+	 * 	
+	 * @return com.toedter.calendar.JDateChooser	
+	 */
+	private JDateChooser getDataRicercaDa() {
+		if (dataRicercaDa == null) {
+			dataRicercaDa = new JDateChooser("dd/MM/yyyy", "##/##/##", '_');
+			dataRicercaDa.setBounds(new Rectangle(5, 38, 112, 24));
+			dataRicercaDa.setDate(new Date());
+			dataRicercaDa.setName("Da");
+		}
+		return dataRicercaDa;
+	}
+
+	/**
+	 * This method initializes btnRicercaData	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnRicercaData() {
+		if (btnRicercaData == null) {
+			btnRicercaData = new JButton();
+			btnRicercaData.setBounds(new Rectangle(245, 38, 20, 24));
+			btnRicercaData.setText("...");
+			btnRicercaData.setToolTipText("Ricerca");
+			btnRicercaData.addActionListener(new MyButtonListener());
+		}
+		return btnRicercaData;
+	}
+
+	/**
+	 * This method initializes pnlDettaglioVendita	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPnlDettaglioVendita() {
+		if (pnlDettaglioVendita == null) {
+			pnlDettaglioVendita = new JPanel();
+			pnlDettaglioVendita.setLayout(new BorderLayout());
+			pnlDettaglioVendita.add(getJScrollPane2(), BorderLayout.CENTER);
+			pnlDettaglioVendita.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(0), "Dettaglio Vendita", 0,
+					0, new Font("Dialog", 1, 12), new Color(51, 51, 51)));
+		}
+		return pnlDettaglioVendita;
+	}
+
+	/**
+	 * This method initializes jScrollPane2	
+	 * 	
+	 * @return javax.swing.JScrollPane	
+	 */
+	private JScrollPane getJScrollPane2() {
+		if (jScrollPane2 == null) {
+			jScrollPane2 = new JScrollPane();
+			jScrollPane2.setViewportView(getTblDettaglioVendita());
+		}
+		return jScrollPane2;
+	}
+
+	/**
+	 * This method initializes tblDettaglioVendita	
+	 * 	
+	 * @return javax.swing.JTable	
+	 */
+	private JTable getTblDettaglioVendita() {
+		if (tblDettaglioVendita == null) {
+			tblDettaglioVendita = new JXTable();
+		}
+		return tblDettaglioVendita;
+	}
+
+	/**
+	 * This method initializes pnlVendite	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPnlVendite() {
+		if (pnlVendite == null) {
+			pnlVendite = new JPanel();
+			pnlVendite.setLayout(new BorderLayout());
+			pnlVendite.add(getJScrollPane1(), BorderLayout.CENTER);
+			pnlVendite.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(0), "Vendite", 0,
+					0, new Font("Dialog", 1, 12), new Color(51, 51, 51)));
+		}
+		return pnlVendite;
 	}
 }

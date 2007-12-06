@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -56,6 +57,13 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
+
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperManager;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
 
 import org.jdesktop.swingx.JXTable;
 
@@ -1711,13 +1719,48 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 		if (btnStampa == null) {
 			try {
 				btnStampa = new JButton();
-				btnStampa.setEnabled(false); // Generated
 				btnStampa.setText("Stampa"); // Generated
+				btnStampa.addActionListener(new java.awt.event.ActionListener() {
+					public void actionPerformed(java.awt.event.ActionEvent e) {
+						stampaScarichi();
+					}
+				});
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
 		}
 		return btnStampa;
+	}
+
+	protected void stampaScarichi() {
+			int scelta = JOptionPane.showConfirmDialog(this,
+					"Sei sicuro di voler stampare l'elenco scarichi?", "AVVISO", 0,3);
+			if (scelta != JOptionPane.YES_OPTION)
+				return;
+			scelta = JOptionPane.showConfirmDialog(this,
+					"Vuoi stampare l'elenco scarichi con dettaglio articoli?", "AVVISO", 0,3);
+			if (scelta != JOptionPane.YES_OPTION){
+				try {
+					JasperViewer.viewReport(
+							JasperFillManager.fillReport(
+									"report/elenco_scarichi.jasper", null, dbm
+											.getConnessione()), false);
+				} catch (JRException e) {
+					e.printStackTrace();
+				}
+			}else {
+				try {
+					JasperReport subreport= (JasperReport) JRLoader.loadObject(new File("report"+File.separator+"dettaglio_scarichi.jasper"));
+					JasperViewer.viewReport(
+							JasperFillManager.fillReport(
+									"report/elenco_scarichi_dettaglio.jasper", null, dbm
+											.getConnessione()), false);
+				} catch (JRException e) {
+					e.printStackTrace();
+				}
+			}
+
+
 	}
 
 	/**

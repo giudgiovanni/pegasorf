@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.db.model;
 
@@ -18,12 +18,12 @@ import rf.utility.db.DBStateChange;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class FatturaViewModel extends AbstractTableModel implements DBStateChange {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private DBManager dbm;
@@ -36,7 +36,7 @@ public class FatturaViewModel extends AbstractTableModel implements DBStateChang
 	private int valore = 0;
 	private Date da;
 	private Date a;
-	
+
 	/*
 	 * se tabella == 1 la ricerca va fatta in fattura
 	 * se tabella == 2 la ricerca va fatta per data nella fattura
@@ -59,7 +59,11 @@ public class FatturaViewModel extends AbstractTableModel implements DBStateChang
 		this.tabella = tab;
 		recuperaDati();
 	}
-	
+
+	public FatturaViewModel(DBManager dbm2, int i) {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int getColumnCount() {
 		int nColonne = 0;
 		try {
@@ -138,19 +142,19 @@ public class FatturaViewModel extends AbstractTableModel implements DBStateChang
 		stateChange();
 
 	}
-	
+
 	public Class<?> getColumnClass(int columnIndex) {
 		if ( columnIndex == 0 || columnIndex == 3 )
 			return Integer.class;
 		else if ( columnIndex == 1 || columnIndex == 2 )
 			return String.class;
-		else 
+		else
 			return java.sql.Date.class;
 	}
 
 	/**
 	 * @throws SQLException
-	 * 
+	 *
 	 */
 	private void recuperaDati() throws SQLException {
 		if ( tabella == 1)

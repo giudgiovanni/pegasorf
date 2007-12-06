@@ -1053,17 +1053,13 @@ public class Fattura extends JFrame{
 	 */
 	private JTable getTblViewFatture() {
 		if (tblViewFatture == null) {
-			try {
-				FatturaViewModel modelView = new FatturaViewModel(dbm, 1);
-				tblViewFatture = new JTable(modelView);
-				DBManager.getIstanceSingleton().addDBStateChange(modelView);
-				TableColumn col=tblViewFatture.getColumnModel().getColumn(0);
-				col.setMinWidth(0);
-				col.setMaxWidth(0);
-				col.setPreferredWidth(0);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			FatturaViewModel modelView = new FatturaViewModel(dbm, 1);
+			tblViewFatture = new JTable(modelView);
+			DBManager.getIstanceSingleton().addDBStateChange(modelView);
+			TableColumn col=tblViewFatture.getColumnModel().getColumn(0);
+			col.setMinWidth(0);
+			col.setMaxWidth(0);
+			col.setPreferredWidth(0);
 		}
 		return tblViewFatture;
 	}

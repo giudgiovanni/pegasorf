@@ -3,6 +3,7 @@
  */
 package rf.pegaso.db.model;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -31,13 +32,34 @@ public class FatturaViewModel extends AbstractTableModel implements DBStateChang
 	private ResultSet rs = null;
 	private ResultSetMetaData rsmd = null;
 	private int tabella = 0;
+	private String colonna = "";
+	private int valore = 0;
+	private Date da;
+	private Date a;
+	
+	/*
+	 * se tabella == 1 la ricerca va fatta in fattura
+	 * se tabella == 2 la ricerca va fatta per data nella fattura
+	 * se tabella == 3 la ricerca va fatta in ddt
+	 * se tabella == 4 la ricerca va fatta per data in ddt
+	 */
 
-	public FatturaViewModel(DBManager dbm, int tab) throws SQLException {
+	public FatturaViewModel(DBManager dbm, String colonna, int valore, int tab) throws SQLException {
 		this.dbm = dbm;
 		this.tabella = tab;
+		this.colonna = colonna;
+		this.valore = valore;
 		recuperaDati();
 	}
 
+	public FatturaViewModel(DBManager dbm, Date da, Date a, int tab) throws SQLException{
+		this.dbm = dbm;
+		this.da = da;
+		this.a = a;
+		this.tabella = tab;
+		recuperaDati();
+	}
+	
 	public int getColumnCount() {
 		int nColonne = 0;
 		try {
@@ -132,9 +154,15 @@ public class FatturaViewModel extends AbstractTableModel implements DBStateChang
 	 */
 	private void recuperaDati() throws SQLException {
 		if ( tabella == 1)
-			this.query = "select f.idfattura,c.cognome,c.nome,f.num_fattura as numero,f.data_vendita as data from fattura as f,clienti as c where c.idcliente=f.idcliente order by f.data_vendita";
+			this.query = "select f.idfattura,c.cognome,c.nome,f.num_fattura as numero,f.data_vendita as data from fattura as f,clienti as c where c.idcliente=f.idcliente and f."+colonna+"="+valore+" order by f.data_vendita";
 		else if ( tabella == 2 )
-			this.query = "select d.idddt,c.cognome,c.nome,d.num_ddt as numero,d.data_ddt as data from ddt as d,clienti as c where c.idcliente=d.idcliente order by d.data_ddt";
+			this.query = "select f.idfattura,c.cognome,c.nome,f.num_fattura as numero,f.data_vendita as data from fattura as f,clienti as c where c.idcliente=f.idcliente and f.data_vendita>='"+da+"' and f.data_vendita<='"+a+"' order by f.data_vendita";
+		else if ( tabella == 3 )
+			this.query = "select d.idddt,c.cognome,c.nome,d.num_ddt as numero,d.data_ddt as data from ddt as d,clienti as c where c.idcliente=d.idcliente and d."+colonna+"="+valore+" order by d.data_ddt";
+		else if ( tabella == 4 )
+			this.query = "select d.idddt,c.cognome,c.nome,d.num_ddt as numero,d.data_ddt as data from ddt as d,clienti as c where c.idcliente=d.idcliente and d.data_ddt>='"+da+"' and d.data_ddt<='"+a+"' order by d.data_ddt";
+		else if ( tabella == 5 )
+			this.query = "select b.idvendita as numero,b.data_vendita as data from banco as b where b.data_vendita>='"+da+"' and b.data_vendita<='"+a+"' order by b.data_vendita";
 		pst = dbm.getNewPreparedStatement(query);
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();

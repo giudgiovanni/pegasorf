@@ -70,6 +70,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JTabbedPane;
 import java.awt.FlowLayout;
 import rf.pegaso.db.model.FatturaViewModel;
+import java.util.Date;
+import java.awt.Color;
 
 public class DocumentoDiTrasporto extends JFrame{
 
@@ -145,7 +147,17 @@ public class DocumentoDiTrasporto extends JFrame{
 	private JScrollPane jScrollPane1 = null;
 	private JTable tblViewDdt = null;
 	private JPanel pnlDdt = null;
-
+	private JPanel pnlRicerca = null;
+	private JLabel lblRicerca = null;
+	private JPanel pnlRicercaData = null;
+	private JDateChooser dataRicercaA = null;
+	private JDateChooser dataRicercaDa = null;
+	private JLabel lblA = null;
+	private JLabel lblDa = null;
+	private JButton btnRicercaData = null;
+	private JPanel pnlRicercaCliente = null;
+	private IDJComboBox cmbClientiR = null;
+	private JButton btnRicercaCliente = null;
 	public DocumentoDiTrasporto(){
 		this.dbm = DBManager.getIstanceSingleton();
 		initialize();
@@ -215,6 +227,33 @@ public class DocumentoDiTrasporto extends JFrame{
 				modificaFattura();
 			else if ( e.getSource() == btnEliminaDdt )
 				eliminaDdt();
+			else if ( e.getSource() == btnRicercaData ){
+				try {
+					FatturaViewModel modelView = new FatturaViewModel(dbm, new java.sql.Date(dataRicercaDa.getDate().getTime()), new java.sql.Date(dataRicercaA.getDate().getTime()), 4);
+					tblViewDdt.setModel(modelView);
+					DBManager.getIstanceSingleton().addDBStateChange(modelView);
+					TableColumn col=tblViewDdt.getColumnModel().getColumn(0);
+					col.setMinWidth(0);
+					col.setMaxWidth(0);
+					col.setPreferredWidth(0);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+			else if ( e.getSource() == btnRicercaCliente ){
+				try {
+					int cliente = Integer.parseInt(cmbClientiR.getIDSelectedItem());
+					FatturaViewModel modelView = new FatturaViewModel(dbm, "idcliente", cliente, 3);
+					tblViewDdt.setModel(modelView);
+					DBManager.getIstanceSingleton().addDBStateChange(modelView);
+					TableColumn col=tblViewDdt.getColumnModel().getColumn(0);
+					col.setMinWidth(0);
+					col.setMaxWidth(0);
+					col.setPreferredWidth(0);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
 		}
 	}
 
@@ -586,7 +625,8 @@ public class DocumentoDiTrasporto extends JFrame{
 				column = jTable.getColumnModel().getColumn(1);
 				column.setCellEditor(new DefaultCellEditor(getTxtCodice()));
 				jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				jTable.setDefaultEditor(Long.class, new QuantitaDisponibileEditor());
+				column = jTable.getColumnModel().getColumn(4);
+				column.setCellEditor(new QuantitaDisponibileEditor());
 				jTable.setDefaultRenderer(Object.class, new MyTableCellRendererAlignment());
 				jTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 				jTable.packAll();
@@ -872,34 +912,6 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	private void caricaClienti(){
-//		Cliente c = new Cliente();
-//		String tmpClienti[] = null;
-//		String tmpCodici[] = null;
-//		try {
-//			cmbClienti.removeAllItems();
-//			cmbClienti.addItem("");
-//			String as[] = (String[]) c.allClienti();
-//			tmpClienti = new String[as.length];
-//			tmpCodici = new String[as.length];
-//			// carichiamo tutti i dati in due array
-//			// da passre al combobox
-//			for (int i = 0; i < as.length; i++) {
-//				String tmp[] = as[i].split("-",2);
-//				tmpClienti[i] = tmp[1].trim();
-//				tmpCodici[i] = tmp[0].trim();
-//			}
-//			((IDJComboBox) cmbClienti).caricaIDAndOggetti(tmpCodici,
-//					tmpClienti);
-//		} catch (SQLException e) {
-//			JOptionPane.showMessageDialog(this,
-//					"Errore caricamento fornitori nel combobox", "ERRORE", 0);
-//			e.printStackTrace();
-//		} catch (LunghezzeArrayDiverse e) {
-//			JOptionPane.showMessageDialog(this, "Errore lunghezza array",
-//					"ERRORE LUNGHEZZA", 0);
-//			e.printStackTrace();
-//		}
-
 		Cliente c = new Cliente();
 		try {
 
@@ -907,12 +919,14 @@ public class DocumentoDiTrasporto extends JFrame{
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
 			((IDJComboBox) cmbClienti).caricaNewValueComboBox(as, true);
+			((IDJComboBox) cmbClientiR).caricaNewValueComboBox(as, true);
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(this,
-					"Errore caricamento fornitori nel combobox", "ERRORE", 0);
+					"Errore caricamento clienti nel combobox", "ERRORE", 0);
 			e.printStackTrace();
 		}
 		AutoCompletion.enable(cmbClienti);
+		AutoCompletion.enable(cmbClientiR);
 	}
 
 	private void caricaDescrizione(){
@@ -1342,8 +1356,9 @@ public class DocumentoDiTrasporto extends JFrame{
 		if (pnlViewDdt == null) {
 			pnlViewDdt = new JPanel();
 			pnlViewDdt.setLayout(new BorderLayout());
-			pnlViewDdt.add(getPnlPulsanti(), java.awt.BorderLayout.NORTH);
+			pnlViewDdt.add(getPnlPulsanti(), java.awt.BorderLayout.SOUTH);
 			pnlViewDdt.add(getJScrollPane1(), BorderLayout.CENTER);
+			pnlViewDdt.add(getPnlRicerca(), BorderLayout.NORTH);
 		}
 		return pnlViewDdt;
 	}
@@ -1504,17 +1519,7 @@ public class DocumentoDiTrasporto extends JFrame{
 	 */
 	private JTable getTblViewDdt() {
 		if (tblViewDdt == null) {
-			try {
-				FatturaViewModel modelView = new FatturaViewModel(dbm, 2);
-				tblViewDdt = new JTable(modelView);
-				DBManager.getIstanceSingleton().addDBStateChange(modelView);
-				TableColumn col=tblViewDdt.getColumnModel().getColumn(0);
-				col.setMinWidth(0);
-				col.setMaxWidth(0);
-				col.setPreferredWidth(0);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			tblViewDdt = new JTable();
 		}
 		return tblViewDdt;
 	}
@@ -1533,5 +1538,142 @@ public class DocumentoDiTrasporto extends JFrame{
 			pnlDdt.add(getJPanelSud(), BorderLayout.SOUTH);
 		}
 		return pnlDdt;
+	}
+
+	/**
+	 * This method initializes pnlRicerca	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPnlRicerca() {
+		if (pnlRicerca == null) {
+			lblRicerca = new JLabel();
+			lblRicerca.setBounds(new Rectangle(8, 8, 80, 16));
+			lblRicerca.setText("Ricerca per..");
+			pnlRicerca = new JPanel();
+			pnlRicerca.setLayout(null);
+			pnlRicerca.setPreferredSize(new Dimension(0, 110));
+			pnlRicerca.add(lblRicerca, null);
+			pnlRicerca.add(getPnlRicercaData(), null);
+			pnlRicerca.add(getPnlRicercaCliente(), null);
+		}
+		return pnlRicerca;
+	}
+
+	/**
+	 * This method initializes pnlRicercaData	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPnlRicercaData() {
+		if (pnlRicercaData == null) {
+			lblDa = new JLabel();
+			lblDa.setBounds(new Rectangle(5, 20, 20, 16));
+			lblDa.setText("da");
+			lblA = new JLabel();
+			lblA.setBounds(new Rectangle(125, 20, 38, 16));
+			lblA.setText("a");
+			pnlRicercaData = new JPanel();
+			pnlRicercaData.setLayout(null);
+			pnlRicercaData.setBounds(new Rectangle(5, 30, 275, 70));
+			pnlRicercaData.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(0), "Data", 0, 0, new Font("Dialog", 1, 12), new Color(51, 51, 51)));
+			pnlRicercaData.add(getDataRicercaA(), null);
+			pnlRicercaData.add(getDataRicercaDa(), null);
+			pnlRicercaData.add(lblA, null);
+			pnlRicercaData.add(lblDa, null);
+			pnlRicercaData.add(getBtnRicercaData(), null);
+		}
+		return pnlRicercaData;
+	}
+
+	/**
+	 * This method initializes dataRicercaA	
+	 * 	
+	 * @return com.toedter.calendar.JDateChooser	
+	 */
+	private JDateChooser getDataRicercaA() {
+		if (dataRicercaA == null) {
+			dataRicercaA = new JDateChooser("dd/MM/yyyy", "##/##/##", '_');
+			dataRicercaA.setBounds(new Rectangle(125, 38, 112, 24));
+			dataRicercaA.setDate(new Date());
+		}
+		return dataRicercaA;
+	}
+
+	/**
+	 * This method initializes dataRicercaDa	
+	 * 	
+	 * @return com.toedter.calendar.JDateChooser	
+	 */
+	private JDateChooser getDataRicercaDa() {
+		if (dataRicercaDa == null) {
+			dataRicercaDa = new JDateChooser("dd/MM/yyyy", "##/##/##", '_');
+			dataRicercaDa.setBounds(new Rectangle(5, 38, 112, 24));
+			dataRicercaDa.setDate(new Date());
+			dataRicercaDa.setName("Da");
+		}
+		return dataRicercaDa;
+	}
+
+	/**
+	 * This method initializes btnRicercaData	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnRicercaData() {
+		if (btnRicercaData == null) {
+			btnRicercaData = new JButton();
+			btnRicercaData.setBounds(new Rectangle(245, 38, 20, 24));
+			btnRicercaData.setText("...");
+			btnRicercaData.setToolTipText("Ricerca");
+			btnRicercaData.addActionListener(new MyButtonListener());
+		}
+		return btnRicercaData;
+	}
+
+	/**
+	 * This method initializes pnlRicercaCliente	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPnlRicercaCliente() {
+		if (pnlRicercaCliente == null) {
+			pnlRicercaCliente = new JPanel();
+			pnlRicercaCliente.setLayout(null);
+			pnlRicercaCliente.setBounds(new Rectangle(285, 30, 245, 70));
+			pnlRicercaCliente.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(0), "Cliente", 0, 0, new Font("Dialog", 1, 12), new Color(51, 51, 51)));
+			pnlRicercaCliente.add(getCmbClientiR(), null);
+			pnlRicercaCliente.add(getBtnRicercaCliente(), null);
+		}
+		return pnlRicercaCliente;
+	}
+
+	/**
+	 * This method initializes cmbClientiR	
+	 * 	
+	 * @return rf.myswing.IDJComboBox	
+	 */
+	private IDJComboBox getCmbClientiR() {
+		if (cmbClientiR == null) {
+			cmbClientiR = new IDJComboBox();
+			cmbClientiR.setBounds(new Rectangle(8, 36, 200, 26));
+		}
+		return cmbClientiR;
+	}
+
+	/**
+	 * This method initializes btnRicercaCliente	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnRicercaCliente() {
+		if (btnRicercaCliente == null) {
+			btnRicercaCliente = new JButton();
+			btnRicercaCliente.setBounds(new Rectangle(215, 36, 20, 26));
+			btnRicercaCliente.setText("...");
+			btnRicercaCliente.setToolTipText("Ricerca");
+			btnRicercaCliente.addActionListener(new MyButtonListener());
+		}
+		return btnRicercaCliente;
 	}
 }

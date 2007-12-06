@@ -486,12 +486,11 @@ public class InitialGUI extends JFrame {
 		UtilGUI.centraFrame(this);
 
 		//effettuiamo alcune modifiche alla base di dati per adattarla
-		File f=new File("modificheok3");
+		File f=new File("modificheok4");
 		if(!f.exists()){
-			//modifichiamo la vista articoli_scaricati_view
-			DBManager.getIstanceSingleton().executeQuery("DROP VIEW articoli_scaricati_view;");
-			DBManager.getIstanceSingleton().executeQuery("CREATE OR REPLACE VIEW articoli_scaricati_view AS SELECT d.idordine, d.idarticolo, a.codbarre, a.descrizione, a.prezzo_acquisto,a.prezzo_ingrosso,a.prezzo_dettaglio, a.iva, u.nome AS um, d.qta, d.sconto FROM articoli a, dettaglio_ordini d, ordini o, clienti c, um u WHERE a.idarticolo = d.idarticolo AND d.idordine = o.idordine AND o.idcliente = c.idcliente AND u.idum = a.um;");
-			DBManager.getIstanceSingleton().executeQuery("ALTER TABLE articoli_scaricati_view OWNER TO postgres;");
+			//creiamo la tabella per la stampa delle etichette
+			DBManager.getIstanceSingleton().executeQuery("CREATE TABLE tmp_etichette_fornitori(idfornitore bigint NOT NULL,nome character varying,via character varying,cap character varying,  citta character varying,  provincia character varying,CONSTRAINT key_fornitori PRIMARY KEY (idfornitore)) WITHOUT OIDS;");
+			DBManager.getIstanceSingleton().executeQuery("ALTER TABLE tmp_etichette_fornitori OWNER TO postgres;");
 			try {
 				f.createNewFile();
 			} catch (IOException e1) {

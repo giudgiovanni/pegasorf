@@ -416,6 +416,9 @@ public class ArticoliGestione extends JFrame {
 				DefaultTableCellRenderer colFormatoRenderer = new DefaultTableCellRenderer();
 				colFormatoRenderer.setHorizontalAlignment(JLabel.LEFT);
 				col.setCellRenderer(colFormatoRenderer);
+				col.setMinWidth(0);
+				col.setMaxWidth(150);
+				col.setPreferredWidth(150);
 
 				col = tblArticoli.getColumn("descrizione");
 				DefaultTableCellRenderer ColTipoRenderer = new DefaultTableCellRenderer();
@@ -426,18 +429,27 @@ public class ArticoliGestione extends JFrame {
 				DefaultTableCellRenderer prezzoColumnRenderer = new DefaultTableCellRenderer();
 				prezzoColumnRenderer.setHorizontalAlignment(JLabel.RIGHT);
 				col.setCellRenderer(prezzoColumnRenderer);
-				col.setPreferredWidth(40);
+				col.setMinWidth(0);
+				col.setMaxWidth(100);
+				col.setPreferredWidth(100);
 
 				col = tblArticoli.getColumn("prezzo_listino");
 				DefaultTableCellRenderer prezzoListinoColumnRenderer = new DefaultTableCellRenderer();
 				prezzoListinoColumnRenderer.setHorizontalAlignment(JLabel.RIGHT);
 				col.setCellRenderer(prezzoListinoColumnRenderer);
-				col.setPreferredWidth(40);
+				col.setMinWidth(0);
+				col.setMaxWidth(100);
+				col.setPreferredWidth(100);
 
 				col = tblArticoli.getColumn("fornitore");
 				DefaultTableCellRenderer fornitoreRenderer = new DefaultTableCellRenderer();
 				fornitoreRenderer.setHorizontalAlignment(JLabel.LEFT);
 				col.setCellRenderer(fornitoreRenderer);
+				col.setMinWidth(0);
+				col.setMaxWidth(250);
+				col.setPreferredWidth(250);
+				
+				
 			} catch (java.lang.Throwable e) {
 				e.printStackTrace();
 			}

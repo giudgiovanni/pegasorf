@@ -74,6 +74,7 @@ import rf.utility.gui.text.UpperTextDocument;
 
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
+import javax.swing.WindowConstants;
 
 // Referenced classes of package rf.pegaso.gui.gestione:
 //            ArticoliAddMod, ArticoliGestione
@@ -1300,7 +1301,7 @@ public class CaricoGui extends JFrame {
 		Carico c = new Carico();
 		idcarico = c.getNewID();
 		setSize(650, 530);
-		setDefaultCloseOperation(0);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle("Carico Merce");
 		setResizable(true);
 		setContentPane(getJContentPane());

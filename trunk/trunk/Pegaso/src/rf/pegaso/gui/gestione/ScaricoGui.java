@@ -1217,7 +1217,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 		Scarico c = new Scarico();
 		this.idcarico = c.getNewID();
 		this.setResizable(true); // Generated
-		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE); // Generated
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); // Generated
 		this.setTitle("Scarico Merce");
 		this.setResizable(true);
 		this.setContentPane(getJContentPane());

@@ -26,7 +26,7 @@
 	<parameter name="SUBREPORT_DIR" isForPrompting="true" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["C:\\progetti\\Pegaso Greco Mobili\\report\\"]]></defaultValueExpression>
 	</parameter>
-	<queryString><![CDATA[select c.idordine as id,c.data_documento,c.num_documento, d.tipo,f.nome ||' '|| f.cognome as cliente,c.note from ordini as c,documento as d,  clienti as f  where c.idordine=c.idordine and c.idcliente=f.idcliente and c.iddocumento=d.iddocumento order by f.nome asc]]></queryString>
+	<queryString><![CDATA[select c.idordine as id,c.data_documento,c.num_documento, d.tipo,f.nome ||' '|| f.cognome as cliente,c.note from ordini as c,documento as d,  clienti as f  where c.idordine=c.idordine and c.idcliente=f.idcliente and c.iddocumento=d.iddocumento and c.idordine>0 order by f.nome asc]]></queryString>
 
 	<field name="id" class="java.lang.Long"/>
 	<field name="data_documento" class="java.sql.Date"/>
@@ -266,6 +266,9 @@
 						width="199"
 						height="16"
 						key="subreport-1"/>
+					<subreportParameter  name="idscarico">
+						<subreportParameterExpression><![CDATA[$F{id}]]></subreportParameterExpression>
+					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "/dettaglio_scarichi.jasper"]]></subreportExpression>
 				</subreport>

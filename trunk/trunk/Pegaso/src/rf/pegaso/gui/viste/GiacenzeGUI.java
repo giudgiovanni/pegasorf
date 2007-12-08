@@ -33,6 +33,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import net.sf.jasperreports.engine.JRException;
@@ -457,6 +458,62 @@ public class GiacenzeGUI extends JFrame {
 				col.setMinWidth(0);
 				col.setMaxWidth(0);
 				col.setPreferredWidth(0);
+				
+				col = tblGiacenze.getColumn("codice");
+				DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+				cellRenderer.setHorizontalAlignment(JLabel.LEFT);
+				col.setCellRenderer(cellRenderer);
+				col.setMinWidth(0);
+				col.setMaxWidth(150);
+				col.setPreferredWidth(150);
+				
+				col = tblGiacenze.getColumn("um");
+				cellRenderer = new DefaultTableCellRenderer();
+				cellRenderer.setHorizontalAlignment(JLabel.CENTER);
+				col.setCellRenderer(cellRenderer);
+				col.setMinWidth(0);
+				col.setMaxWidth(60);
+				col.setPreferredWidth(60);
+				
+				col = tblGiacenze.getColumn("carico");
+				cellRenderer = new DefaultTableCellRenderer();
+				cellRenderer.setHorizontalAlignment(JLabel.CENTER);
+				col.setCellRenderer(cellRenderer);
+				col.setMinWidth(0);
+				col.setMaxWidth(60);
+				col.setPreferredWidth(60);
+				
+				col = tblGiacenze.getColumn("scarico");
+				cellRenderer = new DefaultTableCellRenderer();
+				cellRenderer.setHorizontalAlignment(JLabel.CENTER);
+				col.setCellRenderer(cellRenderer);
+				col.setMinWidth(0);
+				col.setMaxWidth(60);
+				col.setPreferredWidth(60);
+				
+				col = tblGiacenze.getColumn("deposito");
+				cellRenderer = new DefaultTableCellRenderer();
+				cellRenderer.setHorizontalAlignment(JLabel.CENTER);
+				col.setCellRenderer(cellRenderer);
+				col.setMinWidth(0);
+				col.setMaxWidth(80);
+				col.setPreferredWidth(80);
+				
+				col = tblGiacenze.getColumn("prezzo_acquisto");
+				cellRenderer = new DefaultTableCellRenderer();
+				cellRenderer.setHorizontalAlignment(JLabel.RIGHT);
+				col.setCellRenderer(cellRenderer);
+				col.setMinWidth(0);
+				col.setMaxWidth(100);
+				col.setPreferredWidth(100);
+				
+				col = tblGiacenze.getColumn("prezzo_tot");
+				cellRenderer = new DefaultTableCellRenderer();
+				cellRenderer.setHorizontalAlignment(JLabel.RIGHT);
+				col.setCellRenderer(cellRenderer);
+				col.setMinWidth(0);
+				col.setMaxWidth(100);
+				col.setPreferredWidth(100);
 
 			} catch (java.lang.Throwable e) {
 				try {

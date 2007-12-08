@@ -29,6 +29,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import net.sf.jasperreports.engine.JRException;
@@ -329,6 +330,30 @@ public class StampeEtichette extends JFrame {
 				col.setMinWidth(0);
 				col.setMaxWidth(0);
 				col.setPreferredWidth(0);
+				
+				col = tblArticoli.getColumn("codice");
+				DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+				cellRenderer.setHorizontalAlignment(JLabel.LEFT);
+				col.setCellRenderer(cellRenderer);
+				col.setMinWidth(0);
+				col.setMaxWidth(150);
+				col.setPreferredWidth(150);
+				
+				col = tblArticoli.getColumn("prezzo_acquisto");
+				 cellRenderer = new DefaultTableCellRenderer();
+				cellRenderer.setHorizontalAlignment(JLabel.RIGHT);
+				col.setCellRenderer(cellRenderer);
+				col.setMinWidth(0);
+				col.setMaxWidth(100);
+				col.setPreferredWidth(100);
+				
+				col = tblArticoli.getColumn("prezzo_listino");
+				cellRenderer = new DefaultTableCellRenderer();
+				cellRenderer.setHorizontalAlignment(JLabel.RIGHT);
+				col.setCellRenderer(cellRenderer);
+				col.setMinWidth(0);
+				col.setMaxWidth(100);
+				col.setPreferredWidth(100);
 
 			} catch (java.lang.Throwable e) {
 				e.printStackTrace();
@@ -424,11 +449,11 @@ public class StampeEtichette extends JFrame {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(600, 400);
+		this.setSize(700, 500);
 		this.setTitle("Gestione Stampe Etichette");
 
 		this.setContentPane(getJContentPane());
-		this.setSize(padre.getWidth(), padre.getHeight() - 50);
+		//this.setSize(padre.getWidth(), padre.getHeight() - 50);
 		UtilGUI.centraFrame(this);
 		this.setExtendedState(MAXIMIZED_BOTH);
 
@@ -719,6 +744,30 @@ public class StampeEtichette extends JFrame {
 				col.setMinWidth(0);
 				col.setMaxWidth(0);
 				col.setPreferredWidth(0);
+				
+				col = tblFornitori.getColumn("cap");
+				DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+				cellRenderer.setHorizontalAlignment(JLabel.CENTER);
+				col.setCellRenderer(cellRenderer);
+				col.setMinWidth(0);
+				col.setMaxWidth(80);
+				col.setPreferredWidth(80);
+				
+				col = tblFornitori.getColumn("citta");
+				cellRenderer = new DefaultTableCellRenderer();
+				cellRenderer.setHorizontalAlignment(JLabel.LEFT);
+				col.setCellRenderer(cellRenderer);
+				col.setMinWidth(0);
+				col.setMaxWidth(200);
+				col.setPreferredWidth(200);
+				
+				col = tblFornitori.getColumn("provincia");
+				cellRenderer = new DefaultTableCellRenderer();
+				cellRenderer.setHorizontalAlignment(JLabel.CENTER);
+				col.setCellRenderer(cellRenderer);
+				col.setMinWidth(0);
+				col.setMaxWidth(100);
+				col.setPreferredWidth(100);
 
 			} catch (java.lang.Throwable e) {
 				e.printStackTrace();

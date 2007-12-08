@@ -15,12 +15,14 @@ import java.sql.SQLException;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.text.JTextComponent;
 
@@ -335,10 +337,7 @@ public class RicercheArchivio extends JDialog {
 		if (tblArtByForn == null) {
 			try {
 				tblArtByForn = new JXTable();
-				TableColumn col = tblArtByForn.getColumnModel().getColumn(0);
-				col.setMinWidth(0);
-				col.setMaxWidth(0);
-				col.setPreferredWidth(0);
+				
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -381,12 +380,57 @@ public class RicercheArchivio extends JDialog {
 			ArticoliByFornitoreModel model = new ArticoliByFornitoreModel(dbm,
 					cod);
 			tblArtByForn.setModel(model);
-			tblArtByForn.packAll();
+			configuraTabella();
+			
 		} catch (SQLException e) {
 			messaggioErroreCampo("Errore nella ricerca degli articoli");
 			e.printStackTrace();
 		}
 
+	}
+
+	private void configuraTabella() {
+		TableColumn col = tblArtByForn.getColumnModel().getColumn(0);
+		col.setMinWidth(0);
+		col.setMaxWidth(0);
+		col.setPreferredWidth(0);
+		
+		col = tblArtByForn.getColumn("codice_articolo");
+		DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+		cellRenderer.setHorizontalAlignment(JLabel.LEFT);
+		col.setCellRenderer(cellRenderer);
+		col.setMinWidth(0);
+		col.setMaxWidth(150);
+		col.setPreferredWidth(150);
+		
+		col = tblArtByForn.getColumn("prezzo_acquisto");
+		 cellRenderer = new DefaultTableCellRenderer();
+		cellRenderer.setHorizontalAlignment(JLabel.RIGHT);
+		col.setCellRenderer(cellRenderer);
+		col.setMinWidth(0);
+		col.setMaxWidth(100);
+		col.setPreferredWidth(100);
+		
+		
+		
+		col = tblArtByForn.getColumn("prezzo_dettaglio");
+		 cellRenderer = new DefaultTableCellRenderer();
+		cellRenderer.setHorizontalAlignment(JLabel.RIGHT);
+		col.setCellRenderer(cellRenderer);
+		col.setMinWidth(0);
+		col.setMaxWidth(100);
+		col.setPreferredWidth(100);
+		
+		col = tblArtByForn.getColumn("iva");
+		 cellRenderer = new DefaultTableCellRenderer();
+		cellRenderer.setHorizontalAlignment(JLabel.CENTER);
+		col.setCellRenderer(cellRenderer);
+		col.setMinWidth(0);
+		col.setMaxWidth(100);
+		col.setPreferredWidth(100);
+		
+		tblArtByForn.packAll();
+		
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

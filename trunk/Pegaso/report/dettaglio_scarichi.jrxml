@@ -24,8 +24,12 @@
 	<import value="net.sf.jasperreports.engine.data.*" />
 
 	<parameter name="id" isForPrompting="false" class="java.lang.Long"/>
-	<queryString><![CDATA[select a.descrizione, d.qta, a.sconto from ordini o, dettaglio_ordini d, articoli a where o.idordine=d.idordine and d.idarticolo=a.idarticolo and qta>0;]]></queryString>
+	<parameter name="idscarico" isForPrompting="false" class="java.lang.Long">
+		<defaultValueExpression ><![CDATA[new Long(0)]]></defaultValueExpression>
+	</parameter>
+	<queryString><![CDATA[select o.idordine,a.descrizione, d.qta, a.sconto from ordini o, dettaglio_ordini d, articoli a where o.idordine=d.idordine and d.idarticolo=a.idarticolo and qta>0 and o.idordine=$P!{idscarico};]]></queryString>
 
+	<field name="idordine" class="java.lang.Long"/>
 	<field name="descrizione" class="java.lang.String"/>
 	<field name="qta" class="java.lang.Long"/>
 	<field name="sconto" class="java.lang.Long"/>

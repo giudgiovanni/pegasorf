@@ -108,7 +108,7 @@ public class UtilityDBManager {
 	}
 
 	public void backupDataBase(int modalita) throws IOException {
-		
+
 		GregorianCalendar c = new GregorianCalendar();
 		// formattiamo la data
 		SimpleDateFormat format = new SimpleDateFormat("ddMMyyyy_hhmmss");
@@ -182,7 +182,12 @@ public class UtilityDBManager {
 
 	public void restoreBackup(String nome, DefaultListModel l)
 			throws IOException, SQLException {
-		dropAllTable();
+		
+		//disattiviamo il drop delle tabelle perchè
+		//già incluso nei file di backup creati da postgres
+		//dropAllTable();
+		
+		
 		// creaimo il path con il nome del file
 		// per effettuare il ripristino dei dati
 		String f = userDir + File.separator + folderBackup + nome;
@@ -192,6 +197,57 @@ public class UtilityDBManager {
 
 	private void restore(String nome, DefaultListModel l) throws IOException,
 			SQLException {
+// effettuate delle modifiche sotto il codice nuovo
+		// che va bene per il nuovo tipo di backup
+
+//		Statement st = DBManager.getIstanceSingleton().getNewStatement();
+//		StringBuffer sb = new StringBuffer();
+//
+//		// prepariamo la lettura del file
+//		File f = new File(nome);
+//		BufferedReader br = new BufferedReader(new InputStreamReader(
+//				new FileInputStream(f)));
+//		String line = "";
+//		while ((line = br.readLine()) != null && !line.equals("\n")) {
+//			if ((line.length() > 0 && line.charAt(0) != '-')
+//					&& !(line.substring(0, 3).equalsIgnoreCase("set"))
+//					&& !line
+//							.equalsIgnoreCase("CREATE PROCEDURAL LANGUAGE plpgsql;")) {
+//				// se il comando SQL risiede su unica riga lo eseguiamo
+//				// direttamente altrimenti saltiamo avanti per controllare
+//				// le altre righe.
+//				if (line.charAt(line.length() - 1) == ';') {
+//					st.execute(line.substring(0, line.length() - 1));
+//					if (l != null)
+//						l.addElement(line);
+//				} else {
+//					// da qui gestiamo gli altri comandi
+//					// suddivisi su più righe.
+//					sb = new StringBuffer();
+//					// inseriamo la prima riga
+//					sb.append(" " + line);
+//
+//					// e poi leggiamo gli altri fino a quando
+//					// non troviamo il ; come carattere
+//					boolean fine = false;
+//					while (!fine) {
+//						line = br.readLine();
+//						if (line.charAt(line.length() - 1) == ';'
+//								|| line == null) {
+//							fine = true;
+//							sb.append(" " + line);
+//							st.execute(sb.toString().substring(0,
+//									sb.toString().length() - 1));
+//							if (l != null)
+//								l.addElement(line);
+//						} else {
+//							sb.append(" ");
+//							sb.append(line);
+//						}
+//					}
+//				}
+//			}
+//		}
 
 		Statement st = DBManager.getIstanceSingleton().getNewStatement();
 		StringBuffer sb = new StringBuffer();
@@ -203,9 +259,7 @@ public class UtilityDBManager {
 		String line = "";
 		while ((line = br.readLine()) != null && !line.equals("\n")) {
 			if ((line.length() > 0 && line.charAt(0) != '-')
-					&& !(line.substring(0, 3).equalsIgnoreCase("set"))
-					&& !line
-							.equalsIgnoreCase("CREATE PROCEDURAL LANGUAGE plpgsql;")) {
+					&& !(line.substring(0, 3).equalsIgnoreCase("set"))) {
 				// se il comando SQL risiede su unica riga lo eseguiamo
 				// direttamente altrimenti saltiamo avanti per controllare
 				// le altre righe.

@@ -1,16 +1,19 @@
 package rf.pegaso.db.tabelle;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Vector;
 
 import rf.pegaso.db.DBManager;
 import rf.pegaso.db.exception.CodiceBarreInesistente;
 
 public class DettaglioVendita {
-	
+
 	private int idArticolo;
 	private String codiceBarre;
 	private int idVendita;
@@ -21,10 +24,10 @@ public class DettaglioVendita {
 	private double prezzoVendita;
 	private int iva;
 	private int sconto;
-	
+
 	private DBManager dbm;
-	
-	
+
+
 	public DettaglioVendita() {
 		this.idArticolo = 0;
 		this.codiceBarre = "";
@@ -46,7 +49,7 @@ public class DettaglioVendita {
 	public void setIdArticolo(int codice) {
 		this.idArticolo = codice;
 	}
-	
+
 	public int getIdVendita() {
 		return idVendita;
 	}
@@ -78,7 +81,7 @@ public class DettaglioVendita {
 	public void setPrezzoVendita(double prezzoVendita) {
 		this.prezzoVendita = prezzoVendita;
 	}
-	
+
 	public int getSconto() {
 		return sconto;
 	}
@@ -86,7 +89,7 @@ public class DettaglioVendita {
 	public void setSconto(int sconto) {
 		this.sconto = sconto;
 	}
-	
+
 	public int getIva() {
 		return iva;
 	}
@@ -102,7 +105,7 @@ public class DettaglioVendita {
 	public void setCodiceBarre(String codiceBarre) {
 		this.codiceBarre = codiceBarre;
 	}
-	
+
 	public String getUm() {
 		return um;
 	}
@@ -118,7 +121,7 @@ public class DettaglioVendita {
 	public void setQta(int qta) {
 		this.qta = qta;
 	}
-	
+
 	public int caricaDatiByCodiceBarre(String codice){
 		if (codice.equalsIgnoreCase(""))
 			return -1;
@@ -147,7 +150,7 @@ public class DettaglioVendita {
 		return 1;
 
 	}
-	
+
 	public int caricaDatiById(int id){
 		if ( id == 0 )
 			return -1;
@@ -171,7 +174,7 @@ public class DettaglioVendita {
 		}
 		return 1;
 	}
-	
+
 	public Vector<DettaglioVendita> caricaDatiByDB(int id, String tabella, String colonna) throws SQLException {
 		Vector<DettaglioVendita> dettaglioVendite = new Vector<DettaglioVendita>();
 		Statement st = null;
@@ -197,11 +200,11 @@ public class DettaglioVendita {
 			udm.caricaDati(a.getUm());
 			dv.setUm(udm.getNome());
 			dettaglioVendite.add(dv);
-			
+
 		}
 		return dettaglioVendite;
 	}
-	
+
 	public int salvaInDb(String tabella){
 		PreparedStatement pst = null;
 		try{
@@ -218,7 +221,12 @@ public class DettaglioVendita {
 				pst.setInt(6, sconto);
 
 			pst.executeUpdate();
-			updateArticolo(0);
+			//---ROCCO--------------
+			//update viene effettuato con la classe scarico
+			//nel passaggio precedente
+			//updateArticolo(0);
+			//---FINE ROCCO---------
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return -1;
@@ -233,7 +241,7 @@ public class DettaglioVendita {
 		}
 		return 1;
 	}
-	
+
 	public int updateDettaglioInDb(String tabella, String colonna){
 		PreparedStatement pst = null;
 		int qtaIniziale = 0;
@@ -250,7 +258,7 @@ public class DettaglioVendita {
 			if ( !tabella.equals("banco") )
 				insert = "update "+tabella+" set qta=?,prezzo_acquisto=?,prezzo_vendita=?,sconto=? where id"+colonna+"=? and idarticolo=?";
 			pst = dbm.getNewPreparedStatement(insert);
-			pst.setLong(1, qta);
+			pst.setLong(1, qtaIniziale-qta);
 			pst.setDouble(2, prezzoAcquisto);
 			pst.setDouble(3, prezzoVendita);
 			if ( !tabella.equals("banco") ){
@@ -279,10 +287,9 @@ public class DettaglioVendita {
 		}
 		return 1;
 	}
-	
+
 	public void updateArticolo(int qtaIniziale)
 	throws SQLException {
-
 		String query = "update dettaglio_carichi set qta=? where idarticolo=?";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 
@@ -295,7 +302,7 @@ public class DettaglioVendita {
 		if (pst != null)
 			pst.close();
 	}
-	
+
 	public Vector<Object> trasformaInArray() {
 		Vector<Object> v = new Vector<Object>();
 		v.add(idArticolo);

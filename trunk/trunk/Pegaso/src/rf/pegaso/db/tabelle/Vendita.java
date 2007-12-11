@@ -11,7 +11,9 @@ import rf.pegaso.db.DBManager;
 import rf.pegaso.db.tabelle.exception.IDNonValido;
 
 public class Vendita {
-	
+
+
+	private int tipoDocumento;
 	private int idVendita;
 	private String numVendita;
 	private Date data_vendita;
@@ -32,8 +34,8 @@ public class Vendita {
 	private int sconto;
 	private String tipo_prezzo;
 	private DBManager dbm;
-	
-	
+
+
 	public Vendita() {
 		idVendita = 0;
 		this.numVendita = "";
@@ -42,7 +44,7 @@ public class Vendita {
 		this.speseIncasso = 0.0;
 		this.speseTrasporto = 0.0;
 		this.n_colli = 0;
-		this.peso= 0.0; 
+		this.peso= 0.0;
 		this.idPagamento = 0;
 		this.idCausale = 0;
 		this.aspetto = 0;
@@ -50,6 +52,7 @@ public class Vendita {
 		this.porto = "";
 		this.sconto = 0;
 		this.tipo_prezzo = "";
+		this.tipoDocumento=0;
 		this.dbm = DBManager.getIstanceSingleton();
 	}
 
@@ -76,15 +79,15 @@ public class Vendita {
 				peso = rs.getDouble(13);
 				consegna = rs.getString(14);
 				porto = rs.getString(15);
-				destinazione = rs.getString(16);				
+				destinazione = rs.getString(16);
 				aspetto = rs.getInt(17);
 				sconto = rs.getInt(18);
-			}			
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public int salvaDatiInFattura(){
 		PreparedStatement pst = null;
 		String insert = "insert into fattura values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -119,7 +122,7 @@ public class Vendita {
 		}
 		return 1;
 	}
-	
+
 	public int updateDatiInFattura(){
 		PreparedStatement pst = null;
 		String insert = "update fattura set data_vendita=?,ora_vendita=?,idcliente=?,pagamento=?,num_fattura=?,causale=?,spese_incazzo=?,spese_trasporto=?,data_tr=?,ora_tr=?,colli=?,peso=?,consegna=?,porto=?,diversa_dest=?,aspetto=?,sconto=? where idfattura=?";
@@ -154,7 +157,7 @@ public class Vendita {
 		}
 		return 1;
 	}
-	
+
 	public void caricaDatiDaDdt(int idddt){
 		Statement st = null;
 		ResultSet rs = null;
@@ -182,7 +185,7 @@ public class Vendita {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public int salvaDatiInDdt(){
 		PreparedStatement pst = null;
 		String insert = "insert into ddt values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -201,7 +204,7 @@ public class Vendita {
 			pst.setString(11, consegna);
 			pst.setInt(12, n_colli);
 			pst.setInt(13, aspetto);
-			pst.setInt(14, sconto);	
+			pst.setInt(14, sconto);
 			pst.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -212,7 +215,7 @@ public class Vendita {
 		}
 		return 1;
 	}
-	
+
 	public void caricaDatiDaBanco(int idBanco){
 		Statement st = null;
 		ResultSet rs = null;
@@ -225,12 +228,12 @@ public class Vendita {
 				data_vendita = rs.getDate(2);
 				ora_vendita = rs.getTime(3);
 				tipo_prezzo = rs.getString(4);
-			}			
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public int salvaDatiInBanco(){
 		PreparedStatement pst = null;
 		String insert = "insert into banco values (?,?,?,?)";
@@ -240,7 +243,7 @@ public class Vendita {
 			pst.setDate(2, data_vendita);
 			pst.setTime(3, ora_vendita);
 			pst.setString(4, tipo_prezzo);
-			
+
 			pst.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -251,7 +254,7 @@ public class Vendita {
 		}
 		return 1;
 	}
-	
+
 	public int rimuoviDaDb(String tabella, String colonna)throws IDNonValido{
 		String delete = "";
 		Statement st = dbm.getNewStatement();
@@ -275,7 +278,7 @@ public class Vendita {
 		}
 		return cancellati;
 	}
-	
+
 	public int getIdVendita() {
 		return idVendita;
 	}
@@ -496,5 +499,12 @@ public class Vendita {
 
 	public void setTipo_prezzo(String tipo_prezzo) {
 		this.tipo_prezzo = tipo_prezzo;
+	}
+
+	public void setTipoDocumento(int i) {
+		this.tipoDocumento=i;
+	}
+	public int getTipoDocumento(){
+		return this.tipoDocumento;
 	}
 }

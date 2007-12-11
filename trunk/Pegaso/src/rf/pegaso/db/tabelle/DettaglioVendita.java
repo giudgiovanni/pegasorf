@@ -218,7 +218,7 @@ public class DettaglioVendita {
 				pst.setInt(6, sconto);
 
 			pst.executeUpdate();
-			updateArticolo();
+			updateArticolo(0);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return -1;
@@ -234,13 +234,59 @@ public class DettaglioVendita {
 		return 1;
 	}
 	
-	public void updateArticolo()
+	public int updateDettaglioInDb(String tabella, String colonna){
+		PreparedStatement pst = null;
+		int qtaIniziale = 0;
+		try{
+			Statement st = dbm.getNewStatement();
+			ResultSet rs = null;
+			String query = "select * from "+tabella+" where id"+colonna+"=" + idVendita +"and idarticolo="+idArticolo;
+			rs = st.executeQuery(query);
+			while ( rs.next() ){
+				qtaIniziale = rs.getInt("qta");
+			}
+			String insert = "update "+tabella+" set qta=?,prezzo_acquisto=?,prezzo_vendita=? where id"+colonna+"=? and idarticolo=?";
+			//"update dettaglio_carichi set qta=?,prezzo_acquisto=? where idcarico=? and idarticolo=?";
+			if ( !tabella.equals("banco") )
+				insert = "update "+tabella+" set qta=?,prezzo_acquisto=?,prezzo_vendita=?,sconto=? where id"+colonna+"=? and idarticolo=?";
+			pst = dbm.getNewPreparedStatement(insert);
+			pst.setLong(1, qta);
+			pst.setDouble(2, prezzoAcquisto);
+			pst.setDouble(3, prezzoVendita);
+			if ( !tabella.equals("banco") ){
+				pst.setInt(4, sconto);
+				pst.setInt(5, idVendita);
+				pst.setInt(6, idArticolo);
+			}
+			else{
+				pst.setInt(4, idVendita);
+				pst.setInt(5, idArticolo);
+			}
+
+			pst.executeUpdate();
+			updateArticolo(qtaIniziale);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		} finally {
+			try {
+				if (pst != null)
+					pst.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return -1;
+			}
+		}
+		return 1;
+	}
+	
+	public void updateArticolo(int qtaIniziale)
 	throws SQLException {
 
 		String query = "update dettaglio_carichi set qta=? where idarticolo=?";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 
-		pst.setInt(1, qta);
+		pst.setInt(1, (qta - qtaIniziale ));
 		pst.setInt(2, idArticolo);
 
 		// inserimento

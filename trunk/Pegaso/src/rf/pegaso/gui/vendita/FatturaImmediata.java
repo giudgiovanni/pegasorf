@@ -639,8 +639,9 @@ public class FatturaImmediata extends JFrame{
 				column = jTable.getColumnModel().getColumn(1);
 				column.setCellEditor(new DefaultCellEditor(getTxtCodice()));
 				jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				column = jTable.getColumnModel().getColumn(4);
-				column.setCellEditor(new QuantitaDisponibileEditor());
+//				column = jTable.getColumnModel().getColumn(4);
+//				column.setCellEditor(new QuantitaDisponibileEditor());
+				jTable.setDefaultEditor(Integer.class, new QuantitaDisponibileEditor());
 				jTable.setDefaultRenderer(Object.class, new MyTableCellRendererAlignment());
 				jTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 				jTable.packAll();

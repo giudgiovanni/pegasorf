@@ -64,7 +64,16 @@ public class QuantitaDisponibileEditor extends DefaultCellEditor {
 				} else
 					try { // Il testo è valido,
 						//memorizziamo il vecchio valore
-						Long tmp= new Long((Integer)ftf.getValue());
+						//facciamo anche un controllo se è per esempio
+						// un long e nel caso effettuiamo prima delle conversioni
+						Long tmp=null;
+						if(ftf.getValue() instanceof Integer){
+							Integer i=(Integer)ftf.getValue();
+							tmp=new Long(i.intValue());
+						}else if(ftf.getValue() instanceof Long){
+							tmp=(Long)ftf.getValue();
+						}
+						//tmp= new Long((Integer)ftf.getValue());
 						oldValue=tmp;
 						ftf.commitEdit();
 						Long newDisp=(Long)ftf.getValue();

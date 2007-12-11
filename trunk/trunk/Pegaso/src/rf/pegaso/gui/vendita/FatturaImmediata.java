@@ -169,6 +169,7 @@ public class FatturaImmediata extends JFrame{
 	private JButton btnRicercaCliente = null;
 	private JButton btnRicercaPagamento = null;
 	private JPanel pnlPulsanti = null;
+	private boolean saved;
 
 	public FatturaImmediata(){
 		this.dbm = DBManager.getIstanceSingleton();
@@ -212,6 +213,7 @@ public class FatturaImmediata extends JFrame{
 		Calendar c=Calendar.getInstance();
 		txtOraTr.setText(String.valueOf(c.get(Calendar.HOUR_OF_DAY)));
 		txtMinTr.setText(String.valueOf(c.get(Calendar.MINUTE)));
+		saved = false;
 	}
 
 	class MyButtonListener implements ActionListener {
@@ -243,10 +245,11 @@ public class FatturaImmediata extends JFrame{
 			}
 			else if ( e.getSource() == btnEliminaFattura )
 				eliminaFattura();
-			else if ( e.getSource() == btnModifica )
+			else if ( e.getSource() == btnModifica ){
 				modificaFattura();
+				saved = true;
+			}
 			else if ( e.getSource() == btnStampaFattura ){
-				visualizzaFattura();
 				stampa();
 			}
 			else if ( e.getSource() == btnRicercaData ){
@@ -729,8 +732,10 @@ public class FatturaImmediata extends JFrame{
 		v.setDestinazione(txtDestinazione.getText());
 		v.setAspetto(idAspetto);
 		v.setSconto(sconto);
-		
-		v.salvaDatiInFattura();
+		if( saved )
+			v.updateDatiInFattura();
+		else
+			v.salvaDatiInFattura();
 
 		//salviamo i dettagli della fattura
 		carrello.remove(0);
@@ -1173,21 +1178,20 @@ public class FatturaImmediata extends JFrame{
 						}
 					}
 				});
-//				cmbProdotti.getEditor().getEditorComponent().addFocusListener(new java.awt.event.FocusAdapter() {
-//					@Override
-//					public void focusLost(java.awt.event.FocusEvent e) {
-//						int id = Integer.parseInt(((IDJComboBox)cmbProdotti).getIDSelectedItem());
-//						DettaglioVendita dv = new DettaglioVendita();
-//						int er = dv.caricaById(id);
-//						if ( er == 0 )
-//							messaggioCampoMancante("Articolo non disponibile", "AVVISO");
-//						else if ( er == -1 )
-//							messaggioCampoMancante("Articolo non trovato", "AVVISO");
-//						else
-//							inserisci2(dv);
-//						System.out.println("fregato");
-//					}
-//				});
+				cmbProdotti.getEditor().getEditorComponent().addFocusListener(new java.awt.event.FocusAdapter() {
+					@Override
+					public void focusLost(java.awt.event.FocusEvent e) {
+						int id = Integer.parseInt(((IDJComboBox)cmbProdotti).getIDSelectedItem());
+						DettaglioVendita dv = new DettaglioVendita();
+						int er = dv.caricaDatiById(id);
+						if ( er == 0 )
+							messaggioCampoMancante("Articolo non disponibile", "AVVISO");
+						else if ( er == -1 )
+							messaggioCampoMancante("Articolo non trovato", "AVVISO");
+						else
+							inserisci(dv);
+					}
+				});
 			} catch (java.lang.Throwable e) {
 			}
 		}

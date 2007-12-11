@@ -28,7 +28,6 @@ import rf.utility.ControlloDati;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompletion;
 
-import java.awt.GridBagLayout;
 import javax.swing.JButton;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
@@ -36,7 +35,6 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 
-import java.awt.GridBagConstraints;
 import java.awt.Rectangle;
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -59,9 +57,6 @@ import com.toedter.calendar.JDateChooser;
 import javax.swing.JScrollPane;
 
 import org.jdesktop.swingx.JXTable;
-import javax.swing.JTabbedPane;
-import java.awt.FlowLayout;
-import rf.pegaso.db.model.FatturaViewModel;
 import javax.swing.border.TitledBorder;
 
 /**
@@ -85,7 +80,7 @@ public class Fattura extends JFrame{
 	private JTextField txtNumero = null;
 	private JLabel lblData = null;
 	private JDateChooser dataCorrente = null;
-	private JPanel jPanelEst = null;
+	private JPanel jPanelCentro = null;
 	private JScrollPane jScrollPane = null;
 	private JXTable jTable = null;
 	private JPanel jPanelSud = null;
@@ -114,7 +109,6 @@ public class Fattura extends JFrame{
 	private double imposta = 0.00;
 	private JPanel jPanelOvest = null;
 	private JScrollPane jScrollPane1 = null;
-	private JScrollPane jScrollPane2 = null;
 	private JXTable jTableDdt = null;
 	private JLabel lblSpeseIncasso = null;
 	private JFormattedTextField txtSpeseIncasso = null;
@@ -122,14 +116,6 @@ public class Fattura extends JFrame{
 	private JFormattedTextField txtSpeseTr = null;
 	private int id_ddt = 0;
 	private Vendita vendita = null;
-	private JTabbedPane jTabbedPane = null;
-	private JPanel pnlViewFattura = null;
-	private JPanel pnlPulsanti = null;
-	private JButton btnModifica = null;
-	private JButton btnStampaFattura = null;
-	private JButton btnEliminaFattura = null;
-	private JTable tblViewFatture = null;
-	private JPanel pnlFattura = null;
 
 	public Fattura(){
 		this.dbm = DBManager.getIstanceSingleton();
@@ -231,14 +217,13 @@ public class Fattura extends JFrame{
 			messaggioCampoMancante("Selezionare la riga da visualizzare", "AVVISO");
 			return;
 		}
-		id_ddt = (Integer)jTableDdt.getValueAt(riga, 0);
+		id_ddt = ((Long)jTableDdt.getValueAt(riga, 0)).intValue();
 		carrello.removeAllElements();
 		azzeraCampi();
 		vendita.caricaDatiDaDdt(id_ddt);
 		visualizzaVendita();
 		DettaglioVendita dv = new DettaglioVendita();
 		try {
-			//Vector<DettaglioVendita> vdv = (Vector<DettaglioVendita>)dv.caricaDatiByDB(id_ddt, "dettaglio_ddt", "idddt");
 			carrello.removeAllElements();
 			for ( DettaglioVendita d : dv.caricaDatiByDB(id_ddt, "dettaglio_ddt", "idddt") ){
 				carrello.add(d);
@@ -252,7 +237,6 @@ public class Fattura extends JFrame{
 	}
 
 	private void visualizzaVendita(){
-		//txtNumero.setText(vendita.getNumVendita());
 		dataCorrente.setDate(vendita.getData_vendita());
 		cmbClienti.setSelectedItemByID(vendita.getCliente());
 	}
@@ -282,7 +266,10 @@ public class Fattura extends JFrame{
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getJTabbedPane(), BorderLayout.CENTER);
+			jContentPane.add(getJPanelNord(), BorderLayout.NORTH);
+			jContentPane.add(getJPanelCentro(), BorderLayout.CENTER);
+			jContentPane.add(getJPanelSud(), BorderLayout.SOUTH);
+			jContentPane.add(getJPanelOvest(), BorderLayout.WEST);
 		}
 		return jContentPane;
 	}
@@ -419,20 +406,25 @@ public class Fattura extends JFrame{
 	}
 
 	/**
-	 * This method initializes jPanelEst
+	 * This method initializes jPanelCentro
 	 *
 	 * @return javax.swing.JPanel
 	 */
-	private JPanel getJPanelEst() {
-		if (jPanelEst == null) {
-
-			jPanelEst = new JPanel();
-			jPanelEst.setLayout(new BorderLayout());
-			jPanelEst.setPreferredSize(new Dimension(500, 3));
-			jPanelEst.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED), "Dettaglio Documento", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Dialog", Font.BOLD, 12), new Color(51, 51, 51)));
-			jPanelEst.add(getJScrollPane(), BorderLayout.CENTER);
+	private JPanel getJPanelCentro() {
+		if (jPanelCentro == null) {
+			jPanelCentro = new JPanel();
+			jPanelCentro.setLayout(new BorderLayout());
+			jPanelCentro.setPreferredSize(new Dimension(500, 3));
+			jPanelCentro.add(getJScrollPane(), BorderLayout.CENTER);
+			jPanelCentro.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(0), "Dettaglio del Documenti di Trasporto", 0,
+					0, new Font("Dialog", 1, 12), new Color(51, 51, 51)));
+			jPanelCentro = new JPanel();
+			jPanelCentro.setLayout(new BorderLayout());
+			jPanelCentro.setPreferredSize(new Dimension(500, 3));
+			jPanelCentro.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED), "Dettaglio Documento", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Dialog", Font.BOLD, 12), new Color(51, 51, 51)));
+			jPanelCentro.add(getJScrollPane(), BorderLayout.CENTER);
 		}
-		return jPanelEst;
+		return jPanelCentro;
 	}
 
 	/**
@@ -877,9 +869,6 @@ public class Fattura extends JFrame{
 	private JScrollPane getJScrollPane1() {
 		if (jScrollPane1 == null) {
 			jScrollPane1 = new JScrollPane();
-			//jScrollPane1.setBounds(new Rectangle(0, 0, 290, 440));
-//			jScrollPane1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(0), "Documenti di Trasporto", 0,
-//			0, new Font("Dialog", 1, 12), new Color(51, 51, 51)));
 			jScrollPane1.setViewportView(getJTableDdt());
 		}
 		return jScrollPane1;
@@ -942,141 +931,5 @@ public class Fattura extends JFrame{
 			txtSpeseTr.setBounds(new Rectangle(345, 96, 60, 20));
 		}
 		return txtSpeseTr;
-	}
-
-	/**
-	 * This method initializes jTabbedPane
-	 *
-	 * @return javax.swing.JTabbedPane
-	 */
-	private JTabbedPane getJTabbedPane() {
-		if (jTabbedPane == null) {
-			jTabbedPane = new JTabbedPane();
-			jTabbedPane.addTab(null, null, getPnlFattura(), null);
-			jTabbedPane.addTab("Registra Fatture", null, getPnlFattura(), null);
-			jTabbedPane.addTab("Visualizza Fatture", null, getPnlViewFattura(), null);
-		}
-		return jTabbedPane;
-	}
-
-	/**
-	 * This method initializes pnlViewFattura
-	 *
-	 * @return javax.swing.JPanel
-	 */
-	private JPanel getPnlViewFattura() {
-		if (pnlViewFattura == null) {
-			pnlViewFattura = new JPanel();
-			pnlViewFattura.setLayout(new BorderLayout());
-			pnlViewFattura.add(getPnlPulsanti(), java.awt.BorderLayout.NORTH);
-			pnlViewFattura.add(getJScrollPane2(), BorderLayout.CENTER);
-		}
-		return pnlViewFattura;
-	}
-
-	/**
-	 * This method initializes pnlPulsanti
-	 *
-	 * @return javax.swing.JPanel
-	 */
-	private JPanel getPnlPulsanti() {
-		if (pnlPulsanti == null) {
-			FlowLayout flowLayout = new FlowLayout();
-			flowLayout.setAlignment(FlowLayout.LEFT);
-			pnlPulsanti = new JPanel();
-			pnlPulsanti.setLayout(flowLayout);
-			pnlPulsanti.add(getBtnModifica(), null);
-			pnlPulsanti.add(getBtnStampaFattura(), null);
-			pnlPulsanti.add(getBtnEliminaFattura(), null);
-		}
-		return pnlPulsanti;
-	}
-
-	/**
-	 * This method initializes btnModifica
-	 *
-	 * @return javax.swing.JButton
-	 */
-	private JButton getBtnModifica() {
-		if (btnModifica == null) {
-			btnModifica = new JButton();
-			btnModifica.setText("Modifica");
-			btnModifica.addActionListener(new MyButtonListener());
-		}
-		return btnModifica;
-	}
-
-	/**
-	 * This method initializes btnStampaFattura
-	 *
-	 * @return javax.swing.JButton
-	 */
-	private JButton getBtnStampaFattura() {
-		if (btnStampaFattura == null) {
-			btnStampaFattura = new JButton();
-			btnStampaFattura.setEnabled(false);
-			btnStampaFattura.setText("Stampa");
-		}
-		return btnStampaFattura;
-	}
-
-	/**
-	 * This method initializes btnEliminaFattura
-	 *
-	 * @return javax.swing.JButton
-	 */
-	private JButton getBtnEliminaFattura() {
-		if (btnEliminaFattura == null) {
-			btnEliminaFattura = new JButton();
-			btnEliminaFattura.setText("Elimina");
-		}
-		return btnEliminaFattura;
-	}
-
-	/**
-	 * This method initializes jScrollPane1
-	 *
-	 * @return javax.swing.JScrollPane
-	 */
-	private JScrollPane getJScrollPane2() {
-		if (jScrollPane2 == null) {
-			jScrollPane2 = new JScrollPane();
-			jScrollPane2.setViewportView(getTblViewFatture());
-		}
-		return jScrollPane2;
-	}
-
-	/**
-	 * This method initializes tblViewFatture
-	 *
-	 * @return javax.swing.JTable
-	 */
-	private JTable getTblViewFatture() {
-		if (tblViewFatture == null) {
-			FatturaViewModel modelView = new FatturaViewModel(dbm, 1);
-			tblViewFatture = new JTable(modelView);
-			DBManager.getIstanceSingleton().addDBStateChange(modelView);
-			TableColumn col=tblViewFatture.getColumnModel().getColumn(0);
-			col.setMinWidth(0);
-			col.setMaxWidth(0);
-			col.setPreferredWidth(0);
-		}
-		return tblViewFatture;
-	}
-	/**
-	 * This method initializes pnlFattura
-	 *
-	 * @return javax.swing.JPanel
-	 */
-	private JPanel getPnlFattura() {
-		if (pnlFattura == null) {
-			pnlFattura = new JPanel();
-			pnlFattura.setLayout(new BorderLayout());
-			pnlFattura.add(getJPanelNord(), BorderLayout.NORTH);
-			pnlFattura.add(getJPanelEst(), BorderLayout.CENTER);
-			pnlFattura.add(getJPanelSud(), BorderLayout.SOUTH);
-			pnlFattura.add(getJPanelOvest(), BorderLayout.WEST);
-		}
-		return pnlFattura;
 	}
 }

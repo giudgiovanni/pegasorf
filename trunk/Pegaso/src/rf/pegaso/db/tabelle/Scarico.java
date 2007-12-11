@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.db.tabelle;
 
@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
+import java.util.Vector;
 
 import rf.pegaso.db.DBManager;
 import rf.pegaso.db.exception.ResultSetVuoto;
@@ -16,11 +17,11 @@ import rf.pegaso.db.tabelle.exception.IDNonValido;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class Scarico {
 	public static boolean codiceBarrePresenteInScarico(String codbarre, int idordine) throws SQLException {
-		DBManager dbm=DBManager.getIstanceSingleton(); 
+		DBManager dbm=DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		String query = "select codbarre from articoli_scaricati_view where codbarre=? and idordine=?";
 		PreparedStatement st = dbm.getNewPreparedStatement(query);
@@ -41,13 +42,13 @@ public class Scarico {
 	}
 
 	public static int getMaxID() {
-		DBManager dbm=DBManager.getIstanceSingleton(); 
+		DBManager dbm=DBManager.getIstanceSingleton();
 		return dbm.getNewID("ordini", "idordine") - 1;
 	}
 
 	public static double getTotDettaglioImponibile(int idScarico2)
 			throws SQLException {
-		DBManager dbm=DBManager.getIstanceSingleton(); 
+		DBManager dbm=DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
 		String query = "select sum(prezzo_dettaglio*qta) from articoli_scaricati_view where idordine="
@@ -64,7 +65,7 @@ public class Scarico {
 
 	public static double getTotDettaglioImposta(int idScarico2)
 			throws SQLException {
-		DBManager dbm=DBManager.getIstanceSingleton(); 
+		DBManager dbm=DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
 		String query = "select sum((prezzo_dettaglio/100*iva)*qta) from articoli_scaricati_view where idordine="
@@ -81,7 +82,7 @@ public class Scarico {
 
 	public static double getTotIngrossoImponibile(int idScarico2)
 			throws SQLException {
-		DBManager dbm=DBManager.getIstanceSingleton(); 
+		DBManager dbm=DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
 		String query = "select sum(prezzo_ingrosso*qta) from articoli_scaricati_view where idordine="
@@ -97,7 +98,7 @@ public class Scarico {
 	}
 
 	public static double getTotAcquistoImponibileByOrder(int idScarico2) throws SQLException {
-		DBManager dbm=DBManager.getIstanceSingleton(); 
+		DBManager dbm=DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
 		String query = "select sum(prezzo_acquisto*qta) from articoli_scaricati_view where idordine="
@@ -114,7 +115,7 @@ public class Scarico {
 
 	public static double getTotAcquistoImponibileAllOrders()
 			throws SQLException {
-		DBManager dbm=DBManager.getIstanceSingleton(); 
+		DBManager dbm=DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
 		String query = "select sum(prezzo_acquisto*qta) from articoli_scaricati_view";
@@ -129,7 +130,7 @@ public class Scarico {
 	}
 
 	public static double getTotAcquistoImpostaByOrder(int idScarico) throws SQLException {
-		DBManager dbm=DBManager.getIstanceSingleton(); 
+		DBManager dbm=DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
 		String query = "select sum((prezzo_acquisto/100*iva)*qta) from articoli_scaricati_view where idordine="
@@ -146,7 +147,7 @@ public class Scarico {
 
 	public static double getTotAcquistoImpostaAllOrders()
 			throws SQLException {
-		DBManager dbm=DBManager.getIstanceSingleton(); 
+		DBManager dbm=DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
 		String query = "select sum((prezzo_acquisto/100*iva)*qta) from articoli_scaricati_view";
@@ -162,7 +163,7 @@ public class Scarico {
 
 	public static double getTotIngrossoImposta(int idScarico2)
 			throws SQLException {
-		DBManager dbm=DBManager.getIstanceSingleton(); 
+		DBManager dbm=DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
 		String query = "select sum((prezzo_ingrosso/100*iva)*qta) from articoli_scaricati_view where idordine="
@@ -178,7 +179,7 @@ public class Scarico {
 	}
 
 	public static int insertScaricoInizialeZero(int idArticolo) {
-		DBManager dbm=DBManager.getIstanceSingleton(); 
+		DBManager dbm=DBManager.getIstanceSingleton();
 		// Inseriamo lo scarico all'interno del db
 		int idScarico = 0;
 		int idCliente = 0;
@@ -256,7 +257,7 @@ public class Scarico {
 	 */
 	public static boolean isOrderExsist(int idordine)
 			throws SQLException {
-		DBManager dbm=DBManager.getIstanceSingleton(); 
+		DBManager dbm=DBManager.getIstanceSingleton();
 		Statement st = dbm.getNewStatement();
 		ResultSet rs = null;
 		String query = "select * from ordini where idordine=" + idordine;
@@ -290,8 +291,14 @@ public class Scarico {
 
 	private int idDocumento;
 
+	private Vendita vendita;
+
 	public Scarico() {
-		this.dbm = DBManager.getIstanceSingleton(); 
+		this.dbm = DBManager.getIstanceSingleton();
+	}
+
+	public Scarico(Vendita vendita) {
+		this.vendita=vendita;
 	}
 
 	public void caricaDati(int id) throws SQLException {
@@ -372,7 +379,7 @@ public class Scarico {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public int getNewID() {
 		return dbm.getNewID("ordini", "idordine");
@@ -430,6 +437,31 @@ public class Scarico {
 			pst.close();
 		dbm.notifyDBStateChange();
 	}
+
+	public int insertScarico(Vendita vendita) throws SQLException{
+        //prepariamo i dati da inserire
+		setDataDocumento(vendita.getData_vendita());
+		setDataScarico(vendita.getData_vendita());
+		setIdCliente(vendita.getCliente());
+		setIdDocumento(vendita.getTipoDocumento());
+		setIdScarico(this.getNewID());
+		setNote("");
+		setNumDocumento(vendita.getNumVendita());
+		setOraScarico(vendita.getOra_vendita());
+
+		//effettuiamo l'inserimento
+		int r1= insertScarico();
+
+		//inseriamo il dettaglio della vendita prelevando i dati
+		DettaglioVendita dv=new DettaglioVendita();
+		Vector<DettaglioVendita> dett=dv.caricaDatiByDB(vendita.getIdVendita(), "dettaglio_fattura", "idfattura");
+		for(DettaglioVendita tmp:dett){
+			insertArticolo(tmp.getIdArticolo(), tmp.getQta(), tmp.getSconto());
+		}
+
+		return r1;
+	}
+
 
 	public int insertScarico() {
 
@@ -497,8 +529,8 @@ public class Scarico {
 	 * @param idCliente
 	 *            the idCliente to set
 	 */
-	public void setIdCliente(int idFornitore) {
-		this.idCliente = idFornitore;
+	public void setIdCliente(int idCliente) {
+		this.idCliente = idCliente;
 	}
 
 	/**
@@ -615,5 +647,6 @@ public class Scarico {
 	public java.util.Date getDataDocumento() {
 		return this.dataDocumento;
 	}
+
 
 }

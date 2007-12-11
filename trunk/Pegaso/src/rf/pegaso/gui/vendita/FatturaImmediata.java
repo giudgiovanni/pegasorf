@@ -26,6 +26,7 @@ import rf.pegaso.db.tabelle.Causale;
 import rf.pegaso.db.tabelle.Cliente;
 import rf.pegaso.db.tabelle.DettaglioVendita;
 import rf.pegaso.db.tabelle.Pagamento;
+import rf.pegaso.db.tabelle.Scarico;
 import rf.pegaso.db.tabelle.Vendita;
 import rf.pegaso.db.tabelle.exception.IDNonValido;
 import rf.pegaso.gui.gestione.ClientiAdd;
@@ -209,7 +210,7 @@ public class FatturaImmediata extends JFrame{
 		caricaAspetto();
 		caricaVettoreColonne();
 		txtNumero.setText(String.valueOf(dbm.getNewID("fattura", "idfattura")));
-		
+
 		Calendar c=Calendar.getInstance();
 		txtOraTr.setText(String.valueOf(c.get(Calendar.HOUR_OF_DAY)));
 		txtMinTr.setText(String.valueOf(c.get(Calendar.MINUTE)));
@@ -295,13 +296,13 @@ public class FatturaImmediata extends JFrame{
 			}
 		}
 	}
-	
+
 	class MyTableModelListener implements TableModelListener{
 		public void tableChanged(TableModelEvent arg0) {
 			calcoliBarraInferiore();
 		}
 	}
-	
+
 	private void inserisci(DettaglioVendita dv){
 		dv.setIdVendita(dbm.getNewID("fattura", "idfattura"));
 		carrello.add(dv);
@@ -571,7 +572,7 @@ public class FatturaImmediata extends JFrame{
 			}
 		return dataCorrente;
 	}
-	
+
 	private JDateChooser getDataTrasporto() {
 		if (dataTrasporto == null)
 			try {
@@ -696,13 +697,13 @@ public class FatturaImmediata extends JFrame{
 		int colli = 0;
 		double peso = 0.00;
 		int sconto = 0;
-		try {			
+		try {
 			if ( !txtSpeseInc.getText().equals("") )
-				speseInc = ControlloDati.convertPrezzoToDouble(txtSpeseInc.getText());			
+				speseInc = ControlloDati.convertPrezzoToDouble(txtSpeseInc.getText());
 			if ( !txtSpeseTr.getText().equals("") )
-				speseTr = ControlloDati.convertPrezzoToDouble(txtSpeseTr.getText());			
+				speseTr = ControlloDati.convertPrezzoToDouble(txtSpeseTr.getText());
 			if ( !txtColli.getText().equals("") )
-				colli = Integer.parseInt(txtColli.getText());			
+				colli = Integer.parseInt(txtColli.getText());
 			if ( !txtPeso.getText().equals("") )
 				peso = ControlloDati.convertPrezzoToDouble(txtPeso.getText());
 			if ( !txtSconto.getText().equals("") )
@@ -713,7 +714,7 @@ public class FatturaImmediata extends JFrame{
 			e.printStackTrace();
 		}
 		final Time oraTr = new Time(ora, min, 0);
-		
+
 		Vendita v = new Vendita();
 		v.setIdVendita(dbm.getNewID("fattura", "idfattura"));
 		v.setData_vendita(new java.sql.Date(dataCorrente.getDate().getTime()));
@@ -744,6 +745,21 @@ public class FatturaImmediata extends JFrame{
 			dv.salvaInDb("dettaglio_fattura");
 			//carrello.remove(dv);
 		}
+		//----------ROCCO-----------------------------------------------
+		//una volta inserita la fattura aggiorniamo anche la tabella
+		//ordine che serve per tenere traccia delle quantità disponibili
+		//in magazzino
+		// il costruttore accetta una vendita dalla quale preleva tutti i dati
+		// per effettuare le operazioni
+		v.setTipoDocumento(1);
+		Scarico sc=new Scarico();
+		try {
+			sc.insertScarico(v);
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(this, "Errore nell'inserimento del dettaglio vendita", "ERRORE", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
+		//---------FINE ROCCO-----------------------------------------
 		dbm.notifyDBStateChange();
 		resetCampi();
 	}
@@ -755,22 +771,22 @@ public class FatturaImmediata extends JFrame{
 		carrello.add(v);
 		calcoliBarraInferiore();
 	}
-	
+
 	private void nuovoCliente(){
 		ClientiAdd add = new ClientiAdd(this, dbm);
 		add.setVisible(true);
 	}
-	
+
 	private void nuovoPagamento(){
 		PagamentoAdd add = new PagamentoAdd(this);
 		add.setVisible(true);
 	}
-	
+
 	private void nuovoAspetto(){
 		AspettoAdd add = new AspettoAdd(this);
 		add.setVisible(true);
 	}
-	
+
 	private void nuovaCausale(){
 		CausaleAdd add = new CausaleAdd(this);
 		add.setVisible(true);
@@ -937,7 +953,7 @@ public class FatturaImmediata extends JFrame{
 		return cmbClientiR;
 	}
 
-	
+
 	/**
 	 * This method initializes btnNuovoCliente
 	 *
@@ -965,7 +981,7 @@ public class FatturaImmediata extends JFrame{
 		}
 		return cmbPagamento;
 	}
-	
+
 	/**
 	 * This method initializes cmbPagamentoR
 	 *
@@ -1010,7 +1026,7 @@ public class FatturaImmediata extends JFrame{
 		}
 		AutoCompletion.enable(cmbProdotti);
 	}
-	
+
 	private void caricaPagamento(){
 		Pagamento p = new Pagamento();
 		try {
@@ -1042,7 +1058,7 @@ public class FatturaImmediata extends JFrame{
 		}
 		AutoCompletion.enable(cmbCausale);
 	}
-	
+
 	private void caricaAspetto(){
 		Aspetto a = new Aspetto();
 		try {
@@ -1057,7 +1073,7 @@ public class FatturaImmediata extends JFrame{
 		}
 		AutoCompletion.enable(cmbAspetto);
 	}
-	
+
 	/**
 	 * This method initializes txtCodice
 	 *
@@ -1266,9 +1282,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes txtDestinazione	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes txtDestinazione
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtDestinazione() {
 		if (txtDestinazione == null) {
@@ -1279,9 +1295,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes txtSpeseInc	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes txtSpeseInc
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JFormattedTextField getTxtSpeseInc() {
 		if (txtSpeseInc == null) {
@@ -1293,9 +1309,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes txtSpeseTr	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes txtSpeseTr
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JFormattedTextField getTxtSpeseTr() {
 		if (txtSpeseTr == null) {
@@ -1307,9 +1323,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes txtColli	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes txtColli
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JFormattedTextField getTxtColli() {
 		if (txtColli == null) {
@@ -1321,9 +1337,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes txtPeso	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes txtPeso
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JFormattedTextField getTxtPeso() {
 		if (txtPeso == null) {
@@ -1335,9 +1351,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes cmbCausale	
-	 * 	
-	 * @return javax.swing.JComboBox	
+	 * This method initializes cmbCausale
+	 *
+	 * @return javax.swing.JComboBox
 	 */
 	private JComboBox getCmbCausale() {
 		if (cmbCausale == null) {
@@ -1348,9 +1364,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes cmbAspetto	
-	 * 	
-	 * @return javax.swing.JComboBox	
+	 * This method initializes cmbAspetto
+	 *
+	 * @return javax.swing.JComboBox
 	 */
 	private JComboBox getCmbAspetto() {
 		if (cmbAspetto == null) {
@@ -1361,9 +1377,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes cmbConsegna	
-	 * 	
-	 * @return javax.swing.JComboBox	
+	 * This method initializes cmbConsegna
+	 *
+	 * @return javax.swing.JComboBox
 	 */
 	private JComboBox getCmbConsegna() {
 		if (cmbConsegna == null) {
@@ -1378,9 +1394,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes cmbPorto	
-	 * 	
-	 * @return javax.swing.JComboBox	
+	 * This method initializes cmbPorto
+	 *
+	 * @return javax.swing.JComboBox
 	 */
 	private JComboBox getCmbPorto() {
 		if (cmbPorto == null) {
@@ -1395,9 +1411,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnNuovoPagamento	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnNuovoPagamento
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnNuovoPagamento() {
 		if (btnNuovoPagamento == null) {
@@ -1413,9 +1429,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnNuovaCausale	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnNuovaCausale
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnNuovaCausale() {
 		if (btnNuovaCausale == null) {
@@ -1431,9 +1447,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnNuovoAspetto	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnNuovoAspetto
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnNuovoAspetto() {
 		if (btnNuovoAspetto == null) {
@@ -1449,9 +1465,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes txtOraTr	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes txtOraTr
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JFormattedTextField getTxtOraTr() {
 		if (txtOraTr == null) {
@@ -1463,9 +1479,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes txtMinTr	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes txtMinTr
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JFormattedTextField getTxtMinTr() {
 		if (txtMinTr == null) {
@@ -1477,9 +1493,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes jTabbedPane	
-	 * 	
-	 * @return javax.swing.JTabbedPane	
+	 * This method initializes jTabbedPane
+	 *
+	 * @return javax.swing.JTabbedPane
 	 */
 	private JTabbedPane getJTabbedPane() {
 		if (jTabbedPane == null) {
@@ -1491,9 +1507,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes pnlFattura	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes pnlFattura
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlFattura() {
 		if (pnlFattura == null) {
@@ -1507,9 +1523,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes pnlViewFattura	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes pnlViewFattura
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlViewFattura() {
 		if (pnlViewFattura == null) {
@@ -1524,9 +1540,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes pnlRicerca	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes pnlRicerca
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlRicerca() {
 		if (pnlRicerca == null) {
@@ -1552,7 +1568,7 @@ public class FatturaImmediata extends JFrame{
 		}
 		return pnlRicerca;
 	}
-	
+
 	/**
 	 * This method initializes btnModifica
 	 *
@@ -1569,7 +1585,7 @@ public class FatturaImmediata extends JFrame{
 		}
 		return btnModifica;
 	}
-	
+
 	/**
 	 * This method initializes btnStampa
 	 *
@@ -1586,7 +1602,7 @@ public class FatturaImmediata extends JFrame{
 		}
 		return btnStampaFattura;
 	}
-	
+
 	/**
 	 * This method initializes btnEliminaCarico
 	 *
@@ -1600,7 +1616,7 @@ public class FatturaImmediata extends JFrame{
 		}
 		return btnEliminaFattura;
 	}
-	
+
 	private void eliminaFattura(){
 		if (tblViewFatture.getSelectedRow() <= -1) {
 			messaggioCampoMancante("Selezionare una fattura da eliminare", "AVVISO");
@@ -1623,11 +1639,11 @@ public class FatturaImmediata extends JFrame{
 		}
 		vendita = new Vendita();
 	}
-	
+
 	private void visualizzaFattura(){
-		
+
 	}
-	
+
 	private void modificaFattura(){
 		if (tblViewFatture.getSelectedRow() <= -1) {
 			JOptionPane.showMessageDialog(this,
@@ -1660,7 +1676,7 @@ public class FatturaImmediata extends JFrame{
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void visualizzaVendita(){
 		txtNumero.setText(vendita.getNumVendita());
 		dataCorrente.setDate(vendita.getData_vendita());
@@ -1681,9 +1697,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes jScrollPane1	
-	 * 	
-	 * @return javax.swing.JScrollPane	
+	 * This method initializes jScrollPane1
+	 *
+	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getJScrollPane1() {
 		if (jScrollPane1 == null) {
@@ -1694,9 +1710,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes tblViewFatture	
-	 * 	
-	 * @return javax.swing.JTable	
+	 * This method initializes tblViewFatture
+	 *
+	 * @return javax.swing.JTable
 	 */
 	private JTable getTblViewFatture() {
 		if (tblViewFatture == null) {
@@ -1704,7 +1720,7 @@ public class FatturaImmediata extends JFrame{
 		}
 		return tblViewFatture;
 	}
-	
+
 	private JDateChooser getDataRicercaDa() {
 		if (dataRicercaDa == null)
 			try {
@@ -1716,7 +1732,7 @@ public class FatturaImmediata extends JFrame{
 			}
 		return dataRicercaDa;
 	}
-	
+
 	private JDateChooser getDataRicercaA() {
 		if (dataRicercaA == null)
 			try {
@@ -1729,9 +1745,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes pnlRicercaData	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes pnlRicercaData
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlRicercaData() {
 		if (pnlRicercaData == null) {
@@ -1750,9 +1766,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes pnlRicercaCliente	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes pnlRicercaCliente
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlRicercaCliente() {
 		if (pnlRicercaCliente == null) {
@@ -1768,9 +1784,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes pnlRicercaPagamento	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes pnlRicercaPagamento
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlRicercaPagamento() {
 		if (pnlRicercaPagamento == null) {
@@ -1786,9 +1802,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnRicercaData	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnRicercaData
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnRicercaData() {
 		if (btnRicercaData == null) {
@@ -1802,9 +1818,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnRicercaCliente	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnRicercaCliente
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnRicercaCliente() {
 		if (btnRicercaCliente == null) {
@@ -1818,9 +1834,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnRicercaPagamento	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnRicercaPagamento
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnRicercaPagamento() {
 		if (btnRicercaPagamento == null) {
@@ -1834,9 +1850,9 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	/**
-	 * This method initializes pnlPulsanti	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes pnlPulsanti
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlPulsanti() {
 		if (pnlPulsanti == null) {

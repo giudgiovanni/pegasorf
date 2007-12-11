@@ -120,6 +120,41 @@ public class Vendita {
 		return 1;
 	}
 	
+	public int updateDatiInFattura(){
+		PreparedStatement pst = null;
+		String insert = "update fattura set data_vendita=?,ora_vendita=?,idcliente=?,pagamento=?,num_fattura=?,causale=?,spese_incazzo=?,spese_trasporto=?,data_tr=?,ora_tr=?,colli=?,peso=?,consegna=?,porto=?,diversa_dest=?,aspetto=?,sconto=? where idfattura=?";
+		try{
+			pst = dbm.getNewPreparedStatement(insert);
+			pst.setDate(1, data_vendita);
+			pst.setTime(2, ora_vendita);
+			pst.setInt(3, cliente);
+			pst.setInt(4, idPagamento);
+			pst.setString(5, numVendita);
+			pst.setInt(6, idCausale);
+			pst.setDouble(7, speseIncasso);
+			pst.setDouble(8, speseTrasporto);
+			pst.setDate(9, dataTrasporto);
+			pst.setTime(10, oraTrasporto);
+			pst.setInt(11, n_colli);
+			pst.setDouble(12, peso);
+			pst.setString(13, consegna);
+			pst.setString(14, porto);
+			pst.setString(15, destinazione);
+			pst.setInt(16, aspetto);
+			pst.setInt(17, sconto);
+			pst.setInt(18, idVendita);
+
+			pst.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			return -1;
+		}
+		return 1;
+	}
+	
 	public void caricaDatiDaDdt(int idddt){
 		Statement st = null;
 		ResultSet rs = null;

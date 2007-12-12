@@ -22,6 +22,7 @@ import rf.pegaso.db.model.VenditeModel;
 import rf.pegaso.db.tabelle.Cliente;
 import rf.pegaso.db.tabelle.DettaglioVendita;
 import rf.pegaso.db.tabelle.Pagamento;
+import rf.pegaso.db.tabelle.Scarico;
 import rf.pegaso.db.tabelle.Vendita;
 import rf.pegaso.gui.gestione.ClientiAdd;
 import rf.utility.ControlloDati;
@@ -491,9 +492,10 @@ public class Fattura extends JFrame{
 	}
 
 	private int salva(){
+//		Salviamo i dati della fattura
+		Vendita v = new Vendita();
 		try {
-			//Salviamo i dati della fattura
-			Vendita v = new Vendita();
+
 			String num_fattura = txtNumero.getText();
 			if (num_fattura.equalsIgnoreCase("")) {
 				messaggioCampoMancante("Numero DDT non presente.", "CAMPO VUOTO");
@@ -537,16 +539,41 @@ public class Fattura extends JFrame{
 			v.salvaDatiInFattura();
 
 			//salviamo i dettagli della fattura
-			carrello.remove(0);
+			//ROCCO rimuoviamo questo codice in quanto in questa scermata
+			//non c'è la riga vuota come in fattura immediata e altre
+			//altrimenti elimina la prima riga che è cmq buona
+			//carrello.remove(0);
 			for (DettaglioVendita dettaglio : carrello) {
+				//dato che in questo dettaglio è presente il codice del ddt
+				//mentre come codice vendita dobbiamo ora usare quello della
+				//fattura lo sostituiamo con il corrente idfattura prima di effettuare
+				//l'inserimento
+				dettaglio.setIdVendita(v.getIdVendita());
 				dettaglio.salvaInDb("dettaglio_fattura");
-				carrello.remove(dettaglio);
+				//carrello.remove(dettaglio);
 			}
+			carrello.removeAllElements();
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+		//----------ROCCO-----------------------------------------------
+		//una volta inserita la fattura aggiorniamo anche la tabella
+		//ordine che serve per tenere traccia delle quantità disponibili
+		//in magazzino
+		// il costruttore accetta una vendita dalla quale preleva tutti i dati
+		// per effettuare le operazioni
+		//codice 4 corrisponde allo scontrino fiscale
+		v.setTipoDocumento(1);
+		Scarico sc=new Scarico();
+		try {
+			sc.insertScarico(v);
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(this, "Errore nell'inserimento del dettaglio vendita nella fattura", "ERRORE", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
+		//---------FINE ROCCO-----------------------------------------
 		dbm.notifyDBStateChange();
 		txtSpeseIncasso.setText("");
 		txtSpeseTr.setText("");

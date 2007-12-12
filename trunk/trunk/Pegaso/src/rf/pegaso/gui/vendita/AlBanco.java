@@ -21,6 +21,7 @@ import rf.pegaso.db.model.FatturaViewModel;
 import rf.pegaso.db.model.VenditeModel;
 import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.DettaglioVendita;
+import rf.pegaso.db.tabelle.Scarico;
 import rf.pegaso.db.tabelle.Vendita;
 import rf.utility.ControlloDati;
 import rf.utility.gui.UtilGUI;
@@ -61,6 +62,7 @@ import javax.swing.JTabbedPane;
 import java.awt.FlowLayout;
 import java.util.Date;
 import java.awt.Color;
+import java.awt.GridLayout;
 
 public class AlBanco extends JFrame{
 
@@ -69,7 +71,6 @@ public class AlBanco extends JFrame{
 	 */
 	private static final long serialVersionUID = 1L;
 	private DBManager dbm = null;
-	private JPanel jContentPane = null;
 	private JPanel jPanelNord = null;
 	private JButton btnChiudi = null;
 	private JButton btnSalva = null;
@@ -101,7 +102,7 @@ public class AlBanco extends JFrame{
 	private double imposta = 0.00;
 	private JButton btnElimina = null;
 	private int qta = 0;
-	private Vendita vendita = null;
+	private Vendita vendita = null;  //  @jve:decl-index=0:
 	private JTabbedPane jTabbedPane = null;
 	private JPanel pnlVendita = null;
 	private JPanel pnlViewVendita = null;
@@ -123,6 +124,8 @@ public class AlBanco extends JFrame{
 	private JScrollPane jScrollPane2 = null;
 	private JXTable tblDettaglioVendita = null;
 	private JPanel pnlVendite = null;
+	private JPanel jContentPane1 = null;
+	private JPanel pnlCentrale = null;
 	public AlBanco(){
 		this.dbm = DBManager.getIstanceSingleton();
 		initialize();
@@ -141,9 +144,12 @@ public class AlBanco extends JFrame{
 		colonne = new Vector<String>();
 		caricaVettoreColonne();
 		this.setSize(new Dimension(800, 600));
+		//this.setContentPane(getJContentPane());
+		this.setContentPane(getJContentPane1());
+		
 		this.setTitle("Al Banco");
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); // Generated
-		this.setContentPane(getJContentPane());
+
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowClosed(java.awt.event.WindowEvent e) {
 				setEnabled(true);
@@ -199,7 +205,7 @@ public class AlBanco extends JFrame{
 		carrello.add(dv);
 		DBManager.getIstanceSingleton().notifyDBStateChange();
 		calcoliBarraInferiore();
-		
+
 //		Vendita v  = new Vendita();
 //		Articolo a = new Articolo();
 //		int spinQta = 1;
@@ -281,23 +287,6 @@ public class AlBanco extends JFrame{
 		int riga = jTable.getSelectedRow();
 		carrello.remove(riga);
 		dbm.notifyDBStateChange();
-	}
-
-	/**
-	 * This method initializes jContentPane
-	 *
-	 * @return javax.swing.JPanel
-	 */
-	private JPanel getJContentPane() {
-		if (jContentPane == null) {
-			jContentPane = new JPanel();
-			jContentPane.setLayout(new BorderLayout());
-//			jContentPane.add(getJPanelNord(), BorderLayout.NORTH);
-//			jContentPane.add(getJPanelCentro(), BorderLayout.CENTER);
-//			jContentPane.add(getJPanelSud(), BorderLayout.SOUTH);
-			jContentPane.add(getJTabbedPane(), BorderLayout.CENTER);
-		}
-		return jContentPane;
 	}
 
 	/**
@@ -496,16 +485,32 @@ public class AlBanco extends JFrame{
 		vendita.setOra_vendita(new Time(dataCorrente.getDate().getTime()));
 		vendita.setTipo_prezzo((String)cmbTipoPagamento.getSelectedItem());
 		vendita.salvaDatiInBanco();
-		
+
 		//salviamo i dettagli della fattura
 		carrello.remove(0);
 		for (DettaglioVendita dv : carrello) {
 			dv.salvaInDb("dettaglio_banco");
 		}
+//		----------ROCCO-----------------------------------------------
+		//una volta inserita la fattura aggiorniamo anche la tabella
+		//ordine che serve per tenere traccia delle quantità disponibili
+		//in magazzino
+		// il costruttore accetta una vendita dalla quale preleva tutti i dati
+		// per effettuare le operazioni
+		//codice 4 corrisponde allo scontrino fiscale
+		vendita.setTipoDocumento(4);
+		Scarico sc=new Scarico();
+		try {
+			sc.insertScarico(vendita);
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(this, "Errore nell'inserimento del dettaglio vendita al banco", "ERRORE", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
+		//---------FINE ROCCO-----------------------------------------
 		resetCampi();
 		dbm.notifyDBStateChange();
 	}
-	
+
 	private void resetCampi(){
 		txtNumero.setText(String.valueOf(dbm.getNewID("banco", "idvendita")));
 		carrello.removeAllElements();
@@ -820,7 +825,7 @@ public class AlBanco extends JFrame{
 		txtPezzi.setText(String.valueOf(qta));
 		txtTotale.setText(ControlloDati.convertDoubleToPrezzo(imponibile+imposta));
 	}
-	
+
 	/**
 	 * @param string
 	 */
@@ -845,15 +850,15 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes jTabbedPane	
-	 * 	
-	 * @return javax.swing.JTabbedPane	
+	 * This method initializes jTabbedPane
+	 *
+	 * @return javax.swing.JTabbedPane
 	 */
 	private JTabbedPane getJTabbedPane() {
 		if (jTabbedPane == null) {
 			jTabbedPane = new JTabbedPane();
-			jTabbedPane.addTab(null, null, getPnlVendita(), null);
-			jTabbedPane.addTab(null, null, getPnlViewVendita(), null);
+			jTabbedPane.addTab("Vendita", null, getPnlVendita(), null);
+			jTabbedPane.addTab("Visualizza Vendite", null, getPnlViewVendita(), null);
 			jTabbedPane.addTab("Registra Vendita", null, getPnlVendita(), null);
 			jTabbedPane.addTab("Visualizza Vendita", null, getPnlViewVendita(), null);
 		}
@@ -861,9 +866,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes pnlVendita	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes pnlVendita
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlVendita() {
 		if (pnlVendita == null) {
@@ -877,9 +882,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes pnlViewVendita	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes pnlViewVendita
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlViewVendita() {
 		if (pnlViewVendita == null) {
@@ -887,16 +892,15 @@ public class AlBanco extends JFrame{
 			pnlViewVendita.setLayout(new BorderLayout());
 			pnlViewVendita.add(getPnlPulsanti(), BorderLayout.SOUTH);
 			pnlViewVendita.add(getPnlRicerca(), BorderLayout.NORTH);
-			pnlViewVendita.add(getPnlDettaglioVendita(), BorderLayout.CENTER);
-			pnlViewVendita.add(getPnlVendite(), BorderLayout.WEST);
+			pnlViewVendita.add(getPnlCentrale(), BorderLayout.CENTER);
 		}
 		return pnlViewVendita;
 	}
 
 	/**
-	 * This method initializes pnlPulsanti	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes pnlPulsanti
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlPulsanti() {
 		if (pnlPulsanti == null) {
@@ -912,9 +916,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnModifica	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnModifica
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnModifica() {
 		if (btnModifica == null) {
@@ -925,9 +929,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnStampaFattura	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnStampaFattura
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnStampaFattura() {
 		if (btnStampaFattura == null) {
@@ -939,9 +943,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnEliminaFattura	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnEliminaFattura
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnEliminaFattura() {
 		if (btnEliminaFattura == null) {
@@ -952,9 +956,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes jScrollPane1	
-	 * 	
-	 * @return javax.swing.JScrollPane	
+	 * This method initializes jScrollPane1
+	 *
+	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getJScrollPane1() {
 		if (jScrollPane1 == null) {
@@ -965,9 +969,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes tblViewFatture	
-	 * 	
-	 * @return javax.swing.JTable	
+	 * This method initializes tblViewFatture
+	 *
+	 * @return javax.swing.JTable
 	 */
 	private JTable getTblViewFatture() {
 		if (tblViewFatture == null) {
@@ -984,9 +988,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes pnlRicerca	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes pnlRicerca
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlRicerca() {
 		if (pnlRicerca == null) {
@@ -1003,9 +1007,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes pnlRicercaData	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes pnlRicercaData
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlRicercaData() {
 		if (pnlRicercaData == null) {
@@ -1029,9 +1033,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes dataRicercaA	
-	 * 	
-	 * @return com.toedter.calendar.JDateChooser	
+	 * This method initializes dataRicercaA
+	 *
+	 * @return com.toedter.calendar.JDateChooser
 	 */
 	private JDateChooser getDataRicercaA() {
 		if (dataRicercaA == null) {
@@ -1043,9 +1047,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes dataRicercaDa	
-	 * 	
-	 * @return com.toedter.calendar.JDateChooser	
+	 * This method initializes dataRicercaDa
+	 *
+	 * @return com.toedter.calendar.JDateChooser
 	 */
 	private JDateChooser getDataRicercaDa() {
 		if (dataRicercaDa == null) {
@@ -1058,9 +1062,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnRicercaData	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnRicercaData
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnRicercaData() {
 		if (btnRicercaData == null) {
@@ -1074,9 +1078,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes pnlDettaglioVendita	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes pnlDettaglioVendita
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlDettaglioVendita() {
 		if (pnlDettaglioVendita == null) {
@@ -1090,9 +1094,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes jScrollPane2	
-	 * 	
-	 * @return javax.swing.JScrollPane	
+	 * This method initializes jScrollPane2
+	 *
+	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getJScrollPane2() {
 		if (jScrollPane2 == null) {
@@ -1103,9 +1107,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes tblDettaglioVendita	
-	 * 	
-	 * @return javax.swing.JTable	
+	 * This method initializes tblDettaglioVendita
+	 *
+	 * @return javax.swing.JTable
 	 */
 	private JTable getTblDettaglioVendita() {
 		if (tblDettaglioVendita == null) {
@@ -1115,9 +1119,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes pnlVendite	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes pnlVendite
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlVendite() {
 		if (pnlVendite == null) {
@@ -1128,5 +1132,37 @@ public class AlBanco extends JFrame{
 					0, new Font("Dialog", 1, 12), new Color(51, 51, 51)));
 		}
 		return pnlVendite;
+	}
+
+	/**
+	 * This method initializes jContentPane1	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getJContentPane1() {
+		if (jContentPane1 == null) {
+			jContentPane1 = new JPanel();
+			jContentPane1.setLayout(new BorderLayout());
+			jContentPane1.add(getJTabbedPane(), BorderLayout.CENTER);
+		}
+		return jContentPane1;
+	}
+
+	/**
+	 * This method initializes pnlCentrale	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPnlCentrale() {
+		if (pnlCentrale == null) {
+			GridLayout gridLayout = new GridLayout();
+			gridLayout.setRows(1);
+			gridLayout.setColumns(2);
+			pnlCentrale = new JPanel();
+			pnlCentrale.setLayout(gridLayout);
+			pnlCentrale.add(getPnlVendite(), null);
+			pnlCentrale.add(getPnlDettaglioVendita(), null);
+		}
+		return pnlCentrale;
 	}
 }

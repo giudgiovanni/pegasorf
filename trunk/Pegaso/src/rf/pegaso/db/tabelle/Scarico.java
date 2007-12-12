@@ -454,11 +454,19 @@ public class Scarico {
 
 		//inseriamo il dettaglio della vendita prelevando i dati
 		DettaglioVendita dv=new DettaglioVendita();
-		Vector<DettaglioVendita> dett=dv.caricaDatiByDB(vendita.getIdVendita(), "dettaglio_fattura", "idfattura");
+		Vector<DettaglioVendita> dett=null;
+		//se uguale ad uno è una fattura
+		if(vendita.getTipoDocumento()==1){
+			dett=dv.caricaDatiByDB(vendita.getIdVendita(), "dettaglio_fattura", "idfattura");
+		}else 
+			//qui siamo nel caso sia una vendita al banco
+			if (vendita.getTipoDocumento()==4){
+				dett=dv.caricaDatiByDB(vendita.getIdVendita(), "dettaglio_banco", "idvendita");
+			}
+		
 		for(DettaglioVendita tmp:dett){
 			insertArticolo(tmp.getIdArticolo(), tmp.getQta(), tmp.getSconto());
 		}
-
 		return r1;
 	}
 

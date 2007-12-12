@@ -193,7 +193,7 @@ public class DettaglioVendita {
 			a.caricaDati(dv.getIdArticolo());
 			dv.setDescrizione(a.getDescrizione());
 			dv.setCodiceBarre(a.getCodBarre());
-			if ( !tabella.equals("banco") )
+			if ( !tabella.equals("dettaglio_banco") )
 				dv.setSconto(rs.getInt(6));
 			dv.setIva(a.getIva());
 			UnitaDiMisura udm = new UnitaDiMisura();
@@ -208,16 +208,26 @@ public class DettaglioVendita {
 	public int salvaInDb(String tabella){
 		PreparedStatement pst = null;
 		try{
-			String insert = "insert into "+tabella+" values (?,?,?,?,?)";
-			if ( !tabella.equals("banco") )
+			//CODICE SERGIO----------------------------------------------
+//			String insert = "insert into "+tabella+" values (?,?,?,?,?)";
+//			if ( !tabella.equals("banco") )
+//				insert = "insert into "+tabella+" values (?,?,?,?,?,?)";
+			//FINE SERGIO------------------------------------------------
+
+			//CODICE ROCCO-----------------------------------------------
+			String insert="";
+			if ( !tabella.equals("dettaglio_banco") )
 				insert = "insert into "+tabella+" values (?,?,?,?,?,?)";
+			else insert = "insert into "+tabella+" values (?,?,?,?,?)";
+			//FINE ROCCO-------------------------------------------------
+
 			pst = dbm.getNewPreparedStatement(insert);
 			pst.setInt(1, idArticolo);
 			pst.setInt(2, idVendita);
 			pst.setLong(3, qta);
 			pst.setDouble(4, prezzoAcquisto);
 			pst.setDouble(5, prezzoVendita);
-			if ( !tabella.equals("banco") )
+			if ( !tabella.equals("dettaglio_banco") )
 				pst.setInt(6, sconto);
 
 			pst.executeUpdate();

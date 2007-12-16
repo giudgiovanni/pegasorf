@@ -191,7 +191,8 @@ public class FatturaImmediata extends JFrame{
 		caricaVettoreColonne();
 		this.setSize(new Dimension(800, 600));
 		this.setTitle("Fattura Immediata");
-		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); // Generated
+		//this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); // Generated
+		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		this.setContentPane(getJContentPane());
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowClosed(java.awt.event.WindowEvent e) {
@@ -221,7 +222,7 @@ public class FatturaImmediata extends JFrame{
 
 		public void actionPerformed(ActionEvent e) {
 			if ( e.getSource() == btnChiudi )
-				dispose();
+				close();
 			else if ( e.getSource() == btnSalva )
 				salva();
 			else if ( e.getSource() == btnStampa )
@@ -231,18 +232,22 @@ public class FatturaImmediata extends JFrame{
 			else if ( e.getSource() == btnNuovoCliente ){
 				nuovoCliente();
 				caricaClienti();
+				cmbClienti.setSelectedItemByID((dbm.getNewID("clienti","idcliente") - 1));
 			}
 			else if ( e.getSource() == btnNuovoPagamento ){
 				nuovoPagamento();
 				caricaPagamento();
+				cmbPagamento.setSelectedItemByID((dbm.getNewID("pagamento","idpagamento") - 1));
 			}
 			else if ( e.getSource() == btnNuovoAspetto ){
 				nuovoAspetto();
 				caricaAspetto();
+				cmbAspetto.setSelectedItemByID((dbm.getNewID("aspetto","idaspetto") - 1));
 			}
 			else if ( e.getSource() == btnNuovaCausale ){
 				nuovaCausale();
 				caricaCausale();
+				cmbCausale.setSelectedItemByID((dbm.getNewID("causale","idcausale") - 1));
 			}
 			else if ( e.getSource() == btnEliminaFattura )
 				eliminaFattura();
@@ -305,6 +310,19 @@ public class FatturaImmediata extends JFrame{
 
 	private void inserisci(DettaglioVendita dv){
 		dv.setIdVendita(dbm.getNewID("fattura", "idfattura"));
+		for ( DettaglioVendita d : carrello )
+			if( d.getIdArticolo() == dv.getIdArticolo() ){
+				if ( dv.getDisponibilita() < (dv.getQta() + d.getQta()) )
+					messaggioCampoMancante("Articolo non disponibile, ma gia' presente nel carrello", "AVVISO");
+				
+				else{
+					d.setQta(d.getQta() + dv.getQta());
+					d.setDisponibilita(d.getDisponibilita() - dv.getQta());
+				}
+				DBManager.getIstanceSingleton().notifyDBStateChange();
+				calcoliBarraInferiore();
+				return;
+			}
 		carrello.add(dv);
 		DBManager.getIstanceSingleton().notifyDBStateChange();
 		calcoliBarraInferiore();
@@ -320,7 +338,9 @@ public class FatturaImmediata extends JFrame{
 		colonne.add("descrizione");
 		colonne.add("UM");
 		colonne.add("quantita'");
-		colonne.add("prezzo");
+		colonne.add("disp.");
+		colonne.add("prezzo acquisto");
+		colonne.add("prezzo vendita");
 		colonne.add("importo");
 		colonne.add("sconto");
 		colonne.add("iva");
@@ -338,6 +358,23 @@ public class FatturaImmediata extends JFrame{
 		dbm.notifyDBStateChange();
 	}
 
+	private void close(){
+		if( carrello.size() >= 2 ){
+			int scelta = JOptionPane.showConfirmDialog(this,
+					"Uscire senza salvare i cambiamenti?",
+					"AVVISO", JOptionPane.YES_NO_OPTION,
+					JOptionPane.INFORMATION_MESSAGE);
+			if (scelta == JOptionPane.YES_OPTION)
+				dispose();
+			else{
+				salva();
+				dispose();
+			}
+		}
+		else
+			dispose();		
+	}
+	
 	/**
 	 * This method initializes jContentPane
 	 *
@@ -640,9 +677,9 @@ public class FatturaImmediata extends JFrame{
 				column = jTable.getColumnModel().getColumn(1);
 				column.setCellEditor(new DefaultCellEditor(getTxtCodice()));
 				jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//				column = jTable.getColumnModel().getColumn(4);
-//				column.setCellEditor(new QuantitaDisponibileEditor());
-				jTable.setDefaultEditor(Integer.class, new QuantitaDisponibileEditor());
+				column = jTable.getColumnModel().getColumn(4);
+				column.setCellEditor(new QuantitaDisponibileEditor());
+				//jTable.setDefaultEditor(Integer.class, new QuantitaDisponibileEditor());
 				jTable.setDefaultRenderer(Object.class, new MyTableCellRendererAlignment());
 				jTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 				jTable.packAll();
@@ -1002,8 +1039,8 @@ public class FatturaImmediata extends JFrame{
 			String as[] = (String[]) c.allClienti();
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
-			((IDJComboBox) cmbClienti).caricaNewValueComboBox(as, true);
-			((IDJComboBox) cmbClientiR).caricaNewValueComboBox(as, true);
+			((IDJComboBox) cmbClienti).caricaNewValueComboBox(as, false);
+			((IDJComboBox) cmbClientiR).caricaNewValueComboBox(as, false);
 		} catch (SQLException e) {
 			messaggioCampoMancante("Errore caricamento clienti nel combobox", "ERRORE");
 			e.printStackTrace();
@@ -1021,7 +1058,7 @@ public class FatturaImmediata extends JFrame{
 			// da passre al combobox
 			((IDJComboBox) cmbProdotti).caricaNewValueComboBox(as, true);
 		} catch (SQLException e) {
-			messaggioCampoMancante("Errore caricamento fornitori nel combobox", "ERRORE");
+			messaggioCampoMancante("Errore caricamento descrizioni nel combobox", "ERRORE");
 			e.printStackTrace();
 		}
 		AutoCompletion.enable(cmbProdotti);
@@ -1034,8 +1071,8 @@ public class FatturaImmediata extends JFrame{
 			String as[] = (String[]) p.allPagamenti();
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
-			((IDJComboBox) cmbPagamento).caricaNewValueComboBox(as, true);
-			((IDJComboBox) cmbPagamentoR).caricaNewValueComboBox(as, true);
+			((IDJComboBox) cmbPagamento).caricaNewValueComboBox(as, false);
+			((IDJComboBox) cmbPagamentoR).caricaNewValueComboBox(as, false);
 		} catch (SQLException e) {
 			messaggioCampoMancante("Errore caricamento pagamenti nel combobox", "ERRORE");
 			e.printStackTrace();
@@ -1051,7 +1088,7 @@ public class FatturaImmediata extends JFrame{
 			String as[] = (String[]) c.allCausali();
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
-			((IDJComboBox) cmbCausale).caricaNewValueComboBox(as, true);
+			((IDJComboBox) cmbCausale).caricaNewValueComboBox(as, false);
 		} catch (SQLException e) {
 			messaggioCampoMancante("Errore caricamento causale nel combobox", "ERRORE");
 			e.printStackTrace();
@@ -1066,7 +1103,7 @@ public class FatturaImmediata extends JFrame{
 			String as[] = (String[]) a.allAspetti();
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
-			((IDJComboBox) cmbAspetto).caricaNewValueComboBox(as, true);
+			((IDJComboBox) cmbAspetto).caricaNewValueComboBox(as, false);
 		} catch (SQLException e) {
 			messaggioCampoMancante("Errore caricamento aspetto nel combobox", "ERRORE");
 			e.printStackTrace();
@@ -1401,7 +1438,6 @@ public class FatturaImmediata extends JFrame{
 	private JComboBox getCmbPorto() {
 		if (cmbPorto == null) {
 			Vector<String> v = new Vector<String>();
-			v.add("");
 			v.add("Franco");
 			v.add("Assegnato");
 			cmbPorto = new JComboBox(v);
@@ -1638,10 +1674,6 @@ public class FatturaImmediata extends JFrame{
 			e.printStackTrace();
 		}
 		vendita = new Vendita();
-	}
-
-	private void visualizzaFattura(){
-
 	}
 
 	private void modificaFattura(){

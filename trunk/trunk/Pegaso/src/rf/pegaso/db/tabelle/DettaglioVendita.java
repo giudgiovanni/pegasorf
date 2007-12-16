@@ -20,6 +20,7 @@ public class DettaglioVendita {
 	private String descrizione;
 	private String um;
 	private int qta;
+	private int disponibilita;
 	private double prezzoAcquisto;
 	private double prezzoVendita;
 	private int iva;
@@ -35,6 +36,7 @@ public class DettaglioVendita {
 		this.descrizione = "";
 		this.um = "";
 		this.qta = 0;
+		disponibilita = 0;
 		this.prezzoAcquisto = 0.0;
 		this.prezzoVendita = 0.0;
 		this.iva = 0;
@@ -122,6 +124,14 @@ public class DettaglioVendita {
 		this.qta = qta;
 	}
 
+	public int getDisponibilita() {
+		return disponibilita;
+	}
+
+	public void setDisponibilita(int disponibilita) {
+		this.disponibilita = disponibilita;
+	}
+
 	public int caricaDatiByCodiceBarre(String codice){
 		if (codice.equalsIgnoreCase(""))
 			return -1;
@@ -140,6 +150,7 @@ public class DettaglioVendita {
 				codiceBarre = a.getCodBarre();
 				iva = a.getIva();
 				qta = 1;
+				disponibilita = a.getGiacenza() - 1;
 			}
 		} catch (SQLException e1) {
 
@@ -169,6 +180,7 @@ public class DettaglioVendita {
 			codiceBarre = a.getCodBarre();
 			iva = a.getIva();
 			qta = 1;
+			disponibilita = a.getGiacenza() - 1;
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
@@ -193,6 +205,7 @@ public class DettaglioVendita {
 			a.caricaDati(dv.getIdArticolo());
 			dv.setDescrizione(a.getDescrizione());
 			dv.setCodiceBarre(a.getCodBarre());
+			dv.setDisponibilita(a.getGiacenza());
 			if ( !tabella.equals("dettaglio_banco") )
 				dv.setSconto(rs.getInt(6));
 			dv.setIva(a.getIva());
@@ -320,6 +333,8 @@ public class DettaglioVendita {
 		v.add(descrizione);
 		v.add(um);
 		v.add(qta);
+		v.add(disponibilita);
+		v.add(prezzoAcquisto);
 		v.add(prezzoVendita);
 		if ( sconto == 0)
 			v.add(prezzoVendita*qta);

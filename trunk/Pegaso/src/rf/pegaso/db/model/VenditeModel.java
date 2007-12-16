@@ -66,7 +66,7 @@ public class VenditeModel extends AbstractTableModel implements DBStateChange {
 	}
 	
 	public boolean isCellEditable(int r, int c) {
-		if ( c == 1 || c == 2 || c == 4 || c == 7 )
+		if ( c == 1 || c == 2 || c == 4 || c == 9 )
 			return true;
 		return false;
 	}
@@ -81,9 +81,9 @@ public class VenditeModel extends AbstractTableModel implements DBStateChange {
 	}
 
 	public Class<?> getColumnClass(int columnIndex) {
-		if ( columnIndex == 5 || columnIndex == 6 )
+		if ( columnIndex == 6 || columnIndex == 7 || columnIndex == 8 )
 			return Double.class;
-		else if ( columnIndex == 0 || columnIndex == 4 || columnIndex == 7 || columnIndex == 8 )
+		else if ( columnIndex == 0 || columnIndex == 4 || columnIndex == 5 || columnIndex == 9 || columnIndex == 10 )
 			return Integer.class;
 //		else if ( columnIndex == 4 )
 //			return Long.class;
@@ -100,10 +100,10 @@ public class VenditeModel extends AbstractTableModel implements DBStateChange {
 					v.setQta((Integer)o);
 				break;
 			}
-			case 5 :
+			case 6 :
 				v.setPrezzoVendita((Double)o);
 				break;
-			case 7 :
+			case 8 :
 				v.setSconto((Integer)o);
 				break;
 		}

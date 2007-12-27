@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory name="HibernateSessionFactory">
+        <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.password">postgres</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/pegaso</property>
+        <property name="hibernate.connection.username">postgres</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+        <mapping resource="rf/hibernate/Aspetto.hbm.xml" />
+        <mapping resource="rf/hibernate/DettaglioOrdini.hbm.xml" />
+        <mapping resource="rf/hibernate/Pagamento.hbm.xml" />
+        <mapping resource="rf/hibernate/TmpEtichetteFornitori.hbm.xml" />
+        <mapping resource="rf/hibernate/Causale.hbm.xml" />
+        <mapping resource="rf/hibernate/DettaglioCarichi.hbm.xml" />
+        <mapping resource="rf/hibernate/Ddt.hbm.xml" />
+        <mapping resource="rf/hibernate/GiacenzaArticoliAllView.hbm.xml" />
+        <mapping resource="rf/hibernate/Utenti.hbm.xml" />
+        <mapping resource="rf/hibernate/Articoli.hbm.xml" />
+        <mapping resource="rf/hibernate/Fornitori.hbm.xml" />
+        <mapping resource="rf/hibernate/QtaCaricateView.hbm.xml" />
+        <mapping resource="rf/hibernate/ArticoliCaricatiView.hbm.xml" />
+        <mapping resource="rf/hibernate/Reparti.hbm.xml" />
+        <mapping resource="rf/hibernate/TipoDocumento.hbm.xml" />
+        <mapping resource="rf/hibernate/Clienti.hbm.xml" />
+        <mapping resource="rf/hibernate/Carichi.hbm.xml" />
+        <mapping resource="rf/hibernate/Um.hbm.xml" />
+        <mapping resource="rf/hibernate/GiacenzaArticoliView.hbm.xml" />
+        <mapping resource="rf/hibernate/TmpEtichette.hbm.xml" />
+        <mapping resource="rf/hibernate/Fattura.hbm.xml" />
+        <mapping resource="rf/hibernate/ArticoliScaricatiView.hbm.xml" />
+        <mapping resource="rf/hibernate/QtaScaricateView.hbm.xml" />
+        <mapping resource="rf/hibernate/Ordini.hbm.xml" />
+    </session-factory>
+</hibernate-configuration>

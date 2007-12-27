@@ -117,7 +117,7 @@ public class FornitoriModelRidotto extends AbstractTableModel implements
 	 *
 	 */
 	private void recuperaDati() throws SQLException {
-		this.query = "select a.idfornitore,a.nome,a.via,a.cap,a.citta,a.provincia from fornitori a order by a.nome";
+		this.query = "select a.idfornitore,a.nome,a.via,a.cap,a.citta,a.provincia from fornitori a order by a.nome ASC";
 		pst = dbm.getNewPreparedStatement(query);
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();

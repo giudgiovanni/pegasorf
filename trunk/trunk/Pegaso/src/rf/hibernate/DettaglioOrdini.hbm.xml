@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 18-dic-2007 17.22.08 by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="rf.hibernate.DettaglioOrdini" table="dettaglio_ordini" schema="public">
+        <composite-id name="id" class="rf.hibernate.DettaglioOrdiniId">
+            <key-property name="idordine" type="long">
+                <column name="idordine" />
+            </key-property>
+            <key-property name="idarticolo" type="long">
+                <column name="idarticolo" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="ordini" class="rf.hibernate.Ordini" update="false" insert="false" fetch="select">
+            <column name="idordine" not-null="true" />
+        </many-to-one>
+        <many-to-one name="articoli" class="rf.hibernate.Articoli" update="false" insert="false" fetch="select">
+            <column name="idarticolo" not-null="true" />
+        </many-to-one>
+        <property name="qta" type="long">
+            <column name="qta" not-null="true" />
+        </property>
+        <property name="sconto" type="java.lang.Long">
+            <column name="sconto" />
+        </property>
+    </class>
+</hibernate-mapping>

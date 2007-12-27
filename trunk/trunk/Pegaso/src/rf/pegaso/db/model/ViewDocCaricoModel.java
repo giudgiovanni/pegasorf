@@ -117,7 +117,7 @@ public class ViewDocCaricoModel extends AbstractTableModel implements
 		// articoli as a, carichi as c,dettaglio_carichi as d,documento as doc
 		// where a.idarticolo=d.idarticolo and c.idcarico=d.idcarico and
 		// doc.iddocumento=c.idcarico and a.idarticolo=?";
-		this.query = "select d.descrizione, num_documento,data_documento,a.idcarico as num_carico, c.data_carico from articoli_caricati_view as a, carichi AS C,documento as d where a.idcarico=c.idcarico and c.iddocumento=d.iddocumento and a.idarticolo=? order by data_documento desc";
+		this.query = "select d.descrizione, num_documento,data_documento,a.idcarico as num_carico, c.data_carico from articoli_caricati_view as a, carichi AS C,tipo_documento as d where a.idcarico=c.idcarico and c.iddocumento=d.iddocumento and a.idarticolo=? order by data_documento desc";
 		pst = dbm.getNewPreparedStatement(query);
 		pst.setInt(1, idArticolo);
 		rs = pst.executeQuery();

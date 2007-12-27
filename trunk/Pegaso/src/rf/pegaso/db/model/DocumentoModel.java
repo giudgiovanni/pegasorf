@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.db.model;
 
@@ -11,7 +11,7 @@ import rf.utility.db.DBStateChange;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class DocumentoModel extends AbstractTableModel implements DBStateChange {
 
@@ -39,7 +39,7 @@ public class DocumentoModel extends AbstractTableModel implements DBStateChange 
 	}
 
 	public String getTableName() {
-		return "documento";
+		return "tipo_documento";
 	}
 
 	public Object getValueAt(int r, int c) {

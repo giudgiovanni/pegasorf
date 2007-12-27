@@ -32,7 +32,7 @@ public class Documento {
 		String[] o = null;
 		ResultSet rs = null;
 		Statement pst = null;
-		String query = "select iddocumento || ' - ' || tipo from documento order by tipo";
+		String query = "select iddocumento || ' - ' || tipo from tipo_documento order by tipo";
 		pst = dbm.getNewStatement();
 		rs = pst.executeQuery(query);
 		rs.last();
@@ -53,7 +53,7 @@ public class Documento {
 	public void caricaDati(int iddocumento) throws SQLException {
 		Statement st = null;
 		ResultSet rs = null;
-		String query = "select * from documento where iddocumento="
+		String query = "select * from tipo_documento where iddocumento="
 				+ iddocumento;
 		st = dbm.getNewStatement();
 		rs = st.executeQuery(query);
@@ -72,7 +72,7 @@ public class Documento {
 		int cancellati = 0;
 		if (iddocumento <= -1)
 			throw new IDNonValido();
-		delete = "DELETE FROM documento WHERE iddocumento=" + iddocumento;
+		delete = "DELETE FROM tipo_documento WHERE iddocumento=" + iddocumento;
 
 		try {
 			cancellati = st.executeUpdate(delete);
@@ -104,12 +104,12 @@ public class Documento {
 
 	public int insertDocumento() throws IDNonValido {
 
-		iddocumento = dbm.getNewID("documento", "iddocumento");
+		iddocumento = dbm.getNewID("tipo_documento", "iddocumento");
 		if (iddocumento <= -1)
 			throw new IDNonValido();
 		int ok = 0;
 		PreparedStatement pst = null;
-		String insert = "insert into documento values (?,?,?)";
+		String insert = "insert into tipo_documento values (?,?,?)";
 
 		pst = dbm.getNewPreparedStatement(insert);
 		try {
@@ -154,7 +154,7 @@ public class Documento {
 			throw new IDNonValido();
 		int ok = 0;
 		PreparedStatement pst = null;
-		String update = "UPDATE documento SET iddocumento=?,"
+		String update = "UPDATE tipo_documento SET iddocumento=?,"
 				+ "tipo=?,descrizione=? WHERE iddocumento=?";
 
 		pst = dbm.getNewPreparedStatement(update);

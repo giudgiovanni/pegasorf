@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.db.model;
 
@@ -18,7 +18,7 @@ import rf.utility.db.DBStateChange;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class CarichiViewModel extends AbstractTableModel implements
 		DBStateChange {
@@ -113,10 +113,10 @@ public class CarichiViewModel extends AbstractTableModel implements
 
 	/**
 	 * @throws SQLException
-	 * 
+	 *
 	 */
 	private void recuperaDati() throws SQLException {
-		this.query = "select c.idcarico as id,c.data_documento,c.num_documento, d.tipo,f.nome as fornitore,c.note from carichi as c,documento as d,  fornitori as f  where c.idcarico=c.idcarico and c.idfornitore=f.idfornitore and c.iddocumento=d.iddocumento order by c.data_documento desc";
+		this.query = "select c.idcarico as id,c.data_documento,c.num_documento, d.tipo,f.nome as fornitore,c.note from carichi as c,tipo_documento as d,  fornitori as f  where c.idcarico=c.idcarico and c.idfornitore=f.idfornitore and c.iddocumento=d.iddocumento order by c.data_documento desc";
 		pst = dbm.getNewPreparedStatement(query);
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();

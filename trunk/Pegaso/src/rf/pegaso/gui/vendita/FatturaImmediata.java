@@ -171,6 +171,9 @@ public class FatturaImmediata extends JFrame{
 	private JButton btnRicercaPagamento = null;
 	private JPanel pnlPulsanti = null;
 	private boolean saved;
+	private JButton btnAzzera = null;
+	//usata per sapere se si effettua una modifca oppure no
+	private boolean modifica;
 
 	public FatturaImmediata(){
 		this.dbm = DBManager.getIstanceSingleton();
@@ -216,6 +219,7 @@ public class FatturaImmediata extends JFrame{
 		txtOraTr.setText(String.valueOf(c.get(Calendar.HOUR_OF_DAY)));
 		txtMinTr.setText(String.valueOf(c.get(Calendar.MINUTE)));
 		saved = false;
+		modifica=false;
 	}
 
 	class MyButtonListener implements ActionListener {
@@ -223,6 +227,9 @@ public class FatturaImmediata extends JFrame{
 		public void actionPerformed(ActionEvent e) {
 			if ( e.getSource() == btnChiudi )
 				close();
+			else if(e.getSource()==btnAzzera){
+				resetCampi();
+			}
 			else if ( e.getSource() == btnSalva )
 				salva();
 			else if ( e.getSource() == btnStampa )
@@ -536,6 +543,7 @@ public class FatturaImmediata extends JFrame{
 			jPanelNord.add(getTxtOraTr(), null);
 			jPanelNord.add(lblPuntini, null);
 			jPanelNord.add(getTxtMinTr(), null);
+			jPanelNord.add(getBtnAzzera(), null);
 		}
 		return jPanelNord;
 	}
@@ -549,7 +557,7 @@ public class FatturaImmediata extends JFrame{
 		if (btnChiudi == null) {
 			btnChiudi = new JButton();
 			btnChiudi.setText("Chiudi");
-			btnChiudi.setBounds(new Rectangle(700, 7, 82, 26));
+			btnChiudi.setBounds(new Rectangle(709, 7, 73, 26));
 			btnChiudi.addActionListener(new MyButtonListener());
 		}
 		return btnChiudi;
@@ -564,7 +572,7 @@ public class FatturaImmediata extends JFrame{
 		if (btnSalva == null) {
 			btnSalva = new JButton();
 			btnSalva.setText("Salva");
-			btnSalva.setBounds(new Rectangle(514, 7, 82, 26));
+			btnSalva.setBounds(new Rectangle(551, 7, 71, 26));
 			btnSalva.addActionListener(new MyButtonListener());
 		}
 		return btnSalva;
@@ -579,7 +587,7 @@ public class FatturaImmediata extends JFrame{
 		if (btnStampa == null) {
 			btnStampa = new JButton();
 			btnStampa.setText("Stampa");
-			btnStampa.setBounds(new Rectangle(607, 7, 82, 26));
+			btnStampa.setBounds(new Rectangle(626, 7, 79, 26));
 			btnStampa.addActionListener(new MyButtonListener());
 		}
 		return btnStampa;
@@ -705,6 +713,7 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	private void salva(){
+
 		//Salviamo i dati della fattura
 		String num_fattura = txtNumero.getText();
 		if (num_fattura.equalsIgnoreCase("")) {
@@ -771,9 +780,10 @@ public class FatturaImmediata extends JFrame{
 		v.setDestinazione(txtDestinazione.getText());
 		v.setAspetto(idAspetto);
 		v.setSconto(sconto);
-		if( saved )
+		if( saved ){
 			v.updateDatiInFattura();
-		else
+			saved=false;
+		}else
 			v.salvaDatiInFattura();
 
 		//salviamo i dettagli della fattura
@@ -799,6 +809,7 @@ public class FatturaImmediata extends JFrame{
 		//---------FINE ROCCO-----------------------------------------
 		dbm.notifyDBStateChange();
 		resetCampi();
+		modifica=false;
 	}
 
 	private void resetCampi(){
@@ -807,6 +818,7 @@ public class FatturaImmediata extends JFrame{
 		DettaglioVendita v = new DettaglioVendita();
 		carrello.add(v);
 		calcoliBarraInferiore();
+		txtNumero.setText(String.valueOf(dbm.getNewID("fattura", "idfattura")));
 	}
 
 	private void nuovoCliente(){
@@ -1696,6 +1708,7 @@ public class FatturaImmediata extends JFrame{
 		try {
 			Vector<DettaglioVendita> c2 = (Vector<DettaglioVendita>)dv.caricaDatiByDB(idfattura, "dettaglio_fattura", "idfattura");
 			carrello.removeAllElements();
+			carrello.add(new DettaglioVendita());
 			for ( DettaglioVendita d : c2 ){
 				carrello.add(d);
 			}
@@ -1704,6 +1717,7 @@ public class FatturaImmediata extends JFrame{
 			DBManager.getIstanceSingleton().notifyDBStateChange();
 			calcoliBarraInferiore();
 			jTabbedPane.setSelectedIndex(0);
+			saved=true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -1895,5 +1909,20 @@ public class FatturaImmediata extends JFrame{
 			pnlPulsanti.add(getBtnStampaFattura(), null);
 		}
 		return pnlPulsanti;
+	}
+
+	/**
+	 * This method initializes btnAzzera
+	 *
+	 * @return javax.swing.JButton
+	 */
+	private JButton getBtnAzzera() {
+		if (btnAzzera == null) {
+			btnAzzera = new JButton();
+			btnAzzera.setBounds(new Rectangle(472, 7, 77, 26));
+			btnAzzera.setText("Azzera");
+			btnAzzera.addActionListener(new MyButtonListener());
+		}
+		return btnAzzera;
 	}
 }

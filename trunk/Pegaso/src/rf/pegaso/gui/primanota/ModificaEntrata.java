@@ -44,8 +44,9 @@ import java.lang.Double;
 import javax.swing.border.BevelBorder;
 import java.awt.GridBagConstraints;
 import java.awt.FlowLayout;
+import java.text.NumberFormat;
 
-public class ModificaEntrataUscita extends JDialog {
+public class ModificaEntrata extends JDialog {
 
 	public static final int USCITA = 0;
 	private JPanel jContentPane = null;
@@ -55,7 +56,6 @@ public class ModificaEntrataUscita extends JDialog {
 	private JLabel lblDataDocumento = null;
 	private JLabel lblTipoDocumento = null;
 	private IDJComboBox cmbTipoDocumento = null;
-	private JButton btnNuovoDoc = null;
 	private JLabel lblCliente = null;
 	private IDJComboBox cmbClienti = null;
 	private JPanel pnlNote = null;
@@ -70,18 +70,21 @@ public class ModificaEntrataUscita extends JDialog {
 	private JButton jButton = null;
 	private int id;
 	private int modalita;
+	private JLabel lblIvaDocumento = null;
+	private JFormattedTextField txtIvaDocumento = null;
+	private NumberFormat formatPrezzoDocumento = null;
 
 	/**
 	 * This method initializes
 	 *
 	 */
-	public ModificaEntrataUscita(int id,Frame padre) {
+	public ModificaEntrata(int id,Frame padre) {
 		super(padre,true);
 		this.id=id;
 		initialize();
 	}
 
-	public ModificaEntrataUscita(int ID, Frame padre, int modalita) {
+	public ModificaEntrata(int ID, Frame padre, int modalita) {
 		super(padre,true);
 		this.id=id;
 		this.modalita=modalita;
@@ -93,9 +96,9 @@ public class ModificaEntrataUscita extends JDialog {
 	 *
 	 */
 	private void initialize() {
-        this.setSize(new Dimension(700, 193));
-       
-        	
+        this.setSize(new Dimension(700, 215));
+
+
          this.setTitle("Modifica Entrata");
         this.setContentPane(getJContentPane());
 
@@ -148,6 +151,7 @@ public class ModificaEntrataUscita extends JDialog {
 			txtNote.setText(s.getNote());
 			txtNumDocumento.setText(s.getNumDocumento());
 			txtTotale.setValue(new Double(s.getTotaleIvato()));
+			txtIvaDocumento.setValue(s.getIvaDocumento());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -191,6 +195,9 @@ public class ModificaEntrataUscita extends JDialog {
 	 */
 	private JPanel getPnlCentro() {
 		if (pnlCentro == null) {
+			lblIvaDocumento = new JLabel();
+			lblIvaDocumento.setBounds(new Rectangle(5, 95, 91, 21));
+			lblIvaDocumento.setText("Iva Documento");
 			lblNumDocumento = new JLabel();
 			lblNumDocumento.setBounds(new Rectangle(6, 66, 91, 25));
 			lblNumDocumento.setText("N° Documento");
@@ -215,7 +222,6 @@ public class ModificaEntrataUscita extends JDialog {
 			pnlCentro.add(lblDataDocumento, null);
 			pnlCentro.add(lblTipoDocumento, null);
 			pnlCentro.add(getCmbTipoDocumento(), null);
-			pnlCentro.add(getBtnNuovoDoc(), null);
 			pnlCentro.add(lblCliente, null);
 			pnlCentro.add(getCmbClienti(), null);
 			pnlCentro.add(getPnlNote(), null);
@@ -223,6 +229,8 @@ public class ModificaEntrataUscita extends JDialog {
 			pnlCentro.add(getTxtTotale(), null);
 			pnlCentro.add(lblNumDocumento, null);
 			pnlCentro.add(getTxtNumDocumento(), null);
+			pnlCentro.add(lblIvaDocumento, null);
+			pnlCentro.add(getTxtIvaDocumento(), null);
 		}
 		return pnlCentro;
 	}
@@ -257,23 +265,9 @@ public class ModificaEntrataUscita extends JDialog {
 	private IDJComboBox getCmbTipoDocumento() {
 		if (cmbTipoDocumento == null) {
 			cmbTipoDocumento = new IDJComboBox();
-			cmbTipoDocumento.setBounds(new Rectangle(343, 6, 258, 25));
+			cmbTipoDocumento.setBounds(new Rectangle(343, 6, 341, 25));
 		}
 		return cmbTipoDocumento;
-	}
-
-	/**
-	 * This method initializes btnNuovoDoc
-	 *
-	 * @return javax.swing.JButton
-	 */
-	private JButton getBtnNuovoDoc() {
-		if (btnNuovoDoc == null) {
-			btnNuovoDoc = new JButton();
-			btnNuovoDoc.setBounds(new Rectangle(606, 6, 79, 25));
-			btnNuovoDoc.setText("Nuovo");
-		}
-		return btnNuovoDoc;
 	}
 
 	/**
@@ -452,7 +446,7 @@ public class ModificaEntrataUscita extends JDialog {
 				long tmp=((Long)txtTotale.getValue()).longValue();
 				c.setTotaleDocumentoIvato(new Double(tmp).doubleValue());
 			}
-
+			 c.setIvaDocumento(((Long)txtIvaDocumento.getValue()).intValue());
 			c.setIdDocumento((new Integer(cmbTipoDocumento.getIDSelectedItem())).intValue());
 			c.updateScarico();
 
@@ -466,6 +460,37 @@ public class ModificaEntrataUscita extends JDialog {
 			e.printStackTrace();
 		}
 
+	}
+
+	/**
+	 * This method initializes formatPrezzoDocumento
+	 *
+	 * @return java.text.DecimalFormat
+	 */
+	private NumberFormat getFormatPrezzoDocumento() {
+		if (formatPrezzoDocumento == null) {
+			formatPrezzoDocumento = NumberFormat.getInstance();
+			formatPrezzoDocumento.setMinimumFractionDigits(0);
+			formatPrezzoDocumento.setMaximumFractionDigits(0);
+		}
+		return formatPrezzoDocumento;
+	}
+
+	/**
+	 * This method initializes txtIvaDocumento
+	 *
+	 * @return javax.swing.JFormattedTextField
+	 */
+	private JFormattedTextField getTxtIvaDocumento() {
+		if (txtIvaDocumento == null) {
+			txtIvaDocumento = new JFormattedTextField(getFormatPrezzoDocumento());
+			txtIvaDocumento.setBounds(new Rectangle(100, 95, 86, 21));
+			txtIvaDocumento.setDocument(new UpperTextDocument());
+			txtIvaDocumento.setHorizontalAlignment(JTextField.RIGHT);
+			txtIvaDocumento.setValue(new Double(0));
+			txtIvaDocumento.setPreferredSize(new Dimension(100, 20));
+		}
+		return txtIvaDocumento;
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"

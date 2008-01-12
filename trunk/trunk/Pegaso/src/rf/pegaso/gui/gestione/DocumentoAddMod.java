@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.gui.gestione;
 
@@ -7,6 +7,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,12 +27,13 @@ import javax.swing.border.BevelBorder;
 import rf.pegaso.db.DBManager;
 import rf.pegaso.db.tabelle.Documento;
 import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.pegaso.gui.primanota.PrimaNotaGUI;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.UpperTextDocument;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class DocumentoAddMod extends JDialog {
 
@@ -98,6 +100,13 @@ public class DocumentoAddMod extends JDialog {
 		initialize();
 	}
 
+	public DocumentoAddMod(Frame padre, DBManager dbm, int modalita) {
+		super(padre,true);
+		this.dbm=dbm;
+		this.modalita=modalita;
+		initialize();
+	}
+
 	/**
 	 * @return the modalita
 	 */
@@ -112,7 +121,7 @@ public class DocumentoAddMod extends JDialog {
 
 	/**
 	 * This method initializes btnChiudi
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnChiudi() {
@@ -131,7 +140,7 @@ public class DocumentoAddMod extends JDialog {
 
 	/**
 	 * This method initializes btnInsMod
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnInsMod() {
@@ -152,7 +161,7 @@ public class DocumentoAddMod extends JDialog {
 
 	/**
 	 * This method initializes jContentPane
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
@@ -167,7 +176,7 @@ public class DocumentoAddMod extends JDialog {
 
 	/**
 	 * This method initializes jPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanel() {
@@ -191,7 +200,7 @@ public class DocumentoAddMod extends JDialog {
 
 	/**
 	 * This method initializes pnlCentrale
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlCentrale() {
@@ -220,7 +229,7 @@ public class DocumentoAddMod extends JDialog {
 
 	/**
 	 * This method initializes txtDescrizione
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtDescrizione() {
@@ -238,7 +247,7 @@ public class DocumentoAddMod extends JDialog {
 
 	/**
 	 * This method initializes txtTipo
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtTipo() {
@@ -273,7 +282,7 @@ public class DocumentoAddMod extends JDialog {
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 * @return void
 	 */
 	private void initialize() {
@@ -347,7 +356,7 @@ public class DocumentoAddMod extends JDialog {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void recuperaDatiCampi(Documento a) {
 
@@ -358,7 +367,7 @@ public class DocumentoAddMod extends JDialog {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void svuotaCampi() {
 		Component[] component = pnlCentrale.getComponents();

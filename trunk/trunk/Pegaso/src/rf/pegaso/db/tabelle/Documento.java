@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.db.tabelle;
 
@@ -15,7 +15,7 @@ import rf.pegaso.db.tabelle.exception.IDNonValido;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class Documento {
 	private DBManager dbm;
@@ -24,9 +24,30 @@ public class Documento {
 	private String tipo;
 
 	public Documento() {
-		this.dbm=DBManager.getIstanceSingleton(); 
+		this.dbm=DBManager.getIstanceSingleton();
 	}
 
+	public Object[] allDocumentiConDescrizione() throws SQLException {
+		String[] o = null;
+		ResultSet rs = null;
+		Statement pst = null;
+		String query = "select iddocumento || ' - ' || descrizione from tipo_documento order by descrizione";
+		pst = dbm.getNewStatement();
+		rs = pst.executeQuery(query);
+		rs.last();
+		o = new String[rs.getRow()];
+		rs.beforeFirst();
+		int pos = 0;
+		while (rs.next()) {
+			o[pos] = rs.getString(1);
+			pos++;
+		}
+		if (pst != null)
+			pst.close();
+		if (rs != null)
+			rs.close();
+		return o;
+	}
 
 	public Object[] allDocumenti() throws SQLException {
 		String[] o = null;

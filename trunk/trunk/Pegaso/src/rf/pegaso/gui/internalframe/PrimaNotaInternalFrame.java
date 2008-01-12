@@ -18,6 +18,8 @@ import rf.myswing.security.MyJDBCLoginService;
 import rf.myswing.util.ModalFrameUtil;
 import rf.pegaso.db.DBManager;
 import rf.pegaso.gui.configurazioni.RootConfigGUI;
+import rf.pegaso.gui.primanota.PrimaNotaGUI;
+import javax.swing.WindowConstants;
 
 public class PrimaNotaInternalFrame extends JInternalFrame {
 
@@ -32,8 +34,12 @@ public class PrimaNotaInternalFrame extends JInternalFrame {
 
 	private void initialize() {
 		this.setSize(new Dimension(693, 355)); // Generated
+		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		this.setContentPane(getJContentPane()); // Generated
-		this.setTitle("Configurazione applicazione"); // Generated
+		this.setTitle("Prima Nota"); // Generated
+		this.setMaximizable(true); // Generated
+		this.setIconifiable(true); // Generated
+		this.setClosable(true); // Generated
 	}
 
 	/**
@@ -85,7 +91,8 @@ public class PrimaNotaInternalFrame extends JInternalFrame {
 	}
 
 	protected void apriPrimaNota() {
-
+		PrimaNotaGUI pn=new PrimaNotaGUI();
+		pn.setVisible(true);
 
 	}
 

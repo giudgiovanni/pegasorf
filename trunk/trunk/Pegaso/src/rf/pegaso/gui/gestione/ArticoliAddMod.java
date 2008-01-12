@@ -1609,6 +1609,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	 *
 	 */
 	private void caricaCmbUnitaDiMisura() {
+		cmbMisura.removeAllItems();
 		UnitaDiMisura f = new UnitaDiMisura();
 		String allUnita[] = null;
 
@@ -1648,6 +1649,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	 *
 	 */
 	private void caricaCmbCategoria() {
+		cmbReparto.removeAllItems();
 		Reparto f = new Reparto();
 		String allReparti[] = null;
 
@@ -1686,7 +1688,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	 *
 	 */
 	private void caricaCmbFornitori() {
-
+		cmbFornitori.removeAllItems();
 		Fornitore f = new Fornitore();
 		String allFornitori[] = null;
 

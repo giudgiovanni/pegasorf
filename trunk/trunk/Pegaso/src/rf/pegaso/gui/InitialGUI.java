@@ -4,6 +4,7 @@
 package rf.pegaso.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Rectangle;
@@ -31,6 +32,7 @@ import rf.pegaso.db.DBManager;
 import rf.pegaso.db.UtilityDBManager;
 import rf.pegaso.gui.internalframe.ArchivioInternalFrame;
 import rf.pegaso.gui.internalframe.ConfigurazioneInternalFrame;
+import rf.pegaso.gui.internalframe.PrimaNotaInternalFrame;
 import rf.pegaso.gui.internalframe.VenditaInternalFrame;
 import rf.utility.gui.UtilGUI;
 
@@ -60,6 +62,7 @@ public class InitialGUI extends JFrame {
 	private ArchivioInternalFrame archivioInternalFrame = null;
 	private ConfigurazioneInternalFrame confInternalFrame = null;
 	private VenditaInternalFrame venditaInternalFrame = null;
+	private PrimaNotaInternalFrame primanotaInternalFrame=null;
 
 	private JButton btnArchivio = null;
 
@@ -151,7 +154,23 @@ public class InitialGUI extends JFrame {
 	 *
 	 */
 	private void apriPrimaNota() {
-		// TODO Auto-generated method stub
+		if (!primanotaInternalFrame.isVisible()) {
+
+			primanotaInternalFrame.setVisible(true);
+			try {
+				primanotaInternalFrame.setMaximum(true);
+			} catch (PropertyVetoException e1) {
+
+				e1.printStackTrace();
+			}
+		} else if (!primanotaInternalFrame.isFocusOwner()) {
+			try {
+				primanotaInternalFrame.setSelected(true);
+				primanotaInternalFrame.setMaximum(true);
+			} catch (PropertyVetoException e) {
+				e.printStackTrace();
+			}
+		}
 
 	}
 
@@ -302,11 +321,25 @@ public class InitialGUI extends JFrame {
 				jDesktopPane.add(getArchivioInternalFrame(), null);
 				jDesktopPane.add(getConfigurazioneInternalFrame(),null);
 				jDesktopPane.add(getVenditaInternalFrame(), null);
+				jDesktopPane.add(getPrimanotaInternalFrame(), null);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
 		}
 		return jDesktopPane;
+	}
+
+	private Component getPrimanotaInternalFrame() {
+		if (primanotaInternalFrame == null) {
+			try {
+				primanotaInternalFrame = new PrimaNotaInternalFrame(this);
+				primanotaInternalFrame
+						.setBounds(new Rectangle(260, 28, 369, 236)); // Generated
+			} catch (java.lang.Throwable e) {
+				// TODO: Something
+			}
+		}
+		return primanotaInternalFrame;
 	}
 
 	private ConfigurazioneInternalFrame getConfigurazioneInternalFrame() {

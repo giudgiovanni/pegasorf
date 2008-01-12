@@ -293,6 +293,8 @@ public class Scarico {
 
 	private Vendita vendita;
 
+	private double totIvato=0;
+
 	public Scarico() {
 		this.dbm = DBManager.getIstanceSingleton();
 	}
@@ -315,7 +317,8 @@ public class Scarico {
 		this.note = rs.getString("note");
 		this.dataDocumento = rs.getDate("data_documento");
 		this.numDocumento = rs.getString("num_documento");
-		this.idDocumento = rs.getInt("iddocumento");
+		this.idDocumento = rs.getInt("tipo_documento");
+		this.totIvato=rs.getInt("totale_documento");
 		if (st != null)
 			st.close();
 	}
@@ -435,6 +438,7 @@ public class Scarico {
 
 		if (pst != null)
 			pst.close();
+		updateTotDocumentoIvato(idScarico);
 		dbm.notifyDBStateChange();
 	}
 
@@ -458,12 +462,12 @@ public class Scarico {
 		//se uguale ad uno è una fattura
 		if(vendita.getTipoDocumento()==1){
 			dett=dv.caricaDatiByDB(vendita.getIdVendita(), "dettaglio_fattura", "idfattura");
-		}else 
+		}else
 			//qui siamo nel caso sia una vendita al banco
 			if (vendita.getTipoDocumento()==4){
 				dett=dv.caricaDatiByDB(vendita.getIdVendita(), "dettaglio_banco", "idvendita");
 			}
-		
+
 		for(DettaglioVendita tmp:dett){
 			insertArticolo(tmp.getIdArticolo(), tmp.getQta(), tmp.getSconto());
 		}
@@ -476,7 +480,7 @@ public class Scarico {
 		idScarico = dbm.getNewID("ordini", "idordine");
 		int ok = 0;
 		PreparedStatement pst = null;
-		String update = "insert into ordini values (?,?,?,?,?,?,?,?)";
+		String update = "insert into ordini values (?,?,?,?,?,?,?,?,?)";
 		// preleviamo la data di inserimento
 		// e la impostiamo nelle proprietà
 		java.util.Date data = new java.util.Date();
@@ -492,6 +496,7 @@ public class Scarico {
 			pst.setInt(6, this.idDocumento);
 			pst.setString(7, numDocumento);
 			pst.setDate(8, dataDocumento);
+			pst.setDouble(9, this.totIvato);
 
 			ok = pst.executeUpdate();
 		} catch (SQLException e) {
@@ -504,8 +509,26 @@ public class Scarico {
 				e.printStackTrace();
 			}
 		}
+
 		dbm.notifyDBStateChange();
 		return ok;
+	}
+
+	public void updateTotDocumentoIvato(int idScarico2) throws SQLException {
+		String query = "update ordini set totale_documento=? where idordine=?";
+		PreparedStatement pst = dbm.getNewPreparedStatement(query);
+
+
+		pst.setDouble(1, Scarico.getTotIngrossoImponibile(idScarico2)+Scarico.getTotIngrossoImposta(idScarico2));
+		pst.setInt(2, idScarico2);
+		// inserimento
+		pst.executeUpdate();
+
+		if (pst != null)
+			pst.close();
+		dbm.notifyDBStateChange();
+
+
 	}
 
 	/**
@@ -578,7 +601,7 @@ public class Scarico {
 
 		// inserimento
 		pst.executeUpdate();
-
+		updateTotDocumentoIvato(idScarico);
 		if (pst != null)
 			pst.close();
 		dbm.notifyDBStateChange();
@@ -591,7 +614,7 @@ public class Scarico {
 		int ok = 0;
 		PreparedStatement pst = null;
 		String update = "UPDATE ordini SET idordine=?,"
-				+ "idcliente=?,data_ordine=?,ora_ordine=?,note=?, iddocumento=?,num_documento=?,data_documento=? WHERE idordine=?";
+				+ "idcliente=?,data_ordine=?,ora_ordine=?,note=?, tipo_documento=?,num_documento=?,data_documento=?,totale_documento=? WHERE idordine=?";
 
 		pst = dbm.getNewPreparedStatement(update);
 		try {
@@ -603,7 +626,8 @@ public class Scarico {
 			pst.setInt(6, idDocumento);
 			pst.setString(7, numDocumento);
 			pst.setDate(8, dataDocumento);
-			pst.setInt(9, idScarico);
+			pst.setDouble(9, totIvato);
+			pst.setInt(10, idScarico);
 			ok = pst.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -617,6 +641,11 @@ public class Scarico {
 		}
 		dbm.notifyDBStateChange();
 		return ok;
+	}
+
+	private double getTotIvato(int idScarico2) throws SQLException {
+		return Scarico.getTotIngrossoImponibile(idScarico2)+Scarico.getTotIngrossoImposta(idScarico2);
+
 	}
 
 	public void setDataDocumento(Date date) {
@@ -654,6 +683,16 @@ public class Scarico {
 
 	public java.util.Date getDataDocumento() {
 		return this.dataDocumento;
+	}
+
+	public void setTotaleDocumentoIvato(double tot) {
+		this.totIvato=tot;
+
+	}
+
+	public double getTotaleIvato() {
+		// TODO Auto-generated method stub
+		return this.totIvato;
 	}
 
 

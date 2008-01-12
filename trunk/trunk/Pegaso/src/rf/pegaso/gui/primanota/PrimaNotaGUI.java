@@ -46,6 +46,7 @@ import rf.pegaso.db.tabelle.Fornitore;
 import rf.pegaso.db.tabelle.Scarico;
 import rf.pegaso.db.tabelle.exception.IDNonValido;
 import rf.pegaso.gui.gestione.DocumentoAddMod;
+import rf.utility.ControlloDati;
 import rf.utility.gui.ComboBoxUtil;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompletion;
@@ -62,6 +63,8 @@ import java.awt.event.KeyEvent;
 import javax.swing.JTextArea;
 import javax.swing.JFormattedTextField;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 import rf.utility.gui.text.UpperTextDocument;
 
 import java.io.FileNotFoundException;
@@ -173,7 +176,27 @@ public class PrimaNotaGUI extends JFrame {
 
 	private JTextField txtNumDocumento1 = null;
 
-    /**
+	private JPanel pnlSud1 = null;
+
+	private JLabel lblIngImponibile = null;
+
+	private JTextField txtImponibileIng = null;
+
+	private JLabel lblIngImposta = null;
+
+	private JTextField txtImpostaIng = null;
+
+	private JLabel lblTotIng = null;
+
+	private JTextField txtTotaleIng = null;
+
+	private JLabel lblIvaDocumento = null;
+
+	private JFormattedTextField txtIvaDocumento = null;
+
+	private NumberFormat formatPrezzoDocumento = null;
+
+	/**
      * This is the default constructor
      */
     public PrimaNotaGUI() {
@@ -484,7 +507,7 @@ public class PrimaNotaGUI extends JFrame {
 
         int riga = tblEntrate.getSelectedRow();
         int idscarico = ((Long) tblEntrate.getValueAt(riga, 0)).intValue();
-        ModificaEntrataUscita m=new ModificaEntrataUscita(idscarico,this);
+        ModificaEntrata m=new ModificaEntrata(idscarico,this);
         m.setVisible(true);
 
     }
@@ -640,6 +663,7 @@ public class PrimaNotaGUI extends JFrame {
             pnlEntrate.setLayout(new BorderLayout());
             pnlEntrate.add(getJScrollPane(), BorderLayout.CENTER);
             pnlEntrate.add(getPnlNord1(), BorderLayout.NORTH);
+            pnlEntrate.add(getPnlSud1(), BorderLayout.SOUTH);
         }
         return pnlEntrate;
     }
@@ -836,6 +860,7 @@ public class PrimaNotaGUI extends JFrame {
             }
 
             c.setIdDocumento((new Integer(cmbTipoDocumento.getIDSelectedItem())).intValue());
+            c.setIvaDocumento(((Long)txtIvaDocumento.getValue()).intValue());
             c.insertScarico();
 
         } catch (NumberFormatException e) {
@@ -888,6 +913,9 @@ public class PrimaNotaGUI extends JFrame {
 	 */
 	private JPanel getPnlNord1() {
 		if (pnlNord1 == null) {
+			lblIvaDocumento = new JLabel();
+			lblIvaDocumento.setBounds(new Rectangle(5, 95, 91, 21));
+			lblIvaDocumento.setText("Iva Documento");
 			lblNumDocumento = new JLabel();
 			lblNumDocumento.setBounds(new Rectangle(6, 66, 91, 25));
 			lblNumDocumento.setText("N° Documento");
@@ -906,7 +934,7 @@ public class PrimaNotaGUI extends JFrame {
 			lblDataDocumento.setText("Data Documento");
 			pnlNord1 = new JPanel();
 			pnlNord1.setLayout(null);
-			pnlNord1.setPreferredSize(new Dimension(0, 120));
+			pnlNord1.setPreferredSize(new Dimension(0, 130));
 			pnlNord1.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 			pnlNord1.add(getDataDocumento(), null);
 			pnlNord1.add(lblDataDocumento, null);
@@ -919,6 +947,8 @@ public class PrimaNotaGUI extends JFrame {
 			pnlNord1.add(getTxtTotale(), null);
 			pnlNord1.add(lblNumDocumento, null);
 			pnlNord1.add(getTxtNumDocumento(), null);
+			pnlNord1.add(lblIvaDocumento, null);
+			pnlNord1.add(getTxtIvaDocumento(), null);
 		}
 		return pnlNord1;
 	}
@@ -1213,6 +1243,143 @@ public class PrimaNotaGUI extends JFrame {
 			txtNumDocumento1.setBounds(new Rectangle(102, 66, 85, 25));
 		}
 		return txtNumDocumento1;
+	}
+
+	private void calcolaTotaliEntrate() {
+		double imponibile = 0, imposta = 0, tot = 0;
+
+		// Calcoliamo ora la parte totale dello scarico di tutti gli articoli.
+		try {
+
+			imponibile = Scarico.getTotAcquistoImponibileAllOrders();
+			imposta = Scarico.getTotAcquistoImpostaAllOrders();
+			tot = imponibile + imposta;
+
+			// impostiamo i campi
+			txtImponibileIng.setText(ControlloDati
+					.convertDoubleToPrezzo(imponibile));
+			txtImpostaIng.setText(ControlloDati.convertDoubleToPrezzo(imposta));
+			txtTotaleIng.setText(ControlloDati.convertDoubleToPrezzo(tot));
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(this,
+					"Probabile errore nei calcoli all'ingrosso", "ERRORE",
+					JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
+
+	}
+
+
+	/**
+	 * This method initializes pnlSud1
+	 *
+	 * @return javax.swing.JPanel
+	 */
+	private JPanel getPnlSud1() {
+		if (pnlSud1 == null) {
+			lblTotIng = new JLabel();
+			lblTotIng.setBounds(new Rectangle(424, 8, 85, 25));
+			lblTotIng.setText("Totale \u20ac.");
+			lblIngImposta = new JLabel();
+			lblIngImposta.setBounds(new Rectangle(236, 8, 89, 25));
+			lblIngImposta.setText("Imposta \u20ac.");
+			lblIngImponibile = new JLabel();
+			lblIngImponibile.setBounds(new Rectangle(32, 8, 105, 25));
+			lblIngImponibile.setText("Imponibile \u20ac.");
+			pnlSud1 = new JPanel();
+			pnlSud1.setLayout(null);
+			pnlSud1.setPreferredSize(new Dimension(0, 40));
+			pnlSud1.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+			pnlSud1.add(lblIngImponibile, null);
+			pnlSud1.add(getTxtImponibileIng(), null);
+			pnlSud1.add(lblIngImposta, null);
+			pnlSud1.add(getTxtImpostaIng(), null);
+			pnlSud1.add(lblTotIng, null);
+			pnlSud1.add(getTxtTotaleIng(), null);
+		}
+		return pnlSud1;
+	}
+
+	/**
+	 * This method initializes txtImponibileIng
+	 *
+	 * @return javax.swing.JTextField
+	 */
+	private JTextField getTxtImponibileIng() {
+		if (txtImponibileIng == null) {
+			txtImponibileIng = new JTextField();
+			txtImponibileIng.setBounds(new Rectangle(136, 8, 93, 25));
+			txtImponibileIng.setFont(new Font("Dialog", Font.BOLD, 12));
+			txtImponibileIng.setDisabledTextColor(Color.black);
+			txtImponibileIng.setEditable(false);
+			txtImponibileIng.setEnabled(false);
+		}
+		return txtImponibileIng;
+	}
+
+	/**
+	 * This method initializes txtImpostaIng
+	 *
+	 * @return javax.swing.JTextField
+	 */
+	private JTextField getTxtImpostaIng() {
+		if (txtImpostaIng == null) {
+			txtImpostaIng = new JTextField();
+			txtImpostaIng.setBounds(new Rectangle(324, 8, 93, 25));
+			txtImpostaIng.setFont(new Font("Dialog", Font.BOLD, 12));
+			txtImpostaIng.setDisabledTextColor(Color.black);
+			txtImpostaIng.setEditable(false);
+			txtImpostaIng.setEnabled(false);
+		}
+		return txtImpostaIng;
+	}
+
+	/**
+	 * This method initializes txtTotaleIng
+	 *
+	 * @return javax.swing.JTextField
+	 */
+	private JTextField getTxtTotaleIng() {
+		if (txtTotaleIng == null) {
+			txtTotaleIng = new JTextField();
+			txtTotaleIng.setBounds(new Rectangle(508, 8, 93, 25));
+			txtTotaleIng.setFont(new Font("Dialog", Font.BOLD, 12));
+			txtTotaleIng.setDisabledTextColor(Color.red);
+			txtTotaleIng.setEditable(false);
+			txtTotaleIng.setEnabled(false);
+		}
+		return txtTotaleIng;
+	}
+
+	/**
+	 * This method initializes formatPrezzoDocumento
+	 *
+	 * @return java.text.DecimalFormat
+	 */
+	private NumberFormat getFormatPrezzoDocumento() {
+		if (formatPrezzoDocumento == null) {
+			formatPrezzoDocumento =NumberFormat.getInstance();
+			formatPrezzoDocumento.setMinimumFractionDigits(0);
+			formatPrezzoDocumento.setMaximumFractionDigits(0);
+		}
+		return formatPrezzoDocumento;
+	}
+
+	/**
+	 * This method initializes txtIvaDocumento
+	 *
+	 * @return javax.swing.JFormattedTextField
+	 */
+	private JFormattedTextField getTxtIvaDocumento() {
+		if (txtIvaDocumento == null) {
+			txtIvaDocumento = new JFormattedTextField(getFormatPrezzoDocumento());
+			txtIvaDocumento.setBounds(new Rectangle(100, 95, 86, 21));
+			txtIvaDocumento.setDocument(new UpperTextDocument());
+			txtIvaDocumento.setHorizontalAlignment(JTextField.RIGHT);
+			txtIvaDocumento.setValue(new Double(0));
+			txtIvaDocumento.setPreferredSize(new Dimension(100, 20));
+		}
+		return txtIvaDocumento;
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"

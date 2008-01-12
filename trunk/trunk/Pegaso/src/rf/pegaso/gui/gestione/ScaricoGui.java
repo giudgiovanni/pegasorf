@@ -138,8 +138,17 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 						.getSelectedItem());
 				caricaArticoliByIdFornitore(idfornitore);
 				azzeraCampi();
+			} else if (e.getSource() == cmbProdotti) {
+				if (((IDJComboBox) cmbProdotti).getIDSelectedItem() != null) {
+					int id = new Integer(((IDJComboBox) cmbProdotti).getIDSelectedItem())
+							.intValue();
+					caricaArticoloByID(id);
+				}
+
 			}
 		}
+
+
 	}
 
 	private static final long serialVersionUID = 1L;
@@ -326,6 +335,26 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 
 	}
 
+
+	protected void caricaArticoloByID(int id) {
+		// TODO Auto-generated method stub
+		Articolo a = new Articolo();
+
+		try {
+			a.caricaDati(id);
+			Fornitore f = new Fornitore();
+			f.caricaDati(a.getIdFornitore());
+			cmbClienti.setSelectedItem(f.getNome());
+			txtUm.setText((new Integer(a.getUm())).toString());
+			txtQta.setText((new Integer(1)).toString());
+			txtCodBarre.setText(a.getCodBarre());
+
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+	}
+
+
 	/**
 	 *
 	 */
@@ -395,7 +424,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 					.convertDoubleToPrezzo(imponibile));
 			txtImpostaIng.setText(ControlloDati.convertDoubleToPrezzo(imposta));
 			txtTotaleIng.setText(ControlloDati.convertDoubleToPrezzo(tot));
-			
+
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(this,
 					"Probabile errore nei calcoli all'ingrosso", "ERRORE",
@@ -405,9 +434,9 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 
 		// calcoliamo i totali di tutti gli articoli scaricati
 		calcolaTotaliArticoliScaricati();
-		
-		
-		
+
+
+
 
 	}
 
@@ -1259,6 +1288,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 		btnElimina.addActionListener(myButtonListener);
 		btnChiudi.addActionListener(myButtonListener);
 		btnApriArticoli.addActionListener(myButtonListener);
+		cmbProdotti.addActionListener(myComboBoxListener);
 
 	}
 

@@ -118,6 +118,13 @@ public class CaricoGui extends JFrame implements TableModelListener {
 						.intValue();
 				caricaArticoliByIdFornitore(idfornitore);
 				azzeraTesto();
+			} else if (e.getSource() == cmbProdotti) {
+				if (cmbProdotti.getIDSelectedItem() != null) {
+					int id = new Integer(cmbProdotti.getIDSelectedItem())
+							.intValue();
+					caricaArticoloByID(id);
+				}
+
 			}
 		}
 
@@ -204,7 +211,9 @@ public class CaricoGui extends JFrame implements TableModelListener {
 							.getIDSelectedItem())).intValue());
 			c.setOraCarico(new Time((new java.util.Date()).getTime()));
 			c.setNote(txtNote.getText());
-			double tot=Carico.getTotAcquistoImponibileByOrder(c.getIdCarico())+Carico.getTotAcquistoImpostaByOrder(c.getIdCarico());
+			double tot = Carico
+					.getTotAcquistoImponibileByOrder(c.getIdCarico())
+					+ Carico.getTotAcquistoImpostaByOrder(c.getIdCarico());
 			c.setTotaleDocumentoIvato(tot);
 			if (rbtnNo.isSelected())
 				c.setSospeso(0);
@@ -899,14 +908,34 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		return cmbFornitori;
 	}
 
-	private JComboBox getCmbProdotti() {
+	private IDJComboBox getCmbProdotti() {
 		if (cmbProdotti == null)
 			try {
 				cmbProdotti = new IDJComboBox();
 				cmbProdotti.setBounds(new Rectangle(148, 40, 473, 21));
+
 			} catch (Throwable throwable) {
 			}
 		return cmbProdotti;
+	}
+
+	protected void caricaArticoloByID(int id) {
+		// TODO Auto-generated method stub
+		Articolo a = new Articolo();
+
+		try {
+			a.caricaDati(id);
+			Fornitore f = new Fornitore();
+			f.caricaDati(a.getIdFornitore());
+			cmbFornitori.setSelectedItem(f.getNome());
+			txtUm.setText((new Integer(a.getUm())).toString());
+			txtQta.setText((new Integer(1)).toString());
+			txtPrezzo.setValue(new Double(a.getPrezzoAcquisto()));
+			txtCodBarre.setText(a.getCodBarre());
+
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	private JComboBox getCmbTipoDocumento() {
@@ -1432,6 +1461,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		btnInserisci.addActionListener(myButtonListener);
 		btnElimina.addActionListener(myButtonListener);
 		btnChiudi.addActionListener(myButtonListener);
+		cmbProdotti.addActionListener(myComboBoxListener);
 	}
 
 	private void inserisci() {
@@ -1893,7 +1923,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 	/**
 	 * This method initializes btnNuovoForn
-	 *
+	 * 
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnNuovoForn() {
@@ -1919,7 +1949,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 	/**
 	 * This method initializes jPanel
-	 *
+	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanel() {
@@ -1933,7 +1963,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	private void calcoli(int idScarico) {
 		// Calcoliamo tutte le somme e impostiamo i campi
@@ -1966,7 +1996,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 	/**
 	 * This method initializes pnlSud1
-	 *
+	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlSud1() {
@@ -1997,7 +2027,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 	/**
 	 * This method initializes txtImponibileIng
-	 *
+	 * 
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtImponibileIng() {
@@ -2014,7 +2044,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 	/**
 	 * This method initializes txtImpostaIng
-	 *
+	 * 
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtImpostaIng() {
@@ -2031,7 +2061,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 	/**
 	 * This method initializes txtTotaleIng
-	 *
+	 * 
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtTotaleIng() {
@@ -2048,7 +2078,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 	/**
 	 * This method initializes jPanel1
-	 *
+	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanel1() {
@@ -2074,7 +2104,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 	/**
 	 * This method initializes rbtnSi
-	 *
+	 * 
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getRbtnSi() {
@@ -2086,7 +2116,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 	/**
 	 * This method initializes rbtnNo
-	 *
+	 * 
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getRbtnNo() {

@@ -295,6 +295,8 @@ public class Scarico {
 
 	private double totIvato=0;
 
+	private int ivaDocumento;
+
 	public Scarico() {
 		this.dbm = DBManager.getIstanceSingleton();
 	}
@@ -319,6 +321,8 @@ public class Scarico {
 		this.numDocumento = rs.getString("num_documento");
 		this.idDocumento = rs.getInt("tipo_documento");
 		this.totIvato=rs.getInt("totale_documento");
+		this.ivaDocumento=rs.getInt("iva_documento");
+
 		if (st != null)
 			st.close();
 	}
@@ -480,7 +484,7 @@ public class Scarico {
 		idScarico = dbm.getNewID("ordini", "idordine");
 		int ok = 0;
 		PreparedStatement pst = null;
-		String update = "insert into ordini values (?,?,?,?,?,?,?,?,?)";
+		String update = "insert into ordini values (?,?,?,?,?,?,?,?,?,?)";
 		// preleviamo la data di inserimento
 		// e la impostiamo nelle proprietà
 		java.util.Date data = new java.util.Date();
@@ -497,7 +501,7 @@ public class Scarico {
 			pst.setString(7, numDocumento);
 			pst.setDate(8, dataDocumento);
 			pst.setDouble(9, this.totIvato);
-
+			pst.setInt(10, ivaDocumento);
 			ok = pst.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -614,7 +618,7 @@ public class Scarico {
 		int ok = 0;
 		PreparedStatement pst = null;
 		String update = "UPDATE ordini SET idordine=?,"
-				+ "idcliente=?,data_ordine=?,ora_ordine=?,note=?, tipo_documento=?,num_documento=?,data_documento=?,totale_documento=? WHERE idordine=?";
+				+ "idcliente=?,data_ordine=?,ora_ordine=?,note=?, tipo_documento=?,num_documento=?,data_documento=?,totale_documento=?,iva_documento=? WHERE idordine=?";
 
 		pst = dbm.getNewPreparedStatement(update);
 		try {
@@ -627,7 +631,8 @@ public class Scarico {
 			pst.setString(7, numDocumento);
 			pst.setDate(8, dataDocumento);
 			pst.setDouble(9, totIvato);
-			pst.setInt(10, idScarico);
+			pst.setInt(10, ivaDocumento);
+			pst.setInt(11, idScarico);
 			ok = pst.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -695,5 +700,14 @@ public class Scarico {
 		return this.totIvato;
 	}
 
+	public void setIvaDocumento(int iva) {
+		// TODO Auto-generated method stub
+		this.ivaDocumento=iva;
+	}
+
+	public int getIvaDocumento() {
+		// TODO Auto-generated method stub
+		return this.ivaDocumento;
+	}
 
 }

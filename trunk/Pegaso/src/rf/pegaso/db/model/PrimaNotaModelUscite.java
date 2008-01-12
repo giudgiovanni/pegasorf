@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.Date;
 
 import javax.swing.table.AbstractTableModel;
@@ -20,7 +21,7 @@ import rf.utility.db.DBStateChange;
  * @author Hunter
  *
  */
-public class ScarichiViewModel extends AbstractTableModel implements
+public class PrimaNotaModelUscite extends AbstractTableModel implements
 		DBStateChange {
 
 	private DBManager dbm;
@@ -29,8 +30,8 @@ public class ScarichiViewModel extends AbstractTableModel implements
 	private ResultSet rs = null;
 	private ResultSetMetaData rsmd = null;
 
-	public ScarichiViewModel(DBManager dbm) throws SQLException {
-		this.dbm = dbm;
+	public PrimaNotaModelUscite() throws SQLException {
+		this.dbm = DBManager.getIstanceSingleton();
 		recuperaDati();
 
 	}
@@ -56,7 +57,6 @@ public class ScarichiViewModel extends AbstractTableModel implements
 		}
 		return nome;
 	}
-
 	public int getRowCount() {
 		if (rs == null)
 			return -1;
@@ -73,7 +73,7 @@ public class ScarichiViewModel extends AbstractTableModel implements
 	}
 
 	public String getTableName() {
-		return "carichi";
+		return "ordini";
 	}
 
 	public Object getValueAt(int r, int c) {
@@ -89,7 +89,14 @@ public class ScarichiViewModel extends AbstractTableModel implements
 				GregorianCalendarFormat gcf = new GregorianCalendarFormat();
 				gcf.setTime((Date) o);
 				return gcf;
-			}
+			}else if(o instanceof Double) {
+					Double d = (Double) o;
+					DecimalFormat numberFormatter = new DecimalFormat("#,##0.00");
+					numberFormatter.setMaximumFractionDigits(2);
+					numberFormatter.setMinimumFractionDigits(2);
+					return numberFormatter.format(d);
+				}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -116,7 +123,8 @@ public class ScarichiViewModel extends AbstractTableModel implements
 	 *
 	 */
 	private void recuperaDati() throws SQLException {
-		this.query = "select o.idordine as id,o.data_documento,o.num_documento, d.descrizione,c.nome,c.cognome,o.note from ordini as o,tipo_documento as d,  clienti as c  where o.idordine>0 and o.idcliente=c.idcliente and o.tipo_documento=d.iddocumento order by o.idordine,o.data_documento desc";
+		//this.query = "select o.idordine as id,o.data_documento, d.descrizione,o.num_documento,c.nome,c.cognome, t.tot as tot_ivato,o.note from ordini as o,tipo_documento as d,  clienti as c, (select idordine,sum((prezzo_acquisto*qta)+((prezzo_acquisto/100*iva)*qta)) as tot from articoli_scaricati_view group by idordine) as t where o.idordine>0 and o.idcliente=c.idcliente and o.tipo_documento=d.iddocumento and t.idordine=o.idordine order by o.data_documento desc";
+		this.query = "select o.idcarico as id,o.data_documento, d.descrizione,o.num_documento,c.nome, o.totale_documento,o.note from carichi as o,tipo_documento as d,  fornitori as c where o.idcarico>0 and o.idfornitore=c.idfornitore and o.iddocumento=d.iddocumento order by o.data_documento desc";
 		pst = dbm.getNewPreparedStatement(query);
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();

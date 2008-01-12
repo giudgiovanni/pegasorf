@@ -25,6 +25,7 @@ import java.text.DecimalFormat;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -75,11 +76,17 @@ import rf.utility.gui.text.UpperTextDocument;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
 import javax.swing.WindowConstants;
+import java.awt.GridBagLayout;
+import javax.swing.border.BevelBorder;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.border.TitledBorder;
+import javax.swing.JRadioButton;
 
 // Referenced classes of package rf.pegaso.gui.gestione:
 //            ArticoliAddMod, ArticoliGestione
 
-public class CaricoGui extends JFrame {
+public class CaricoGui extends JFrame implements TableModelListener {
 	class MyButtonListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
@@ -187,14 +194,25 @@ public class CaricoGui extends JFrame {
 		Carico c = new Carico();
 		try {
 			c.setIdCarico((new Integer(txtNumeroCarico.getText())).intValue());
-			c.setIdFornitore((new Integer(cmbFornitori.getIDSelectedItem())).intValue());
+			c.setIdFornitore((new Integer(cmbFornitori.getIDSelectedItem()))
+					.intValue());
 			c.setDataCarico(new Date(dataCarico.getDate().getTime()));
 			c.setDataDocumento(new Date(dataDocumento.getDate().getTime()));
 			c.setNumDocumento(txtNumDocumento.getText());
-			c.setIdDocumento((new Integer(cmbTipoDocumento.getIDSelectedItem())).intValue());
+			c
+					.setIdDocumento((new Integer(cmbTipoDocumento
+							.getIDSelectedItem())).intValue());
 			c.setOraCarico(new Time((new java.util.Date()).getTime()));
 			c.setNote(txtNote.getText());
-			if (!c.isInsert((new Integer(txtNumeroCarico.getText())).intValue()))
+			double tot=Carico.getTotAcquistoImponibileByOrder(c.getIdCarico())+Carico.getTotAcquistoImpostaByOrder(c.getIdCarico());
+			c.setTotaleDocumentoIvato(tot);
+			if (rbtnNo.isSelected())
+				c.setSospeso(0);
+			else
+				c.setSospeso(1);
+			if (!c
+					.isInsert((new Integer(txtNumeroCarico.getText()))
+							.intValue()))
 				c.insertCarico();
 			else
 				try {
@@ -220,12 +238,21 @@ public class CaricoGui extends JFrame {
 
 		// PUNTO DI BACKUP DA ATTIVARE DA CONFIGURAZIONI
 		try {
-			UtilityDBManager.getSingleInstance().backupDataBase(UtilityDBManager.UPDATE);
+			UtilityDBManager.getSingleInstance().backupDataBase(
+					UtilityDBManager.UPDATE);
 		} catch (FileNotFoundException e1) {
-			JOptionPane.showMessageDialog(this, "File di configurazione per backup\nmancante o danneggiato", "ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"File di configurazione per backup\nmancante o danneggiato",
+							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
 			e1.printStackTrace();
 		} catch (IOException e1) {
-			JOptionPane.showMessageDialog(this, "File di configurazione per backup\nmancante o danneggiato", "ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"File di configurazione per backup\nmancante o danneggiato",
+							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
 			e1.printStackTrace();
 		}
 		// FINE PUNTO BACKUP
@@ -301,12 +328,21 @@ public class CaricoGui extends JFrame {
 
 		// PUNTO DI BACKUP DA ATTIVARE DA CONFIGURAZIONI
 		try {
-			UtilityDBManager.getSingleInstance().backupDataBase(UtilityDBManager.UPDATE);
+			UtilityDBManager.getSingleInstance().backupDataBase(
+					UtilityDBManager.UPDATE);
 		} catch (FileNotFoundException e1) {
-			JOptionPane.showMessageDialog(this, "File di configurazione per backup\nmancante o danneggiato", "ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"File di configurazione per backup\nmancante o danneggiato",
+							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
 			e1.printStackTrace();
 		} catch (IOException e1) {
-			JOptionPane.showMessageDialog(this, "File di configurazione per backup\nmancante o danneggiato", "ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"File di configurazione per backup\nmancante o danneggiato",
+							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
 			e1.printStackTrace();
 		}
 		// FINE PUNTO BACKUP
@@ -327,6 +363,7 @@ public class CaricoGui extends JFrame {
 			}
 			double prezzo = d.doubleValue();
 			c.updateArticolo(a.getIdArticolo(), qta[0], prezzo);
+			calcoli((new Integer(txtNumeroCarico.getText())).intValue());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (IDNonValido e) {
@@ -372,35 +409,35 @@ public class CaricoGui extends JFrame {
 	}
 
 	private void caricaArticoli(JComboBox cmbProdotti) {
-//		Articolo f = new Articolo();
-//		String tmpArticoli[] = null;
-//		String tmpCodici[] = null;
-//		try {
-//			cmbProdotti.removeAllItems();
-//			cmbProdotti.addItem("");
-//			String as[] = (String[]) f.allArticoli();
-//			tmpArticoli = new String[as.length];
-//			tmpCodici = new String[as.length];
-//			// carichiamo tutti i dati in due array
-//			// da passre al combobox
-//			for (int i = 0; i < as.length; i++) {
-//				String tmp[] = as[i].split("-",2);
-//				tmpArticoli[i] = tmp[1].trim();
-//				tmpCodici[i] = tmp[0].trim();
-//			}
-//			((IDJComboBox) cmbProdotti).caricaIDAndOggetti(tmpCodici,
-//					tmpArticoli);
-//
-//		} catch (SQLException e) {
-//			JOptionPane.showMessageDialog(this,
-//					"Errore caricamento articoli nel combobox", "ERRORE", 0);
-//			e.printStackTrace();
-//		} catch (LunghezzeArrayDiverse e) {
-//			JOptionPane.showMessageDialog(this, "Errore lunghezza array",
-//					"ERRORE LUNGHEZZA", 0);
-//			e.printStackTrace();
-//		}
-//		AutoCompletion.enable(cmbProdotti);
+		// Articolo f = new Articolo();
+		// String tmpArticoli[] = null;
+		// String tmpCodici[] = null;
+		// try {
+		// cmbProdotti.removeAllItems();
+		// cmbProdotti.addItem("");
+		// String as[] = (String[]) f.allArticoli();
+		// tmpArticoli = new String[as.length];
+		// tmpCodici = new String[as.length];
+		// // carichiamo tutti i dati in due array
+		// // da passre al combobox
+		// for (int i = 0; i < as.length; i++) {
+		// String tmp[] = as[i].split("-",2);
+		// tmpArticoli[i] = tmp[1].trim();
+		// tmpCodici[i] = tmp[0].trim();
+		// }
+		// ((IDJComboBox) cmbProdotti).caricaIDAndOggetti(tmpCodici,
+		// tmpArticoli);
+		//
+		// } catch (SQLException e) {
+		// JOptionPane.showMessageDialog(this,
+		// "Errore caricamento articoli nel combobox", "ERRORE", 0);
+		// e.printStackTrace();
+		// } catch (LunghezzeArrayDiverse e) {
+		// JOptionPane.showMessageDialog(this, "Errore lunghezza array",
+		// "ERRORE LUNGHEZZA", 0);
+		// e.printStackTrace();
+		// }
+		// AutoCompletion.enable(cmbProdotti);
 
 		Articolo f = new Articolo();
 		try {
@@ -419,34 +456,34 @@ public class CaricoGui extends JFrame {
 	}
 
 	private void caricaArticoliByIdFornitore(int idfornitore) {
-//		Articolo f = new Articolo();
-//		cmbProdotti.removeAllItems();
-//		cmbProdotti.addItem("");
-//		String tmpArticoli[] = null;
-//		String tmpCodici[] = null;
-//		try {
-//			String as[] = f.allArticoliByFornitore(idfornitore);
-//			tmpArticoli = new String[as.length];
-//			tmpCodici = new String[as.length];
-//			// carichiamo tutti i dati in due array
-//			// da passre al combobox
-//			for (int i = 0; i < as.length; i++) {
-//				String tmp[] = as[i].split("-",2);
-//				tmpArticoli[i] = tmp[1].trim();
-//				tmpCodici[i] = tmp[0].trim();
-//			}
-//			((IDJComboBox) cmbProdotti).caricaIDAndOggetti(tmpCodici,
-//					tmpArticoli);
-//
-//		} catch (SQLException e) {
-//			JOptionPane.showMessageDialog(this,
-//					"Errore caricamento articoli nel combobox", "ERRORE", 0);
-//			e.printStackTrace();
-//		} catch (LunghezzeArrayDiverse e) {
-//			JOptionPane.showMessageDialog(this, "Errore lunghezza array",
-//					"ERRORE LUNGHEZZA", 0);
-//			e.printStackTrace();
-//		}
+		// Articolo f = new Articolo();
+		// cmbProdotti.removeAllItems();
+		// cmbProdotti.addItem("");
+		// String tmpArticoli[] = null;
+		// String tmpCodici[] = null;
+		// try {
+		// String as[] = f.allArticoliByFornitore(idfornitore);
+		// tmpArticoli = new String[as.length];
+		// tmpCodici = new String[as.length];
+		// // carichiamo tutti i dati in due array
+		// // da passre al combobox
+		// for (int i = 0; i < as.length; i++) {
+		// String tmp[] = as[i].split("-",2);
+		// tmpArticoli[i] = tmp[1].trim();
+		// tmpCodici[i] = tmp[0].trim();
+		// }
+		// ((IDJComboBox) cmbProdotti).caricaIDAndOggetti(tmpCodici,
+		// tmpArticoli);
+		//
+		// } catch (SQLException e) {
+		// JOptionPane.showMessageDialog(this,
+		// "Errore caricamento articoli nel combobox", "ERRORE", 0);
+		// e.printStackTrace();
+		// } catch (LunghezzeArrayDiverse e) {
+		// JOptionPane.showMessageDialog(this, "Errore lunghezza array",
+		// "ERRORE LUNGHEZZA", 0);
+		// e.printStackTrace();
+		// }
 
 		Articolo f = new Articolo();
 		try {
@@ -487,6 +524,13 @@ public class CaricoGui extends JFrame {
 		}
 	}
 
+	public void tableChanged(TableModelEvent arg0) {
+		// TODO Auto-generated method stub
+
+		calcoli(new Integer(txtNumeroCarico.getText()).intValue());
+
+	}
+
 	private void caricaDati(Carico c) {
 		txtNumeroCarico.setText((new Integer(c.getIdCarico())).toString());
 		dataCarico.setDate(c.getDataCarico());
@@ -504,10 +548,16 @@ public class CaricoGui extends JFrame {
 		}
 
 		cmbTipoDocumento.setSelectedItem(d.getTipo());
-		//cmbFornitori.setSelectedItem(f.getNome());
+		// cmbFornitori.setSelectedItem(f.getNome());
 		cmbFornitori.setSelectedItemByID(f.getIdFornitore());
+		int sosp = c.getSospeso();
+		if (sosp == 0)
+			rbtnNo.setSelected(true);
+		else
+			rbtnSi.setSelected(true);
 		ricaricaTableCarico(c.getIdCarico());
 		tbp.setSelectedIndex(0);
+		calcoli((new Integer(c.getIdCarico())).intValue());
 	}
 
 	private void caricaDatiArticolo() {
@@ -526,34 +576,34 @@ public class CaricoGui extends JFrame {
 	}
 
 	private void caricaDocumenti(JComboBox cmbDocumenti) {
-//		Documento f = new Documento();
-//		String tmpDocumenti[] = null;
-//		String tmpCodici[] = null;
-//		try {
-//			cmbDocumenti.removeAllItems();
-//			cmbDocumenti.addItem("");
-//			String as[] = (String[]) f.allDocumenti();
-//			tmpDocumenti = new String[as.length];
-//			tmpCodici = new String[as.length];
-//			// carichiamo tutti i dati in due array
-//			// da passre al combobox
-//			for (int i = 0; i < as.length; i++) {
-//				String tmp[] = as[i].split("-",2);
-//				tmpDocumenti[i] = tmp[1].trim();
-//				tmpCodici[i] = tmp[0].trim();
-//			}
-//			((IDJComboBox) cmbDocumenti).caricaIDAndOggetti(tmpCodici,
-//					tmpDocumenti);
-//		} catch (SQLException e) {
-//			JOptionPane.showMessageDialog(this,
-//					"Errore caricamento documenti nel combobox", "ERRORE", 0);
-//			e.printStackTrace();
-//		} catch (LunghezzeArrayDiverse e) {
-//			JOptionPane.showMessageDialog(this, "Errore lunghezza array",
-//					"ERRORE LUNGHEZZA", 0);
-//			e.printStackTrace();
-//		}
-//		AutoCompletion.enable(cmbDocumenti);
+		// Documento f = new Documento();
+		// String tmpDocumenti[] = null;
+		// String tmpCodici[] = null;
+		// try {
+		// cmbDocumenti.removeAllItems();
+		// cmbDocumenti.addItem("");
+		// String as[] = (String[]) f.allDocumenti();
+		// tmpDocumenti = new String[as.length];
+		// tmpCodici = new String[as.length];
+		// // carichiamo tutti i dati in due array
+		// // da passre al combobox
+		// for (int i = 0; i < as.length; i++) {
+		// String tmp[] = as[i].split("-",2);
+		// tmpDocumenti[i] = tmp[1].trim();
+		// tmpCodici[i] = tmp[0].trim();
+		// }
+		// ((IDJComboBox) cmbDocumenti).caricaIDAndOggetti(tmpCodici,
+		// tmpDocumenti);
+		// } catch (SQLException e) {
+		// JOptionPane.showMessageDialog(this,
+		// "Errore caricamento documenti nel combobox", "ERRORE", 0);
+		// e.printStackTrace();
+		// } catch (LunghezzeArrayDiverse e) {
+		// JOptionPane.showMessageDialog(this, "Errore lunghezza array",
+		// "ERRORE LUNGHEZZA", 0);
+		// e.printStackTrace();
+		// }
+		// AutoCompletion.enable(cmbDocumenti);
 		Documento f = new Documento();
 		try {
 
@@ -570,34 +620,34 @@ public class CaricoGui extends JFrame {
 	}
 
 	private void caricaFornitori(JComboBox cmbFornitori) {
-//		Fornitore f = new Fornitore();
-//		String tmpFornitori[] = null;
-//		String tmpCodici[] = null;
-//		try {
-//			cmbFornitori.removeAllItems();
-//			cmbFornitori.addItem("");
-//			String as[] = (String[]) f.allFornitori();
-//			tmpFornitori = new String[as.length];
-//			tmpCodici = new String[as.length];
-//			// carichiamo tutti i dati in due array
-//			// da passre al combobox
-//			for (int i = 0; i < as.length; i++) {
-//				String tmp[] = as[i].split("-",2);
-//				tmpFornitori[i] = tmp[1].trim();
-//				tmpCodici[i] = tmp[0].trim();
-//			}
-//			((IDJComboBox) cmbFornitori).caricaIDAndOggetti(tmpCodici,
-//					tmpFornitori);
-//		} catch (SQLException e) {
-//			JOptionPane.showMessageDialog(this,
-//					"Errore caricamento fornitori nel combobox", "ERRORE", 0);
-//			e.printStackTrace();
-//		} catch (LunghezzeArrayDiverse e) {
-//			JOptionPane.showMessageDialog(this, "Errore lunghezza array",
-//					"ERRORE LUNGHEZZA", 0);
-//			e.printStackTrace();
-//		}
-//		AutoCompletion.enable(cmbFornitori);
+		// Fornitore f = new Fornitore();
+		// String tmpFornitori[] = null;
+		// String tmpCodici[] = null;
+		// try {
+		// cmbFornitori.removeAllItems();
+		// cmbFornitori.addItem("");
+		// String as[] = (String[]) f.allFornitori();
+		// tmpFornitori = new String[as.length];
+		// tmpCodici = new String[as.length];
+		// // carichiamo tutti i dati in due array
+		// // da passre al combobox
+		// for (int i = 0; i < as.length; i++) {
+		// String tmp[] = as[i].split("-",2);
+		// tmpFornitori[i] = tmp[1].trim();
+		// tmpCodici[i] = tmp[0].trim();
+		// }
+		// ((IDJComboBox) cmbFornitori).caricaIDAndOggetti(tmpCodici,
+		// tmpFornitori);
+		// } catch (SQLException e) {
+		// JOptionPane.showMessageDialog(this,
+		// "Errore caricamento fornitori nel combobox", "ERRORE", 0);
+		// e.printStackTrace();
+		// } catch (LunghezzeArrayDiverse e) {
+		// JOptionPane.showMessageDialog(this, "Errore lunghezza array",
+		// "ERRORE LUNGHEZZA", 0);
+		// e.printStackTrace();
+		// }
+		// AutoCompletion.enable(cmbFornitori);
 
 		Fornitore f = new Fornitore();
 		try {
@@ -632,7 +682,8 @@ public class CaricoGui extends JFrame {
 		else
 			pNuovo = ((Double) txtPrezzo.getValue()).doubleValue();
 		if (!prezzoUguale(pNuovo, a.getIdArticolo())) {
-			int scelta = JOptionPane.showConfirmDialog(
+			int scelta = JOptionPane
+					.showConfirmDialog(
 							this,
 							"Vuoi aggiornare il prezzo del prodotto\ncon il prezzo corrente di acquisto?",
 							"AVVISO DI AGGIORNAMENTO", 0);
@@ -662,24 +713,33 @@ public class CaricoGui extends JFrame {
 		if (tblCarico.getSelectedRow() <= -1) {
 			int ok = JOptionPane.showConfirmDialog(this,
 					"Sei sicuro si voler eliminare?", "AVVISO", 0, 1);
-			if (ok !=JOptionPane.YES_OPTION)
+			if (ok != JOptionPane.YES_OPTION)
 				return;
 		}
 
 		// PUNTO DI BACKUP DA ATTIVARE DA CONFIGURAZIONI
 		try {
-			UtilityDBManager.getSingleInstance().backupDataBase(UtilityDBManager.DELETE);
+			UtilityDBManager.getSingleInstance().backupDataBase(
+					UtilityDBManager.DELETE);
 		} catch (FileNotFoundException e1) {
-			JOptionPane.showMessageDialog(this, "File di configurazione per backup\nmancante o danneggiato", "ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"File di configurazione per backup\nmancante o danneggiato",
+							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
 			e1.printStackTrace();
 		} catch (IOException e1) {
-			JOptionPane.showMessageDialog(this, "File di configurazione per backup\nmancante o danneggiato", "ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"File di configurazione per backup\nmancante o danneggiato",
+							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
 			e1.printStackTrace();
 		}
 		// FINE PUNTO BACKUP
 
 		int riga = tblCarico.getSelectedRow();
-		TableColumn col = tblCarico.getColumn("codice_articolo");
+		TableColumn col = tblCarico.getColumn("codice");
 		int colonna = col.getModelIndex();
 		String codBarre = (String) tblCarico.getValueAt(riga, colonna);
 		Articolo a = new Articolo();
@@ -697,6 +757,7 @@ public class CaricoGui extends JFrame {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		calcoli((new Integer(txtNumeroCarico.getText())).intValue());
 	}
 
 	private void eliminaCarico() {
@@ -708,16 +769,27 @@ public class CaricoGui extends JFrame {
 		int scelta = JOptionPane.showConfirmDialog(this,
 				"Sei sicuro di voler\neliminare il carico selezionato?",
 				"AVVISO", 0, 1);
-		if (scelta == JOptionPane.NO_OPTION || scelta==JOptionPane.CANCEL_OPTION || scelta==JOptionPane.CLOSED_OPTION)
+		if (scelta == JOptionPane.NO_OPTION
+				|| scelta == JOptionPane.CANCEL_OPTION
+				|| scelta == JOptionPane.CLOSED_OPTION)
 			return;
 		// PUNTO DI BACKUP DA ATTIVARE DA CONFIGURAZIONI
 		try {
-			UtilityDBManager.getSingleInstance().backupDataBase(UtilityDBManager.DELETE);
+			UtilityDBManager.getSingleInstance().backupDataBase(
+					UtilityDBManager.DELETE);
 		} catch (FileNotFoundException e1) {
-			JOptionPane.showMessageDialog(this, "File di configurazione per backup\nmancante o danneggiato", "ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"File di configurazione per backup\nmancante o danneggiato",
+							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
 			e1.printStackTrace();
 		} catch (IOException e1) {
-			JOptionPane.showMessageDialog(this, "File di configurazione per backup\nmancante o danneggiato", "ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"File di configurazione per backup\nmancante o danneggiato",
+							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
 			e1.printStackTrace();
 		}
 		// FINE PUNTO BACKUP
@@ -841,7 +913,7 @@ public class CaricoGui extends JFrame {
 		if (cmbTipoDocumento == null)
 			try {
 				cmbTipoDocumento = new IDJComboBox();
-				cmbTipoDocumento.setBounds(new Rectangle(108, 48, 273, 25));
+				cmbTipoDocumento.setBounds(new Rectangle(108, 48, 282, 25));
 			} catch (Throwable throwable) {
 			}
 		return cmbTipoDocumento;
@@ -938,6 +1010,7 @@ public class CaricoGui extends JFrame {
 				pnlNord.add(lblDataDocumento, null);
 				pnlNord.add(getDataCarico(), null);
 				pnlNord.add(getBtnNuovoForn(), null);
+				pnlNord.add(getJPanel1(), null);
 			} catch (Throwable throwable) {
 			}
 		return pnlNord;
@@ -1012,6 +1085,7 @@ public class CaricoGui extends JFrame {
 				pnlSud = new JPanel();
 				pnlSud.setLayout(new BorderLayout());
 				pnlSud.add(getJScrollPane(), "Center");
+				pnlSud.add(getJPanel(), BorderLayout.SOUTH);
 			} catch (Throwable throwable) {
 			}
 		return pnlSud;
@@ -1039,9 +1113,10 @@ public class CaricoGui extends JFrame {
 				tblCarico.setDefaultEditor(Double.class, new DoubleEditor());
 				tblCarico.setSelectionMode(0);
 				tblCarico.setModel(caricoModel);
+				caricoModel.addTableModelListener(this);
 
 				// impostiamo le varie colonne
-				TableColumn col=tblCarico.getColumnModel().getColumn(0);
+				TableColumn col = tblCarico.getColumnModel().getColumn(0);
 				col.setMinWidth(0);
 				col.setMaxWidth(0);
 				col.setPreferredWidth(0);
@@ -1050,7 +1125,6 @@ public class CaricoGui extends JFrame {
 				DefaultTableCellRenderer colFormatoRenderer = new DefaultTableCellRenderer();
 				colFormatoRenderer.setHorizontalAlignment(JLabel.LEFT);
 				col.setCellRenderer(colFormatoRenderer);
-
 
 				col = tblCarico.getColumn("descrizione");
 				DefaultTableCellRenderer ColTipoRenderer = new DefaultTableCellRenderer();
@@ -1106,6 +1180,22 @@ public class CaricoGui extends JFrame {
 				tblViewCarichi.setAutoResizeMode(4);
 				tblViewCarichi.packAll();
 				tblViewCarichi.getTableHeader().setReorderingAllowed(false);
+
+				TableColumn col = tblViewCarichi.getColumnModel().getColumn(0);
+				col.setMinWidth(0);
+				col.setMaxWidth(0);
+				col.setPreferredWidth(0);
+
+				col = tblViewCarichi.getColumn("totale_documento");
+				DefaultTableCellRenderer prezzoColumnRenderer = new DefaultTableCellRenderer();
+				prezzoColumnRenderer.setHorizontalAlignment(JLabel.RIGHT);
+				col.setCellRenderer(prezzoColumnRenderer);
+				col.setPreferredWidth(40);
+
+				col = tblViewCarichi.getColumn("sospeso");
+				DefaultTableCellRenderer sospeso = new DefaultTableCellRenderer();
+				sospeso.setHorizontalAlignment(JLabel.CENTER);
+				col.setCellRenderer(sospeso);
 			} catch (Throwable throwable) {
 			}
 		return tblViewCarichi;
@@ -1160,10 +1250,12 @@ public class CaricoGui extends JFrame {
 				dataDocumento = new JDateChooser("dd/MM/yyyy", "##/##/##", '_');
 				dataDocumento.setDate(new java.util.Date());
 				dataDocumento.setBounds(new Rectangle(304, 80, 114, 25));
-				JTextFieldDateEditor f=(JTextFieldDateEditor) dataDocumento.getDateEditor();
+				JTextFieldDateEditor f = (JTextFieldDateEditor) dataDocumento
+						.getDateEditor();
 				f.addFocusListener(new java.awt.event.FocusAdapter() {
 					public void focusGained(java.awt.event.FocusEvent e) {
-						JTextFieldDateEditor s=(JTextFieldDateEditor) dataDocumento.getDateEditor();
+						JTextFieldDateEditor s = (JTextFieldDateEditor) dataDocumento
+								.getDateEditor();
 						s.setCaretPosition(0);
 					}
 				});
@@ -1255,7 +1347,7 @@ public class CaricoGui extends JFrame {
 	}
 
 	private void initialize() {
-//		 impostiamo la finestra per ascoltare i tasti funzione da F1 in su
+		// impostiamo la finestra per ascoltare i tasti funzione da F1 in su
 		// ed altri pulsanti
 		InputMap im = this.getRootPane().getInputMap(
 				JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
@@ -1297,10 +1389,9 @@ public class CaricoGui extends JFrame {
 			}
 		});
 
-
 		Carico c = new Carico();
 		idcarico = c.getNewID();
-		setSize(650, 530);
+		setSize(650, 600);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle("Carico Merce");
 		setResizable(true);
@@ -1322,14 +1413,22 @@ public class CaricoGui extends JFrame {
 		caricaArticoli(cmbProdotti);
 		caricaDocumenti(cmbTipoDocumento);
 		inizializzaListeners();
+		inizializzaRadioButton();
 
+	}
+
+	private void inizializzaRadioButton() {
+		ButtonGroup g = new ButtonGroup();
+		g.add(rbtnSi);
+		g.add(rbtnNo);
+		rbtnNo.setSelected(true);
 
 	}
 
 	private void inizializzaListeners() {
 		myComboBoxListener = new MyComboBoxListener();
 		myButtonListener = new MyButtonListener();
-		//cmbFornitori.addActionListener(myComboBoxListener);
+		// cmbFornitori.addActionListener(myComboBoxListener);
 		btnInserisci.addActionListener(myButtonListener);
 		btnElimina.addActionListener(myButtonListener);
 		btnChiudi.addActionListener(myButtonListener);
@@ -1351,12 +1450,21 @@ public class CaricoGui extends JFrame {
 
 		// PUNTO DI BACKUP DA ATTIVARE DA CONFIGURAZIONI
 		try {
-			UtilityDBManager.getSingleInstance().backupDataBase(UtilityDBManager.INSERT);
+			UtilityDBManager.getSingleInstance().backupDataBase(
+					UtilityDBManager.INSERT);
 		} catch (FileNotFoundException e1) {
-			JOptionPane.showMessageDialog(this, "File di configurazione per backup\nmancante o danneggiato", "ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"File di configurazione per backup\nmancante o danneggiato",
+							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
 			e1.printStackTrace();
 		} catch (IOException e1) {
-			JOptionPane.showMessageDialog(this, "File di configurazione per backup\nmancante o danneggiato", "ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"File di configurazione per backup\nmancante o danneggiato",
+							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
 			e1.printStackTrace();
 		}
 		// FINE PUNTO BACKUP
@@ -1380,24 +1488,38 @@ public class CaricoGui extends JFrame {
 							.intValue())) {
 				c.setIdCarico((new Integer(txtNumeroCarico.getText()))
 						.intValue());
-				c.setIdFornitore((new Integer(cmbFornitori.getIDSelectedItem())).intValue());
+				c
+						.setIdFornitore((new Integer(cmbFornitori
+								.getIDSelectedItem())).intValue());
 				c.setDataCarico(new Date(dataCarico.getDate().getTime()));
 				c.setDataDocumento(new Date(dataDocumento.getDate().getTime()));
 				c.setNumDocumento(txtNumDocumento.getText());
-				c.setIdDocumento((new Integer(cmbTipoDocumento.getIDSelectedItem())).intValue());
+				c.setIdDocumento((new Integer(cmbTipoDocumento
+						.getIDSelectedItem())).intValue());
 				c.setOraCarico(new Time((new java.util.Date()).getTime()));
 				c.setNote(txtNote.getText());
+				if (rbtnNo.isSelected())
+					c.setSospeso(0);
+				else
+					c.setSospeso(1);
 				c.insertCarico();
 			} else {
 				c.setIdCarico((new Integer(txtNumeroCarico.getText()))
 						.intValue());
-				c.setIdFornitore((new Integer(cmbFornitori.getIDSelectedItem())).intValue());
+				c
+						.setIdFornitore((new Integer(cmbFornitori
+								.getIDSelectedItem())).intValue());
 				c.setDataCarico(new Date(dataCarico.getDate().getTime()));
 				c.setDataDocumento(new Date(dataDocumento.getDate().getTime()));
 				c.setNumDocumento(txtNumDocumento.getText());
-				c.setIdDocumento((new Integer( cmbTipoDocumento.getIDSelectedItem())).intValue());
+				c.setIdDocumento((new Integer(cmbTipoDocumento
+						.getIDSelectedItem())).intValue());
 				c.setOraCarico(new Time((new java.util.Date()).getTime()));
 				c.setNote(txtNote.getText());
+				if (rbtnNo.isSelected())
+					c.setSospeso(0);
+				else
+					c.setSospeso(1);
 				try {
 					c.updateCarico();
 				} catch (IDNonValido e) {
@@ -1448,6 +1570,7 @@ public class CaricoGui extends JFrame {
 				c.insertArticolo(a.getIdArticolo(), (new Integer(txtQta
 						.getText())).intValue(), price);
 			}
+			calcoli((new Integer(txtNumeroCarico.getText())).intValue());
 			azzeraCampi();
 			tblCarico.packAll();
 		} catch (SQLException e) {
@@ -1457,7 +1580,6 @@ public class CaricoGui extends JFrame {
 					"Errore nell'inserimento dinumeri", "NUMERO ERRATO", 0);
 			e.printStackTrace();
 		}
-
 
 	}
 
@@ -1478,7 +1600,7 @@ public class CaricoGui extends JFrame {
 		int scelta = JOptionPane.showConfirmDialog(this,
 				"Sei sicuro di voler\nmodificare il carico selezionato?",
 				"AVVISO", 0, 1);
-		if (scelta !=JOptionPane.YES_OPTION)
+		if (scelta != JOptionPane.YES_OPTION)
 			return;
 		int riga = tblViewCarichi.getSelectedRow();
 		int idcarico = ((Long) tblViewCarichi.getValueAt(riga, 0)).intValue();
@@ -1553,10 +1675,12 @@ public class CaricoGui extends JFrame {
 				dataCarico = new JDateChooser("dd/MM/yyyy", "##/##/##", '_');
 				dataCarico.setDate(new java.util.Date());
 				dataCarico.setBounds(new Rectangle(216, 20, 112, 25));
-				JTextFieldDateEditor f=(JTextFieldDateEditor) dataCarico.getDateEditor();
+				JTextFieldDateEditor f = (JTextFieldDateEditor) dataCarico
+						.getDateEditor();
 				f.addFocusListener(new java.awt.event.FocusAdapter() {
 					public void focusGained(java.awt.event.FocusEvent e) {
-						JTextFieldDateEditor s=(JTextFieldDateEditor) dataCarico.getDateEditor();
+						JTextFieldDateEditor s = (JTextFieldDateEditor) dataCarico
+								.getDateEditor();
 						s.setCaretPosition(0);
 					}
 				});
@@ -1626,63 +1750,147 @@ public class CaricoGui extends JFrame {
 	}
 
 	private static final long serialVersionUID = 1L;
+
 	private JButton btnAzzera;
+
 	private JButton btnChiudi;
+
 	private JButton btnElimina;
+
 	private JButton btnEliminaCarico;
+
 	private JButton btnInserisci;
+
 	private JButton btnModifica;
+
 	private CarichiViewModel carichiView;
+
 	private CaricoModel caricoModel;
+
 	private JCheckBox chkInsRapido;
+
 	private IDJComboBox cmbFornitori;
+
 	private IDJComboBox cmbProdotti;
+
 	private IDJComboBox cmbTipoDocumento;
+
 	private DBManager dbm;
+
 	private int idcarico;
+
 	private JPanel jContentPane;
+
 	private JScrollPane jScrollPane;
+
 	private JScrollPane jScrollPane1;
+
 	private JScrollPane jScrollPane2;
+
 	private JLabel lblCodBarre;
+
 	private JLabel lblDataCarico;
+
 	private JLabel lblDescrizioneProdotto;
+
 	private JLabel lblFornitore;
+
 	private JLabel lblInsRapido;
+
 	private JLabel lblNote;
+
 	private JLabel lblNumDocumento;
+
 	private JLabel lblNumeroCarico;
+
 	private JLabel lblPrezzo;
+
 	private JLabel lblQta;
+
 	private JLabel lblTipoDocumento;
+
 	private JLabel lblUm;
+
 	private MyButtonListener myButtonListener;
+
 	private MyComboBoxListener myComboBoxListener;
+
 	private JPanel pnlCentrale;
+
 	private JPanel pnlNord;
+
 	private JPanel pnlProdotto;
+
 	private JPanel pnlSud;
+
 	private JPanel pnlViewCarichi;
+
 	private JXTable tblCarico;
+
 	private JXTable tblViewCarichi;
+
 	private JTabbedPane tbp;
+
 	private JTextField txtCodBarre;
+
 	private JDateChooser dataDocumento;
+
 	private JTextArea txtNote;
+
 	private JTextField txtNumDocumento;
+
 	private JTextField txtNumeroCarico;
+
 	private JFormattedTextField txtPrezzo;
+
 	private JTextField txtQta;
+
 	private JTextField txtUm;
+
 	private JLabel lblDataDocumento;
+
 	private JButton btnNewArticolo;
+
 	private JDateChooser dataCarico;
+
 	private JButton btnStampa;
+
 	private Frame padre;
+
 	private JButton btnVisualizzaArt;
+
 	private JPanel pnlNord1;
+
 	private JPanel pnlCentro;
+
 	private JButton btnNuovoForn = null;
+
+	private JPanel jPanel = null;
+
+	private JPanel pnlSud1 = null;
+
+	private JLabel lblIngImponibile = null;
+
+	private JTextField txtImponibileIng = null;
+
+	private JLabel lblIngImposta = null;
+
+	private JTextField txtImpostaIng = null;
+
+	private JLabel lblTotIng = null;
+
+	private JTextField txtTotaleIng = null;
+
+	private JPanel jPanel1 = null;
+
+	private JRadioButton rbtnSi = null;
+
+	private JRadioButton rbtnNo = null;
+
+	private JLabel lblSi = null;
+
+	private JLabel lblNO = null;
+
 	/**
 	 * This method initializes btnNuovoForn
 	 *
@@ -1703,9 +1911,189 @@ public class CaricoGui extends JFrame {
 	}
 
 	protected void nuovoFornitore() {
-		FornitoriAdd add=new FornitoriAdd(this,DBManager.getIstanceSingleton());
+		FornitoriAdd add = new FornitoriAdd(this, DBManager
+				.getIstanceSingleton());
 		add.setVisible(true);
 
 	}
 
-}
+	/**
+	 * This method initializes jPanel
+	 *
+	 * @return javax.swing.JPanel
+	 */
+	private JPanel getJPanel() {
+		if (jPanel == null) {
+			jPanel = new JPanel();
+			jPanel.setLayout(new BorderLayout());
+			jPanel.setPreferredSize(new Dimension(0, 60));
+			jPanel.add(getPnlSud1(), BorderLayout.CENTER);
+		}
+		return jPanel;
+	}
+
+	/**
+	 *
+	 */
+	private void calcoli(int idScarico) {
+		// Calcoliamo tutte le somme e impostiamo i campi
+		// cominciamo prima a calcolare il dettaglio
+		double imponibile;
+		double imposta;
+		double tot = 0;
+		int id = idScarico;
+
+		// Calcoliamo ora la parte all'ingrosso
+		try {
+
+			imponibile = Carico.getTotAcquistoImponibileByOrder(id);
+			imposta = Carico.getTotAcquistoImpostaByOrder(idScarico);
+			tot = imponibile + imposta;
+
+			// impostiamo i campi
+			txtImponibileIng.setText(ControlloDati
+					.convertDoubleToPrezzo(imponibile));
+			txtImpostaIng.setText(ControlloDati.convertDoubleToPrezzo(imposta));
+			txtTotaleIng.setText(ControlloDati.convertDoubleToPrezzo(tot));
+
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(this,
+					"Probabile errore nei calcoli all'ingrosso", "ERRORE",
+					JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * This method initializes pnlSud1
+	 *
+	 * @return javax.swing.JPanel
+	 */
+	private JPanel getPnlSud1() {
+		if (pnlSud1 == null) {
+			lblTotIng = new JLabel();
+			lblTotIng.setBounds(new Rectangle(424, 8, 85, 25));
+			lblTotIng.setText("Totale \u20ac.");
+			lblIngImposta = new JLabel();
+			lblIngImposta.setBounds(new Rectangle(236, 8, 89, 25));
+			lblIngImposta.setText("Imposta \u20ac.");
+			lblIngImponibile = new JLabel();
+			lblIngImponibile.setBounds(new Rectangle(32, 8, 105, 25));
+			lblIngImponibile.setText("Imponibile \u20ac.");
+			pnlSud1 = new JPanel();
+			pnlSud1.setLayout(null);
+			pnlSud1.setPreferredSize(new Dimension(0, 50));
+			pnlSud1.setBorder(BorderFactory
+					.createBevelBorder(BevelBorder.RAISED));
+			pnlSud1.add(lblIngImponibile, null);
+			pnlSud1.add(getTxtImponibileIng(), null);
+			pnlSud1.add(lblIngImposta, null);
+			pnlSud1.add(getTxtImpostaIng(), null);
+			pnlSud1.add(lblTotIng, null);
+			pnlSud1.add(getTxtTotaleIng(), null);
+		}
+		return pnlSud1;
+	}
+
+	/**
+	 * This method initializes txtImponibileIng
+	 *
+	 * @return javax.swing.JTextField
+	 */
+	private JTextField getTxtImponibileIng() {
+		if (txtImponibileIng == null) {
+			txtImponibileIng = new JTextField();
+			txtImponibileIng.setBounds(new Rectangle(136, 8, 93, 25));
+			txtImponibileIng.setFont(new Font("Dialog", Font.BOLD, 12));
+			txtImponibileIng.setDisabledTextColor(Color.black);
+			txtImponibileIng.setEditable(false);
+			txtImponibileIng.setEnabled(false);
+		}
+		return txtImponibileIng;
+	}
+
+	/**
+	 * This method initializes txtImpostaIng
+	 *
+	 * @return javax.swing.JTextField
+	 */
+	private JTextField getTxtImpostaIng() {
+		if (txtImpostaIng == null) {
+			txtImpostaIng = new JTextField();
+			txtImpostaIng.setBounds(new Rectangle(324, 8, 93, 25));
+			txtImpostaIng.setFont(new Font("Dialog", Font.BOLD, 12));
+			txtImpostaIng.setDisabledTextColor(Color.black);
+			txtImpostaIng.setEditable(false);
+			txtImpostaIng.setEnabled(false);
+		}
+		return txtImpostaIng;
+	}
+
+	/**
+	 * This method initializes txtTotaleIng
+	 *
+	 * @return javax.swing.JTextField
+	 */
+	private JTextField getTxtTotaleIng() {
+		if (txtTotaleIng == null) {
+			txtTotaleIng = new JTextField();
+			txtTotaleIng.setBounds(new Rectangle(508, 8, 93, 25));
+			txtTotaleIng.setFont(new Font("Dialog", Font.BOLD, 12));
+			txtTotaleIng.setDisabledTextColor(Color.red);
+			txtTotaleIng.setEditable(false);
+			txtTotaleIng.setEnabled(false);
+		}
+		return txtTotaleIng;
+	}
+
+	/**
+	 * This method initializes jPanel1
+	 *
+	 * @return javax.swing.JPanel
+	 */
+	private JPanel getJPanel1() {
+		if (jPanel1 == null) {
+			lblNO = new JLabel();
+			lblNO.setText("NO");
+			lblSi = new JLabel();
+			lblSi.setText("SI");
+			jPanel1 = new JPanel();
+			jPanel1.setLayout(new FlowLayout());
+			jPanel1.setBounds(new Rectangle(401, 18, 110, 58));
+			jPanel1.setBorder(BorderFactory.createTitledBorder(null, "Sospeso",
+					TitledBorder.DEFAULT_JUSTIFICATION,
+					TitledBorder.DEFAULT_POSITION, new Font("Dialog",
+							Font.BOLD, 12), new Color(51, 51, 51)));
+			jPanel1.add(lblSi, null);
+			jPanel1.add(getRbtnSi(), null);
+			jPanel1.add(lblNO, null);
+			jPanel1.add(getRbtnNo(), null);
+		}
+		return jPanel1;
+	}
+
+	/**
+	 * This method initializes rbtnSi
+	 *
+	 * @return javax.swing.JRadioButton
+	 */
+	private JRadioButton getRbtnSi() {
+		if (rbtnSi == null) {
+			rbtnSi = new JRadioButton();
+		}
+		return rbtnSi;
+	}
+
+	/**
+	 * This method initializes rbtnNo
+	 *
+	 * @return javax.swing.JRadioButton
+	 */
+	private JRadioButton getRbtnNo() {
+		if (rbtnNo == null) {
+			rbtnNo = new JRadioButton();
+		}
+		return rbtnNo;
+	}
+
+} // @jve:decl-index=0:visual-constraint="10,10"

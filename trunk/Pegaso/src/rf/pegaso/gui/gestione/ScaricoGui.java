@@ -3,6 +3,7 @@
  */
 package rf.pegaso.gui.gestione;
 
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -379,7 +380,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 		// cominciamo prima a calcolare il dettaglio
 		double imponibile;
 		double imposta;
-		double tot;
+		double tot=0;
 		int id = idScarico;
 
 		// Calcoliamo ora la parte all'ingrosso
@@ -394,6 +395,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 					.convertDoubleToPrezzo(imponibile));
 			txtImpostaIng.setText(ControlloDati.convertDoubleToPrezzo(imposta));
 			txtTotaleIng.setText(ControlloDati.convertDoubleToPrezzo(tot));
+			
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(this,
 					"Probabile errore nei calcoli all'ingrosso", "ERRORE",
@@ -403,6 +405,9 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 
 		// calcoliamo i totali di tutti gli articoli scaricati
 		calcolaTotaliArticoliScaricati();
+		
+		
+		
 
 	}
 

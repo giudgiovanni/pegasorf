@@ -223,14 +223,14 @@ public class Scarico {
 		// Inseriamo l'articolo all'interno del db
 		// con qta 0 per effettuare il calcolo della
 		// giacenza
-		int qta = 0;
+		double qta = 0;
 		int sconto = 0;
 		String query = "insert into dettaglio_ordini values(?,?,?,?)";
 		pst = dbm.getNewPreparedStatement(query);
 		try {
 			pst.setInt(1, idScarico);
 			pst.setInt(2, idArticolo);
-			pst.setInt(3, qta);
+			pst.setDouble(3, qta);
 			pst.setInt(4, sconto);
 			// inserimento
 			pst.executeUpdate();
@@ -407,7 +407,7 @@ public class Scarico {
 		return oraScarico;
 	}
 
-	public int getQuantitaScaricata(int idArticolo) throws IDNonValido,
+	public double getQuantitaScaricata(int idArticolo) throws IDNonValido,
 			SQLException, ResultSetVuoto {
 		if (this.idScarico <= 0)
 			throw new IDNonValido();
@@ -419,7 +419,7 @@ public class Scarico {
 		rs.next();
 		if (rs.getRow() < 1)
 			throw new ResultSetVuoto();
-		int qta = rs.getInt(1);
+		double qta = rs.getDouble(1);
 		if (pst != null)
 			pst.close();
 		if (rs != null)
@@ -427,14 +427,14 @@ public class Scarico {
 		return qta;
 	}
 
-	public void insertArticolo(int idArticolo, int qta, int sconto)
+	public void insertArticolo(int idArticolo, double qta, int sconto)
 			throws SQLException {
 
 		String query = "insert into dettaglio_ordini values(?,?,?,?)";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 		pst.setInt(1, idScarico);
 		pst.setInt(2, idArticolo);
-		pst.setInt(3, qta);
+		pst.setDouble(3, qta);
 		pst.setInt(4, sconto);
 
 		// inserimento
@@ -592,13 +592,13 @@ public class Scarico {
 		this.oraScarico = oraCarico;
 	}
 
-	public void updateArticolo(int idArticolo, int qta, int sconto)
+	public void updateArticolo(int idArticolo, double qta, int sconto)
 			throws SQLException {
 
 		String query = "update dettaglio_ordini set qta=?,sconto=? where idordine=? and idarticolo=?";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 
-		pst.setInt(1, qta);
+		pst.setDouble(1, qta);
 		pst.setDouble(2, sconto);
 		pst.setInt(3, idScarico);
 		pst.setInt(4, idArticolo);

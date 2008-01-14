@@ -22,6 +22,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -60,6 +61,7 @@ import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.pegaso.db.exception.ResultSetVuoto;
 import rf.pegaso.db.model.CarichiViewModel;
 import rf.pegaso.db.model.CaricoModel;
+import rf.pegaso.db.model.DdtCaricoModel;
 import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.Carico;
 import rf.pegaso.db.tabelle.Documento;
@@ -82,6 +84,14 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.border.TitledBorder;
 import javax.swing.JRadioButton;
+import javax.swing.border.EtchedBorder;
+import rf.pegaso.db.model.VenditeModel;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Vector;
+import javax.swing.ListSelectionModel;
+import rf.pegaso.db.model.DdtFatturaModel;
 
 // Referenced classes of package rf.pegaso.gui.gestione:
 //            ArticoliAddMod, ArticoliGestione
@@ -329,8 +339,8 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		}
 		int riga = tblCarico.getSelectedRow();
 		String codBarre = (String) tblCarico.getValueAt(riga, 0);
-		int n = ((Long) tblCarico.getValueAt(riga, 4)).intValue();
-		int qta[] = new int[1];
+		double n = ((Double) tblCarico.getValueAt(riga, 4)).doubleValue();
+		double qta[] = new double[1];
 		qta[0] = n;
 		ModificaQuantitaRiga mod = new ModificaQuantitaRiga(qta, this);
 		mod.setVisible(true);
@@ -393,8 +403,8 @@ public class CaricoGui extends JFrame implements TableModelListener {
 	private void azzeraCampi() {
 		txtCodBarre.setText("");
 		txtUm.setText("");
-		txtQta.setText("");
-		txtPrezzo.setText("");
+		txtQta.setValue(0.0);
+		txtPrezzo.setValue(0.0);
 		cmbProdotti.setSelectedIndex(0);
 		cmbFornitori.setSelectedIndex(0);
 	}
@@ -402,7 +412,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 	private void azzeraTesto() {
 		txtCodBarre.setText("");
 		txtUm.setText("");
-		txtQta.setText("");
+		txtQta.setValue(new Double(0.0));
 		txtPrezzo.setText("");
 	}
 
@@ -418,36 +428,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 	}
 
 	private void caricaArticoli(JComboBox cmbProdotti) {
-		// Articolo f = new Articolo();
-		// String tmpArticoli[] = null;
-		// String tmpCodici[] = null;
-		// try {
-		// cmbProdotti.removeAllItems();
-		// cmbProdotti.addItem("");
-		// String as[] = (String[]) f.allArticoli();
-		// tmpArticoli = new String[as.length];
-		// tmpCodici = new String[as.length];
-		// // carichiamo tutti i dati in due array
-		// // da passre al combobox
-		// for (int i = 0; i < as.length; i++) {
-		// String tmp[] = as[i].split("-",2);
-		// tmpArticoli[i] = tmp[1].trim();
-		// tmpCodici[i] = tmp[0].trim();
-		// }
-		// ((IDJComboBox) cmbProdotti).caricaIDAndOggetti(tmpCodici,
-		// tmpArticoli);
-		//
-		// } catch (SQLException e) {
-		// JOptionPane.showMessageDialog(this,
-		// "Errore caricamento articoli nel combobox", "ERRORE", 0);
-		// e.printStackTrace();
-		// } catch (LunghezzeArrayDiverse e) {
-		// JOptionPane.showMessageDialog(this, "Errore lunghezza array",
-		// "ERRORE LUNGHEZZA", 0);
-		// e.printStackTrace();
-		// }
-		// AutoCompletion.enable(cmbProdotti);
-
+		cmbProdotti.removeAllItems();
 		Articolo f = new Articolo();
 		try {
 			String as[] = (String[]) f.allArticoli();
@@ -521,7 +502,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 				cmbFornitori.setSelectedItem(f.getNome());
 				cmbProdotti.setSelectedItem(a.getDescrizione());
 				txtUm.setText((new Integer(a.getUm())).toString());
-				txtQta.setText((new Integer(1)).toString());
+				txtQta.setValue((new Double(1.0)));
 				txtPrezzo.setValue(new Double(a.getPrezzoAcquisto()));
 				txtCodBarre.setText(codBarre);
 			}
@@ -576,7 +557,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 			a.caricaDati(idarticolo);
 			txtCodBarre.setText(a.getCodBarre());
 			txtUm.setText((new Integer(a.getUm())).toString());
-			txtQta.setText("1");
+			txtQta.setValue((new Double(1.0)));
 			txtPrezzo.setValue(new Double(a.getPrezzoAcquisto()));
 		} catch (SQLException e1) {
 			erroreCaricamentoDatiDB();
@@ -585,38 +566,11 @@ public class CaricoGui extends JFrame implements TableModelListener {
 	}
 
 	private void caricaDocumenti(JComboBox cmbDocumenti) {
-		// Documento f = new Documento();
-		// String tmpDocumenti[] = null;
-		// String tmpCodici[] = null;
-		// try {
-		// cmbDocumenti.removeAllItems();
-		// cmbDocumenti.addItem("");
-		// String as[] = (String[]) f.allDocumenti();
-		// tmpDocumenti = new String[as.length];
-		// tmpCodici = new String[as.length];
-		// // carichiamo tutti i dati in due array
-		// // da passre al combobox
-		// for (int i = 0; i < as.length; i++) {
-		// String tmp[] = as[i].split("-",2);
-		// tmpDocumenti[i] = tmp[1].trim();
-		// tmpCodici[i] = tmp[0].trim();
-		// }
-		// ((IDJComboBox) cmbDocumenti).caricaIDAndOggetti(tmpCodici,
-		// tmpDocumenti);
-		// } catch (SQLException e) {
-		// JOptionPane.showMessageDialog(this,
-		// "Errore caricamento documenti nel combobox", "ERRORE", 0);
-		// e.printStackTrace();
-		// } catch (LunghezzeArrayDiverse e) {
-		// JOptionPane.showMessageDialog(this, "Errore lunghezza array",
-		// "ERRORE LUNGHEZZA", 0);
-		// e.printStackTrace();
-		// }
-		// AutoCompletion.enable(cmbDocumenti);
+
 		Documento f = new Documento();
 		try {
 
-			String as[] = (String[]) f.allDocumenti();
+			String as[] = (String[]) f.allDocumentiConDescrizione();
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
 			((IDJComboBox) cmbDocumenti).caricaNewValueComboBox(as, true);
@@ -629,35 +583,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 	}
 
 	private void caricaFornitori(JComboBox cmbFornitori) {
-		// Fornitore f = new Fornitore();
-		// String tmpFornitori[] = null;
-		// String tmpCodici[] = null;
-		// try {
-		// cmbFornitori.removeAllItems();
-		// cmbFornitori.addItem("");
-		// String as[] = (String[]) f.allFornitori();
-		// tmpFornitori = new String[as.length];
-		// tmpCodici = new String[as.length];
-		// // carichiamo tutti i dati in due array
-		// // da passre al combobox
-		// for (int i = 0; i < as.length; i++) {
-		// String tmp[] = as[i].split("-",2);
-		// tmpFornitori[i] = tmp[1].trim();
-		// tmpCodici[i] = tmp[0].trim();
-		// }
-		// ((IDJComboBox) cmbFornitori).caricaIDAndOggetti(tmpCodici,
-		// tmpFornitori);
-		// } catch (SQLException e) {
-		// JOptionPane.showMessageDialog(this,
-		// "Errore caricamento fornitori nel combobox", "ERRORE", 0);
-		// e.printStackTrace();
-		// } catch (LunghezzeArrayDiverse e) {
-		// JOptionPane.showMessageDialog(this, "Errore lunghezza array",
-		// "ERRORE LUNGHEZZA", 0);
-		// e.printStackTrace();
-		// }
-		// AutoCompletion.enable(cmbFornitori);
-
+		cmbFornitori.removeAllItems();
 		Fornitore f = new Fornitore();
 		try {
 
@@ -929,7 +855,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 			f.caricaDati(a.getIdFornitore());
 			cmbFornitori.setSelectedItem(f.getNome());
 			txtUm.setText((new Integer(a.getUm())).toString());
-			txtQta.setText((new Integer(1)).toString());
+			txtQta.setValue((new Double(1.0)));
 			txtPrezzo.setValue(new Double(a.getPrezzoAcquisto()));
 			txtCodBarre.setText(a.getCodBarre());
 
@@ -938,7 +864,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		}
 	}
 
-	private JComboBox getCmbTipoDocumento() {
+	private IDJComboBox getCmbTipoDocumento() {
 		if (cmbTipoDocumento == null)
 			try {
 				cmbTipoDocumento = new IDJComboBox();
@@ -1347,9 +1273,13 @@ public class CaricoGui extends JFrame implements TableModelListener {
 	private JTextField getTxtQta() {
 		if (txtQta == null)
 			try {
-				txtQta = new JTextField();
+				DecimalFormat formatPrice = new DecimalFormat();
+				formatPrice.setMaximumFractionDigits(2);
+				formatPrice.setMinimumFractionDigits(2);
+				txtQta = new JFormattedTextField(formatPrice);
 				txtQta.setBounds(new Rectangle(59, 82, 60, 20));
-				txtQta.addFocusListener(new FocusAdapter() {
+				txtQta.setValue(0.0);
+				/*txtQta.addFocusListener(new FocusAdapter() {
 
 					public void focusLost(FocusEvent e) {
 						String numero = txtQta.getText();
@@ -1358,7 +1288,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 							messaggioErroreCampo("Errore campo quantit\340");
 						}
 					}
-				});
+				});*/
 			} catch (Throwable throwable) {
 			}
 		return txtQta;
@@ -1420,7 +1350,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 		Carico c = new Carico();
 		idcarico = c.getNewID();
-		setSize(650, 600);
+		setSize(703, 600);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle("Carico Merce");
 		setResizable(true);
@@ -1475,7 +1405,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 			return;
 		}
 		String codBarre = txtCodBarre.getText();
-		String tmp = txtQta.getText();
+		double tmp = ((Number)txtQta.getValue()).doubleValue();
 		String tmpPrezzo = txtPrezzo.getText();
 
 		// PUNTO DI BACKUP DA ATTIVARE DA CONFIGURAZIONI
@@ -1499,7 +1429,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		}
 		// FINE PUNTO BACKUP
 
-		if (codBarre.equals("") && tmp.equals("") && tmpPrezzo.equals("")) {
+		if (codBarre.equals("") && tmp==0.0 && tmpPrezzo.equals("")) {
 			salvaFattura();
 			return;
 		}
@@ -1507,7 +1437,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 			messaggioCampoMancante("Codice a barre non presente \nselezionare un prodotto");
 			return;
 		}
-		if (tmp.equalsIgnoreCase("")) {
+		if (tmp==0.0) {
 			messaggioCampoMancante("Inserire la quantit\340");
 			return;
 		}
@@ -1568,7 +1498,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 					Integer.parseInt(txtNumeroCarico.getText()))) {
 				c.caricaDati((new Integer(txtNumeroCarico.getText()))
 						.intValue());
-				int qta = 0;
+				double qta = 0;
 				try {
 					qta = c.getQuantitaCaricata(a.getIdArticolo());
 				} catch (IDNonValido e) {
@@ -1590,15 +1520,14 @@ public class CaricoGui extends JFrame implements TableModelListener {
 				else
 					price = ((Long) txtPrezzo.getValue()).intValue();
 				c.updateArticolo(a.getIdArticolo(), qta
-						+ Integer.parseInt(txtQta.getText()), price);
+						+ ((Number)txtQta.getValue()).doubleValue(), price);
 			} else {
 				double price = 0.0D;
 				if (txtPrezzo.getValue() instanceof Double)
 					price = ((Double) txtPrezzo.getValue()).doubleValue();
 				else
 					price = ((Long) txtPrezzo.getValue()).intValue();
-				c.insertArticolo(a.getIdArticolo(), (new Integer(txtQta
-						.getText())).intValue(), price);
+				c.insertArticolo(a.getIdArticolo(), ((Number)txtQta.getValue()).doubleValue(), price);
 			}
 			calcoli((new Integer(txtNumeroCarico.getText())).intValue());
 			azzeraCampi();
@@ -1696,6 +1625,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		add.setCloseOnOk(true);
 		add.setVisible(true);
 		txtCodBarre.setText(codArticolo[0]);
+		caricaArticoli(cmbProdotti);
 		caricaArticoloByCodBarre();
 	}
 
@@ -1873,7 +1803,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 	private JFormattedTextField txtPrezzo;
 
-	private JTextField txtQta;
+	private JFormattedTextField txtQta;
 
 	private JTextField txtUm;
 
@@ -1921,9 +1851,43 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 	private JLabel lblNO = null;
 
+	private DecimalFormat notaz = null;
+
+	private DecimalFormat notaz1 = null;  //  @jve:decl-index=0:
+
+	private VenditeModel model = null;
+
+	private Vector carrello = null;
+
+	private Vector colonne = null;
+
+	private JPanel jPanelOvest = null;
+
+	private JXTable jTableDdt = null;
+
+	private DdtFatturaModel ddtModel = null;
+
+	private DdtFatturaModel ddtModel1 = null;
+
+	private JPanel jPanelOvest1 = null;
+
+	private JScrollPane jScrollPane111 = null;
+
+	private DdtFatturaModel ddtModel11 = null;
+
+	private int id_ddt;
+
+	private DdtCaricoModel modelloDdtCarico;
+
+	private GregorianCalendar time1 = null;
+
+	private JTable tblDDT1 = null;
+
+	private DdtCaricoModel modelloDdtCarico1 = null;
+
 	/**
 	 * This method initializes btnNuovoForn
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnNuovoForn() {
@@ -1944,12 +1908,13 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		FornitoriAdd add = new FornitoriAdd(this, DBManager
 				.getIstanceSingleton());
 		add.setVisible(true);
+		caricaFornitori(cmbFornitori);
 
 	}
 
 	/**
 	 * This method initializes jPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanel() {
@@ -1963,7 +1928,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void calcoli(int idScarico) {
 		// Calcoliamo tutte le somme e impostiamo i campi
@@ -1996,7 +1961,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 	/**
 	 * This method initializes pnlSud1
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlSud1() {
@@ -2027,7 +1992,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 	/**
 	 * This method initializes txtImponibileIng
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtImponibileIng() {
@@ -2044,7 +2009,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 	/**
 	 * This method initializes txtImpostaIng
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtImpostaIng() {
@@ -2061,7 +2026,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 	/**
 	 * This method initializes txtTotaleIng
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtTotaleIng() {
@@ -2078,7 +2043,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 	/**
 	 * This method initializes jPanel1
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanel1() {
@@ -2104,7 +2069,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 	/**
 	 * This method initializes rbtnSi
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getRbtnSi() {
@@ -2116,7 +2081,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 	/**
 	 * This method initializes rbtnNo
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getRbtnNo() {
@@ -2125,5 +2090,34 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		}
 		return rbtnNo;
 	}
+
+
+	/**
+	 * @param string
+	 */
+	private void messaggioCampoMancante(String testo, String tipo) {
+		JOptionPane.showMessageDialog(this, testo, tipo,
+				JOptionPane.INFORMATION_MESSAGE);
+	}
+
+
+
+
+	/**
+	 * This method initializes time1
+	 *
+	 * @return java.util.GregorianCalendar
+	 */
+	private GregorianCalendar getTime1() {
+		if (time1 == null) {
+			time1 = (GregorianCalendar) Calendar.getInstance();
+		}
+		return time1;
+	}
+
+
+
+
+
 
 } // @jve:decl-index=0:visual-constraint="10,10"

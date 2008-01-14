@@ -28,7 +28,7 @@ public class Articolo {
 	 */
 	public static int caricaQtaMagazzino(int idArticolo)
 			throws SQLException {
-		DBManager dbm=DBManager.getIstanceSingleton(); 
+		DBManager dbm=DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		String query = "select deposito from giacenza_articoli_view where idarticolo=?";
 		PreparedStatement st = dbm.getNewPreparedStatement(query);
@@ -105,7 +105,7 @@ public class Articolo {
 		this.dbm=DBManager.getIstanceSingleton();
 	}
 
-	
+
 
 	/**
 	 * @return
@@ -132,8 +132,8 @@ public class Articolo {
 			rs.close();
 		return o;
 	}
-	
-	
+
+
 	public String[] allCodiciBarre() throws SQLException{
 		String[] o = null;
 		ResultSet rs = null;
@@ -250,7 +250,7 @@ public class Articolo {
 	/**
 	 * Questo metodo cancella un articolo dalla base di dati Riceve come
 	 * parametro il codice id univoco della riga da cancellare
-	 * 
+	 *
 	 * @param idArticolo
 	 *            il codice della riga da cancellare
 	 * @return un intero positivo se tutto è andato bene
@@ -408,7 +408,7 @@ public class Articolo {
 
 	/**
 	 * Il seguente metodo inserisce l'articolo nella tabella corrispondente
-	 * 
+	 *
 	 * @return un numero inferiore a 0 se ci sono stati problemi oppure maggiore
 	 *         altrimenti (in pratica ritorna il numero delle righe aggiornate)
 	 * @throws IDNonValido
@@ -576,7 +576,7 @@ public class Articolo {
 
 	/**
 	 * Il seguente metodo aggiorna l'articolo nella tabella corrispondente
-	 * 
+	 *
 	 * @return un numero inferiore a 0 se ci sono stati problemi oppure maggiore
 	 *         altrimenti (in pratica ritorna il numero delle righe aggiornate)
 	 * @throws IDNonValido
@@ -662,7 +662,7 @@ public class Articolo {
 		return this.idArticolo;
 	}
 
-	public int getGiacenza() throws SQLException {
+	public double getGiacenza() throws SQLException {
 		PreparedStatement pst=null;
 		ResultSet rs=null;
 		String query="select deposito from giacenza_articoli_all_view where idarticolo=?";
@@ -674,16 +674,16 @@ public class Articolo {
 		if(row<1){
 			return -1;
 		}
-		row=rs.getInt(1);
+		int g=rs.getInt(1);
 		if(rs!=null)
 			rs.close();
 		if(pst!=null)
 			pst.close();
-		return row;
+		return g;
 	}
 
 	public static int idByCodiceBarre(String codbarre) throws SQLException {
-		DBManager dbm=DBManager.getIstanceSingleton(); 
+		DBManager dbm=DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		String query = "select idarticolo from articoli where codbarre=?";
 		PreparedStatement st = dbm.getNewPreparedStatement(query);
@@ -707,7 +707,7 @@ public class Articolo {
 	}
 
 	public static double prezzoAcquistoByID(int id) throws SQLException {
-		DBManager dbm=DBManager.getIstanceSingleton(); 
+		DBManager dbm=DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		String query = "select prezzo_acquisto from articoli where idarticolo=?";
 		PreparedStatement st = dbm.getNewPreparedStatement(query);

@@ -27,6 +27,7 @@ import rf.pegaso.gui.gestione.ArticoliGestione;
 import rf.pegaso.gui.gestione.CaricoGui;
 import rf.pegaso.gui.gestione.ClientiGestione;
 import rf.pegaso.gui.gestione.DocumentiGestione;
+import rf.pegaso.gui.gestione.FatturaByDdt;
 import rf.pegaso.gui.gestione.FornitoriGestione;
 import rf.pegaso.gui.gestione.RepartiGestione;
 import rf.pegaso.gui.gestione.ScaricoGui;
@@ -96,6 +97,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	private JFrame padre;
 	private JPanel pnlCentrale = null;
 	private JButton jButton = null;
+	private JButton btnFtByDdt = null;
 
 	/**
 	 * This is the xxx default constructor
@@ -124,7 +126,12 @@ public class ArchivioInternalFrame extends JInternalFrame {
 		//Apriamo il Frame in modo modale
 		ModalFrameUtil.showAsModal(ordine, padre);
 		//ordine.setVisible(true);
+		//ordine.setVisible(true);
+	}
 
+	public void apriDdtAFattura(){
+		FatturaByDdt f=new FatturaByDdt(padre);
+		f.setVisible(true);
 	}
 
 	/**
@@ -454,6 +461,9 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	private JPanel getPnlCentrale() {
 		if (pnlCentrale == null) {
 			try {
+				GridBagConstraints gridBagConstraints15 = new GridBagConstraints();
+				gridBagConstraints15.gridx = 4;
+				gridBagConstraints15.gridy = 2;
 				GridBagConstraints gridBagConstraints14 = new GridBagConstraints();
 				gridBagConstraints14.gridx = 4;
 				gridBagConstraints14.gridy = 2;
@@ -516,6 +526,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				pnlCentrale.add(getBtnDocumento(), gridBagConstraints13); // Generated
 				pnlCentrale.add(getBtnStampe(), gridBagConstraints17); // Generated
 				pnlCentrale.add(getBtnRicerche(), gridBagConstraints18);
+				pnlCentrale.add(getBtnFtByDdt(), gridBagConstraints15);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -549,6 +560,25 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	private void inizializeAscoltatori() {
 		myActionListener = new MyActionListener();
 
+	}
+
+	/**
+	 * This method initializes btnFtByDdt
+	 *
+	 * @return javax.swing.JButton
+	 */
+	private JButton getBtnFtByDdt() {
+		if (btnFtByDdt == null) {
+			btnFtByDdt = new JButton();
+			btnFtByDdt.setPreferredSize(new Dimension(120, 70));
+			btnFtByDdt.setText("Fattura da DDT");
+			btnFtByDdt.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					apriDdtAFattura();
+				}
+			});
+		}
+		return btnFtByDdt;
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

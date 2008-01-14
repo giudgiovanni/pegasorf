@@ -17,6 +17,7 @@ import java.awt.event.KeyEvent;
 import java.awt.Component;
 import java.awt.Toolkit;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import javax.swing.text.DefaultFormatterFactory;
@@ -34,6 +35,7 @@ import sun.swing.SwingUtilities2;
 public class QuantitaDisponibileEditorSQL extends DefaultCellEditor {
 	private JFormattedTextField ftf;
 	private NumberFormat integerFormat;
+	private DecimalFormat doubleFormat;
 	private JTable tbl;
 	private Object oldValue;
 
@@ -42,12 +44,23 @@ public class QuantitaDisponibileEditorSQL extends DefaultCellEditor {
 		ftf = (JFormattedTextField) getComponent();
 
 		// Set up the editor for the integer cells.
-		integerFormat = NumberFormat.getIntegerInstance();
-		NumberFormatter intFormatter = new NumberFormatter(integerFormat);
-		intFormatter.setFormat(integerFormat);
+//		integerFormat = NumberFormat.getIntegerInstance();
+//		integerFormat.setMaximumFractionDigits(2);
+//		integerFormat.setMinimumFractionDigits(2);
+//		NumberFormatter intFormatter = new NumberFormatter(integerFormat);
+//		intFormatter.setFormat(integerFormat);
+//
+//		ftf.setFormatterFactory(new DefaultFormatterFactory(intFormatter));
+//		ftf.setHorizontalAlignment(JTextField.TRAILING);
+//		ftf.setFocusLostBehavior(JFormattedTextField.PERSIST);
 
-		ftf.setFormatterFactory(new DefaultFormatterFactory(intFormatter));
-		ftf.setHorizontalAlignment(JTextField.TRAILING);
+		doubleFormat = new DecimalFormat();
+		doubleFormat.setMaximumFractionDigits(2);
+		doubleFormat.setMinimumFractionDigits(2);
+		NumberFormatter doubleFormatter = new NumberFormatter(doubleFormat);
+		doubleFormatter.setFormat(doubleFormat);
+		ftf.setFormatterFactory(new DefaultFormatterFactory(doubleFormatter));
+		ftf.setHorizontalAlignment(JTextField.CENTER);
 		ftf.setFocusLostBehavior(JFormattedTextField.PERSIST);
 
 		// Impostiamo il comportamento quando l'oggetto ha il focus
@@ -87,7 +100,7 @@ public class QuantitaDisponibileEditorSQL extends DefaultCellEditor {
 		Articolo a=new Articolo();
 		int row=tbl.getSelectedRow();
 		String codbarre=(String)tbl.getValueAt(row, 1);
-		int giacenza=0;
+		double giacenza=0;
 		try {
 			a.caricaDatiByCodBarre(codbarre);
 			giacenza = a.getGiacenza();

@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -39,6 +40,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -70,9 +72,11 @@ import org.jdesktop.swingx.JXTable;
 
 import rf.myswing.IDJComboBox;
 import rf.myswing.exception.LunghezzeArrayDiverse;
+import rf.myswing.util.DoubleEditor;
 import rf.myswing.util.ModalFrameUtil;
 import rf.myswing.util.MyTableCellRendererAlignment;
 import rf.myswing.util.QuantitaDisponibileEditorSQL;
+import rf.myswing.util.QuantitaEditorSql;
 import rf.pegaso.db.DBManager;
 import rf.pegaso.db.UtilityDBManager;
 import rf.pegaso.db.exception.CodiceBarreInesistente;
@@ -221,7 +225,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 
 	private JTextField txtNumeroScarico = null;
 
-	private JTextField txtQta = null;
+	private JFormattedTextField txtQta = null;
 
 	private JTextField txtTotaleIng = null;
 
@@ -309,8 +313,8 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 		}
 		int riga = tblScarico.getSelectedRow();
 		String codBarre = ((String) tblScarico.getValueAt(riga, 0));
-		Long n = ((Long) tblScarico.getValueAt(riga, 4));
-		int[] qta = new int[1];
+		Double n = ((Double) tblScarico.getValueAt(riga, 4));
+		double[] qta = new double[1];
 		qta[0] = n.intValue();
 		ModificaQuantitaRiga mod = new ModificaQuantitaRiga(qta, this);
 		mod.setVisible(true);
@@ -346,7 +350,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 			f.caricaDati(a.getIdFornitore());
 			cmbClienti.setSelectedItem(f.getNome());
 			txtUm.setText((new Integer(a.getUm())).toString());
-			txtQta.setText((new Integer(1)).toString());
+			txtQta.setValue(1.0);
 			txtCodBarre.setText(a.getCodBarre());
 
 		} catch (SQLException e1) {
@@ -361,7 +365,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 	public void azzeraCampi() {
 		txtCodBarre.setText("");
 		txtUm.setText("");
-		txtQta.setText("");
+		txtQta.setValue(0.0);
 		cmbProdotti.setSelectedIndex(0);
 
 	}
@@ -531,7 +535,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 						+ f.getNome());
 				cmbProdotti.setSelectedItem(a.getDescrizione());
 				txtUm.setText(new Integer(a.getUm()).toString());
-				txtQta.setText(new Integer(1).toString());
+				txtQta.setValue(1.0);
 				txtCodBarre.setText(codBarre);
 			}
 		} catch (SQLException e1) {
@@ -568,7 +572,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 			// impostiamo i vari campi
 			txtCodBarre.setText(a.getCodBarre());
 			txtUm.setText(new Integer(a.getUm()).toString());
-			txtQta.setText("1");
+			txtQta.setValue(1.0);
 		} catch (SQLException e1) {
 			erroreCaricamentoDatiDB();
 			e1.printStackTrace();
@@ -957,8 +961,8 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 						.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				// impostiamo l'editor di default per il controllo sulla
 				// quantità
-				tblScarico.setDefaultEditor(Integer.class,
-						new QuantitaDisponibileEditorSQL());
+				//tblScarico.setDefaultEditor(Double.class,new QuantitaDisponibileEditorSQL());
+				tblScarico.setDefaultEditor(Double.class,new QuantitaEditorSql());
 				// impostiamo il cell renderer per una impostazione centrale
 				// tblScarico.setDefaultRenderer(String.class, new
 				// MyTableCellRendererAlignment());
@@ -1145,21 +1149,16 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 	 *
 	 * @return javax.swing.JTextField
 	 */
-	private JTextField getTxtQta() {
+	private JFormattedTextField getTxtQta() {
 		if (txtQta == null) {
 			try {
-				txtQta = new JTextField();
+				DecimalFormat formatPrice = new DecimalFormat();
+				formatPrice.setMaximumFractionDigits(2);
+				formatPrice.setMinimumFractionDigits(2);
+				txtQta = new JFormattedTextField(formatPrice);
+				txtQta.setValue(0.0);
 				txtQta.setBounds(new Rectangle(59, 82, 60, 20)); // Generated
-				txtQta.addFocusListener(new java.awt.event.FocusAdapter() {
-					@Override
-					public void focusLost(java.awt.event.FocusEvent e) {
-						String numero = txtQta.getText();
-						if (!ControlloDati.isNumero(numero)) {
-							txtQta.selectAll();
-							messaggioErroreCampo("Errore campo quantità");
-						}
-					}
-				});
+
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -1365,7 +1364,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 				c
 						.caricaDati(new Integer(txtNumeroScarico.getText())
 								.intValue());
-				int qta = 0;
+				double qta = 0;
 				try {
 					qta = c.getQuantitaScaricata(a.getIdArticolo());
 				} catch (IDNonValido e) {
@@ -1381,8 +1380,8 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 									"ERRORE", JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
-				int giacenza = a.getGiacenza();
-				int qta1 = Integer.parseInt(txtQta.getText());
+				double giacenza = a.getGiacenza();
+				double qta1 = ((Number)txtQta.getValue()).doubleValue();
 				if ((giacenza - qta1) < 0) {
 					JOptionPane.showMessageDialog(this,
 							"Quantità richiesta non disponibile\nDisponibilità magazzino = "
@@ -1391,14 +1390,14 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 					return;
 				} else {
 					c.updateArticolo(a.getIdArticolo(), qta
-							+ Integer.parseInt(txtQta.getText()), 0);
+							+ ((Number)txtQta.getValue()).doubleValue(), 0);
 					// c.insertArticolo(a.getIdArticolo(),new
 					// Integer(txtQta.getText()).intValue(),0);
 				}
 
 			} else {
-				int giacenza = a.getGiacenza();
-				int qta = Integer.parseInt(txtQta.getText());
+				double giacenza = a.getGiacenza();
+				double qta =((Number)txtQta.getValue()).doubleValue();
 
 				if ((giacenza - qta) < 0) {
 					JOptionPane.showMessageDialog(this,
@@ -1406,8 +1405,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 							JOptionPane.INFORMATION_MESSAGE);
 					return;
 				} else {
-					c.insertArticolo(a.getIdArticolo(), new Integer(txtQta
-							.getText()).intValue(), 0);
+					c.insertArticolo(a.getIdArticolo(), ((Number)txtQta.getValue()).doubleValue(), 0);
 
 				}
 

@@ -252,7 +252,7 @@ public class Carico {
 	 * @throws IDNonValido
 	 * @throws ResultSetVuoto
 	 */
-	public int getQuantitaCaricata(int idArticolo) throws SQLException,
+	public double getQuantitaCaricata(int idArticolo) throws SQLException,
 			IDNonValido, ResultSetVuoto {
 		if (this.idCarico <= 0)
 			throw new IDNonValido();
@@ -264,7 +264,7 @@ public class Carico {
 		rs.next();
 		if (rs.getRow() < 1)
 			throw new ResultSetVuoto();
-		int qta = rs.getInt(1);
+		double qta = rs.getDouble(1);
 		if (pst != null)
 			pst.close();
 		if (rs != null)
@@ -272,14 +272,14 @@ public class Carico {
 		return qta;
 	}
 
-	public void insertArticolo(int idArticolo, int qta, double prezzoAcquisto)
+	public void insertArticolo(int idArticolo, double qta, double prezzoAcquisto)
 			throws SQLException {
 
 		String query = "insert into dettaglio_carichi values(?,?,?,?)";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 		pst.setInt(1, idArticolo);
 		pst.setInt(2, idCarico);
-		pst.setInt(3, qta);
+		pst.setDouble(3, qta);
 		pst.setDouble(4, prezzoAcquisto);
 
 		// inserimento
@@ -416,13 +416,13 @@ public class Carico {
 		this.oraCarico = oraCarico;
 	}
 
-	public void updateArticolo(int idArticolo, int qta, double prezzoAcquisto)
+	public void updateArticolo(int idArticolo, double qta, double prezzoAcquisto)
 			throws SQLException {
 
 		String query = "update dettaglio_carichi set qta=?,prezzo_acquisto=? where idcarico=? and idarticolo=?";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 
-		pst.setInt(1, qta);
+		pst.setDouble(1, qta);
 		pst.setDouble(2, prezzoAcquisto);
 		pst.setInt(3, idCarico);
 		pst.setInt(4, idArticolo);

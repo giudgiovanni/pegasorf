@@ -96,7 +96,7 @@ public class QuantitaDisponibileEditor extends DefaultCellEditor {
 		Articolo a=new Articolo();
 		int row=tbl.getSelectedRow();
 		String codbarre=(String)tbl.getValueAt(row, 1);
-		int giacenza=0;
+		double giacenza=0;
 		try {
 			a.caricaDatiByCodBarre(codbarre);
 			giacenza = a.getGiacenza();

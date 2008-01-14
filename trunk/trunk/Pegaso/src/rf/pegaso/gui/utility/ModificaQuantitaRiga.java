@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.gui.utility;
 
@@ -19,11 +19,12 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
+import rf.pegaso.gui.gestione.ScaricoGui;
 import rf.utility.gui.UtilGUI;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class ModificaQuantitaRiga extends JDialog {
 
@@ -31,20 +32,15 @@ public class ModificaQuantitaRiga extends JDialog {
 	private JLabel lblQta = null;
 	private JFormattedTextField txtQta = null;
 	private JButton btnOK = null;
-	private int[] qta;
+	private double[] qta;
 
 	/**
 	 * This method initializes
-	 * 
+	 *
 	 */
-	public ModificaQuantitaRiga(int[] qta, JDialog padre) {
-		super(padre, true);
-		this.qta = qta;
 
-		initialize();
-	}
-	
-	public ModificaQuantitaRiga(int[] qta, JFrame padre) {
+
+	public ModificaQuantitaRiga(double[] qta, JFrame padre) {
 		super(padre, true);
 		this.qta = qta;
 
@@ -53,7 +49,7 @@ public class ModificaQuantitaRiga extends JDialog {
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 */
 	private void initialize() {
 		try {
@@ -69,7 +65,7 @@ public class ModificaQuantitaRiga extends JDialog {
 
 	/**
 	 * This method initializes jPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanel() {
@@ -95,7 +91,7 @@ public class ModificaQuantitaRiga extends JDialog {
 
 	/**
 	 * This method initializes txtQta
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtQta() {
@@ -105,7 +101,7 @@ public class ModificaQuantitaRiga extends JDialog {
 				txtQta = new JFormattedTextField(format);
 				txtQta.setBounds(new Rectangle(112, 48, 57, 29)); // Generated
 				txtQta.setFont(new Font("Dialog", Font.PLAIN, 14));
-				txtQta.setValue(new Integer(qta[0]));
+				txtQta.setValue(new Double(qta[0]));
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -115,7 +111,7 @@ public class ModificaQuantitaRiga extends JDialog {
 
 	/**
 	 * This method initializes btnOK
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnOK() {
@@ -137,10 +133,10 @@ public class ModificaQuantitaRiga extends JDialog {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	protected void modifica() {
-		qta[0] = ((Long) txtQta.getValue()).intValue();
+		qta[0] = ((Double) txtQta.getValue()).doubleValue();
 		this.dispose();
 
 	}

@@ -19,8 +19,8 @@ public class DettaglioVendita {
 	private int idVendita;
 	private String descrizione;
 	private String um;
-	private int qta;
-	private int disponibilita;
+	private double qta;
+	private double disponibilita;
 	private double prezzoAcquisto;
 	private double prezzoVendita;
 	private int iva;
@@ -116,19 +116,19 @@ public class DettaglioVendita {
 		this.um = um;
 	}
 
-	public int getQta() {
+	public double getQta() {
 		return qta;
 	}
 
-	public void setQta(int qta) {
+	public void setQta(double qta) {
 		this.qta = qta;
 	}
 
-	public int getDisponibilita() {
+	public double getDisponibilita() {
 		return disponibilita;
 	}
 
-	public void setDisponibilita(int disponibilita) {
+	public void setDisponibilita(double disponibilita) {
 		this.disponibilita = disponibilita;
 	}
 
@@ -149,7 +149,7 @@ public class DettaglioVendita {
 				prezzoVendita = a.getPrezzoIngrosso();
 				codiceBarre = a.getCodBarre();
 				iva = a.getIva();
-				qta = 1;
+				qta = 1.0;
 				disponibilita = a.getGiacenza() - 1;
 			}
 		} catch (SQLException e1) {
@@ -198,7 +198,7 @@ public class DettaglioVendita {
 			DettaglioVendita dv = new DettaglioVendita();
 			dv.setIdArticolo(rs.getInt(1));
 			dv.setIdVendita(rs.getInt(2));
-			dv.setQta(rs.getInt(3));
+			dv.setQta(rs.getDouble(3));
 			dv.setPrezzoAcquisto(rs.getDouble(4));
 			dv.setPrezzoVendita(rs.getDouble(5));
 			Articolo a = new Articolo();
@@ -237,7 +237,7 @@ public class DettaglioVendita {
 			pst = dbm.getNewPreparedStatement(insert);
 			pst.setInt(1, idArticolo);
 			pst.setInt(2, idVendita);
-			pst.setLong(3, qta);
+			pst.setDouble(3, qta);
 			pst.setDouble(4, prezzoAcquisto);
 			pst.setDouble(5, prezzoVendita);
 			if ( !tabella.equals("dettaglio_banco") )
@@ -267,21 +267,21 @@ public class DettaglioVendita {
 
 	public int updateDettaglioInDb(String tabella, String colonna){
 		PreparedStatement pst = null;
-		int qtaIniziale = 0;
+		double qtaIniziale = 0;
 		try{
 			Statement st = dbm.getNewStatement();
 			ResultSet rs = null;
 			String query = "select * from "+tabella+" where id"+colonna+"=" + idVendita +"and idarticolo="+idArticolo;
 			rs = st.executeQuery(query);
 			while ( rs.next() ){
-				qtaIniziale = rs.getInt("qta");
+				qtaIniziale = rs.getDouble("qta");
 			}
 			String insert = "update "+tabella+" set qta=?,prezzo_acquisto=?,prezzo_vendita=? where id"+colonna+"=? and idarticolo=?";
 			//"update dettaglio_carichi set qta=?,prezzo_acquisto=? where idcarico=? and idarticolo=?";
 			if ( !tabella.equals("banco") )
 				insert = "update "+tabella+" set qta=?,prezzo_acquisto=?,prezzo_vendita=?,sconto=? where id"+colonna+"=? and idarticolo=?";
 			pst = dbm.getNewPreparedStatement(insert);
-			pst.setLong(1, qtaIniziale-qta);
+			pst.setDouble(1, qtaIniziale-qta);
 			pst.setDouble(2, prezzoAcquisto);
 			pst.setDouble(3, prezzoVendita);
 			if ( !tabella.equals("banco") ){
@@ -311,12 +311,12 @@ public class DettaglioVendita {
 		return 1;
 	}
 
-	public void updateArticolo(int qtaIniziale)
+	public void updateArticolo(double qtaIniziale)
 	throws SQLException {
 		String query = "update dettaglio_carichi set qta=? where idarticolo=?";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 
-		pst.setInt(1, (qta - qtaIniziale ));
+		pst.setDouble(1, (qta - qtaIniziale ));
 		pst.setInt(2, idArticolo);
 
 		// inserimento

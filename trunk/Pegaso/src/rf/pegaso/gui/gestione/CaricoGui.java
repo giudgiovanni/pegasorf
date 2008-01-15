@@ -734,8 +734,32 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		Carico c = new Carico();
 		try {
 			c.caricaDati(idcarico);
+			int rifdoc=c.getRiferimentoDoc();
+			int doc=c.getIdDocumento();
+			//in caso il doc è un ddt ed ha un riferimanto ad una
+			//fattura facciamo un update degli articoli impostando
+			//nel dettaglio carico il codce da quello del ddt
+			//a quello della fattura
+			if(rifdoc!=-1 && doc==2){
+				c.moveCaricoToRiferimentoDoc();
+			}
+
+			//dopo gli aggiornamenti cancelliamo il tutto
 			c.deleteAllArticoliCaricati();
 			c.deleteCarico(idcarico);
+
+
+			//se il doc è una fattura quindi 1 lo eliminiamo ma reimpostiamo
+			//il ddt come senza fattura.
+			if(rifdoc!=-1 && doc==1){
+				c=new Carico();
+				c.caricaDati(rifdoc);
+				c.setRiferimentoDoc(-1);
+				if(c.getIdDocumento()==2)
+					c.updateCarico();
+
+
+			}
 		} catch (IDNonValido e) {
 			JOptionPane.showMessageDialog(this, "Valore idCliente errato",
 					"ERRORE", 2);
@@ -1566,9 +1590,17 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		Carico c = new Carico();
 		try {
 			c.caricaDati(idcarico);
+			if(!c.haArticoli())
+				c.switchCarico();
 			caricaDati(c);
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(this, "Errore nel db", "ERRORE", 2);
+			e.printStackTrace();
+		} catch (IDNonValido e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ResultSetVuoto e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

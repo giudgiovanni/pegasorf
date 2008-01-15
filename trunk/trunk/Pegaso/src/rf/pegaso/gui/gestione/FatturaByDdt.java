@@ -3,6 +3,8 @@ package rf.pegaso.gui.gestione;
 import javax.swing.JPanel;
 import java.awt.Frame;
 import java.awt.BorderLayout;
+import java.awt.Window;
+
 import javax.swing.JDialog;
 import java.awt.Dimension;
 import javax.swing.JLabel;
@@ -25,6 +27,9 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.TableColumn;
 
 import java.awt.Color;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
@@ -33,6 +38,9 @@ import org.jdesktop.swingx.JXTable;
 import rf.pegaso.db.DBManager;
 import rf.pegaso.db.model.DdtCaricoModel;
 import rf.pegaso.db.model.DdtFatturaModel;
+import rf.pegaso.db.tabelle.Carico;
+import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.utility.gui.UtilGUI;
 
 public class FatturaByDdt extends JDialog {
 
@@ -93,7 +101,8 @@ public class FatturaByDdt extends JDialog {
 	 */
 	private void initialize() {
 		this.setSize(800, 600);
-		this.setContentPane(getJContentPane());
+		this.setContentPane(getJContentPane());this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		UtilGUI.centraDialog(this);
 	}
 
 	/**
@@ -213,6 +222,11 @@ public class FatturaByDdt extends JDialog {
 			btnChiudi1 = new JButton();
 			btnChiudi1.setBounds(new Rectangle(408, 8, 69, 26));
 			btnChiudi1.setText("Chiudi");
+			btnChiudi1.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					dispose(); // TODO Auto-generated Event stub actionPerformed()
+				}
+			});
 		}
 		return btnChiudi1;
 	}
@@ -227,8 +241,67 @@ public class FatturaByDdt extends JDialog {
 			btnSalva = new JButton();
 			btnSalva.setBounds(new Rectangle(482, 8, 65, 26));
 			btnSalva.setText("Salva");
+			btnSalva.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					salva(); // TODO Auto-generated Event stub actionPerformed()
+				}
+			});
 		}
 		return btnSalva;
+	}
+
+	protected void salva() {
+		if (tblDDT.getSelectedRow() <= -1) {
+			JOptionPane.showMessageDialog(this, "Selezionare un righa",
+					"AVVISO", 1);
+			return;
+		}
+		if (txtNumero.getText().equals("")) {
+			JOptionPane.showMessageDialog(this, "Numero Fattura obbligatorio.",
+					"AVVISO", 1);
+			return;
+		}
+
+		int scelta = JOptionPane.showConfirmDialog(this,
+				"Sei sicuro di voler\nsalvare da ddt a fattura?",
+				"AVVISO", 0, 1);
+		if (scelta != JOptionPane.YES_OPTION)
+			return;
+		int riga = tblDDT.getSelectedRow();
+		int idcarico = ((Long) tblDDT.getValueAt(riga, 0)).intValue();
+		Carico c = new Carico();
+		Carico n=new Carico();
+		try {
+			c.caricaDati(idcarico);
+			n.setDataCarico(c.getDataCarico());
+			n.setDataDocumento(new java.sql.Date(dataCorrente.getDate().getTime()));
+			n.setIdCarico(DBManager.getIstanceSingleton().getNewID("carichi", "idcarico"));
+			n.setIdDocumento(1);
+			n.setIdFornitore(c.getIdFornitore());
+			n.setNote(c.getNote());
+			n.setNumDocumento(txtNumero.getText());
+			n.setOraCarico(c.getOraCarico());
+			if (rbtnNo1.isSelected())
+				n.setSospeso(0);
+			else
+				n.setSospeso(1);
+			n.setTotaleDocumentoIvato(c.getTotaleIvato());
+			n.setRiferimentoDoc(c.getIdCarico());
+			n.insertCarico();
+
+			c.setRiferimentoDoc(n.getIdCarico());
+			c.updateCarico();
+
+			txtNumero.setText("");
+			rbtnNo1.setSelected(true);
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(this, "Errore nel db", "ERRORE", 2);
+			e.printStackTrace();
+		} catch (IDNonValido e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	/**
@@ -244,12 +317,15 @@ public class FatturaByDdt extends JDialog {
 			lblSi1.setText("SI");
 			jPanel11 = new JPanel();
 			jPanel11.setLayout(new FlowLayout());
-			jPanel11.setBounds(new Rectangle(555, 10, 122, 46));
+			jPanel11.setBounds(new Rectangle(560, 6, 113, 54));
 			jPanel11.setBorder(BorderFactory.createTitledBorder(null, "Sospeso", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Dialog", Font.BOLD, 12), new Color(51, 51, 51)));
 			jPanel11.add(lblSi1, null);
 			jPanel11.add(getRbtnSi1(), null);
 			jPanel11.add(lblNO1, null);
 			jPanel11.add(getRbtnNo1(), null);
+			ButtonGroup bg=new ButtonGroup();
+			bg.add(rbtnNo1);
+			bg.add(rbtnSi1);
 		}
 		return jPanel11;
 	}
@@ -275,6 +351,7 @@ public class FatturaByDdt extends JDialog {
 		if (rbtnNo1 == null) {
 			rbtnNo1 = new JRadioButton();
 		}
+		rbtnNo1.setSelected(true);
 		return rbtnNo1;
 	}
 
@@ -322,10 +399,6 @@ public class FatturaByDdt extends JDialog {
 			DBManager.getIstanceSingleton().addDBStateChange(modelloDdtCarico);
 
 			TableColumn col=tblDDT.getColumnModel().getColumn(0);
-			col.setMinWidth(0);
-			col.setMaxWidth(0);
-			col.setPreferredWidth(0);
-			col = tblDDT.getColumnModel().getColumn(1);
 			col.setMinWidth(0);
 			col.setMaxWidth(0);
 			col.setPreferredWidth(0);

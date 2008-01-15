@@ -462,13 +462,13 @@ public class ArchivioInternalFrame extends JInternalFrame {
 		if (pnlCentrale == null) {
 			try {
 				GridBagConstraints gridBagConstraints15 = new GridBagConstraints();
-				gridBagConstraints15.gridx = 4;
+				gridBagConstraints15.gridx = 3;
 				gridBagConstraints15.gridy = 2;
 				GridBagConstraints gridBagConstraints14 = new GridBagConstraints();
 				gridBagConstraints14.gridx = 4;
 				gridBagConstraints14.gridy = 2;
 				GridBagConstraints gridBagConstraints18 = new GridBagConstraints();
-				gridBagConstraints18.gridx = 3; // Generated
+				gridBagConstraints18.gridx = 4; // Generated
 				gridBagConstraints18.gridy = 2; // Generated
 				GridBagConstraints gridBagConstraints17 = new GridBagConstraints();
 				gridBagConstraints17.gridx = 2; // Generated

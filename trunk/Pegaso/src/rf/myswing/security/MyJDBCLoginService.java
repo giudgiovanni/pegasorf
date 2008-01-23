@@ -8,12 +8,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -32,12 +32,12 @@ import rf.pegaso.db.DBManager;
 
 /**
  * A login service for connecting to SQL based databases via JDBC
- * 
+ *
  * @author rbair
  */
 public class MyJDBCLoginService extends LoginService {
 
-	
+
 	private DBManager dbm;
 
 	public MyJDBCLoginService(DBManager dbm) throws NoSuchAlgorithmException, SQLException {
@@ -47,19 +47,19 @@ public class MyJDBCLoginService extends LoginService {
 			createRootAdmin();
 		}
 	}
-	
+
 	public boolean authenticate(String name, char[] password, String server)
 			throws Exception {
-		
+
 		String pwd1=new String(password);
 		String pwdRoot=getPasswordUser(name);
 		if(pwd1.equals(pwdRoot))
 			return true;
 		return false;
 	}
-	
+
 	private String getPasswordUser(String name) throws SQLException, IOException, NoSuchAlgorithmException {
-		
+
 		//prepariamo le query ed eseguiamola
 		String query="select pwd from utenti where nome=?";
 		PreparedStatement pst=dbm.getNewPreparedStatement(query);
@@ -70,9 +70,9 @@ public class MyJDBCLoginService extends LoginService {
 		rs=pst.executeQuery();
 		rs.next();
 		String tmp=rs.getString(1);
-		
+
 		//decodifichiamo la password
-		byte[] dec = new sun.misc.BASE64Decoder().decodeBuffer(tmp); 
+		byte[] dec = new sun.misc.BASE64Decoder().decodeBuffer(tmp);
 		tmp="";
 		for(int i=0; i<dec.length; i++){
 		tmp+=( char )dec[ i ];
@@ -86,12 +86,12 @@ public class MyJDBCLoginService extends LoginService {
 		// prepariamo prima la query di inserimento
 		String insert="insert into utenti values (?,?,?,?,?,?,?)";
 		PreparedStatement pst=dbm.getNewPreparedStatement(insert);
-				
+
 		//prepariamo la password convertendola con algoritmo
 		// BASE64
 		// Codifichiamo i byte in base64
 		String pwd=new sun.misc.BASE64Encoder().encode("root".getBytes());
-		
+
 		//impostiamo ora i campi della query
 		pst.setInt(1, dbm.getNewID("utenti", "idutente"));
 		pst.setString(2, "root");
@@ -100,20 +100,20 @@ public class MyJDBCLoginService extends LoginService {
 		pst.setInt(5, 1);
 		pst.setInt(6, 1);
 		pst.setString(7, "Amministratore sistema Pegaso");
-		
+
 		//effettuiamo la quesry di inserimento
 		pst.execute();
-		
+
 		//chiudiamo le risorse
 		pst.close();
-		
+
 	}
 
 	public boolean existRootAdmin() throws SQLException{
 		return existUser("root");
-		
+
 	}
-	
+
 	public boolean existUser(String user) throws SQLException{
 		String query="select nome from utenti where nome=?";
 		PreparedStatement pst=dbm.getNewPreparedStatement(query);

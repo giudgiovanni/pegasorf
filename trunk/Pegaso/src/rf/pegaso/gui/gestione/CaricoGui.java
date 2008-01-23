@@ -23,6 +23,9 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Vector;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -37,12 +40,19 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
@@ -53,8 +63,8 @@ import net.sf.jasperreports.view.JasperViewer;
 import org.jdesktop.swingx.JXTable;
 
 import rf.myswing.IDJComboBox;
-import rf.myswing.exception.LunghezzeArrayDiverse;
 import rf.myswing.util.DoubleEditor;
+import rf.myswing.util.SospesiColorRenderer;
 import rf.pegaso.db.DBManager;
 import rf.pegaso.db.UtilityDBManager;
 import rf.pegaso.db.exception.CodiceBarreInesistente;
@@ -62,6 +72,7 @@ import rf.pegaso.db.exception.ResultSetVuoto;
 import rf.pegaso.db.model.CarichiViewModel;
 import rf.pegaso.db.model.CaricoModel;
 import rf.pegaso.db.model.DdtCaricoModel;
+import rf.pegaso.db.model.DdtFatturaModel;
 import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.Carico;
 import rf.pegaso.db.tabelle.Documento;
@@ -77,21 +88,6 @@ import rf.utility.gui.text.UpperTextDocument;
 
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
-import javax.swing.WindowConstants;
-import java.awt.GridBagLayout;
-import javax.swing.border.BevelBorder;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.border.TitledBorder;
-import javax.swing.JRadioButton;
-import javax.swing.border.EtchedBorder;
-import rf.pegaso.db.model.VenditeModel;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Vector;
-import javax.swing.ListSelectionModel;
-import rf.pegaso.db.model.DdtFatturaModel;
 
 // Referenced classes of package rf.pegaso.gui.gestione:
 //            ArticoliAddMod, ArticoliGestione
@@ -221,9 +217,16 @@ public class CaricoGui extends JFrame implements TableModelListener {
 							.getIDSelectedItem())).intValue());
 			c.setOraCarico(new Time((new java.util.Date()).getTime()));
 			c.setNote(txtNote.getText());
+
+
+			c.setSconto(((Number) txtSconto.getValue()).intValue());
 			double tot = Carico
 					.getTotAcquistoImponibileByOrder(c.getIdCarico())
 					+ Carico.getTotAcquistoImpostaByOrder(c.getIdCarico());
+			int sconto = c.getSconto();
+			if (sconto > 0) {
+				tot -= (tot / 100 * sconto);
+			}
 			c.setTotaleDocumentoIvato(tot);
 			if (rbtnNo.isSelected())
 				c.setSospeso(0);
@@ -382,7 +385,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 			}
 			double prezzo = d.doubleValue();
 			c.updateArticolo(a.getIdArticolo(), qta[0], prezzo);
-			calcoli((new Integer(txtNumeroCarico.getText())).intValue());
+			calcoli(c);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (IDNonValido e) {
@@ -407,6 +410,8 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		txtPrezzo.setValue(0.0);
 		cmbProdotti.setSelectedIndex(0);
 		cmbFornitori.setSelectedIndex(0);
+		txtNote.setText("");
+
 	}
 
 	private void azzeraTesto() {
@@ -414,6 +419,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		txtUm.setText("");
 		txtQta.setValue(new Double(0.0));
 		txtPrezzo.setText("");
+		txtNote.setText("");
 	}
 
 	private void azzeraTuttiCampi() {
@@ -517,7 +523,17 @@ public class CaricoGui extends JFrame implements TableModelListener {
 	public void tableChanged(TableModelEvent arg0) {
 		// TODO Auto-generated method stub
 
-		calcoli(new Integer(txtNumeroCarico.getText()).intValue());
+		Carico c = new Carico();
+		try {
+			c.caricaDati(new Integer(txtNumeroCarico.getText()).intValue());
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		calcoli(c);
 
 	}
 
@@ -537,7 +553,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 			e.printStackTrace();
 		}
 
-		cmbTipoDocumento.setSelectedItem(d.getTipo());
+		cmbTipoDocumento.setSelectedItem(d.getDescrizione());
 		// cmbFornitori.setSelectedItem(f.getNome());
 		cmbFornitori.setSelectedItemByID(f.getIdFornitore());
 		int sosp = c.getSospeso();
@@ -545,9 +561,10 @@ public class CaricoGui extends JFrame implements TableModelListener {
 			rbtnNo.setSelected(true);
 		else
 			rbtnSi.setSelected(true);
+		txtSconto.setValue(c.getSconto());
 		ricaricaTableCarico(c.getIdCarico());
 		tbp.setSelectedIndex(0);
-		calcoli((new Integer(c.getIdCarico())).intValue());
+		calcoli(c);
 	}
 
 	private void caricaDatiArticolo() {
@@ -692,7 +709,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		calcoli((new Integer(txtNumeroCarico.getText())).intValue());
+		calcoli(c);
 	}
 
 	private void eliminaCarico() {
@@ -734,30 +751,29 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		Carico c = new Carico();
 		try {
 			c.caricaDati(idcarico);
-			int rifdoc=c.getRiferimentoDoc();
-			int doc=c.getIdDocumento();
-			//in caso il doc è un ddt ed ha un riferimanto ad una
-			//fattura facciamo un update degli articoli impostando
-			//nel dettaglio carico il codce da quello del ddt
-			//a quello della fattura
-			if(rifdoc!=-1 && doc==2){
+			int rifdoc = c.getRiferimentoDoc();
+			int doc = c.getIdDocumento();
+			// in caso il doc è un ddt ed ha un riferimanto ad una
+			// fattura facciamo un update degli articoli impostando
+			// nel dettaglio carico il codce da quello del ddt
+			// a quello della fattura
+			if (rifdoc != -1 && (doc == 2 || doc == 1)) {
 				c.moveCaricoToRiferimentoDoc();
 			}
 
-			//dopo gli aggiornamenti cancelliamo il tutto
+			// dopo gli aggiornamenti cancelliamo il tutto
 			c.deleteAllArticoliCaricati();
 			c.deleteCarico(idcarico);
 
-
-			//se il doc è una fattura quindi 1 lo eliminiamo ma reimpostiamo
-			//il ddt come senza fattura.
-			if(rifdoc!=-1 && doc==1){
-				c=new Carico();
+			// se il doc eliminato è una fattura quindi 1 lo eliminiamo ma
+			// reimpostiamo
+			// il ddt come senza fattura.
+			if (rifdoc != -1 && doc == 1) {
+				c = new Carico();
 				c.caricaDati(rifdoc);
 				c.setRiferimentoDoc(-1);
-				if(c.getIdDocumento()==2)
+				if (c.getIdDocumento() == 2)
 					c.updateCarico();
-
 
 			}
 		} catch (IDNonValido e) {
@@ -774,7 +790,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		if (btnAzzera == null)
 			try {
 				btnAzzera = new JButton();
-				btnAzzera.setBounds(new Rectangle(526, 40, 103, 29));
+				btnAzzera.setBounds(new Rectangle(725, 45, 103, 29));
 				btnAzzera.setText("Azzera (F1)");
 				btnAzzera.addActionListener(new MyButtonListener());
 			} catch (Throwable throwable) {
@@ -786,7 +802,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		if (btnChiudi == null)
 			try {
 				btnChiudi = new JButton();
-				btnChiudi.setBounds(new Rectangle(525, 8, 104, 29));
+				btnChiudi.setBounds(new Rectangle(725, 10, 104, 29));
 				btnChiudi.setText("Chiudi (ESC)");
 			} catch (Throwable throwable) {
 			}
@@ -892,7 +908,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		if (cmbTipoDocumento == null)
 			try {
 				cmbTipoDocumento = new IDJComboBox();
-				cmbTipoDocumento.setBounds(new Rectangle(108, 48, 282, 25));
+				cmbTipoDocumento.setBounds(new Rectangle(108, 48, 313, 25));
 			} catch (Throwable throwable) {
 			}
 		return cmbTipoDocumento;
@@ -990,6 +1006,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 				pnlNord.add(getDataCarico(), null);
 				pnlNord.add(getBtnNuovoForn(), null);
 				pnlNord.add(getJPanel1(), null);
+				pnlNord.add(getPnlSconto(), null);
 			} catch (Throwable throwable) {
 			}
 		return pnlNord;
@@ -1034,7 +1051,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 						BorderFactory.createBevelBorder(0), "Dati prodotto", 0,
 						0, new Font("Dialog", 1, 12), new Color(51, 51, 51)));
 				pnlProdotto.setLocation(new Point(6, 140));
-				pnlProdotto.setSize(new Dimension(633, 192));
+				pnlProdotto.setSize(new Dimension(825, 192));
 				pnlProdotto.add(lblCodBarre, null);
 				pnlProdotto.add(getTxtCodBarre(), null);
 				pnlProdotto.add(lblDescrizioneProdotto, null);
@@ -1153,28 +1170,20 @@ public class CaricoGui extends JFrame implements TableModelListener {
 			try {
 				carichiView = new CarichiViewModel(dbm);
 				dbm.addDBStateChange(carichiView);
-				tblViewCarichi = new JXTable();
+				tblViewCarichi = new JXTable(carichiView);
 				tblViewCarichi.setSelectionMode(0);
-				tblViewCarichi.setModel(carichiView);
 				tblViewCarichi.setAutoResizeMode(4);
 				tblViewCarichi.packAll();
 				tblViewCarichi.getTableHeader().setReorderingAllowed(false);
+				// tblViewCarichi.setHighlighters(new
+				// AlternateRowHighlighter(Color.RED,Color.GREEN,Color.BLACK));
+				// tblViewCarichi.getColumn(8).setCellRenderer(new
+				// SospesiColorRenderer());
+				// tblViewCarichi.getColumn(7).setCellRenderer(new
+				// SospesiColorRenderer());
+				tblViewCarichi.setDefaultRenderer(Object.class,
+						new SospesiColorRenderer());
 
-				TableColumn col = tblViewCarichi.getColumnModel().getColumn(0);
-				col.setMinWidth(0);
-				col.setMaxWidth(0);
-				col.setPreferredWidth(0);
-
-				col = tblViewCarichi.getColumn("totale_documento");
-				DefaultTableCellRenderer prezzoColumnRenderer = new DefaultTableCellRenderer();
-				prezzoColumnRenderer.setHorizontalAlignment(JLabel.RIGHT);
-				col.setCellRenderer(prezzoColumnRenderer);
-				col.setPreferredWidth(40);
-
-				col = tblViewCarichi.getColumn("sospeso");
-				DefaultTableCellRenderer sospeso = new DefaultTableCellRenderer();
-				sospeso.setHorizontalAlignment(JLabel.CENTER);
-				col.setCellRenderer(sospeso);
 			} catch (Throwable throwable) {
 			}
 		return tblViewCarichi;
@@ -1228,7 +1237,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 			try {
 				dataDocumento = new JDateChooser("dd/MM/yyyy", "##/##/##", '_');
 				dataDocumento.setDate(new java.util.Date());
-				dataDocumento.setBounds(new Rectangle(304, 80, 114, 25));
+				dataDocumento.setBounds(new Rectangle(304, 80, 117, 25));
 				JTextFieldDateEditor f = (JTextFieldDateEditor) dataDocumento
 						.getDateEditor();
 				f.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1281,7 +1290,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		return txtNumeroCarico;
 	}
 
-	private JTextField getTxtPrezzo() {
+	private JFormattedTextField getTxtPrezzo() {
 		if (txtPrezzo == null)
 			try {
 				DecimalFormat formatPrice = new DecimalFormat();
@@ -1289,12 +1298,13 @@ public class CaricoGui extends JFrame implements TableModelListener {
 				formatPrice.setMinimumFractionDigits(2);
 				txtPrezzo = new JFormattedTextField(formatPrice);
 				txtPrezzo.setBounds(new Rectangle(124, 82, 76, 20));
+				txtPrezzo.setValue(0);
 			} catch (Throwable throwable) {
 			}
 		return txtPrezzo;
 	}
 
-	private JTextField getTxtQta() {
+	private JFormattedTextField getTxtQta() {
 		if (txtQta == null)
 			try {
 				DecimalFormat formatPrice = new DecimalFormat();
@@ -1303,16 +1313,14 @@ public class CaricoGui extends JFrame implements TableModelListener {
 				txtQta = new JFormattedTextField(formatPrice);
 				txtQta.setBounds(new Rectangle(59, 82, 60, 20));
 				txtQta.setValue(0.0);
-				/*txtQta.addFocusListener(new FocusAdapter() {
-
-					public void focusLost(FocusEvent e) {
-						String numero = txtQta.getText();
-						if (!ControlloDati.isNumero(numero)) {
-							txtQta.selectAll();
-							messaggioErroreCampo("Errore campo quantit\340");
-						}
-					}
-				});*/
+				/*
+				 * txtQta.addFocusListener(new FocusAdapter() {
+				 *
+				 * public void focusLost(FocusEvent e) { String numero =
+				 * txtQta.getText(); if (!ControlloDati.isNumero(numero)) {
+				 * txtQta.selectAll(); messaggioErroreCampo("Errore campo
+				 * quantit\340"); } } });
+				 */
 			} catch (Throwable throwable) {
 			}
 		return txtQta;
@@ -1374,7 +1382,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 		Carico c = new Carico();
 		idcarico = c.getNewID();
-		setSize(703, 600);
+		setSize(850, 600);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle("Carico Merce");
 		setResizable(true);
@@ -1429,8 +1437,9 @@ public class CaricoGui extends JFrame implements TableModelListener {
 			return;
 		}
 		String codBarre = txtCodBarre.getText();
-		double tmp = ((Number)txtQta.getValue()).doubleValue();
+		double tmp = ((Number) txtQta.getValue()).doubleValue();
 		String tmpPrezzo = txtPrezzo.getText();
+		String s = txtQta.getText();
 
 		// PUNTO DI BACKUP DA ATTIVARE DA CONFIGURAZIONI
 		try {
@@ -1453,7 +1462,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		}
 		// FINE PUNTO BACKUP
 
-		if (codBarre.equals("") && tmp==0.0 && tmpPrezzo.equals("")) {
+		if (codBarre.equals("") && s.equals("0,00") && tmpPrezzo.equals("0,00")) {
 			salvaFattura();
 			return;
 		}
@@ -1461,7 +1470,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 			messaggioCampoMancante("Codice a barre non presente \nselezionare un prodotto");
 			return;
 		}
-		if (tmp==0.0) {
+		if (tmp == 0.0) {
 			messaggioCampoMancante("Inserire la quantit\340");
 			return;
 		}
@@ -1482,6 +1491,8 @@ public class CaricoGui extends JFrame implements TableModelListener {
 						.getIDSelectedItem())).intValue());
 				c.setOraCarico(new Time((new java.util.Date()).getTime()));
 				c.setNote(txtNote.getText());
+				c.setInsertByPN(0);
+				c.setSconto(((Number) txtSconto.getValue()).intValue());
 				if (rbtnNo.isSelected())
 					c.setSospeso(0);
 				else
@@ -1499,6 +1510,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 				c.setIdDocumento((new Integer(cmbTipoDocumento
 						.getIDSelectedItem())).intValue());
 				c.setOraCarico(new Time((new java.util.Date()).getTime()));
+				c.setSconto(((Number) txtSconto.getValue()).intValue());
 				c.setNote(txtNote.getText());
 				if (rbtnNo.isSelected())
 					c.setSospeso(0);
@@ -1544,16 +1556,17 @@ public class CaricoGui extends JFrame implements TableModelListener {
 				else
 					price = ((Long) txtPrezzo.getValue()).intValue();
 				c.updateArticolo(a.getIdArticolo(), qta
-						+ ((Number)txtQta.getValue()).doubleValue(), price);
+						+ ((Number) txtQta.getValue()).doubleValue(), price);
 			} else {
 				double price = 0.0D;
 				if (txtPrezzo.getValue() instanceof Double)
 					price = ((Double) txtPrezzo.getValue()).doubleValue();
 				else
 					price = ((Long) txtPrezzo.getValue()).intValue();
-				c.insertArticolo(a.getIdArticolo(), ((Number)txtQta.getValue()).doubleValue(), price);
+				c.insertArticolo(a.getIdArticolo(),
+						((Number) txtQta.getValue()).doubleValue(), price);
 			}
-			calcoli((new Integer(txtNumeroCarico.getText())).intValue());
+			calcoli(c);
 			azzeraCampi();
 			tblCarico.packAll();
 		} catch (SQLException e) {
@@ -1590,7 +1603,14 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		Carico c = new Carico();
 		try {
 			c.caricaDati(idcarico);
-			if(!c.haArticoli())
+			if (c.getInsertByPN() == 1) {
+				JOptionPane.showMessageDialog(this,
+						"Impossibile modificare il documento da carico.\n"
+								+ "modifica permessa solo da prima nota.",
+						"AVVISO", 1);
+				return;
+			}
+			if (!c.haArticoli())
 				c.switchCarico();
 			caricaDati(c);
 		} catch (SQLException e) {
@@ -1885,9 +1905,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 	private DecimalFormat notaz = null;
 
-	private DecimalFormat notaz1 = null;  //  @jve:decl-index=0:
-
-	private VenditeModel model = null;
+	private DecimalFormat notaz1 = null;
 
 	private Vector carrello = null;
 
@@ -1916,6 +1934,10 @@ public class CaricoGui extends JFrame implements TableModelListener {
 	private JTable tblDDT1 = null;
 
 	private DdtCaricoModel modelloDdtCarico1 = null;
+
+	private JPanel pnlSconto = null;
+
+	private JFormattedTextField txtSconto = null;
 
 	/**
 	 * This method initializes btnNuovoForn
@@ -1962,20 +1984,24 @@ public class CaricoGui extends JFrame implements TableModelListener {
 	/**
 	 *
 	 */
-	private void calcoli(int idScarico) {
+	private void calcoli(Carico c) {
 		// Calcoliamo tutte le somme e impostiamo i campi
 		// cominciamo prima a calcolare il dettaglio
 		double imponibile;
 		double imposta;
 		double tot = 0;
-		int id = idScarico;
+		int id = c.getIdCarico();
 
 		// Calcoliamo ora la parte all'ingrosso
 		try {
 
 			imponibile = Carico.getTotAcquistoImponibileByOrder(id);
-			imposta = Carico.getTotAcquistoImpostaByOrder(idScarico);
+			imposta = Carico.getTotAcquistoImpostaByOrder(id);
 			tot = imponibile + imposta;
+			int sconto = c.getSconto();
+			if (sconto > 0) {
+				tot = tot - ((tot / 100) * sconto);
+			}
 
 			// impostiamo i campi
 			txtImponibileIng.setText(ControlloDati
@@ -2086,7 +2112,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 			lblSi.setText("SI");
 			jPanel1 = new JPanel();
 			jPanel1.setLayout(new FlowLayout());
-			jPanel1.setBounds(new Rectangle(401, 18, 110, 58));
+			jPanel1.setBounds(new Rectangle(425, 50, 110, 56));
 			jPanel1.setBorder(BorderFactory.createTitledBorder(null, "Sospeso",
 					TitledBorder.DEFAULT_JUSTIFICATION,
 					TitledBorder.DEFAULT_POSITION, new Font("Dialog",
@@ -2123,7 +2149,6 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		return rbtnNo;
 	}
 
-
 	/**
 	 * @param string
 	 */
@@ -2131,9 +2156,6 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		JOptionPane.showMessageDialog(this, testo, tipo,
 				JOptionPane.INFORMATION_MESSAGE);
 	}
-
-
-
 
 	/**
 	 * This method initializes time1
@@ -2147,9 +2169,39 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		return time1;
 	}
 
+	/**
+	 * This method initializes pnlSconto
+	 *
+	 * @return javax.swing.JPanel
+	 */
+	private JPanel getPnlSconto() {
+		if (pnlSconto == null) {
+			pnlSconto = new JPanel();
+			pnlSconto.setLayout(new FlowLayout());
+			pnlSconto.setBounds(new Rectangle(540, 50, 106, 56));
+			pnlSconto.setBorder(BorderFactory.createTitledBorder(null,
+					"Sconto \u20ac.", TitledBorder.DEFAULT_JUSTIFICATION,
+					TitledBorder.DEFAULT_POSITION, new Font("Dialog",
+							Font.BOLD, 12), new Color(51, 51, 51)));
+			pnlSconto.add(getTxtSconto(), null);
+		}
+		return pnlSconto;
+	}
 
-
-
-
+	/**
+	 * This method initializes txtSconto
+	 *
+	 * @return javax.swing.JTextField
+	 */
+	private JFormattedTextField getTxtSconto() {
+		if (txtSconto == null) {
+			NumberFormat f = NumberFormat.getIntegerInstance();
+			txtSconto = new JFormattedTextField(f);
+			txtSconto.setPreferredSize(new Dimension(80, 20));
+			txtSconto.setHorizontalAlignment(SwingConstants.RIGHT);
+			txtSconto.setValue(0);
+		}
+		return txtSconto;
+	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

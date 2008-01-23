@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.db.model;
 
@@ -16,7 +16,7 @@ import rf.utility.db.DBStateChange;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class ViewDocCaricoModel extends AbstractTableModel implements
 		DBStateChange {
@@ -109,7 +109,7 @@ public class ViewDocCaricoModel extends AbstractTableModel implements
 
 	/**
 	 * @throws SQLException
-	 * 
+	 *
 	 */
 	private void recuperaDati() throws SQLException {
 		// this.query = "select c.idcarico as Num_Carico,c.data_documento as
@@ -124,5 +124,11 @@ public class ViewDocCaricoModel extends AbstractTableModel implements
 		rsmd = rs.getMetaData();
 
 	}
+
+	public String getNomeTabella() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

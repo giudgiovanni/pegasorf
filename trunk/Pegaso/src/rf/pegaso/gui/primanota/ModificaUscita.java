@@ -1,51 +1,46 @@
 package rf.pegaso.gui.primanota;
 
-import javax.swing.JDialog;
-import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Frame;
-import java.awt.GridBagLayout;
-import com.toedter.calendar.JDateChooser;
 import java.awt.Rectangle;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.sql.Time;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Date;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.TitledBorder;
+
 import rf.myswing.IDJComboBox;
-import rf.pegaso.db.DBManager;
 import rf.pegaso.db.UtilityDBManager;
 import rf.pegaso.db.tabelle.Carico;
 import rf.pegaso.db.tabelle.Cliente;
 import rf.pegaso.db.tabelle.Documento;
 import rf.pegaso.db.tabelle.Fornitore;
-import rf.pegaso.db.tabelle.Scarico;
 import rf.pegaso.db.tabelle.exception.IDNonValido;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.BorderFactory;
-import javax.swing.border.TitledBorder;
-import java.awt.Font;
-import java.awt.Color;
-import javax.swing.JFormattedTextField;
-
-import java.sql.SQLException;
-import java.sql.Time;
-import java.text.DecimalFormat;
-
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompletion;
 import rf.utility.gui.text.UpperTextDocument;
-import javax.swing.JTextField;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.lang.Double;
-import javax.swing.border.BevelBorder;
-import java.awt.GridBagConstraints;
-import java.awt.FlowLayout;
+import com.toedter.calendar.JDateChooser;
 
 public class ModificaUscita extends JDialog {
 
@@ -72,6 +67,9 @@ public class ModificaUscita extends JDialog {
 	private JButton jButton = null;
 	private int id;
 	private int modalita;
+	private JLabel lblIvaDocUscite = null;
+	private JFormattedTextField txtIvaDocUscita = null;
+	private NumberFormat f1 = null;
 
 	/**
 	 * This method initializes
@@ -95,7 +93,7 @@ public class ModificaUscita extends JDialog {
 	 *
 	 */
 	private void initialize() {
-        this.setSize(new Dimension(700, 193));
+        this.setSize(new Dimension(700, 207));
 
 
          this.setTitle("Modifica Entrata");
@@ -167,6 +165,7 @@ public class ModificaUscita extends JDialog {
 			txtNote.setText(s.getNote());
 			txtNumDocumento.setText(s.getNumDocumento());
 			txtTotale.setValue(new Double(s.getTotaleIvato()));
+			txtIvaDocUscita.setValue(s.getIva_doc());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -210,6 +209,9 @@ public class ModificaUscita extends JDialog {
 	 */
 	private JPanel getPnlCentro() {
 		if (pnlCentro == null) {
+			lblIvaDocUscite = new JLabel();
+			lblIvaDocUscite.setBounds(new Rectangle(5, 95, 91, 26));
+			lblIvaDocUscite.setText("Iva Documento");
 			lblNumDocumento = new JLabel();
 			lblNumDocumento.setBounds(new Rectangle(6, 66, 91, 25));
 			lblNumDocumento.setText("N° Documento");
@@ -242,6 +244,8 @@ public class ModificaUscita extends JDialog {
 			pnlCentro.add(getTxtTotale(), null);
 			pnlCentro.add(lblNumDocumento, null);
 			pnlCentro.add(getTxtNumDocumento(), null);
+			pnlCentro.add(lblIvaDocUscite, null);
+			pnlCentro.add(getTxtIvaDocUscita(), null);
 		}
 		return pnlCentro;
 	}
@@ -471,7 +475,7 @@ public class ModificaUscita extends JDialog {
 				long tmp=((Long)txtTotale.getValue()).longValue();
 				c.setTotaleDocumentoIvato(new Double(tmp).doubleValue());
 			}
-
+			c.setIva_doc(((Number) txtIvaDocUscita.getValue()).intValue());
 			c.setIdDocumento((new Integer(cmbTipoDocumento.getIDSelectedItem())).intValue());
 			c.updateCarico();
 
@@ -485,6 +489,23 @@ public class ModificaUscita extends JDialog {
 			e.printStackTrace();
 		}
 
+	}
+
+
+
+	/**
+	 * This method initializes txtIvaDocUscita
+	 *
+	 * @return javax.swing.JFormattedTextField
+	 */
+	private JFormattedTextField getTxtIvaDocUscita() {
+		if (txtIvaDocUscita == null) {
+			f1 = NumberFormat.getIntegerInstance();
+			txtIvaDocUscita = new JFormattedTextField(f1);
+			txtIvaDocUscita.setBounds(new Rectangle(100, 95, 86, 26));
+			txtIvaDocUscita.setValue(20);
+		}
+		return txtIvaDocUscita;
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"

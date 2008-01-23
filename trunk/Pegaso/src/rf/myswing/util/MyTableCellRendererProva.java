@@ -2,14 +2,10 @@ package rf.myswing.util;
 
 import java.awt.Component;
 import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
-import java.lang.reflect.Type;
 
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
 
 import rf.pegaso.db.DBManager;
 import rf.utility.gui.text.AutoCompleteTextComponent;

@@ -1,22 +1,50 @@
 package rf.pegaso.gui.vendita;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.sql.Time;
+import java.util.Date;
+import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableColumn;
+
+import org.jdesktop.swingx.JXTable;
 
 import rf.myswing.IDJComboBox;
 import rf.myswing.util.MyTableCellRendererAlignment;
 import rf.myswing.util.QuantitaDisponibileEditor;
 import rf.pegaso.db.DBManager;
-import rf.pegaso.db.model.BancoViewModel;
 import rf.pegaso.db.model.FatturaViewModel;
 import rf.pegaso.db.model.VenditeModel;
 import rf.pegaso.db.tabelle.Articolo;
@@ -29,40 +57,7 @@ import rf.utility.gui.text.AutoCompleteTextComponent;
 import rf.utility.gui.text.AutoCompletion;
 import rf.utility.gui.text.UpperAutoCompleteDocument;
 
-import java.awt.GridBagLayout;
-import javax.swing.JButton;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.EtchedBorder;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.TableColumn;
-
-import java.awt.GridBagConstraints;
-import java.awt.Rectangle;
-import javax.swing.JLabel;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.sql.Time;
-import java.util.Vector;
-
-import javax.swing.JTextField;
-
 import com.toedter.calendar.JDateChooser;
-
-import javax.swing.JScrollPane;
-
-import org.jdesktop.swingx.JXTable;
-import javax.swing.JComboBox;
-import javax.swing.JTabbedPane;
-import java.awt.FlowLayout;
-import java.util.Date;
-import java.awt.Color;
-import java.awt.GridLayout;
 
 public class AlBanco extends JFrame{
 

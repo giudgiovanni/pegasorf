@@ -52,7 +52,7 @@ public class AutoCompleteTextComponent extends AbstractAutoCompleteAdaptor
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.jdesktop.swingx.autocomplete.AbstractComponentAdaptor#getItem(int)
 	 */
 	@Override
@@ -62,7 +62,7 @@ public class AutoCompleteTextComponent extends AbstractAutoCompleteAdaptor
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.jdesktop.swingx.autocomplete.AbstractComponentAdaptor#getItemCount()
 	 */
 	@Override
@@ -72,7 +72,7 @@ public class AutoCompleteTextComponent extends AbstractAutoCompleteAdaptor
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.jdesktop.swingx.autocomplete.AbstractComponentAdaptor#getSelectedItem()
 	 */
 	@Override
@@ -85,7 +85,7 @@ public class AutoCompleteTextComponent extends AbstractAutoCompleteAdaptor
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see rf.utility.db.DBStateChange#getTableName()
 	 */
 	public String getTableName() {
@@ -95,7 +95,7 @@ public class AutoCompleteTextComponent extends AbstractAutoCompleteAdaptor
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.jdesktop.swingx.autocomplete.AbstractComponentAdaptor#getTextComponent()
 	 */
 	@Override
@@ -128,7 +128,7 @@ public class AutoCompleteTextComponent extends AbstractAutoCompleteAdaptor
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.jdesktop.swingx.autocomplete.AbstractComponentAdaptor#setSelectedItem(java.lang.Object)
 	 */
 	@Override
@@ -148,7 +148,7 @@ public class AutoCompleteTextComponent extends AbstractAutoCompleteAdaptor
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see rf.hotel.db.DBStateChange#stateChange()
 	 */
 	public void stateChange() {
@@ -158,12 +158,18 @@ public class AutoCompleteTextComponent extends AbstractAutoCompleteAdaptor
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see rf.utility.db.DBStateChange#stateChange(rf.utility.db.DBEvent)
 	 */
 	public void stateChange(DBEvent dbe) {
 		// TODO Auto-generated method stub
 
 	}
+
+	public String getNomeTabella() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

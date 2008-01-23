@@ -96,7 +96,7 @@ public class PrimaNotaModelUscite extends AbstractTableModel implements
 					numberFormatter.setMinimumFractionDigits(2);
 					return numberFormatter.format(d);
 				}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -124,11 +124,17 @@ public class PrimaNotaModelUscite extends AbstractTableModel implements
 	 */
 	private void recuperaDati() throws SQLException {
 		//this.query = "select o.idordine as id,o.data_documento, d.descrizione,o.num_documento,c.nome,c.cognome, t.tot as tot_ivato,o.note from ordini as o,tipo_documento as d,  clienti as c, (select idordine,sum((prezzo_acquisto*qta)+((prezzo_acquisto/100*iva)*qta)) as tot from articoli_scaricati_view group by idordine) as t where o.idordine>0 and o.idcliente=c.idcliente and o.tipo_documento=d.iddocumento and t.idordine=o.idordine order by o.data_documento desc";
-		this.query = "select o.idcarico as id,o.data_documento, d.descrizione,o.num_documento,c.nome, o.totale_documento,o.note from carichi as o,tipo_documento as d,  fornitori as c where o.idcarico>0 and o.idfornitore=c.idfornitore and o.iddocumento=d.iddocumento order by o.data_documento desc";
+		this.query = "select o.idcarico as id,o.data_documento, d.descrizione,o.num_documento,c.nome, o.totale_documento,o.note from carichi as o,tipo_documento as d,  fornitori as c where o.idcarico>0 and o.idfornitore=c.idfornitore and o.iddocumento=d.iddocumento and(o.iddocumento=1 or o.iddocumento=3 or o.iddocumento=4) order by o.data_documento desc";
 		pst = dbm.getNewPreparedStatement(query);
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();
 
 	}
+
+	public String getNomeTabella() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

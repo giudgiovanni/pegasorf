@@ -99,9 +99,11 @@ public class CarichiViewModel extends AbstractTableModel implements
 			}
 			if(c==7){
 				Integer i=(Integer)o;
-				if(i.intValue()==0)
-					return "NO";
-				else return "SI";
+				if(i==null)
+					return "PAGATO";
+				else if(i.intValue()==0)
+					return "PAGATO";
+				else return "SOSPESO";
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -135,5 +137,11 @@ public class CarichiViewModel extends AbstractTableModel implements
 		rsmd = rs.getMetaData();
 
 	}
+
+	public String getNomeTabella() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

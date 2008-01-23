@@ -13,8 +13,7 @@ import java.text.ParseException;
 import javax.swing.table.AbstractTableModel;
 
 import rf.pegaso.db.DBManager;
-import rf.pegaso.db.tabelle.Articolo;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.pegaso.db.tabelle.Carico;
 import rf.utility.ControlloDati;
 import rf.utility.db.DBEvent;
 import rf.utility.db.DBStateChange;
@@ -56,7 +55,7 @@ public class CaricoModel extends AbstractTableModel implements DBStateChange {
 
 	@Override
 	public boolean isCellEditable(int r, int c) {
-		if (c == 0 || c == 4 || c == 7)
+		if (c == 0 || c == 4 || c == 8)
 			return false;
 		return true;
 	}
@@ -64,8 +63,10 @@ public class CaricoModel extends AbstractTableModel implements DBStateChange {
 	@Override
 	public Class getColumnClass(int c) {
 		if (getRowCount() > 0) {
-			if (c == 6 || c == 7)
+			if (c == 6 || c == 8)
 				return Double.class;
+			else if(c==7)
+				return Integer.class;
 			return getValueAt(0, c).getClass();
 		}
 		return String.class;
@@ -91,7 +92,8 @@ public class CaricoModel extends AbstractTableModel implements DBStateChange {
 		else if (c == 6) {
 			query = "update articoli set prezzo_acquisto=? where idarticolo=?";
 			query2 = "update dettaglio_carichi set prezzo_acquisto=? where idcarico=? and idarticolo=?";
-		}
+		}else if(c==7)
+			query = "update dettaglio_carichi set sconto=? where idcarico=? and idarticolo=?";
 
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 		PreparedStatement pst2 = null;
@@ -131,8 +133,20 @@ public class CaricoModel extends AbstractTableModel implements DBStateChange {
 
 			} else
 				pst.setObject(1, o);
-			pst.setInt(2, idArticolo);
-			pst.executeUpdate();
+			if(c==7){
+				pst.setInt(2, this.idcarico);
+				pst.setInt(3, idArticolo);
+				pst.executeUpdate();
+			}else {
+				pst.setInt(2, idArticolo);
+				pst.executeUpdate();
+			}
+
+			if(c==5)
+			{
+				Carico ca=new Carico();
+				ca.updateTotDocumentoIvato(this.idcarico);
+			}
 			pst.close();
 
 			recuperaDati();
@@ -219,8 +233,10 @@ public class CaricoModel extends AbstractTableModel implements DBStateChange {
 	 *
 	 */
 	private void recuperaDati() throws SQLException {
-		this.query = "select idarticolo,codbarre AS codice,descrizione,iva,um,qta,prezzo_acquisto, (qta*prezzo_acquisto) as totale from articoli_caricati_view where idcarico="
-				+ idcarico + " order by codice";
+//		this.query = "select idarticolo,codbarre AS codice,descrizione,iva,um,qta,prezzo_acquisto, (qta*prezzo_acquisto) as totale from articoli_caricati_view where idcarico="
+//				+ idcarico + " order by codice";
+		this.query = "select idarticolo,codbarre AS codice,descrizione,iva,um,qta,prezzo_acquisto, sconto,(qta*prezzo_acquisto-((qta*prezzo_acquisto)/100*sconto)) as totale from articoli_caricati_view where idcarico="
+			+ idcarico + " order by codice";
 		pst = dbm.getNewPreparedStatement(query);
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();
@@ -233,5 +249,11 @@ public class CaricoModel extends AbstractTableModel implements DBStateChange {
 		recuperaDati();
 
 	}
+
+	public String getNomeTabella() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

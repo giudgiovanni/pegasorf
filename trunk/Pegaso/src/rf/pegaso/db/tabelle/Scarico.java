@@ -20,8 +20,9 @@ import rf.pegaso.db.tabelle.exception.IDNonValido;
  *
  */
 public class Scarico {
-	public static boolean codiceBarrePresenteInScarico(String codbarre, int idordine) throws SQLException {
-		DBManager dbm=DBManager.getIstanceSingleton();
+	public static boolean codiceBarrePresenteInScarico(String codbarre,
+			int idordine) throws SQLException {
+		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		String query = "select codbarre from articoli_scaricati_view where codbarre=? and idordine=?";
 		PreparedStatement st = dbm.getNewPreparedStatement(query);
@@ -42,13 +43,13 @@ public class Scarico {
 	}
 
 	public static int getMaxID() {
-		DBManager dbm=DBManager.getIstanceSingleton();
+		DBManager dbm = DBManager.getIstanceSingleton();
 		return dbm.getNewID("ordini", "idordine") - 1;
 	}
 
 	public static double getTotDettaglioImponibile(int idScarico2)
 			throws SQLException {
-		DBManager dbm=DBManager.getIstanceSingleton();
+		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
 		String query = "select sum(prezzo_dettaglio*qta) from articoli_scaricati_view where idordine="
@@ -65,7 +66,7 @@ public class Scarico {
 
 	public static double getTotDettaglioImposta(int idScarico2)
 			throws SQLException {
-		DBManager dbm=DBManager.getIstanceSingleton();
+		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
 		String query = "select sum((prezzo_dettaglio/100*iva)*qta) from articoli_scaricati_view where idordine="
@@ -82,7 +83,7 @@ public class Scarico {
 
 	public static double getTotIngrossoImponibile(int idScarico2)
 			throws SQLException {
-		DBManager dbm=DBManager.getIstanceSingleton();
+		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
 		String query = "select sum(prezzo_ingrosso*qta) from articoli_scaricati_view where idordine="
@@ -97,8 +98,9 @@ public class Scarico {
 		return tot;
 	}
 
-	public static double getTotAcquistoImponibileByOrder(int idScarico2) throws SQLException {
-		DBManager dbm=DBManager.getIstanceSingleton();
+	public static double getTotAcquistoImponibileByOrder(int idScarico2)
+			throws SQLException {
+		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
 		String query = "select sum(prezzo_acquisto*qta) from articoli_scaricati_view where idordine="
@@ -115,7 +117,7 @@ public class Scarico {
 
 	public static double getTotAcquistoImponibileAllOrders()
 			throws SQLException {
-		DBManager dbm=DBManager.getIstanceSingleton();
+		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
 		String query = "select sum(prezzo_acquisto*qta) from articoli_scaricati_view";
@@ -129,8 +131,41 @@ public class Scarico {
 		return tot;
 	}
 
-	public static double getTotAcquistoImpostaByOrder(int idScarico) throws SQLException {
-		DBManager dbm=DBManager.getIstanceSingleton();
+	public static double getTotVenditeImponibileByPrimaNota()
+			throws SQLException {
+		DBManager dbm = DBManager.getIstanceSingleton();
+		ResultSet rs = null;
+		Statement st = dbm.getNewStatement();
+		String query = "select sum(totale_documento-(totale_documento*iva_documento/(100.0+iva_documento))) from ordini where tipo_documento=1 or tipo_documento=3 or tipo_documento=4";
+		rs = st.executeQuery(query);
+		rs.next();
+		double tot = rs.getDouble(1);
+		if (st != null)
+			st.close();
+		if (rs != null)
+			rs.close();
+		return tot;
+	}
+
+	public static double getTotVenditeImpostaByPrimaNota()
+			throws SQLException {
+		DBManager dbm = DBManager.getIstanceSingleton();
+		ResultSet rs = null;
+		Statement st = dbm.getNewStatement();
+		String query = "select sum(totale_documento*iva_documento/(100.0+iva_documento)) from ordini where tipo_documento=1 or tipo_documento=3 or tipo_documento=4";
+		rs = st.executeQuery(query);
+		rs.next();
+		double tot = rs.getDouble(1);
+		if (st != null)
+			st.close();
+		if (rs != null)
+			rs.close();
+		return tot;
+	}
+
+	public static double getTotAcquistoImpostaByOrder(int idScarico)
+			throws SQLException {
+		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
 		String query = "select sum((prezzo_acquisto/100*iva)*qta) from articoli_scaricati_view where idordine="
@@ -145,9 +180,8 @@ public class Scarico {
 		return tot;
 	}
 
-	public static double getTotAcquistoImpostaAllOrders()
-			throws SQLException {
-		DBManager dbm=DBManager.getIstanceSingleton();
+	public static double getTotAcquistoImpostaAllOrders() throws SQLException {
+		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
 		String query = "select sum((prezzo_acquisto/100*iva)*qta) from articoli_scaricati_view";
@@ -163,7 +197,7 @@ public class Scarico {
 
 	public static double getTotIngrossoImposta(int idScarico2)
 			throws SQLException {
-		DBManager dbm=DBManager.getIstanceSingleton();
+		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
 		String query = "select sum((prezzo_ingrosso/100*iva)*qta) from articoli_scaricati_view where idordine="
@@ -179,7 +213,7 @@ public class Scarico {
 	}
 
 	public static int insertScaricoInizialeZero(int idArticolo) {
-		DBManager dbm=DBManager.getIstanceSingleton();
+		DBManager dbm = DBManager.getIstanceSingleton();
 		// Inseriamo lo scarico all'interno del db
 		int idScarico = 0;
 		int idCliente = 0;
@@ -255,9 +289,8 @@ public class Scarico {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static boolean isOrderExsist(int idordine)
-			throws SQLException {
-		DBManager dbm=DBManager.getIstanceSingleton();
+	public static boolean isOrderExsist(int idordine) throws SQLException {
+		DBManager dbm = DBManager.getIstanceSingleton();
 		Statement st = dbm.getNewStatement();
 		ResultSet rs = null;
 		String query = "select * from ordini where idordine=" + idordine;
@@ -293,16 +326,22 @@ public class Scarico {
 
 	private Vendita vendita;
 
-	private double totIvato=0;
+	private double totIvato = 0;
 
 	private int ivaDocumento;
+
+	private int primaNota;
+
+	private int docEmesso;
+
+	private int docFiscale;
 
 	public Scarico() {
 		this.dbm = DBManager.getIstanceSingleton();
 	}
 
 	public Scarico(Vendita vendita) {
-		this.vendita=vendita;
+		this.vendita = vendita;
 	}
 
 	public void caricaDati(int id) throws SQLException {
@@ -320,8 +359,11 @@ public class Scarico {
 		this.dataDocumento = rs.getDate("data_documento");
 		this.numDocumento = rs.getString("num_documento");
 		this.idDocumento = rs.getInt("tipo_documento");
-		this.totIvato=rs.getInt("totale_documento");
-		this.ivaDocumento=rs.getInt("iva_documento");
+		this.totIvato = rs.getInt("totale_documento");
+		this.ivaDocumento = rs.getInt("iva_documento");
+		this.docEmesso = rs.getInt("doc_emesso");
+		this.docFiscale = rs.getInt("doc_fiscale");
+		this.primaNota = rs.getInt("ins_pn");
 
 		if (st != null)
 			st.close();
@@ -446,8 +488,8 @@ public class Scarico {
 		dbm.notifyDBStateChange();
 	}
 
-	public int insertScarico(Vendita vendita) throws SQLException{
-        //prepariamo i dati da inserire
+	public int insertScarico(Vendita vendita) throws SQLException {
+		// prepariamo i dati da inserire
 		setDataDocumento(vendita.getData_vendita());
 		setDataScarico(vendita.getData_vendita());
 		setIdCliente(vendita.getCliente());
@@ -457,34 +499,35 @@ public class Scarico {
 		setNumDocumento(vendita.getNumVendita());
 		setOraScarico(vendita.getOra_vendita());
 
-		//effettuiamo l'inserimento
-		int r1= insertScarico();
+		// effettuiamo l'inserimento
+		int r1 = insertScarico();
 
-		//inseriamo il dettaglio della vendita prelevando i dati
-		DettaglioVendita dv=new DettaglioVendita();
-		Vector<DettaglioVendita> dett=null;
-		//se uguale ad uno è una fattura
-		if(vendita.getTipoDocumento()==1){
-			dett=dv.caricaDatiByDB(vendita.getIdVendita(), "dettaglio_fattura", "idfattura");
-		}else
-			//qui siamo nel caso sia una vendita al banco
-			if (vendita.getTipoDocumento()==4){
-				dett=dv.caricaDatiByDB(vendita.getIdVendita(), "dettaglio_banco", "idvendita");
-			}
+		// inseriamo il dettaglio della vendita prelevando i dati
+		DettaglioVendita dv = new DettaglioVendita();
+		Vector<DettaglioVendita> dett = null;
+		// se uguale ad uno è una fattura
+		if (vendita.getTipoDocumento() == 1) {
+			dett = dv.caricaDatiByDB(vendita.getIdVendita(),
+					"dettaglio_fattura", "idfattura");
+		} else
+		// qui siamo nel caso sia una vendita al banco
+		if (vendita.getTipoDocumento() == 4) {
+			dett = dv.caricaDatiByDB(vendita.getIdVendita(), "dettaglio_banco",
+					"idvendita");
+		}
 
-		for(DettaglioVendita tmp:dett){
+		for (DettaglioVendita tmp : dett) {
 			insertArticolo(tmp.getIdArticolo(), tmp.getQta(), tmp.getSconto());
 		}
 		return r1;
 	}
-
 
 	public int insertScarico() {
 
 		idScarico = dbm.getNewID("ordini", "idordine");
 		int ok = 0;
 		PreparedStatement pst = null;
-		String update = "insert into ordini values (?,?,?,?,?,?,?,?,?,?)";
+		String update = "insert into ordini values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		// preleviamo la data di inserimento
 		// e la impostiamo nelle proprietà
 		java.util.Date data = new java.util.Date();
@@ -502,6 +545,10 @@ public class Scarico {
 			pst.setDate(8, dataDocumento);
 			pst.setDouble(9, this.totIvato);
 			pst.setInt(10, ivaDocumento);
+
+			pst.setInt(11, this.docEmesso);
+			pst.setInt(12, this.docFiscale);
+			pst.setInt(13, primaNota);
 			ok = pst.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -522,8 +569,8 @@ public class Scarico {
 		String query = "update ordini set totale_documento=? where idordine=?";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 
-
-		pst.setDouble(1, Scarico.getTotIngrossoImponibile(idScarico2)+Scarico.getTotIngrossoImposta(idScarico2));
+		pst.setDouble(1, Scarico.getTotIngrossoImponibile(idScarico2)
+				+ Scarico.getTotIngrossoImposta(idScarico2));
 		pst.setInt(2, idScarico2);
 		// inserimento
 		pst.executeUpdate();
@@ -531,7 +578,6 @@ public class Scarico {
 		if (pst != null)
 			pst.close();
 		dbm.notifyDBStateChange();
-
 
 	}
 
@@ -618,7 +664,7 @@ public class Scarico {
 		int ok = 0;
 		PreparedStatement pst = null;
 		String update = "UPDATE ordini SET idordine=?,"
-				+ "idcliente=?,data_ordine=?,ora_ordine=?,note=?, tipo_documento=?,num_documento=?,data_documento=?,totale_documento=?,iva_documento=? WHERE idordine=?";
+				+ "idcliente=?,data_ordine=?,ora_ordine=?,note=?, tipo_documento=?,num_documento=?,data_documento=?,totale_documento=?,iva_documento=?,doc_emesso=?,doc_fiscale=?,ins_pn=? WHERE idordine=?";
 
 		pst = dbm.getNewPreparedStatement(update);
 		try {
@@ -632,7 +678,11 @@ public class Scarico {
 			pst.setDate(8, dataDocumento);
 			pst.setDouble(9, totIvato);
 			pst.setInt(10, ivaDocumento);
-			pst.setInt(11, idScarico);
+
+			pst.setInt(11, this.docEmesso);
+			pst.setInt(12, this.docFiscale);
+			pst.setInt(13, primaNota);
+			pst.setInt(14, idScarico);
 			ok = pst.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -649,7 +699,8 @@ public class Scarico {
 	}
 
 	private double getTotIvato(int idScarico2) throws SQLException {
-		return Scarico.getTotIngrossoImponibile(idScarico2)+Scarico.getTotIngrossoImposta(idScarico2);
+		return Scarico.getTotIngrossoImponibile(idScarico2)
+				+ Scarico.getTotIngrossoImposta(idScarico2);
 
 	}
 
@@ -691,7 +742,7 @@ public class Scarico {
 	}
 
 	public void setTotaleDocumentoIvato(double tot) {
-		this.totIvato=tot;
+		this.totIvato = tot;
 
 	}
 
@@ -702,12 +753,22 @@ public class Scarico {
 
 	public void setIvaDocumento(int iva) {
 		// TODO Auto-generated method stub
-		this.ivaDocumento=iva;
+		this.ivaDocumento = iva;
 	}
 
 	public int getIvaDocumento() {
 		// TODO Auto-generated method stub
 		return this.ivaDocumento;
 	}
+
+	public void setInsertByPN(int i) {
+		this.primaNota = i;
+
+	}
+
+	public int getInsertByPN() {
+		return primaNota;
+	}
+
 
 }

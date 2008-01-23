@@ -1,12 +1,9 @@
 package rf.pegaso.db.tabelle;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Vector;
 
 import rf.pegaso.db.DBManager;

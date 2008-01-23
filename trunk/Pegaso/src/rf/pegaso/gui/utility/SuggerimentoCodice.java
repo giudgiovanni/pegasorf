@@ -17,7 +17,6 @@ import rf.pegaso.db.DBManager;
 import rf.pegaso.db.tabelle.Articolo;
 import rf.utility.gui.ComboBoxAutoComplete;
 import rf.utility.gui.UtilGUI;
-import rf.utility.gui.text.AutoCompletion;
 
 public class SuggerimentoCodice extends JDialog {
 

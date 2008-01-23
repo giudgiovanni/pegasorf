@@ -4,6 +4,15 @@ package rf.myswing.util;
  * IntegerEditor is used by TableFTFEditDemo.java.
  */
 
+import java.awt.Component;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+
 import javax.swing.AbstractAction;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JFormattedTextField;
@@ -12,21 +21,11 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.Component;
-import java.awt.Toolkit;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
 
-import rf.pegaso.db.DBManager;
 import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.exception.IDNonValido;
-import sun.swing.SwingUtilities2;
 
 /**
  * Implements a cell editor that uses a formatted text field to edit Integer

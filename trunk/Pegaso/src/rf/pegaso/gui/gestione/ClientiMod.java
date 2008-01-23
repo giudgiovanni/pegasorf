@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.gui.gestione;
 
@@ -31,7 +31,7 @@ import rf.utility.gui.text.UpperTextDocument;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class ClientiMod extends JDialog {
 	class MyActionListener implements ActionListener {
@@ -140,7 +140,7 @@ public class ClientiMod extends JDialog {
 
 	/**
 	 * This method initializes btnChiudi
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnChiudi() {
@@ -159,7 +159,7 @@ public class ClientiMod extends JDialog {
 
 	/**
 	 * This method initializes btnModifica
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnModifica() {
@@ -177,7 +177,7 @@ public class ClientiMod extends JDialog {
 
 	/**
 	 * This method initializes jContentPane
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
@@ -192,7 +192,7 @@ public class ClientiMod extends JDialog {
 
 	/**
 	 * This method initializes jPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanel() {
@@ -216,7 +216,7 @@ public class ClientiMod extends JDialog {
 
 	/**
 	 * This method initializes jScrollPane
-	 * 
+	 *
 	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getJScrollPane() {
@@ -234,7 +234,7 @@ public class ClientiMod extends JDialog {
 
 	/**
 	 * This method initializes jTabbedPane
-	 * 
+	 *
 	 * @return javax.swing.JTabbedPane
 	 */
 	private JTabbedPane getJTabbedPane() {
@@ -253,7 +253,7 @@ public class ClientiMod extends JDialog {
 
 	/**
 	 * This method initializes pnlAltriDati
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlAltriDati() {
@@ -302,7 +302,7 @@ public class ClientiMod extends JDialog {
 
 	/**
 	 * This method initializes pnlCentrale
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlCentrale() {
@@ -320,7 +320,7 @@ public class ClientiMod extends JDialog {
 
 	/**
 	 * This method initializes pnlDatiPersonali
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlDatiPersonali() {
@@ -379,7 +379,7 @@ public class ClientiMod extends JDialog {
 
 	/**
 	 * This method initializes txtCap
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtCap() {
@@ -389,6 +389,7 @@ public class ClientiMod extends JDialog {
 				txtCap.setPreferredSize(new Dimension(80, 20)); // Generated
 				txtCap.setBounds(new Rectangle(6, 131, 81, 20)); // Generated
 				txtCap.setDocument(new UpperTextDocument());
+
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -398,7 +399,7 @@ public class ClientiMod extends JDialog {
 
 	/**
 	 * This method initializes txtCell
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtCell() {
@@ -417,7 +418,7 @@ public class ClientiMod extends JDialog {
 
 	/**
 	 * This method initializes txtCitta
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtCitta() {
@@ -436,7 +437,7 @@ public class ClientiMod extends JDialog {
 
 	/**
 	 * This method initializes txtCodFisc
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtCodFisc() {
@@ -455,7 +456,7 @@ public class ClientiMod extends JDialog {
 
 	/**
 	 * This method initializes txtCognome
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtCognome() {
@@ -474,7 +475,7 @@ public class ClientiMod extends JDialog {
 
 	/**
 	 * This method initializes txtEmail
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtEmail() {
@@ -493,7 +494,7 @@ public class ClientiMod extends JDialog {
 
 	/**
 	 * This method initializes txtFax
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtFax() {
@@ -512,7 +513,7 @@ public class ClientiMod extends JDialog {
 
 	/**
 	 * This method initializes txtNome
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtNome() {
@@ -531,7 +532,7 @@ public class ClientiMod extends JDialog {
 
 	/**
 	 * This method initializes txtNote
-	 * 
+	 *
 	 * @return javax.swing.JTextArea
 	 */
 	private JTextArea getTxtNote() {
@@ -549,7 +550,7 @@ public class ClientiMod extends JDialog {
 
 	/**
 	 * This method initializes txtPiva
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtPiva() {
@@ -568,7 +569,7 @@ public class ClientiMod extends JDialog {
 
 	/**
 	 * This method initializes txtProvincia
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtProvincia() {
@@ -587,7 +588,7 @@ public class ClientiMod extends JDialog {
 
 	/**
 	 * This method initializes txtTel
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtTel() {
@@ -606,7 +607,7 @@ public class ClientiMod extends JDialog {
 
 	/**
 	 * This method initializes txtVia
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtVia() {
@@ -625,7 +626,7 @@ public class ClientiMod extends JDialog {
 
 	/**
 	 * This method initializes txtWebSite
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtWebSite() {
@@ -643,7 +644,7 @@ public class ClientiMod extends JDialog {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void impostaCampi(Cliente c) {
 		txtNome.setText(c.getNome());
@@ -665,7 +666,7 @@ public class ClientiMod extends JDialog {
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 * @return void
 	 */
 	private void initialize() {
@@ -677,12 +678,11 @@ public class ClientiMod extends JDialog {
 		Cliente c = new Cliente();
 		try {
 			c.caricaDati(this.idCliente);
-			impostaCampi(c);
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(this, "Errore caricamento dati DB",
-					"ERRORE", JOptionPane.ERROR_MESSAGE);
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		impostaCampi(c);
 
 	}
 
@@ -715,8 +715,7 @@ public class ClientiMod extends JDialog {
 		try {
 			c.updateCliente();
 		} catch (IDNonValido e) {
-			JOptionPane.showMessageDialog(this, "Valore idCliente errato",
-					"ERRORE", JOptionPane.ERROR_MESSAGE);
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		dispose();

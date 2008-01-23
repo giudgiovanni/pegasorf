@@ -20,6 +20,8 @@ import rf.utility.db.MyResultSet;
  *
  */
 public class Carico {
+	private int iva_doc = 0;
+
 	/**
 	 * @param dbm2
 	 * @param text
@@ -73,6 +75,10 @@ public class Carico {
 
 	private int rifDoc = -1;
 
+	private int primaNota;
+
+	private int sconto;
+
 	public Carico() {
 		this.dbm = DBManager.getIstanceSingleton();
 	}
@@ -95,8 +101,19 @@ public class Carico {
 		this.totDocumento = rs.getDouble("totale_documento");
 		this.sospeso = rs.getInt("sospeso");
 		this.rifDoc = rs.getInt("rif_doc");
+		this.iva_doc=rs.getInt("iva_documento");
+		this.sconto=rs.getInt("sconto");
+		primaNota=rs.getInt("ins_pn");
 		if (st != null)
 			st.close();
+	}
+
+	public int getSconto() {
+		return sconto;
+	}
+
+	public void setSconto(int sconto) {
+		this.sconto = sconto;
 	}
 
 	public void deleteAllArticoliCaricati() throws SQLException {
@@ -314,13 +331,18 @@ public class Carico {
 		dbm.notifyDBStateChange();
 	}
 
-	public void updateTotDocumentoIvato(int idScarico2) throws SQLException {
+	public void updateTotDocumentoIvato(int id) throws SQLException {
 		String query = "update carichi set totale_documento=? where idcarico=?";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
-
-		pst.setDouble(1, Carico.getTotIngrossoImponibile(idScarico2)
-				+ Carico.getTotIngrossoImposta(idScarico2));
-		pst.setInt(2, idScarico2);
+		double tot=Carico.getTotIngrossoImponibile(id)+ Carico.getTotIngrossoImposta(id);
+		Carico c=new Carico();
+		c.caricaDati(id);
+		int sconto=c.getSconto();
+		if(sconto>0){
+			tot-=(tot/100*sconto);
+		}
+		pst.setDouble(1,tot );
+		pst.setInt(2, id);
 		// inserimento
 		pst.executeUpdate();
 
@@ -335,7 +357,7 @@ public class Carico {
 		idCarico = dbm.getNewID("carichi", "idCarico");
 		int ok = 0;
 		PreparedStatement pst = null;
-		String update = "insert into carichi values (?,?,?,?,?,?,?,?,?,?,?)";
+		String update = "insert into carichi values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		// preleviamo la data di inserimento
 		// e la impostiamo nelle proprietà
 		java.util.Date data = new java.util.Date();
@@ -355,6 +377,10 @@ public class Carico {
 			pst.setDouble(9, totDocumento);
 			pst.setInt(10, this.sospeso);
 			pst.setInt(11, this.rifDoc);
+
+			pst.setInt(12, this.sconto);
+			pst.setInt(13, this.iva_doc);
+			pst.setInt(14, this.primaNota);
 
 			ok = pst.executeUpdate();
 		} catch (SQLException e) {
@@ -466,7 +492,7 @@ public class Carico {
 		int ok = 0;
 		PreparedStatement pst = null;
 		String update = "UPDATE carichi SET idcarico=?,"
-				+ "idfornitore=?,data_carico=?,ora_carico=?,note=?,iddocumento=?,num_documento=?,data_documento=?,totale_documento=?,sospeso=?,rif_doc=? WHERE idcarico=?";
+				+ "idfornitore=?,data_carico=?,ora_carico=?,note=?,iddocumento=?,num_documento=?,data_documento=?,totale_documento=?,sospeso=?,rif_doc=?,sconto=?,iva_documento=?,ins_pn=? WHERE idcarico=?";
 		// dataCarico = new Date(new java.util.Date().getTime());
 		// oraCarico = new Time(new java.util.Date().getTime());
 		pst = dbm.getNewPreparedStatement(update);
@@ -482,7 +508,11 @@ public class Carico {
 			pst.setDouble(9, this.totDocumento);
 			pst.setInt(10, sospeso);
 			pst.setInt(11, rifDoc);
-			pst.setInt(12, this.idCarico);
+
+			pst.setInt(12, this.sconto);
+			pst.setInt(13, this.iva_doc);
+			pst.setInt(14, primaNota);
+			pst.setInt(15, this.idCarico);
 
 			ok = pst.executeUpdate();
 		} catch (SQLException e) {
@@ -514,7 +544,7 @@ public class Carico {
 		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
-		String query = "select sum(prezzo_acquisto*qta) from articoli_caricati_view where idcarico="
+		String query = "select sum(qta*prezzo_acquisto-((qta*prezzo_acquisto)/100*sconto)) from articoli_caricati_view where idcarico="
 				+ id;
 		rs = st.executeQuery(query);
 		rs.next();
@@ -531,7 +561,7 @@ public class Carico {
 		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
-		String query = "select sum((prezzo_acquisto/100*iva)*qta) from articoli_caricati_view where idcarico="
+		String query = "select sum(((prezzo_acquisto-(prezzo_acquisto/100*sconto))/100*iva)*qta) from articoli_caricati_view where idcarico="
 				+ idScarico;
 		rs = st.executeQuery(query);
 		rs.next();
@@ -594,6 +624,82 @@ public class Carico {
 			pst.close();
 		dbm.notifyDBStateChange();
 	}
+
+	public void setInsertByPN(int i) {
+		this.primaNota=i;
+
+	}
+
+	public int getInsertByPN(){
+		return primaNota;
+	}
+
+	public static double getTotAcquistoImponibileByPrimaNota() throws SQLException, IDNonValido, ResultSetVuoto {
+		double tot=0.0;
+		DBManager dbm = DBManager.getIstanceSingleton();
+		ResultSet rs = null;
+		Statement st = dbm.getNewStatement();
+		String queryID="select idcarico from carichi where iddocumento=1 or iddocumento=3 or iddocumento=4";
+		//String query = "select sum(totale_documento-(totale_documento/100*iva_documento)) from ordini where tipo_documento=1 or tipo_documento=3 or tipo_documento=4";
+		rs = st.executeQuery(queryID);
+		while(rs.next()){
+			int id=rs.getInt(1);
+			Carico c=new Carico();
+			c.caricaDati(id);
+			if(c.haArticoli()){
+				tot+=Carico.getTotAcquistoImponibileByOrder(id);
+			}else{
+
+				tot+=(c.getTotaleIvato()-(c.getTotaleIvato()*c.getIva_doc()/(100+c.getIva_doc())));
+			}
+		}
+		//double tot = rs.getDouble(1);
+		if (st != null)
+			st.close();
+		if (rs != null)
+			rs.close();
+		return tot;
+	}
+
+
+	public static double getTotAcquistoImpostaByPrimaNota() throws SQLException, IDNonValido, ResultSetVuoto {
+		double tot=0.0;
+		DBManager dbm = DBManager.getIstanceSingleton();
+		ResultSet rs = null;
+		Statement st = dbm.getNewStatement();
+		String queryID="select idcarico from carichi where iddocumento=1 or iddocumento=3 or iddocumento=4";
+		//String query = "select sum(totale_documento-(totale_documento/100*iva_documento)) from ordini where tipo_documento=1 or tipo_documento=3 or tipo_documento=4";
+		rs = st.executeQuery(queryID);
+		while(rs.next()){
+			int id=rs.getInt(1);
+			Carico c=new Carico();
+			c.caricaDati(id);
+			if(c.haArticoli()){
+				tot+=Carico.getTotAcquistoImpostaByOrder(id);
+			}else{
+				tot+=(c.getTotaleIvato()*c.getIva_doc()/(100+c.getIva_doc()));
+			}
+		}
+		//double tot = rs.getDouble(1);
+		if (st != null)
+			st.close();
+		if (rs != null)
+			rs.close();
+		return tot;
+	}
+
+
+
+
+	public int getIva_doc() {
+		return iva_doc;
+	}
+
+	public void setIva_doc(int iva_doc) {
+		this.iva_doc = iva_doc;
+	}
+
+
 
 
 

@@ -183,4 +183,10 @@ public class ScaricoModel extends AbstractTableModel implements DBStateChange {
 
 	}
 
+	public String getNomeTabella() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 }

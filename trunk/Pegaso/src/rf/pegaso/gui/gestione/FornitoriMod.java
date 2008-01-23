@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.gui.gestione;
 
@@ -24,7 +24,6 @@ import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
 import rf.pegaso.db.DBManager;
-import rf.pegaso.db.tabelle.Cliente;
 import rf.pegaso.db.tabelle.Fornitore;
 import rf.pegaso.db.tabelle.exception.IDNonValido;
 import rf.utility.gui.UtilGUI;
@@ -32,7 +31,7 @@ import rf.utility.gui.text.UpperTextDocument;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class FornitoriMod extends JDialog {
 	class MyActionListener implements ActionListener {
@@ -137,7 +136,7 @@ public class FornitoriMod extends JDialog {
 
 	/**
 	 * This method initializes btnChiudi
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnChiudi() {
@@ -156,7 +155,7 @@ public class FornitoriMod extends JDialog {
 
 	/**
 	 * This method initializes btnModifica
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnModifica() {
@@ -174,7 +173,7 @@ public class FornitoriMod extends JDialog {
 
 	/**
 	 * This method initializes jContentPane
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
@@ -189,7 +188,7 @@ public class FornitoriMod extends JDialog {
 
 	/**
 	 * This method initializes jPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanel() {
@@ -213,7 +212,7 @@ public class FornitoriMod extends JDialog {
 
 	/**
 	 * This method initializes jScrollPane
-	 * 
+	 *
 	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getJScrollPane() {
@@ -231,7 +230,7 @@ public class FornitoriMod extends JDialog {
 
 	/**
 	 * This method initializes jTabbedPane
-	 * 
+	 *
 	 * @return javax.swing.JTabbedPane
 	 */
 	private JTabbedPane getJTabbedPane() {
@@ -250,7 +249,7 @@ public class FornitoriMod extends JDialog {
 
 	/**
 	 * This method initializes pnlAltriDati
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlAltriDati() {
@@ -299,7 +298,7 @@ public class FornitoriMod extends JDialog {
 
 	/**
 	 * This method initializes pnlCentrale
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlCentrale() {
@@ -317,7 +316,7 @@ public class FornitoriMod extends JDialog {
 
 	/**
 	 * This method initializes pnlDatiPersonali
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlDatiPersonali() {
@@ -371,7 +370,7 @@ public class FornitoriMod extends JDialog {
 
 	/**
 	 * This method initializes txtCap
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtCap() {
@@ -390,7 +389,7 @@ public class FornitoriMod extends JDialog {
 
 	/**
 	 * This method initializes txtCell
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtCell() {
@@ -409,7 +408,7 @@ public class FornitoriMod extends JDialog {
 
 	/**
 	 * This method initializes txtCitta
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtCitta() {
@@ -428,7 +427,7 @@ public class FornitoriMod extends JDialog {
 
 	/**
 	 * This method initializes txtCodFisc
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtCodFisc() {
@@ -447,7 +446,7 @@ public class FornitoriMod extends JDialog {
 
 	/**
 	 * This method initializes txtEmail
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtEmail() {
@@ -466,7 +465,7 @@ public class FornitoriMod extends JDialog {
 
 	/**
 	 * This method initializes txtFax
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtFax() {
@@ -485,7 +484,7 @@ public class FornitoriMod extends JDialog {
 
 	/**
 	 * This method initializes txtNote
-	 * 
+	 *
 	 * @return javax.swing.JTextArea
 	 */
 	private JTextArea getTxtNote() {
@@ -503,7 +502,7 @@ public class FornitoriMod extends JDialog {
 
 	/**
 	 * This method initializes txtPiva
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtPiva() {
@@ -522,7 +521,7 @@ public class FornitoriMod extends JDialog {
 
 	/**
 	 * This method initializes txtProvincia
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtProvincia() {
@@ -541,7 +540,7 @@ public class FornitoriMod extends JDialog {
 
 	/**
 	 * This method initializes txtRagSociale
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtRagSociale() {
@@ -560,7 +559,7 @@ public class FornitoriMod extends JDialog {
 
 	/**
 	 * This method initializes txtTel
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtTel() {
@@ -579,7 +578,7 @@ public class FornitoriMod extends JDialog {
 
 	/**
 	 * This method initializes txtVia
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtVia() {
@@ -598,7 +597,7 @@ public class FornitoriMod extends JDialog {
 
 	/**
 	 * This method initializes txtWebSite
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtWebSite() {
@@ -615,25 +614,25 @@ public class FornitoriMod extends JDialog {
 		return txtWebSite;
 	}
 
-	/**
-	 * 
-	 */
-	private void impostaCampi(Cliente c) {
-		txtRagSociale.setText(c.getNome());
-		txtPiva.setText(c.getPiva());
-		txtCodFisc.setText(c.getCodfisc());
-		txtVia.setText(c.getVia());
-		txtCap.setText(c.getCap());
-		txtCitta.setText(c.getCitta());
-		txtProvincia.setText(c.getProvincia());
-		txtTel.setText(c.getTelefono());
-		txtCell.setText(c.getCellulare());
-		txtFax.setText(c.getFax());
-		txtEmail.setText(c.getEmail());
-		txtWebSite.setText(c.getWebsite());
-		txtNote.setText(c.getNote());
-
-	}
+//	/**
+//	 *
+//	 */
+//	private void impostaCampi(Cliente c) {
+//		txtRagSociale.setText(c.getNome());
+//		txtPiva.setText(c.getPiva());
+//		txtCodFisc.setText(c.getCodFiscale());
+//		txtVia.setText(c.getVia());
+//		txtCap.setText(new Integer(c.getCap()).toString());
+//		txtCitta.setText(c.getCitta());
+//		txtProvincia.setText(c.getProvincia());
+//		txtTel.setText(c.getTelefono());
+//		txtCell.setText(c.getCellulare());
+//		txtFax.setText(c.getFax());
+//		txtEmail.setText(c.getEmail());
+//		txtWebSite.setText(c.getWebsite());
+//		txtNote.setText(c.getNote());
+//
+//	}
 
 	/**
 	 * @param c
@@ -657,7 +656,7 @@ public class FornitoriMod extends JDialog {
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 * @return void
 	 */
 	private void initialize() {

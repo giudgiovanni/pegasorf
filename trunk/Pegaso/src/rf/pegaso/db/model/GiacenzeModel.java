@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.db.model;
 
@@ -17,7 +17,7 @@ import rf.utility.db.DBStateChange;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class GiacenzeModel extends AbstractTableModel implements DBStateChange {
 
@@ -113,7 +113,7 @@ public class GiacenzeModel extends AbstractTableModel implements DBStateChange {
 
 	/**
 	 * @throws SQLException
-	 * 
+	 *
 	 */
 	private void recuperaDati() throws SQLException {
 		this.query = "select * from giacenza_articoli_view order by codice";
@@ -122,5 +122,11 @@ public class GiacenzeModel extends AbstractTableModel implements DBStateChange {
 		rsmd = rs.getMetaData();
 
 	}
+
+	public String getNomeTabella() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

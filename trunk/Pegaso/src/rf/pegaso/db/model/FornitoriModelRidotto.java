@@ -124,4 +124,10 @@ public class FornitoriModelRidotto extends AbstractTableModel implements
 
 	}
 
+	public String getNomeTabella() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 }

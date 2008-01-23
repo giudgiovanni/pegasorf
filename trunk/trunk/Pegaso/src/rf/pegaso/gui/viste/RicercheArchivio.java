@@ -13,6 +13,7 @@ import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -33,8 +34,6 @@ import rf.pegaso.db.model.search.ArticoliByFornitoreModel;
 import rf.pegaso.db.tabelle.Fornitore;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompletion;
-
-import javax.swing.JButton;
 
 /**
  * @author Hunter

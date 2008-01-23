@@ -3,15 +3,40 @@ package rf.pegaso.gui.vendita;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Time;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.util.Vector;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableColumn;
+
+import org.jdesktop.swingx.JXTable;
 
 import rf.myswing.IDJComboBox;
 import rf.myswing.util.MyTableCellRendererAlignment;
@@ -29,36 +54,7 @@ import rf.utility.ControlloDati;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompletion;
 
-import javax.swing.JButton;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.EtchedBorder;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.TableColumn;
-
-import java.awt.Rectangle;
-import javax.swing.JLabel;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Time;
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.util.Vector;
-
-import javax.swing.JTextField;
-
 import com.toedter.calendar.JDateChooser;
-
-import javax.swing.JScrollPane;
-
-import org.jdesktop.swingx.JXTable;
-import javax.swing.border.TitledBorder;
 
 /**
  * @author Administrator

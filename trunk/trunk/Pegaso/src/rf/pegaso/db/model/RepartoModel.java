@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.db.model;
 
@@ -16,7 +16,7 @@ import rf.utility.db.DBStateChange;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class RepartoModel extends AbstractTableModel implements DBStateChange {
 
@@ -105,7 +105,7 @@ public class RepartoModel extends AbstractTableModel implements DBStateChange {
 
 	/**
 	 * @throws SQLException
-	 * 
+	 *
 	 */
 	private void recuperaDati() throws SQLException {
 		this.query = "select idreparto,nome as Descrizione, descrizione as note from reparti order by idreparto";
@@ -114,5 +114,11 @@ public class RepartoModel extends AbstractTableModel implements DBStateChange {
 		rsmd = rs.getMetaData();
 
 	}
+
+	public String getNomeTabella() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

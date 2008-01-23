@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.db.model.search;
 
@@ -17,7 +17,7 @@ import rf.utility.db.DBStateChange;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class GiacenzeSearchDescModel extends AbstractTableModel implements
 		DBStateChange {
@@ -117,7 +117,7 @@ public class GiacenzeSearchDescModel extends AbstractTableModel implements
 
 	/**
 	 * @throws SQLException
-	 * 
+	 *
 	 */
 	private void recuperaDati() throws SQLException {
 		this.query = "select * from giacenza_articoli_view g where g.descrizione like '%"
@@ -127,5 +127,11 @@ public class GiacenzeSearchDescModel extends AbstractTableModel implements
 		rsmd = rs.getMetaData();
 
 	}
+
+	public String getNomeTabella() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

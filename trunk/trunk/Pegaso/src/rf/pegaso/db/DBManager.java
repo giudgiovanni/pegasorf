@@ -15,9 +15,9 @@ import rf.utility.db.DBStateChange;
 
 //Implementazione del pattern Singleton
 public class DBManager implements DBObserved {
-	
+
 	private static DBManager istanza=null;
-	
+
 	private LinkedList<DBStateChange> ascoltatori = null;
 
 	private ConnectionManager cm;
@@ -28,23 +28,23 @@ public class DBManager implements DBObserved {
 
 	private Statement st = null;
 
-	
+
 	public static DBManager getIstanceSingleton(){
 		if(istanza==null){
 			istanza =new DBManager();
 		}
 		return istanza;
 	}
-	
-	
+
+
 	/**
 	 * metodo costruttore al quale viene passato un oggetto ConnectionManager
 	 * che altro non è che la connessione al DataBase.
-	 * 
+	 *
 	 * @param cm
 	 */
 	private DBManager() {
-		
+
 		ascoltatori = new LinkedList<DBStateChange>();
 		this.cm = new ConnectionManager();
 		this.connessione = this.cm.getConnection();
@@ -117,7 +117,7 @@ public class DBManager implements DBObserved {
 
 	/**
 	 * Ritorna il nome della colonna in base alla sua posizione
-	 * 
+	 *
 	 * @param col
 	 *            è la posizione della colonna
 	 * @param tabella
@@ -187,7 +187,7 @@ public class DBManager implements DBObserved {
 
 	/**
 	 * Questo metodo ritorna il numero delle colonne presenti in una tabella
-	 * 
+	 *
 	 * @param tabella
 	 *            è il nome della tabella su cui effettuare le operazioni
 	 * @return un intero che è il numero delle colonne

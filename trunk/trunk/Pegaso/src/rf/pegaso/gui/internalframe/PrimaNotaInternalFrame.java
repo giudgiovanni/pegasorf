@@ -4,28 +4,22 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
-
-import org.jdesktop.swingx.JXLoginPanel;
-
-import rf.myswing.security.MyJDBCLoginService;
-import rf.myswing.util.ModalFrameUtil;
-import rf.pegaso.db.DBManager;
-import rf.pegaso.gui.configurazioni.RootConfigGUI;
-import rf.pegaso.gui.primanota.PrimaNotaGUI;
 import javax.swing.WindowConstants;
+
+import rf.pegaso.gui.primanota.BancheGestione;
+import rf.pegaso.gui.primanota.PrimaNotaGUI;
 
 public class PrimaNotaInternalFrame extends JInternalFrame {
 
 	private JPanel jContentPane = null;
 	private JButton btnPrimaNota = null;
 	private JFrame padre;
+	private JButton btnBanca = null;
 
 	public PrimaNotaInternalFrame(JFrame padre) {
 		this.padre=padre;
@@ -50,6 +44,10 @@ public class PrimaNotaInternalFrame extends JInternalFrame {
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
 			try {
+				GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
+				gridBagConstraints1.gridx = 1;
+				gridBagConstraints1.insets = new Insets(10, 10, 10, 10);
+				gridBagConstraints1.gridy = 0;
 				GridBagConstraints gridBagConstraints = new GridBagConstraints();
 				gridBagConstraints.gridx = 0; // Generated
 				gridBagConstraints.insets = new Insets(10, 10, 10, 10); // Generated
@@ -57,6 +55,7 @@ public class PrimaNotaInternalFrame extends JInternalFrame {
 				jContentPane = new JPanel();
 				jContentPane.setLayout(new GridBagLayout()); // Generated
 				jContentPane.add(getBtnConfigAdmin(), gridBagConstraints); // Generated
+				jContentPane.add(getBtnBanca(), gridBagConstraints1);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -93,6 +92,31 @@ public class PrimaNotaInternalFrame extends JInternalFrame {
 	protected void apriPrimaNota() {
 		PrimaNotaGUI pn=new PrimaNotaGUI();
 		pn.setVisible(true);
+
+	}
+
+	/**
+	 * This method initializes btnBanca
+	 *
+	 * @return javax.swing.JButton
+	 */
+	private JButton getBtnBanca() {
+		if (btnBanca == null) {
+			btnBanca = new JButton();
+			btnBanca.setPreferredSize(new Dimension(120, 70));
+			btnBanca.setText("Banche");
+			btnBanca.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					apriGestioneBanche(); // TODO Auto-generated Event stub actionPerformed()
+				}
+			});
+		}
+		return btnBanca;
+	}
+
+	protected void apriGestioneBanche() {
+		BancheGestione b=new BancheGestione(this.padre);
+		b.setVisible(true);
 
 	}
 

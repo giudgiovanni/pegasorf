@@ -15,7 +15,6 @@ import javax.swing.JPanel;
 import org.jdesktop.swingx.JXLoginPanel;
 
 import rf.myswing.security.MyJDBCLoginService;
-import rf.myswing.util.ModalFrameUtil;
 import rf.pegaso.db.DBManager;
 import rf.pegaso.gui.configurazioni.RootConfigGUI;
 

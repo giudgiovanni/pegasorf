@@ -2,13 +2,16 @@ package rf.hibernate;
 
 // Generated 18-dic-2007 17.22.09 by Hibernate Tools 3.2.0.CR1
 
+import static org.hibernate.criterion.Example.create;
+
 import java.util.List;
+
 import javax.naming.InitialContext;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.LockMode;
 import org.hibernate.SessionFactory;
-import static org.hibernate.criterion.Example.create;
 
 /**
  * Home object for domain model class Pagamento.

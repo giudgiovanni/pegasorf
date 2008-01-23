@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.db.model;
 
@@ -17,7 +17,7 @@ import rf.utility.db.DBStateChange;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class DdtFatturaModel extends AbstractTableModel implements DBStateChange {
 
@@ -111,19 +111,19 @@ public class DdtFatturaModel extends AbstractTableModel implements DBStateChange
 		stateChange();
 
 	}
-	
+
 	public Class<?> getColumnClass(int columnIndex) {
 		if ( columnIndex == 0 || columnIndex == 1 )
 			return Integer.class;
 		else if ( columnIndex == 2 || columnIndex == 3 )
 			return String.class;
-		else 
+		else
 			return java.sql.Date.class;
 	}
 
 	/**
 	 * @throws SQLException
-	 * 
+	 *
 	 */
 	private void recuperaDati() throws SQLException {
 		this.query = "select d.idddt,c.idcliente,c.cognome,c.nome,d.data_ddt as data from ddt as d,clienti as c where c.idcliente=d.idcliente order by d.data_ddt";
@@ -131,6 +131,11 @@ public class DdtFatturaModel extends AbstractTableModel implements DBStateChange
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();
 
+	}
+
+	public String getNomeTabella() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

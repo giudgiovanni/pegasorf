@@ -18,13 +18,13 @@ import java.util.LinkedList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
@@ -50,9 +50,6 @@ import rf.pegaso.db.tabelle.Fornitore;
 import rf.pegaso.gui.print.StartLabelPrint;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.UpperTextDocument;
-import javax.swing.JTabbedPane;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 
 /**
  * @author Hunter

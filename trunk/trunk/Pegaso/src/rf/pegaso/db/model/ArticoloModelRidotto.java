@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.db.model;
 
@@ -17,7 +17,7 @@ import rf.utility.db.DBStateChange;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class ArticoloModelRidotto extends AbstractTableModel implements
 		DBStateChange {
@@ -114,7 +114,7 @@ public class ArticoloModelRidotto extends AbstractTableModel implements
 
 	/**
 	 * @throws SQLException
-	 * 
+	 *
 	 */
 	private void recuperaDati() throws SQLException {
 		this.query = "select a.idArticolo,a.codbarre as codice,a.descrizione,a.prezzo_acquisto,a.prezzo_ingrosso as prezzo_listino from articoli a order by a.codbarre";
@@ -122,6 +122,11 @@ public class ArticoloModelRidotto extends AbstractTableModel implements
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();
 
+	}
+
+	public String getNomeTabella() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

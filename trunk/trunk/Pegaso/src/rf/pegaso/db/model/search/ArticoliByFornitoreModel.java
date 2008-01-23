@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.db.model.search;
 
@@ -17,7 +17,7 @@ import rf.utility.db.DBStateChange;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class ArticoliByFornitoreModel extends AbstractTableModel implements
 		DBStateChange {
@@ -117,7 +117,7 @@ public class ArticoliByFornitoreModel extends AbstractTableModel implements
 
 	/**
 	 * @throws SQLException
-	 * 
+	 *
 	 */
 	private void recuperaDati() throws SQLException {
 		this.query = "select idarticolo as id, codbarre as codice_articolo,  descrizione,prezzo_acquisto,iva,prezzo_dettaglio from articoli where idfornitore="
@@ -127,5 +127,11 @@ public class ArticoliByFornitoreModel extends AbstractTableModel implements
 		rsmd = rs.getMetaData();
 
 	}
+
+	public String getNomeTabella() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

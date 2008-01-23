@@ -1,46 +1,41 @@
 package rf.pegaso.gui.gestione;
 
-import javax.swing.JPanel;
-import java.awt.Frame;
 import java.awt.BorderLayout;
-import java.awt.Window;
-
-import javax.swing.JDialog;
+import java.awt.Color;
 import java.awt.Dimension;
-import javax.swing.JLabel;
-import java.awt.Rectangle;
+import java.awt.FlowLayout;
 import java.awt.Font;
-import javax.swing.BorderFactory;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.EtchedBorder;
-import javax.swing.JTextField;
-import com.toedter.calendar.JDateChooser;
-
+import java.awt.Frame;
+import java.awt.Rectangle;
 import java.sql.SQLException;
-import java.util.GregorianCalendar;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import java.awt.FlowLayout;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.TableColumn;
-
-import java.awt.Color;
-
-import javax.swing.ButtonGroup;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 
 import org.jdesktop.swingx.JXTable;
 
 import rf.pegaso.db.DBManager;
 import rf.pegaso.db.model.DdtCaricoModel;
-import rf.pegaso.db.model.DdtFatturaModel;
 import rf.pegaso.db.tabelle.Carico;
 import rf.pegaso.db.tabelle.exception.IDNonValido;
 import rf.utility.gui.UtilGUI;
+
+import com.toedter.calendar.JDateChooser;
 
 public class FatturaByDdt extends JDialog {
 

@@ -15,7 +15,6 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -26,7 +25,6 @@ import javax.swing.border.BevelBorder;
 import rf.pegaso.db.DBManager;
 import rf.pegaso.db.tabelle.Cliente;
 import rf.pegaso.db.tabelle.exception.IDNonValido;
-import rf.pegaso.gui.vendita.FatturaImmediata;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.UpperTextDocument;
 
@@ -394,10 +392,12 @@ public class ClientiAdd extends JDialog {
 	private JTextField getTxtCap() {
 		if (txtCap == null) {
 			try {
+
 				txtCap = new JTextField();
 				txtCap.setPreferredSize(new Dimension(80, 20)); // Generated
 				txtCap.setBounds(new Rectangle(6, 131, 81, 20)); // Generated
 				txtCap.setDocument(new UpperTextDocument());
+
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -684,8 +684,7 @@ public class ClientiAdd extends JDialog {
 		try {
 			c.insertCliente();
 		} catch (IDNonValido e) {
-			JOptionPane.showMessageDialog(this, "Valore idCliente errato",
-					"ERRORE", JOptionPane.ERROR_MESSAGE);
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		dispose();

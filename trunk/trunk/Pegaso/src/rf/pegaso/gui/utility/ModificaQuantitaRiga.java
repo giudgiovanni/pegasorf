@@ -6,7 +6,6 @@ package rf.pegaso.gui.utility;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
-import java.awt.Window;
 import java.text.NumberFormat;
 
 import javax.swing.BorderFactory;
@@ -19,7 +18,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
-import rf.pegaso.gui.gestione.ScaricoGui;
 import rf.utility.gui.UtilGUI;
 
 /**

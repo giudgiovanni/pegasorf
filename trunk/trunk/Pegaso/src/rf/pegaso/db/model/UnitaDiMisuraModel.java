@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.db.model;
 
@@ -11,7 +11,7 @@ import rf.utility.db.DBStateChange;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class UnitaDiMisuraModel extends AbstractTableModel implements
 		DBStateChange {
@@ -57,5 +57,11 @@ public class UnitaDiMisuraModel extends AbstractTableModel implements
 		stateChange();
 
 	}
+
+	public String getNomeTabella() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

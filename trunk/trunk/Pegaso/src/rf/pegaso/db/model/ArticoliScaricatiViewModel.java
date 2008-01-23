@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.db.model;
 
@@ -19,7 +19,7 @@ import rf.utility.db.DBStateChange;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class ArticoliScaricatiViewModel extends AbstractTableModel implements
 		DBStateChange {
@@ -120,7 +120,7 @@ public class ArticoliScaricatiViewModel extends AbstractTableModel implements
 
 	/**
 	 * @throws SQLException
-	 * 
+	 *
 	 */
 	private void recuperaDati() throws SQLException {
 		this.query = "select a.codbarre as codice,a.descrizione,a.qta as sc, articoli.prezzo_acquisto as acquisto,(articoli.prezzo_acquisto* a.qta) as totale, o.data_documento as data, a.idordine as ordine from articoli_scaricati_view as a, articoli,giacenza_articoli_all_view as g, ordini as o where articoli.idarticolo=a.idarticolo and o.idordine=a.idordine and g.codice=a.codbarre and a.qta>0  order by a.codbarre";
@@ -129,5 +129,11 @@ public class ArticoliScaricatiViewModel extends AbstractTableModel implements
 		rsmd = rs.getMetaData();
 
 	}
+
+	public String getNomeTabella() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

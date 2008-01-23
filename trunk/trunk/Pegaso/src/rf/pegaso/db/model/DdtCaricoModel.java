@@ -139,4 +139,10 @@ public class DdtCaricoModel extends AbstractTableModel implements DBStateChange 
 
 	}
 
+	public String getNomeTabella() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 }

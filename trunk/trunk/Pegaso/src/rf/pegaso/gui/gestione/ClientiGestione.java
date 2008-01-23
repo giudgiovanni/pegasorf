@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.gui.gestione;
 
@@ -19,6 +19,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.TableColumn;
 
@@ -33,11 +34,10 @@ import rf.pegaso.db.model.ClienteModel;
 import rf.pegaso.db.tabelle.Cliente;
 import rf.pegaso.db.tabelle.exception.IDNonValido;
 import rf.utility.gui.UtilGUI;
-import javax.swing.WindowConstants;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class ClientiGestione extends JDialog {
 	class MyActionListener implements ActionListener {
@@ -131,13 +131,12 @@ public class ClientiGestione extends JDialog {
 		if (scelta != JOptionPane.YES_OPTION)
 			return;
 		int riga = tblClienti.getSelectedRow();
-		int idCliente = ((Long) tblClienti.getValueAt(riga, 0)).intValue();
+		int idCliente = ((Number) tblClienti.getValueAt(riga, 0)).intValue();
 		Cliente c = new Cliente();
 		try {
 			c.deleteCliente(idCliente);
 		} catch (IDNonValido e) {
-			JOptionPane.showMessageDialog(this, "Valore idCliente errato",
-					"ERRORE", JOptionPane.WARNING_MESSAGE);
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -145,7 +144,7 @@ public class ClientiGestione extends JDialog {
 
 	/**
 	 * This method initializes btnElimina
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnElimina() {
@@ -165,7 +164,7 @@ public class ClientiGestione extends JDialog {
 
 	/**
 	 * This method initializes btnModifica
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnModifica() {
@@ -184,7 +183,7 @@ public class ClientiGestione extends JDialog {
 
 	/**
 	 * This method initializes btnNuovo
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnNuovo() {
@@ -204,7 +203,7 @@ public class ClientiGestione extends JDialog {
 
 	/**
 	 * This method initializes jContentPane
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
@@ -219,7 +218,7 @@ public class ClientiGestione extends JDialog {
 
 	/**
 	 * This method initializes jScrollPane
-	 * 
+	 *
 	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getJScrollPane() {
@@ -236,7 +235,7 @@ public class ClientiGestione extends JDialog {
 
 	/**
 	 * This method initializes jSeparator
-	 * 
+	 *
 	 * @return javax.swing.JSeparator
 	 */
 	private JSeparator getJSeparator() {
@@ -253,7 +252,7 @@ public class ClientiGestione extends JDialog {
 
 	/**
 	 * This method initializes pnlCentrale
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlCentrale() {
@@ -271,7 +270,7 @@ public class ClientiGestione extends JDialog {
 
 	/**
 	 * This method initializes pnlNord
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlNord() {
@@ -296,7 +295,7 @@ public class ClientiGestione extends JDialog {
 
 	/**
 	 * This method initializes tblClienti
-	 * 
+	 *
 	 * @return javax.swing.JTable
 	 */
 	private JTable getTblClienti() {
@@ -324,7 +323,7 @@ public class ClientiGestione extends JDialog {
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 * @return void
 	 */
 	private void initialize() {
@@ -346,7 +345,7 @@ public class ClientiGestione extends JDialog {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void modificaCliente() {
 		// Apre la Dialog delegata alla modifica
@@ -357,14 +356,14 @@ public class ClientiGestione extends JDialog {
 			return;
 		}
 		int riga = tblClienti.getSelectedRow();
-		int idCliente = ((Long) tblClienti.getValueAt(riga, 0)).intValue();
+		int idCliente = ((Number) tblClienti.getValueAt(riga, 0)).intValue();
 		ClientiMod mod = new ClientiMod(this, dbm, idCliente);
 		mod.setVisible(true);
 
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void nuovoReparto() {
 		ClientiAdd add = new ClientiAdd(this, dbm);
@@ -374,7 +373,7 @@ public class ClientiGestione extends JDialog {
 
 	/**
 	 * This method initializes btnStampa
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnStampa() {

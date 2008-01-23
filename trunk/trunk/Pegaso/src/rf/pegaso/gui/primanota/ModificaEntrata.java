@@ -1,50 +1,45 @@
 package rf.pegaso.gui.primanota;
 
-import javax.swing.JDialog;
-import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Frame;
-import java.awt.GridBagLayout;
-import com.toedter.calendar.JDateChooser;
 import java.awt.Rectangle;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.sql.Time;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Date;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.TitledBorder;
+
 import rf.myswing.IDJComboBox;
-import rf.pegaso.db.DBManager;
 import rf.pegaso.db.UtilityDBManager;
 import rf.pegaso.db.tabelle.Cliente;
 import rf.pegaso.db.tabelle.Documento;
 import rf.pegaso.db.tabelle.Scarico;
 import rf.pegaso.db.tabelle.exception.IDNonValido;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.BorderFactory;
-import javax.swing.border.TitledBorder;
-import java.awt.Font;
-import java.awt.Color;
-import javax.swing.JFormattedTextField;
-
-import java.sql.SQLException;
-import java.sql.Time;
-import java.text.DecimalFormat;
-
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompletion;
 import rf.utility.gui.text.UpperTextDocument;
-import javax.swing.JTextField;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.lang.Double;
-import javax.swing.border.BevelBorder;
-import java.awt.GridBagConstraints;
-import java.awt.FlowLayout;
-import java.text.NumberFormat;
+import com.toedter.calendar.JDateChooser;
 
 public class ModificaEntrata extends JDialog {
 
@@ -446,8 +441,9 @@ public class ModificaEntrata extends JDialog {
 				long tmp=((Long)txtTotale.getValue()).longValue();
 				c.setTotaleDocumentoIvato(new Double(tmp).doubleValue());
 			}
-			 c.setIvaDocumento(((Long)txtIvaDocumento.getValue()).intValue());
+			 c.setIvaDocumento(((Number)txtIvaDocumento.getValue()).intValue());
 			c.setIdDocumento((new Integer(cmbTipoDocumento.getIDSelectedItem())).intValue());
+
 			c.updateScarico();
 
 		} catch (NumberFormatException e) {

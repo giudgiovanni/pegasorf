@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DecimalFormat;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -121,5 +120,11 @@ public class FornitoriSearchNomeModel extends AbstractTableModel implements
 		rsmd = rs.getMetaData();
 
 	}
+
+	public String getNomeTabella() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

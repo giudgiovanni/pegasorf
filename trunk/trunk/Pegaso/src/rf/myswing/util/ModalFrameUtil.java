@@ -1,12 +1,13 @@
 package rf.myswing.util;
 
-import javax.swing.*; 
-import java.awt.*; 
-import java.awt.event.WindowAdapter; 
-import java.awt.event.WindowEvent; 
-import java.lang.reflect.InvocationHandler; 
-import java.lang.reflect.Method; 
-import java.lang.reflect.Proxy; 
+import java.awt.Frame;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+
+import javax.swing.JFrame;
  
 
 public class ModalFrameUtil{ 

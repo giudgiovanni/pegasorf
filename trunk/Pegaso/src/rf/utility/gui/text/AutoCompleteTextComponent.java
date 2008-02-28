@@ -78,6 +78,37 @@ public class AutoCompleteTextComponent extends AbstractAutoCompleteAdaptor
 	valori = new LinkedList<String>(set);
     }
 
+<<<<<<< .mine
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.jdesktop.swingx.autocomplete.AbstractComponentAdaptor#getSelectedItem()
+     */
+    @Override
+    public Object getSelectedItem() {
+	if (selezionato != -1)
+	    return valori.get(selezionato);
+	return "";
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.jdesktop.swingx.autocomplete.AbstractComponentAdaptor#setSelectedItem(java.lang.Object)
+     */
+    @Override
+    public void setSelectedItem(Object o) {
+	String s = (String) o;
+	ListIterator<String> it = valori.listIterator();
+	selezionato = -1;
+	boolean fine = false;
+	while (it.hasNext() && !fine) {
+	    selezionato++;
+	    String tmp = it.next();
+	    if (s.equalsIgnoreCase(tmp))
+		fine = true;
+=======
     /*
      * (non-Javadoc)
      *
@@ -107,10 +138,22 @@ public class AutoCompleteTextComponent extends AbstractAutoCompleteAdaptor
 	    String tmp = it.next();
 	    if (s.equalsIgnoreCase(tmp))
 		fine = true;
+>>>>>>> .r83
 	}
 
     }
 
+<<<<<<< .mine
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.jdesktop.swingx.autocomplete.AbstractComponentAdaptor#getItemCount()
+     */
+    @Override
+    public int getItemCount() {
+	return valori.size();
+    }
+=======
     /*
      * (non-Javadoc)
      *
@@ -120,7 +163,19 @@ public class AutoCompleteTextComponent extends AbstractAutoCompleteAdaptor
     public int getItemCount() {
 	return valori.size();
     }
+>>>>>>> .r83
 
+<<<<<<< .mine
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.jdesktop.swingx.autocomplete.AbstractComponentAdaptor#getItem(int)
+     */
+    @Override
+    public Object getItem(int pos) {
+	return valori.get(pos);
+    }
+=======
     /*
      * (non-Javadoc)
      *
@@ -130,7 +185,19 @@ public class AutoCompleteTextComponent extends AbstractAutoCompleteAdaptor
     public Object getItem(int pos) {
 	return valori.get(pos);
     }
+>>>>>>> .r83
 
+<<<<<<< .mine
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.jdesktop.swingx.autocomplete.AbstractComponentAdaptor#getTextComponent()
+     */
+    @Override
+    public JTextComponent getTextComponent() {
+	return this.component;
+    }
+=======
     /*
      * (non-Javadoc)
      *
@@ -140,7 +207,17 @@ public class AutoCompleteTextComponent extends AbstractAutoCompleteAdaptor
     public JTextComponent getTextComponent() {
 	return this.component;
     }
+>>>>>>> .r83
 
+<<<<<<< .mine
+    /*
+     * (non-Javadoc)
+     * 
+     * @see rf.hotel.db.DBStateChange#stateChange()
+     */
+    public void stateChange() {
+	inizialize(this.tabella);
+=======
     /*
      * (non-Javadoc)
      *
@@ -148,9 +225,21 @@ public class AutoCompleteTextComponent extends AbstractAutoCompleteAdaptor
      */
     public void stateChange() {
 	inizialize(this.tabella);
+>>>>>>> .r83
 
     }
 
+<<<<<<< .mine
+    /*
+     * (non-Javadoc)
+     * 
+     * @see rf.utility.db.DBStateChange#getTableName()
+     */
+    public String getTableName() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+=======
     /*
      * (non-Javadoc)
      *
@@ -160,7 +249,19 @@ public class AutoCompleteTextComponent extends AbstractAutoCompleteAdaptor
 	// TODO Auto-generated method stub
 	return null;
     }
+>>>>>>> .r83
 
+<<<<<<< .mine
+    /*
+     * (non-Javadoc)
+     * 
+     * @see rf.hotel.db.DBStateChange#getNomeTabella()
+     */
+    public String getNomeTabella() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+=======
     /*
      * (non-Javadoc)
      *
@@ -170,7 +271,17 @@ public class AutoCompleteTextComponent extends AbstractAutoCompleteAdaptor
 	// TODO Auto-generated method stub
 	return null;
     }
+>>>>>>> .r83
 
+<<<<<<< .mine
+    /*
+     * (non-Javadoc)
+     * 
+     * @see rf.hotel.db.DBStateChange#rowStateChange(rf.hotel.db.RowEvent)
+     */
+    public void rowStateChange(RowEvent re) {
+	// TODO Auto-generated method stub
+=======
     /*
      * (non-Javadoc)
      *
@@ -178,7 +289,22 @@ public class AutoCompleteTextComponent extends AbstractAutoCompleteAdaptor
      */
     public void rowStateChange(RowEvent re) {
 	// TODO Auto-generated method stub
+>>>>>>> .r83
 
+<<<<<<< .mine
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see rf.hotel.db.DBStateChange#stateChange(rf.hotel.db.DBEvent)
+     */
+    public void stateChange(DBEvent dbe) {
+	// TODO Auto-generated method stub
+
+    }
+
+=======
     }
 
     /*
@@ -191,4 +317,5 @@ public class AutoCompleteTextComponent extends AbstractAutoCompleteAdaptor
 
     }
 
+>>>>>>> .r83
 }

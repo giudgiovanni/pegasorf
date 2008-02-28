@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 package rf.utility.gui.text;
@@ -17,7 +17,6 @@ public class UpperTextDocument extends PlainDocument {
 	 * Questo metodo serve per inserire sempre il testo maiscolo nei JTextFiled
 	 * e altri campi di testo.
 	 */
-	@Override
 	public void insertString(int offs, String str, AttributeSet a)
 			throws BadLocationException {
 		str = str.toUpperCase();

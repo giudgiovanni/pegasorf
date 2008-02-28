@@ -28,7 +28,7 @@ import java.sql.SQLException;
 
 import org.jdesktop.swingx.auth.LoginService;
 
-import rf.pegaso.db.DBManager;
+import rf.utility.db.DBManager;
 
 /**
  * A login service for connecting to SQL based databases via JDBC

@@ -61,10 +61,12 @@ public class IDJComboBox extends JComboBox{
 	public void setSelectedItemByID(int id){
 		String codId=new Integer(id).toString();
 		int pos=ricercaLineare(this.codId, codId);
-		
-		//se il combo contiene la prima riga vuota allora 
+
+		//se il combo contiene la prima riga vuota allora
 		//facciamo pos + 1 altrimenti solo pos
 		String tmp=(String)getItemAt(0);
+		if(tmp==null)
+			return;
 		if(tmp.equals("")){
 			setSelectedIndex(pos+1);
 		}else setSelectedIndex(pos);
@@ -195,10 +197,12 @@ public class IDJComboBox extends JComboBox{
 	}
 
 	public String getIDSelectedItem(){
-		String tmp=getSelectedItem().toString();
-		int pos=ricercaLineare(descItem, tmp);
-		if(pos==-1)
+		Object o=getSelectedItem();
+		if(o==null)
 			return null;
+		int pos=ricercaLineare(descItem, o.toString());
+		if(pos==-1)
+			return "-1";
 		return codId[pos];
 	}
 }

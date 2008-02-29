@@ -13,9 +13,10 @@ import java.util.Date;
 import javax.swing.table.AbstractTableModel;
 
 import rf.myswing.GregorianCalendarFormat;
-import rf.pegaso.db.DBManager;
 import rf.utility.db.DBEvent;
+import rf.utility.db.DBManager;
 import rf.utility.db.DBStateChange;
+import rf.utility.db.RowEvent;
 
 /**
  * @author Hunter
@@ -132,7 +133,7 @@ public class DdtCaricoModel extends AbstractTableModel implements DBStateChange 
 	 *
 	 */
 	private void recuperaDati() throws SQLException {
-		this.query = "select d.idcarico,d.num_documento,d.data_carico as data,c.nome as fornitore from carichi as d,fornitori as c where c.idfornitore=d.idfornitore and d.iddocumento=2 and rif_doc=-1 order by d.data_carico";
+		this.query = "select d.idcarico,d.num_documento,d.data_documento as data,c.nome as fornitore from carichi as d,fornitori as c where c.idfornitore=d.idfornitore and d.iddocumento=2 and rif_doc=-1 order by d.data_carico";
 		pst = dbm.getNewPreparedStatement(query);
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();
@@ -142,6 +143,11 @@ public class DdtCaricoModel extends AbstractTableModel implements DBStateChange 
 	public String getNomeTabella() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void rowStateChange(RowEvent re) {
+		// TODO Auto-generated method stub
+
 	}
 
 

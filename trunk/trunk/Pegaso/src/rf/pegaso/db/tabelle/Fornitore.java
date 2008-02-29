@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.db.tabelle;
 
@@ -9,12 +9,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import rf.pegaso.db.DBManager;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.IDNonValido;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class Fornitore {
 
@@ -25,7 +25,7 @@ public class Fornitore {
 	 */
 	public static int getIdFornitoreByCodBarre(String codbarreF)
 			throws SQLException {
-		DBManager dbm=DBManager.getIstanceSingleton(); 
+		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		String query = "select idfornitore from fornitori where codbarre=?";
 		PreparedStatement st = dbm.getNewPreparedStatement(query);
@@ -49,19 +49,33 @@ public class Fornitore {
 	}
 
 	private String cap;
+
 	private String cellulare;
+
 	private String citta;
+
 	private String codBarre;
+
 	private String codfisc;
+
 	private Date dataInserimento;
+
 	private DBManager dbm;
+
 	private String email;
+
 	private String fax;
+
 	private int idFornitore;
+
 	private String nome;
+
 	private String note;
+
 	private String piva;
-	private String provincia;
+
+	private int provincia;
+
 	private String telefono;
 
 	private String via;
@@ -70,13 +84,11 @@ public class Fornitore {
 
 	/**
 	 * Costruttore di default
-	 * 
+	 *
 	 */
 	public Fornitore() {
-		this.dbm=DBManager.getIstanceSingleton();
+		this.dbm = DBManager.getIstanceSingleton();
 	}
-
-	
 
 	/**
 	 * @return
@@ -109,13 +121,17 @@ public class Fornitore {
 	 * @throws SQLException
 	 */
 	public void caricaDati(int idFornitore) throws SQLException {
+		if(idFornitore<0)
+			return;
 		Statement st = null;
 		ResultSet rs = null;
 		String query = "select * from fornitori where idFornitore="
 				+ idFornitore;
 		st = dbm.getNewStatement();
 		rs = st.executeQuery(query);
-		rs.next();
+		//se ritorna false vuol dire che non ci sono righe ed esce
+		if(!rs.next())
+			return;
 		this.cap = rs.getString("cap");
 		this.cellulare = rs.getString("cell");
 		this.citta = rs.getString("citta");
@@ -127,7 +143,7 @@ public class Fornitore {
 		this.idFornitore = idFornitore;
 		this.note = rs.getString("note");
 		this.piva = rs.getString("piva");
-		this.provincia = rs.getString("provincia");
+		this.provincia = rs.getInt("provincia");
 		this.telefono = rs.getString("tel");
 		this.via = rs.getString("via");
 		this.website = rs.getString("website");
@@ -140,14 +156,15 @@ public class Fornitore {
 	/**
 	 * Questo metodo cancella un Fornitore dalla base di dati Riceve come
 	 * parametro il codice id univoco della riga da cancellare
-	 * 
+	 *
 	 * @param idFornitore
 	 *            è il codice della riga da cancellare
 	 * @return un intero positivo se tutto è andato bene
 	 * @throws IDNonValido
 	 *             eccezzione generata se l'id è <=0
+	 * @throws SQLException
 	 */
-	public int deleteFornitore(int idFornitore) throws IDNonValido {
+	public int deleteFornitore(int idFornitore) throws IDNonValido, SQLException {
 
 		String delete = "";
 		Statement st = dbm.getNewStatement();
@@ -156,19 +173,10 @@ public class Fornitore {
 			throw new IDNonValido();
 		delete = "DELETE FROM fornitori WHERE idfornitore=" + idFornitore;
 
-		try {
-			cancellati = st.executeUpdate(delete);
-			dbm.notifyDBStateChange();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (st != null)
-					st.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+		cancellati = st.executeUpdate(delete);
+		dbm.notifyDBStateChange();
+		if (st != null)
+			st.close();
 		return cancellati;
 	}
 
@@ -220,8 +228,27 @@ public class Fornitore {
 		return piva;
 	}
 
-	public String getProvincia() {
+	public int getProvincia() {
 		return provincia;
+	}
+
+	public String getProvinciaToString() throws SQLException {
+		DBManager dbm = DBManager.getIstanceSingleton();
+		ResultSet rs = null;
+		String query = "select p.provincia from provincia,fornitori where f.provincia=p.idprovincia and idfornitore=?";
+		PreparedStatement st = dbm.getNewPreparedStatement(query);
+		st.setInt(1, idFornitore);
+		rs = st.executeQuery();
+		rs.next();
+		if (rs.getRow() < 1) {
+			return "";
+		}
+		String result = rs.getString(1);
+		if (st != null)
+			st.close();
+		if (rs != null)
+			rs.close();
+		return result;
 	}
 
 	public String getTelefono() {
@@ -238,7 +265,7 @@ public class Fornitore {
 
 	/**
 	 * Il seguente metodo inserisce nuovo fornitore nella tabella corrispondente
-	 * 
+	 *
 	 * @return un numero inferiore a 0 se ci sono stati problemi oppure maggiore
 	 *         altrimenti (in pratica ritorna il numero delle righe aggiornate)
 	 * @throws IDNonValido
@@ -264,14 +291,14 @@ public class Fornitore {
 			pst.setString(6, via);
 			pst.setString(7, cap);
 			pst.setString(8, citta);
-			pst.setString(9, provincia);
-			pst.setString(10, telefono);
-			pst.setString(11, cellulare);
-			pst.setString(12, fax);
-			pst.setString(13, email);
-			pst.setString(14, website);
-			pst.setString(15, note);
-			pst.setString(16, codBarre);
+			pst.setString(9, telefono);
+			pst.setString(10, cellulare);
+			pst.setString(11, fax);
+			pst.setString(12, email);
+			pst.setString(13, website);
+			pst.setString(14, note);
+			pst.setString(15, codBarre);
+			pst.setInt(16, provincia);
 			ok = pst.executeUpdate();
 			dbm.notifyDBStateChange();
 		} catch (SQLException e) {
@@ -343,7 +370,7 @@ public class Fornitore {
 		this.piva = piva;
 	}
 
-	public void setProvincia(String provincia) {
+	public void setProvincia(int provincia) {
 		this.provincia = provincia;
 	}
 
@@ -362,7 +389,7 @@ public class Fornitore {
 	/**
 	 * Il seguente metodo aggiorna l'unità di misura nella tabella
 	 * corrispondente
-	 * 
+	 *
 	 * @return un numero inferiore a 0 se ci sono stati problemi oppure maggiore
 	 *         altrimenti (in pratica ritorna il numero delle righe aggiornate)
 	 * @throws IDNonValido
@@ -376,7 +403,7 @@ public class Fornitore {
 		int ok = 0;
 		PreparedStatement pst = null;
 		String update = "UPDATE fornitori SET idFornitore=?,"
-				+ "data_inserimento=?,nome=?,piva=?,codfisc=?,via=?,cap=?,citta=?,provincia=?,tel=?,cell=?,fax=?,email=?,website=?,note=?,codbarre=? WHERE idFornitore=?";
+				+ "data_inserimento=?,nome=?,piva=?,codfisc=?,via=?,cap=?,citta=?,tel=?,cell=?,fax=?,email=?,website=?,note=?,codbarre=?,provincia=? WHERE idFornitore=?";
 
 		pst = dbm.getNewPreparedStatement(update);
 		try {
@@ -388,14 +415,15 @@ public class Fornitore {
 			pst.setString(6, via);
 			pst.setString(7, cap);
 			pst.setString(8, citta);
-			pst.setString(9, provincia);
-			pst.setString(10, telefono);
-			pst.setString(11, cellulare);
-			pst.setString(12, fax);
-			pst.setString(13, email);
-			pst.setString(14, website);
-			pst.setString(15, note);
-			pst.setString(16, codBarre);
+
+			pst.setString(9, telefono);
+			pst.setString(10, cellulare);
+			pst.setString(11, fax);
+			pst.setString(12, email);
+			pst.setString(13, website);
+			pst.setString(14, note);
+			pst.setString(15, codBarre);
+			pst.setInt(16, provincia);
 			pst.setInt(17, idFornitore);
 			ok = pst.executeUpdate();
 			dbm.notifyDBStateChange();

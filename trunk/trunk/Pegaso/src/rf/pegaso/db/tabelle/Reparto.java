@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.db.tabelle;
 
@@ -9,31 +9,32 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import rf.pegaso.db.DBManager;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.IDNonValido;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class Reparto {
 
 	private Date dataCreazione;
+
 	private DBManager dbm;
+
 	private String descrizione;
+
 	private int idReparto;
 
 	private String nome;
 
 	/**
 	 * Costruttore di default
-	 * 
+	 *
 	 */
 	public Reparto() {
-		this.dbm=DBManager.getIstanceSingleton(); 
+		this.dbm = DBManager.getIstanceSingleton();
 	}
-
-	
 
 	/**
 	 * @return
@@ -84,14 +85,15 @@ public class Reparto {
 	/**
 	 * Questo metodo cancella un reparto dalla base di dati Riceve come
 	 * parametro il codice id univoco della riga da cancellare
-	 * 
+	 *
 	 * @param idArticolo
 	 *            il codice della riga da cancellare
 	 * @return un intero positivo se tutto è andato bene
 	 * @throws IDNonValido
 	 *             eccezzione generata se l'id è <=0
+	 * @throws SQLException
 	 */
-	public int deleteCliente(int idReparto) throws IDNonValido {
+	public int deleteCliente(int idReparto) throws IDNonValido, SQLException {
 
 		String delete = "";
 		Statement st = dbm.getNewStatement();
@@ -100,18 +102,9 @@ public class Reparto {
 			throw new IDNonValido();
 		delete = "DELETE FROM reparti WHERE idreparto=" + idReparto;
 
-		try {
-			cancellati = st.executeUpdate(delete);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (st != null)
-					st.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+		cancellati = st.executeUpdate(delete);
+		if (st != null)
+			st.close();
 		dbm.notifyDBStateChange();
 		return cancellati;
 	}
@@ -138,7 +131,7 @@ public class Reparto {
 
 	/**
 	 * Il seguente metodo inserisce il reparto nella tabella corrispondente
-	 * 
+	 *
 	 * @return un numero inferiore a 0 se ci sono stati problemi oppure maggiore
 	 *         altrimenti (in pratica ritorna il numero delle righe aggiornate)
 	 * @throws IDNonValido
@@ -199,7 +192,7 @@ public class Reparto {
 
 	/**
 	 * Il seguente metodo aggiorna il reparto nella tabella corrispondente
-	 * 
+	 *
 	 * @return un numero inferiore a 0 se ci sono stati problemi oppure maggiore
 	 *         altrimenti (in pratica ritorna il numero delle righe aggiornate)
 	 * @throws IDNonValido

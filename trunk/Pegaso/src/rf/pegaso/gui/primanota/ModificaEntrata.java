@@ -30,11 +30,11 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
 
 import rf.myswing.IDJComboBox;
-import rf.pegaso.db.UtilityDBManager;
 import rf.pegaso.db.tabelle.Cliente;
 import rf.pegaso.db.tabelle.Documento;
 import rf.pegaso.db.tabelle.Scarico;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.utility.db.UtilityDBManager;
+import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompletion;
 import rf.utility.gui.text.UpperTextDocument;

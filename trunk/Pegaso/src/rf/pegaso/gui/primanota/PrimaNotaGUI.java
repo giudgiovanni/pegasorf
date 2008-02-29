@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
@@ -45,8 +46,6 @@ import javax.swing.table.TableColumn;
 import org.jdesktop.swingx.JXTable;
 
 import rf.myswing.IDJComboBox;
-import rf.pegaso.db.DBManager;
-import rf.pegaso.db.UtilityDBManager;
 import rf.pegaso.db.exception.ResultSetVuoto;
 import rf.pegaso.db.model.MovimentiContoModel;
 import rf.pegaso.db.model.PrimaNotaModelUscite;
@@ -59,10 +58,12 @@ import rf.pegaso.db.tabelle.Documento;
 import rf.pegaso.db.tabelle.Fornitore;
 import rf.pegaso.db.tabelle.MovimentoBanca;
 import rf.pegaso.db.tabelle.Scarico;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
 import rf.pegaso.gui.gestione.DocumentoAddMod;
 import rf.utility.ControlloDati;
-import rf.utility.date.DateManager;
+import rf.utility.DateManager;
+import rf.utility.db.DBManager;
+import rf.utility.db.UtilityDBManager;
+import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompletion;
 import rf.utility.gui.text.UpperTextDocument;
@@ -1892,11 +1893,7 @@ public class PrimaNotaGUI extends JFrame {
 			lblImpEntrate.setText("Imponibile");
 			pnlTotEntrate = new JPanel();
 			pnlTotEntrate.setLayout(flowLayout1);
-			pnlTotEntrate.setBorder(BorderFactory.createTitledBorder(
-					BorderFactory.createBevelBorder(BevelBorder.RAISED),
-					"Entrate", TitledBorder.DEFAULT_JUSTIFICATION,
-					TitledBorder.DEFAULT_POSITION, new Font("Dialog",
-							Font.BOLD, 14), Color.green));
+			pnlTotEntrate.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED), "Entrate", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Dialog", Font.BOLD, 14), SystemColor.activeCaption));
 			pnlTotEntrate.add(lblImpEntrate, null);
 			pnlTotEntrate.add(getTxtImpEntrate(), null);
 			pnlTotEntrate.add(lblImpostaEntrate, null);
@@ -1954,7 +1951,7 @@ public class PrimaNotaGUI extends JFrame {
 			txtImpEntrate.setHorizontalAlignment(JTextField.RIGHT);
 			txtImpEntrate.setEditable(false);
 			txtImpEntrate.setFont(new Font("Dialog", Font.BOLD, 12));
-			txtImpEntrate.setForeground(Color.green);
+			txtImpEntrate.setForeground(Color.blue);
 			txtImpEntrate.setValue(0);
 		}
 		return txtImpEntrate;
@@ -1975,7 +1972,7 @@ public class PrimaNotaGUI extends JFrame {
 			txtImpostaEntrate.setHorizontalAlignment(JTextField.RIGHT);
 			txtImpostaEntrate.setEditable(false);
 			txtImpostaEntrate.setFont(new Font("Dialog", Font.BOLD, 12));
-			txtImpostaEntrate.setForeground(Color.green);
+			txtImpostaEntrate.setForeground(Color.blue);
 			txtImpostaEntrate.setValue(0);
 		}
 		return txtImpostaEntrate;
@@ -1996,7 +1993,7 @@ public class PrimaNotaGUI extends JFrame {
 			txtTotaleEntrate.setHorizontalAlignment(JTextField.RIGHT);
 			txtTotaleEntrate.setEditable(false);
 			txtTotaleEntrate.setFont(new Font("Dialog", Font.BOLD, 12));
-			txtTotaleEntrate.setForeground(Color.green);
+			txtTotaleEntrate.setForeground(Color.blue);
 			txtTotaleEntrate.setValue(0);
 		}
 		return txtTotaleEntrate;

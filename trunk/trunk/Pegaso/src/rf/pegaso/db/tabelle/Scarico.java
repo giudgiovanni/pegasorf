@@ -11,9 +11,10 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.util.Vector;
 
-import rf.pegaso.db.DBManager;
 import rf.pegaso.db.exception.ResultSetVuoto;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.pegaso.db.tabelle.exception.NumeroOrdineEsistente;
+import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.IDNonValido;
 
 /**
  * @author Hunter
@@ -306,6 +307,28 @@ public class Scarico {
 		return true;
 	}
 
+	/**
+	 * @param i
+	 * @return
+	 * @throws SQLException
+	 */
+	public static boolean isNumeroOrdineEsistente(String numDocumento) throws SQLException,NumeroOrdineEsistente {
+		DBManager dbm = DBManager.getIstanceSingleton();
+		Statement st = dbm.getNewStatement();
+		ResultSet rs = null;
+		String query = "select num_documento from ordini where num_documento=" + numDocumento;
+		rs = st.executeQuery(query);
+		rs.last();
+		int nRow = rs.getRow();
+		if (st != null)
+			st.close();
+		if (rs != null)
+			rs.close();
+		if (nRow <= 0)
+			return false;
+		return true;
+	}
+
 	private Date dataScarico;
 
 	private DBManager dbm;
@@ -323,6 +346,20 @@ public class Scarico {
 	private String numDocumento;
 
 	private int idDocumento;
+
+	private int idPagamento;
+	private int idCausale;
+	private double speseIncasso=0;
+	private double speseTrasporto=0;
+	private Date dataTrasporto;
+	private Time oraTrasporto;
+	private int colli=0;
+	private double peso=0;
+	private String consegna;
+	private String porto;
+	private String destDiversa;
+	private int idAspetto;
+	private int sconto=0;
 
 	private Vendita vendita;
 
@@ -364,6 +401,19 @@ public class Scarico {
 		this.docEmesso = rs.getInt("doc_emesso");
 		this.docFiscale = rs.getInt("doc_fiscale");
 		this.primaNota = rs.getInt("ins_pn");
+		idPagamento=rs.getInt("idpagamento");
+		idCausale=rs.getInt("idcausale");
+		speseIncasso=rs.getDouble("spese_incasso");
+		speseTrasporto=rs.getDouble("spese_trasporto");
+		dataTrasporto=rs.getDate("data_trasp");
+		oraTrasporto=rs.getTime("ora_trasp");
+		colli=rs.getInt("colli");
+		peso=rs.getDouble("peso");
+		consegna=rs.getString("consegna");
+		porto=rs.getString("porto");
+		destDiversa=rs.getString("diversa_dest");
+		idAspetto=rs.getInt("idaspetto");
+		sconto=rs.getInt("sconto");
 
 		if (st != null)
 			st.close();
@@ -469,15 +519,18 @@ public class Scarico {
 		return qta;
 	}
 
-	public void insertArticolo(int idArticolo, double qta, int sconto)
+	public void insertArticolo(int idArticolo, double qta, int sconto,double prezzoAcquisto,double prezzoVendita,int iva)
 			throws SQLException {
 
-		String query = "insert into dettaglio_ordini values(?,?,?,?)";
+		String query = "insert into dettaglio_ordini values(?,?,?,?,?,?,?)";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 		pst.setInt(1, idScarico);
 		pst.setInt(2, idArticolo);
 		pst.setDouble(3, qta);
 		pst.setInt(4, sconto);
+		pst.setDouble(5, prezzoAcquisto);
+		pst.setDouble(6, prezzoVendita);
+		pst.setInt(7, iva);
 
 		// inserimento
 		pst.executeUpdate();
@@ -517,7 +570,7 @@ public class Scarico {
 		}
 
 		for (DettaglioVendita tmp : dett) {
-			insertArticolo(tmp.getIdArticolo(), tmp.getQta(), tmp.getSconto());
+			insertArticolo(tmp.getIdArticolo(), tmp.getQta(), tmp.getSconto(),tmp.getPrezzoAcquisto(),tmp.getPrezzoVendita(),tmp.getIva());
 		}
 		return r1;
 	}
@@ -527,7 +580,7 @@ public class Scarico {
 		idScarico = dbm.getNewID("ordini", "idordine");
 		int ok = 0;
 		PreparedStatement pst = null;
-		String update = "insert into ordini values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String update = "insert into ordini values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		// preleviamo la data di inserimento
 		// e la impostiamo nelle proprietà
 		java.util.Date data = new java.util.Date();
@@ -545,10 +598,22 @@ public class Scarico {
 			pst.setDate(8, dataDocumento);
 			pst.setDouble(9, this.totIvato);
 			pst.setInt(10, ivaDocumento);
-
 			pst.setInt(11, this.docEmesso);
 			pst.setInt(12, this.docFiscale);
 			pst.setInt(13, primaNota);
+			pst.setInt(14, idPagamento);
+			pst.setInt(15, idCausale);
+			pst.setDouble(16, speseIncasso);
+			pst.setDouble(17, speseTrasporto);
+			pst.setDate(18, dataTrasporto);
+			pst.setTime(19, oraTrasporto);
+			pst.setInt(20, colli);
+			pst.setDouble(21, peso);
+			pst.setString(22, consegna);
+			pst.setString(23, porto);
+			pst.setString(24, destDiversa);
+			pst.setInt(25, idAspetto);
+			pst.setInt(26, sconto);
 			ok = pst.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -638,16 +703,19 @@ public class Scarico {
 		this.oraScarico = oraCarico;
 	}
 
-	public void updateArticolo(int idArticolo, double qta, int sconto)
+	public void updateArticolo(int idArticolo, double qta, int sconto,double prezzoAcquisto,double prezzoVendita,int iva)
 			throws SQLException {
 
-		String query = "update dettaglio_ordini set qta=?,sconto=? where idordine=? and idarticolo=?";
+		String query = "update dettaglio_ordini set qta=?,sconto=?,prezzo_acquisto=?,prezzo_vendita=?,iva=? where idordine=? and idarticolo=?";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 
 		pst.setDouble(1, qta);
 		pst.setDouble(2, sconto);
-		pst.setInt(3, idScarico);
-		pst.setInt(4, idArticolo);
+		pst.setDouble(3, prezzoAcquisto);
+		pst.setDouble(4, prezzoVendita);
+		pst.setInt(5, iva);
+		pst.setInt(6, idScarico);
+		pst.setInt(7, idArticolo);
 
 		// inserimento
 		pst.executeUpdate();
@@ -664,7 +732,11 @@ public class Scarico {
 		int ok = 0;
 		PreparedStatement pst = null;
 		String update = "UPDATE ordini SET idordine=?,"
-				+ "idcliente=?,data_ordine=?,ora_ordine=?,note=?, tipo_documento=?,num_documento=?,data_documento=?,totale_documento=?,iva_documento=?,doc_emesso=?,doc_fiscale=?,ins_pn=? WHERE idordine=?";
+				+ "idcliente=?,data_ordine=?,ora_ordine=?,note=?, tipo_documento=?,num_documento=?," +
+						"data_documento=?,totale_documento=?,iva_documento=?,doc_emesso=?,doc_fiscale=?," +
+						"ins_pn=?,idpagamento=?,idcausale=?,spese_incasso=?,spese_trasporto=?," +
+						"data_trasp=?,ora_trasp=?,colli=?,peso=?,consegna=?,porto=?,diversa_dest=?," +
+						"idaspetto=?,sconto=? WHERE idordine=?";
 
 		pst = dbm.getNewPreparedStatement(update);
 		try {
@@ -678,11 +750,23 @@ public class Scarico {
 			pst.setDate(8, dataDocumento);
 			pst.setDouble(9, totIvato);
 			pst.setInt(10, ivaDocumento);
-
 			pst.setInt(11, this.docEmesso);
 			pst.setInt(12, this.docFiscale);
 			pst.setInt(13, primaNota);
-			pst.setInt(14, idScarico);
+			pst.setInt(14, idPagamento);
+			pst.setInt(15, idCausale);
+			pst.setDouble(16, speseIncasso);
+			pst.setDouble(17, speseTrasporto);
+			pst.setDate(18, dataTrasporto);
+			pst.setTime(19, oraTrasporto);
+			pst.setInt(20, colli);
+			pst.setDouble(21, peso);
+			pst.setString(22, consegna);
+			pst.setString(23, porto);
+			pst.setString(24, destDiversa);
+			pst.setInt(25, idAspetto);
+			pst.setInt(26, sconto);
+			pst.setInt(27, idScarico);
 			ok = pst.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -768,6 +852,142 @@ public class Scarico {
 
 	public int getInsertByPN() {
 		return primaNota;
+	}
+
+	public int getColli() {
+		return colli;
+	}
+
+	public void setColli(int colli) {
+		this.colli = colli;
+	}
+
+	public String getConsegna() {
+		return consegna;
+	}
+
+	public void setConsegna(String consegna) {
+		this.consegna = consegna;
+	}
+
+	public Date getDataTrasporto() {
+		return dataTrasporto;
+	}
+
+	public void setDataTrasporto(Date dataTrasporto) {
+		this.dataTrasporto = dataTrasporto;
+	}
+
+	public String getDestDiversa() {
+		return destDiversa;
+	}
+
+	public void setDestDiversa(String destDiversa) {
+		this.destDiversa = destDiversa;
+	}
+
+	public int getDocEmesso() {
+		return docEmesso;
+	}
+
+	public void setDocEmesso(int docEmesso) {
+		this.docEmesso = docEmesso;
+	}
+
+	public int getDocFiscale() {
+		return docFiscale;
+	}
+
+	public void setDocFiscale(int docFiscale) {
+		this.docFiscale = docFiscale;
+	}
+
+	public int getIdAspetto() {
+		return idAspetto;
+	}
+
+	public void setIdAspetto(int idAspetto) {
+		this.idAspetto = idAspetto;
+	}
+
+	public int getIdCausale() {
+		return idCausale;
+	}
+
+	public void setIdCausale(int idCausale) {
+		this.idCausale = idCausale;
+	}
+
+	public int getIdPagamento() {
+		return idPagamento;
+	}
+
+	public void setIdPagamento(int idPagamento) {
+		this.idPagamento = idPagamento;
+	}
+
+	public Time getOraTrasporto() {
+		return oraTrasporto;
+	}
+
+	public void setOraTrasporto(Time oraTrasporto) {
+		this.oraTrasporto = oraTrasporto;
+	}
+
+	public double getPeso() {
+		return peso;
+	}
+
+	public void setPeso(double peso) {
+		this.peso = peso;
+	}
+
+	public String getPorto() {
+		return porto;
+	}
+
+	public void setPorto(String porto) {
+		this.porto = porto;
+	}
+
+	public int getPrimaNota() {
+		return primaNota;
+	}
+
+	public void setPrimaNota(int primaNota) {
+		this.primaNota = primaNota;
+	}
+
+	public int getSconto() {
+		return sconto;
+	}
+
+	public void setSconto(int sconto) {
+		this.sconto = sconto;
+	}
+
+	public double getSpeseIncasso() {
+		return speseIncasso;
+	}
+
+	public void setSpeseIncasso(double speseIncasso) {
+		this.speseIncasso = speseIncasso;
+	}
+
+	public double getSpeseTrasporto() {
+		return speseTrasporto;
+	}
+
+	public void setSpeseTrasporto(double speseTrasporto) {
+		this.speseTrasporto = speseTrasporto;
+	}
+
+	public double getTotIvato() {
+		return totIvato;
+	}
+
+	public void setTotIvato(double totIvato) {
+		this.totIvato = totIvato;
 	}
 
 

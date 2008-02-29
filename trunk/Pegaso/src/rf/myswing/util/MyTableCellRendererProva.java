@@ -7,7 +7,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import rf.pegaso.db.DBManager;
+import rf.utility.db.DBManager;
 import rf.utility.gui.text.AutoCompleteTextComponent;
 import rf.utility.gui.text.UpperAutoCompleteDocument;
 

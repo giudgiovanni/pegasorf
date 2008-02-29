@@ -50,7 +50,6 @@ import org.jdesktop.swingx.JXTable;
 import rf.myswing.IDJComboBox;
 import rf.myswing.util.MyTableCellRendererAlignment;
 import rf.myswing.util.QuantitaDisponibileEditor;
-import rf.pegaso.db.DBManager;
 import rf.pegaso.db.model.FatturaViewModel;
 import rf.pegaso.db.model.VenditeModel;
 import rf.pegaso.db.tabelle.Articolo;
@@ -59,9 +58,9 @@ import rf.pegaso.db.tabelle.Causale;
 import rf.pegaso.db.tabelle.Cliente;
 import rf.pegaso.db.tabelle.DettaglioVendita;
 import rf.pegaso.db.tabelle.Vendita;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
 import rf.pegaso.gui.gestione.ClientiAdd;
 import rf.utility.ControlloDati;
+import rf.utility.db.DBManager;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompleteTextComponent;
 import rf.utility.gui.text.AutoCompletion;
@@ -190,7 +189,7 @@ public class DocumentoDiTrasporto extends JFrame{
 		caricaCausale();
 		caricaAspetto();
 		txtNumero.setText(String.valueOf(dbm.getNewID("ddt", "idddt")));
-		
+
 		Calendar c=Calendar.getInstance();
 		txtOraTr.setText(String.valueOf(c.get(Calendar.HOUR_OF_DAY)));
 		txtMinTr.setText(String.valueOf(c.get(Calendar.MINUTE)));
@@ -268,7 +267,7 @@ public class DocumentoDiTrasporto extends JFrame{
 		carrello.add(dv);
 		DBManager.getIstanceSingleton().notifyDBStateChange();
 		calcoliBarraInferiore();
-		
+
 //		Vendita v  = new Vendita();
 //		Articolo a = new Articolo();
 //		int spinQta = 1;
@@ -553,7 +552,7 @@ public class DocumentoDiTrasporto extends JFrame{
 			}
 		return dataCorrente;
 	}
-	
+
 	private JDateChooser getDataTrasporto() {
 		if (dataTrasporto == null)
 			try {
@@ -662,7 +661,7 @@ public class DocumentoDiTrasporto extends JFrame{
 		}
 		int idfattura = dbm.getNewID("ddt", "idddt");
 		try {
-		
+
 			java.sql.Date d = new java.sql.Date(dataCorrente.getDate().getTime());
 			java.sql.Time t = new Time(dataCorrente.getDate().getTime());
 			int idCliente = 0;
@@ -684,7 +683,7 @@ public class DocumentoDiTrasporto extends JFrame{
 			if ( !txtSconto.getText().equals("") )
 				sconto = Integer.parseInt(txtSconto.getText());
 			final Time oraTr = new Time(ora, min, 0);
-			
+
 			vendita.setIdVendita(idfattura);
 			vendita.setNumVendita(num_fattura);
 			vendita.setData_vendita(d);
@@ -699,10 +698,10 @@ public class DocumentoDiTrasporto extends JFrame{
 			vendita.setN_colli(colli);
 			vendita.setAspetto(idAspetto);
 			vendita.setSconto(sconto);
-		
+
 			vendita.salvaDatiInDdt();
-		
-			
+
+
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (ParseException e) {
@@ -725,17 +724,17 @@ public class DocumentoDiTrasporto extends JFrame{
 		carrello.add(v);
 		calcoliBarraInferiore();
 	}
-	
+
 	private void nuovoCliente(){
 		ClientiAdd add = new ClientiAdd(this, dbm);
 		add.setVisible(true);
 	}
-	
+
 	private void nuovoAspetto(){
 		AspettoAdd add = new AspettoAdd(this);
 		add.setVisible(true);
 	}
-	
+
 	private void nuovaCausale(){
 		CausaleAdd add = new CausaleAdd(this);
 		add.setVisible(true);
@@ -881,8 +880,13 @@ public class DocumentoDiTrasporto extends JFrame{
 								dest += c.getCap()+" ";
 							if ( c.getCitta() != null )
 								dest += c.getCitta()+" ";
-							if ( c.getProvincia() != null )
-								dest += c.getProvincia();
+							try {
+								if ( c.getProvinciaToString() != null )
+									dest += c.getProvincia();
+							} catch (SQLException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 							txtDestinazione.setText(dest);
 						}
 					}
@@ -940,7 +944,7 @@ public class DocumentoDiTrasporto extends JFrame{
 		}
 		AutoCompletion.enable(cmbProdotti);
 	}
-	
+
 	private void caricaCausale(){
 		Causale c = new Causale();
 		try {
@@ -956,7 +960,7 @@ public class DocumentoDiTrasporto extends JFrame{
 		}
 		AutoCompletion.enable(cmbCausale);
 	}
-	
+
 	private void caricaAspetto(){
 		Aspetto a = new Aspetto();
 		try {
@@ -972,7 +976,7 @@ public class DocumentoDiTrasporto extends JFrame{
 		}
 		AutoCompletion.enable(cmbAspetto);
 	}
-	
+
 	/**
 	 * This method initializes txtCodice
 	 *
@@ -1182,9 +1186,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes txtDestinazione	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes txtDestinazione
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtDestinazione() {
 		if (txtDestinazione == null) {
@@ -1195,9 +1199,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes txtColli	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes txtColli
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JFormattedTextField getTxtColli() {
 		if (txtColli == null) {
@@ -1209,9 +1213,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes txtPeso	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes txtPeso
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JFormattedTextField getTxtPeso() {
 		if (txtPeso == null) {
@@ -1223,9 +1227,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes cmbCausale	
-	 * 	
-	 * @return javax.swing.JComboBox	
+	 * This method initializes cmbCausale
+	 *
+	 * @return javax.swing.JComboBox
 	 */
 	private JComboBox getCmbCausale() {
 		if (cmbCausale == null) {
@@ -1236,9 +1240,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes cmbAspetto	
-	 * 	
-	 * @return javax.swing.JComboBox	
+	 * This method initializes cmbAspetto
+	 *
+	 * @return javax.swing.JComboBox
 	 */
 	private JComboBox getCmbAspetto() {
 		if (cmbAspetto == null) {
@@ -1249,9 +1253,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes cmbConsegna	
-	 * 	
-	 * @return javax.swing.JComboBox	
+	 * This method initializes cmbConsegna
+	 *
+	 * @return javax.swing.JComboBox
 	 */
 	private JComboBox getCmbConsegna() {
 		if (cmbConsegna == null) {
@@ -1266,9 +1270,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnNuovaCausale	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnNuovaCausale
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnNuovaCausale() {
 		if (btnNuovaCausale == null) {
@@ -1284,9 +1288,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnNuovoAspetto	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnNuovoAspetto
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnNuovoAspetto() {
 		if (btnNuovoAspetto == null) {
@@ -1302,9 +1306,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes txtOraTr	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes txtOraTr
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JFormattedTextField getTxtOraTr() {
 		if (txtOraTr == null) {
@@ -1316,9 +1320,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes txtMinTr	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes txtMinTr
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JFormattedTextField getTxtMinTr() {
 		if (txtMinTr == null) {
@@ -1330,9 +1334,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes jTabbedPane	
-	 * 	
-	 * @return javax.swing.JTabbedPane	
+	 * This method initializes jTabbedPane
+	 *
+	 * @return javax.swing.JTabbedPane
 	 */
 	private JTabbedPane getJTabbedPane() {
 		if (jTabbedPane == null) {
@@ -1344,9 +1348,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes pnlViewFattura	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes pnlViewFattura
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlViewDdt() {
 		if (pnlViewDdt == null) {
@@ -1360,9 +1364,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes pnlPulsanti	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes pnlPulsanti
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlPulsanti() {
 		if (pnlPulsanti == null) {
@@ -1378,9 +1382,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnModifica	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnModifica
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnModifica() {
 		if (btnModifica == null) {
@@ -1423,7 +1427,7 @@ public class DocumentoDiTrasporto extends JFrame{
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void visualizzaVendita(){
 		txtNumero.setText(vendita.getNumVendita());
 		dataCorrente.setDate(vendita.getData_vendita());
@@ -1442,7 +1446,7 @@ public class DocumentoDiTrasporto extends JFrame{
 		cmbConsegna.setSelectedItem(vendita.getConsegna());
 //		cmbPorto.setSelectedItem(vendita.getPorto());
 	}
-	
+
 	private void eliminaDdt(){
 		if (tblViewDdt.getSelectedRow() <= -1) {
 			messaggioCampoMancante("Selezionare un ddt da eliminare", "AVVISO");
@@ -1460,17 +1464,18 @@ public class DocumentoDiTrasporto extends JFrame{
 		vendita.setIdVendita(idfattura);
 		try {
 			vendita.rimuoviDaDb("ddt", "idddt");
-		} catch (IDNonValido e) {
+		} catch (rf.utility.db.eccezzioni.IDNonValido e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		vendita = new Vendita();
 	}
 
-	
+
 	/**
-	 * This method initializes btnStampaFattura	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnStampaFattura
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnStampaFattura() {
 		if (btnStampaFattura == null) {
@@ -1482,9 +1487,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnEliminaFattura	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnEliminaFattura
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnEliminaFattura() {
 		if (btnEliminaDdt == null) {
@@ -1496,9 +1501,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes jScrollPane1	
-	 * 	
-	 * @return javax.swing.JScrollPane	
+	 * This method initializes jScrollPane1
+	 *
+	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getJScrollPane1() {
 		if (jScrollPane1 == null) {
@@ -1509,9 +1514,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes tblViewFatture	
-	 * 	
-	 * @return javax.swing.JTable	
+	 * This method initializes tblViewFatture
+	 *
+	 * @return javax.swing.JTable
 	 */
 	private JTable getTblViewDdt() {
 		if (tblViewDdt == null) {
@@ -1521,9 +1526,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes pnlDdt	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes pnlDdt
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlDdt() {
 		if (pnlDdt == null) {
@@ -1537,9 +1542,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes pnlRicerca	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes pnlRicerca
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlRicerca() {
 		if (pnlRicerca == null) {
@@ -1557,9 +1562,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes pnlRicercaData	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes pnlRicercaData
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlRicercaData() {
 		if (pnlRicercaData == null) {
@@ -1583,9 +1588,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes dataRicercaA	
-	 * 	
-	 * @return com.toedter.calendar.JDateChooser	
+	 * This method initializes dataRicercaA
+	 *
+	 * @return com.toedter.calendar.JDateChooser
 	 */
 	private JDateChooser getDataRicercaA() {
 		if (dataRicercaA == null) {
@@ -1597,9 +1602,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes dataRicercaDa	
-	 * 	
-	 * @return com.toedter.calendar.JDateChooser	
+	 * This method initializes dataRicercaDa
+	 *
+	 * @return com.toedter.calendar.JDateChooser
 	 */
 	private JDateChooser getDataRicercaDa() {
 		if (dataRicercaDa == null) {
@@ -1612,9 +1617,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnRicercaData	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnRicercaData
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnRicercaData() {
 		if (btnRicercaData == null) {
@@ -1628,9 +1633,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes pnlRicercaCliente	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes pnlRicercaCliente
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlRicercaCliente() {
 		if (pnlRicercaCliente == null) {
@@ -1645,9 +1650,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes cmbClientiR	
-	 * 	
-	 * @return rf.myswing.IDJComboBox	
+	 * This method initializes cmbClientiR
+	 *
+	 * @return rf.myswing.IDJComboBox
 	 */
 	private IDJComboBox getCmbClientiR() {
 		if (cmbClientiR == null) {
@@ -1658,9 +1663,9 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	/**
-	 * This method initializes btnRicercaCliente	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnRicercaCliente
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnRicercaCliente() {
 		if (btnRicercaCliente == null) {

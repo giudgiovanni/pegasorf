@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.gui.gestione;
 
@@ -11,6 +11,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -24,15 +25,15 @@ import javax.swing.table.TableColumn;
 
 import org.jdesktop.swingx.JXTable;
 
-import rf.pegaso.db.DBManager;
 import rf.pegaso.db.model.RepartoModel;
 import rf.pegaso.db.tabelle.Reparto;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class RepartiGestione extends JDialog {
 	class MyActionListener implements ActionListener {
@@ -105,13 +106,18 @@ public class RepartiGestione extends JDialog {
 			JOptionPane.showMessageDialog(this, "Valore idReparto errato",
 					"ERRORE", JOptionPane.WARNING_MESSAGE);
 			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(this, e.getMessage(),
+					"ERRORE", JOptionPane.WARNING_MESSAGE);
+			e.printStackTrace();
 		}
 
 	}
 
 	/**
 	 * This method initializes btnElimina
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnElimina() {
@@ -130,7 +136,7 @@ public class RepartiGestione extends JDialog {
 
 	/**
 	 * This method initializes btnModifica
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnModifica() {
@@ -148,7 +154,7 @@ public class RepartiGestione extends JDialog {
 
 	/**
 	 * This method initializes btnNuovo
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnNuovo() {
@@ -168,7 +174,7 @@ public class RepartiGestione extends JDialog {
 
 	/**
 	 * This method initializes jContentPane
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
@@ -183,7 +189,7 @@ public class RepartiGestione extends JDialog {
 
 	/**
 	 * This method initializes jScrollPane
-	 * 
+	 *
 	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getJScrollPane() {
@@ -200,7 +206,7 @@ public class RepartiGestione extends JDialog {
 
 	/**
 	 * This method initializes jSeparator
-	 * 
+	 *
 	 * @return javax.swing.JSeparator
 	 */
 	private JSeparator getJSeparator() {
@@ -216,7 +222,7 @@ public class RepartiGestione extends JDialog {
 
 	/**
 	 * This method initializes pnlCentrale
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlCentrale() {
@@ -234,7 +240,7 @@ public class RepartiGestione extends JDialog {
 
 	/**
 	 * This method initializes pnlNord
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlNord() {
@@ -273,7 +279,7 @@ public class RepartiGestione extends JDialog {
 
 	/**
 	 * This method initializes tblReparti
-	 * 
+	 *
 	 * @return javax.swing.JTable
 	 */
 	private JTable getTblReparti() {
@@ -301,7 +307,7 @@ public class RepartiGestione extends JDialog {
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 * @return void
 	 */
 	private void initialize() {
@@ -312,7 +318,7 @@ public class RepartiGestione extends JDialog {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void modificaReparto() {
 		// Apre la Dialog delegata alla modifica
@@ -330,7 +336,7 @@ public class RepartiGestione extends JDialog {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void nuovoReparto() {
 		// Apre la finestra delegata all'inserimento

@@ -23,10 +23,10 @@ import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
-import rf.pegaso.db.DBManager;
 import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.Fornitore;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.IDNonValido;
 
 /**
  * 

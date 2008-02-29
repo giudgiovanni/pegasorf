@@ -13,9 +13,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import rf.pegaso.db.DBManager;
 import rf.pegaso.db.exception.CodiceBarreInesistente;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.IDNonValido;
 
 public class Articolo {
 	/**
@@ -187,6 +187,8 @@ public class Articolo {
 	 * @throws SQLException
 	 */
 	public void caricaDati(int idArticolo) throws SQLException {
+		if(idArticolo<0)
+			return;
 		Statement st = null;
 		ResultSet rs = null;
 		String query = "select * from articoli where idArticolo=" + idArticolo;

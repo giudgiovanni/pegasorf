@@ -10,10 +10,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
 
-import rf.pegaso.db.DBManager;
 import rf.pegaso.db.exception.ResultSetVuoto;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.pegaso.db.tabelle.exception.NumeroCaricoEsistente;
+import rf.utility.db.DBManager;
 import rf.utility.db.MyResultSet;
+import rf.utility.db.eccezzioni.IDNonValido;
 
 /**
  * @author Hunter
@@ -232,6 +233,29 @@ public class Carico {
 		if (rs != null)
 			rs.close();
 		return tot;
+	}
+
+
+	/**
+	 * @param i
+	 * @return
+	 * @throws SQLException
+	 */
+	public static boolean isNumeroCaricoEsistente(String numDocumento) throws SQLException,NumeroCaricoEsistente {
+		DBManager dbm = DBManager.getIstanceSingleton();
+		Statement st = dbm.getNewStatement();
+		ResultSet rs = null;
+		String query = "select num_documento from carichi where num_documento=" + numDocumento;
+		rs = st.executeQuery(query);
+		rs.last();
+		int nRow = rs.getRow();
+		if (st != null)
+			st.close();
+		if (rs != null)
+			rs.close();
+		if (nRow <= 0)
+			return false;
+		return true;
 	}
 
 	public static double getTotIngrossoImponibile(int idScarico2)

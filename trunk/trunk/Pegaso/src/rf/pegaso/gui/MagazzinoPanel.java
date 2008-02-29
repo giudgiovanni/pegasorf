@@ -21,10 +21,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
-import rf.pegaso.db.UtilityDBManager;
 import rf.pegaso.gui.internalframe.ArchivioInternalFrame;
 import rf.pegaso.gui.internalframe.ConfigurazioneInternalFrame;
 import rf.pegaso.gui.internalframe.PrimaNotaInternalFrame;
+import rf.utility.db.UtilityDBManager;
 
 /**
  * @author Hunter

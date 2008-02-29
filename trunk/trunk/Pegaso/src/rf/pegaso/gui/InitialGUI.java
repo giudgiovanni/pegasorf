@@ -28,12 +28,12 @@ import javax.swing.JToolBar;
 import javax.swing.WindowConstants;
 
 import rf.myswing.GregorianCalendarFormat;
-import rf.pegaso.db.DBManager;
-import rf.pegaso.db.UtilityDBManager;
 import rf.pegaso.gui.internalframe.ArchivioInternalFrame;
 import rf.pegaso.gui.internalframe.ConfigurazioneInternalFrame;
 import rf.pegaso.gui.internalframe.PrimaNotaInternalFrame;
 import rf.pegaso.gui.internalframe.VenditaInternalFrame;
+import rf.utility.db.DBManager;
+import rf.utility.db.UtilityDBManager;
 import rf.utility.gui.UtilGUI;
 
 /**

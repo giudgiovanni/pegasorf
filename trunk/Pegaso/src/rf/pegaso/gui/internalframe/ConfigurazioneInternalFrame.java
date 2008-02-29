@@ -15,8 +15,8 @@ import javax.swing.JPanel;
 import org.jdesktop.swingx.JXLoginPanel;
 
 import rf.myswing.security.MyJDBCLoginService;
-import rf.pegaso.db.DBManager;
 import rf.pegaso.gui.configurazioni.RootConfigGUI;
+import rf.utility.db.DBManager;
 
 public class ConfigurazioneInternalFrame extends JInternalFrame {
 

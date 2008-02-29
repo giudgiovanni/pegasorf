@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -11,8 +13,12 @@ import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import org.jdesktop.swingx.JXLoginPanel;
+
+import rf.myswing.security.MyJDBCLoginService;
 import rf.pegaso.gui.primanota.BancheGestione;
 import rf.pegaso.gui.primanota.PrimaNotaGUI;
+import rf.utility.db.DBManager;
 
 public class PrimaNotaInternalFrame extends JInternalFrame {
 
@@ -90,8 +96,26 @@ public class PrimaNotaInternalFrame extends JInternalFrame {
 	}
 
 	protected void apriPrimaNota() {
-		PrimaNotaGUI pn=new PrimaNotaGUI();
-		pn.setVisible(true);
+		MyJDBCLoginService jdbc=null;
+		try {
+			jdbc = new MyJDBCLoginService(DBManager
+					.getIstanceSingleton());
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		JXLoginPanel.Status stato = JXLoginPanel.showLoginDialog(getParent(),
+				jdbc);
+		if (stato == JXLoginPanel.Status.SUCCEEDED) {
+			PrimaNotaGUI pn=new PrimaNotaGUI();
+			pn.setVisible(true);
+		}
+		
+		
+		
 
 	}
 

@@ -18,7 +18,6 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import rf.myswing.util.ModalFrameUtil;
-import rf.pegaso.db.DBManager;
 import rf.pegaso.gui.gestione.ArticoliGestione;
 import rf.pegaso.gui.gestione.CaricoGui;
 import rf.pegaso.gui.gestione.ClientiGestione;
@@ -33,6 +32,7 @@ import rf.pegaso.gui.viste.GiacenzeGUI;
 import rf.pegaso.gui.viste.RicercheArchivio;
 import rf.utility.ConversioneArt;
 import rf.utility.ConversioneForn;
+import rf.utility.db.DBManager;
 
 /**
  * @author Hunter

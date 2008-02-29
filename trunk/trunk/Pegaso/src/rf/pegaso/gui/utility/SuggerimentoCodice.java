@@ -13,8 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 import javax.swing.text.JTextComponent;
 
-import rf.pegaso.db.DBManager;
 import rf.pegaso.db.tabelle.Articolo;
+import rf.utility.db.DBManager;
 import rf.utility.gui.ComboBoxAutoComplete;
 import rf.utility.gui.UtilGUI;
 

@@ -19,7 +19,7 @@ import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
 
-import rf.pegaso.db.UtilityDBManager;
+import rf.utility.db.UtilityDBManager;
 
 public class DBJPanelBackup extends JPanel {
 

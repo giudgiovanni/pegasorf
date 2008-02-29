@@ -29,10 +29,10 @@ import javax.swing.table.TableColumn;
 
 import org.jdesktop.swingx.JXTable;
 
-import rf.pegaso.db.DBManager;
 import rf.pegaso.db.model.DdtCaricoModel;
 import rf.pegaso.db.tabelle.Carico;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 
 import com.toedter.calendar.JDateChooser;

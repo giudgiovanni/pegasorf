@@ -24,9 +24,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
-import rf.pegaso.db.DBManager;
 import rf.pegaso.db.tabelle.Documento;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.UpperTextDocument;
 

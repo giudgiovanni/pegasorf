@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.gui.gestione;
 
@@ -9,6 +9,7 @@ import java.awt.Frame;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -29,15 +30,15 @@ import net.sf.jasperreports.view.JasperViewer;
 
 import org.jdesktop.swingx.JXTable;
 
-import rf.pegaso.db.DBManager;
 import rf.pegaso.db.model.FornitoriModel;
 import rf.pegaso.db.tabelle.Fornitore;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class FornitoriGestione extends JDialog {
 	class MyActionListener implements ActionListener {
@@ -138,13 +139,17 @@ public class FornitoriGestione extends JDialog {
 			JOptionPane.showMessageDialog(this, "Valore idFornitore errato",
 					"ERRORE", JOptionPane.WARNING_MESSAGE);
 			e.printStackTrace();
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage(),
+					"ERRORE", JOptionPane.WARNING_MESSAGE);
+			e.printStackTrace();
 		}
 
 	}
 
 	/**
 	 * This method initializes btnElimina
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnElimina() {
@@ -164,7 +169,7 @@ public class FornitoriGestione extends JDialog {
 
 	/**
 	 * This method initializes btnModifica
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnModifica() {
@@ -183,7 +188,7 @@ public class FornitoriGestione extends JDialog {
 
 	/**
 	 * This method initializes btnNuovo
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnNuovo() {
@@ -204,7 +209,7 @@ public class FornitoriGestione extends JDialog {
 
 	/**
 	 * This method initializes jContentPane
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
@@ -219,7 +224,7 @@ public class FornitoriGestione extends JDialog {
 
 	/**
 	 * This method initializes jScrollPane
-	 * 
+	 *
 	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getJScrollPane() {
@@ -236,7 +241,7 @@ public class FornitoriGestione extends JDialog {
 
 	/**
 	 * This method initializes jSeparator
-	 * 
+	 *
 	 * @return javax.swing.JSeparator
 	 */
 	private JSeparator getJSeparator() {
@@ -253,7 +258,7 @@ public class FornitoriGestione extends JDialog {
 
 	/**
 	 * This method initializes pnlCentrale
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlCentrale() {
@@ -271,7 +276,7 @@ public class FornitoriGestione extends JDialog {
 
 	/**
 	 * This method initializes pnlNord
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlNord() {
@@ -296,7 +301,7 @@ public class FornitoriGestione extends JDialog {
 
 	/**
 	 * This method initializes tblFornitori
-	 * 
+	 *
 	 * @return javax.swing.JTable
 	 */
 	private JTable getTblFornitori() {
@@ -324,7 +329,7 @@ public class FornitoriGestione extends JDialog {
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 * @return void
 	 */
 	private void initialize() {
@@ -345,7 +350,7 @@ public class FornitoriGestione extends JDialog {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void modificaFornitori() {
 		// Apre la Dialog delegata alla modifica
@@ -363,7 +368,7 @@ public class FornitoriGestione extends JDialog {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void nuovoFornitori() {
 		// Apre la finestra delegata all'inserimento
@@ -375,7 +380,7 @@ public class FornitoriGestione extends JDialog {
 
 	/**
 	 * This method initializes btnStampa
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnStampa() {

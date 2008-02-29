@@ -13,9 +13,10 @@ import java.util.Date;
 import javax.swing.table.AbstractTableModel;
 
 import rf.myswing.GregorianCalendarFormat;
-import rf.pegaso.db.DBManager;
 import rf.utility.db.DBEvent;
+import rf.utility.db.DBManager;
 import rf.utility.db.DBStateChange;
+import rf.utility.db.RowEvent;
 
 /**
  * @author Hunter
@@ -133,6 +134,11 @@ public class ArticoliScaricatiViewModel extends AbstractTableModel implements
 	public String getNomeTabella() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void rowStateChange(RowEvent re) {
+		// TODO Auto-generated method stub
+
 	}
 
 

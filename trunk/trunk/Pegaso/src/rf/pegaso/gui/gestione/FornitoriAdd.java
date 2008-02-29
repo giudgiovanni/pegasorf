@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.gui.gestione;
 
@@ -9,9 +9,11 @@ import java.awt.FlowLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -23,15 +25,18 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
-import rf.pegaso.db.DBManager;
+import rf.myswing.IDJComboBox;
 import rf.pegaso.db.tabelle.Fornitore;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.pegaso.db.tabelle.Provincia;
+import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
+import rf.utility.gui.text.AutoCompletion;
 import rf.utility.gui.text.UpperTextDocument;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class FornitoriAdd extends JDialog {
 	class MyActionListener implements ActionListener {
@@ -116,13 +121,15 @@ public class FornitoriAdd extends JDialog {
 
 	private JTextField txtPiva = null;
 
-	private JTextField txtProvincia = null;
+	private IDJComboBox cmbProvincia = null;
 
 	private JTextField txtTel = null;
 
 	private JTextField txtVia = null;
 
 	private JTextField txtWebSite = null;
+
+	private JButton btnProvincia = null;
 
 	/**
 	 * @param owner
@@ -133,8 +140,8 @@ public class FornitoriAdd extends JDialog {
 		this.idCliente = idCliente;
 		initialize();
 	}
-	
-	
+
+
 	public FornitoriAdd(JFrame owner, DBManager dbm) {
 		super(owner, true);
 		this.dbm = dbm;
@@ -144,7 +151,7 @@ public class FornitoriAdd extends JDialog {
 
 	/**
 	 * This method initializes btnChiudi
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnChiudi() {
@@ -163,7 +170,7 @@ public class FornitoriAdd extends JDialog {
 
 	/**
 	 * This method initializes btnInserisci
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnInserisci() {
@@ -181,7 +188,7 @@ public class FornitoriAdd extends JDialog {
 
 	/**
 	 * This method initializes jContentPane
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
@@ -196,7 +203,7 @@ public class FornitoriAdd extends JDialog {
 
 	/**
 	 * This method initializes jPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanel() {
@@ -220,7 +227,7 @@ public class FornitoriAdd extends JDialog {
 
 	/**
 	 * This method initializes jScrollPane
-	 * 
+	 *
 	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getJScrollPane() {
@@ -238,7 +245,7 @@ public class FornitoriAdd extends JDialog {
 
 	/**
 	 * This method initializes jTabbedPane
-	 * 
+	 *
 	 * @return javax.swing.JTabbedPane
 	 */
 	private JTabbedPane getJTabbedPane() {
@@ -257,7 +264,7 @@ public class FornitoriAdd extends JDialog {
 
 	/**
 	 * This method initializes pnlAltriDati
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlAltriDati() {
@@ -306,7 +313,7 @@ public class FornitoriAdd extends JDialog {
 
 	/**
 	 * This method initializes pnlCentrale
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlCentrale() {
@@ -324,7 +331,7 @@ public class FornitoriAdd extends JDialog {
 
 	/**
 	 * This method initializes pnlDatiPersonali
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlDatiPersonali() {
@@ -332,16 +339,16 @@ public class FornitoriAdd extends JDialog {
 			try {
 				lblPiva = new JLabel();
 				lblPiva.setText("P.iva"); // Generated
-				lblPiva.setBounds(new Rectangle(191, 156, 27, 16)); // Generated
+				lblPiva.setBounds(new Rectangle(152, 154, 27, 16)); // Generated
 				lblCodFisc = new JLabel();
 				lblCodFisc.setText("Codice fiscale"); // Generated
 				lblCodFisc.setBounds(new Rectangle(6, 156, 80, 16)); // Generated
 				lblProvincia = new JLabel();
 				lblProvincia.setText("Provincia"); // Generated
-				lblProvincia.setBounds(new Rectangle(377, 115, 53, 16)); // Generated
+				lblProvincia.setBounds(new Rectangle(302, 111, 53, 16)); // Generated
 				lblCitta = new JLabel();
 				lblCitta.setText("Città"); // Generated
-				lblCitta.setBounds(new Rectangle(191, 115, 26, 16)); // Generated
+				lblCitta.setBounds(new Rectangle(108, 113, 26, 16)); // Generated
 				lblCap = new JLabel();
 				lblCap.setText("Cap"); // Generated
 				lblCap.setBounds(new Rectangle(6, 115, 22, 16)); // Generated
@@ -364,11 +371,12 @@ public class FornitoriAdd extends JDialog {
 				pnlDatiPersonali.add(lblCitta, null); // Generated
 				pnlDatiPersonali.add(lblProvincia, null); // Generated
 				pnlDatiPersonali.add(getTxtCitta(), null); // Generated
-				pnlDatiPersonali.add(getTxtProvincia(), null); // Generated
+				pnlDatiPersonali.add(getCmbProvincia(), null); // Generated
 				pnlDatiPersonali.add(lblCodFisc, null); // Generated
 				pnlDatiPersonali.add(lblPiva, null); // Generated
 				pnlDatiPersonali.add(getTxtCodFisc(), null); // Generated
 				pnlDatiPersonali.add(getTxtPiva(), null); // Generated
+				pnlDatiPersonali.add(getBtnProvincia(), null);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -378,7 +386,7 @@ public class FornitoriAdd extends JDialog {
 
 	/**
 	 * This method initializes txtCap
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtCap() {
@@ -397,7 +405,7 @@ public class FornitoriAdd extends JDialog {
 
 	/**
 	 * This method initializes txtCell
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtCell() {
@@ -416,7 +424,7 @@ public class FornitoriAdd extends JDialog {
 
 	/**
 	 * This method initializes txtCitta
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtCitta() {
@@ -424,7 +432,7 @@ public class FornitoriAdd extends JDialog {
 			try {
 				txtCitta = new JTextField();
 				txtCitta.setPreferredSize(new Dimension(140, 20)); // Generated
-				txtCitta.setBounds(new Rectangle(191, 131, 180, 20)); // Generated
+				txtCitta.setBounds(new Rectangle(108, 129, 180, 20)); // Generated
 				txtCitta.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -435,7 +443,7 @@ public class FornitoriAdd extends JDialog {
 
 	/**
 	 * This method initializes txtCodFisc
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtCodFisc() {
@@ -454,7 +462,7 @@ public class FornitoriAdd extends JDialog {
 
 	/**
 	 * This method initializes txtEmail
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtEmail() {
@@ -473,7 +481,7 @@ public class FornitoriAdd extends JDialog {
 
 	/**
 	 * This method initializes txtFax
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtFax() {
@@ -492,7 +500,7 @@ public class FornitoriAdd extends JDialog {
 
 	/**
 	 * This method initializes txtNome
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtNome() {
@@ -511,7 +519,7 @@ public class FornitoriAdd extends JDialog {
 
 	/**
 	 * This method initializes txtNote
-	 * 
+	 *
 	 * @return javax.swing.JTextArea
 	 */
 	private JTextArea getTxtNote() {
@@ -529,7 +537,7 @@ public class FornitoriAdd extends JDialog {
 
 	/**
 	 * This method initializes txtPiva
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtPiva() {
@@ -537,7 +545,7 @@ public class FornitoriAdd extends JDialog {
 			try {
 				txtPiva = new JTextField();
 				txtPiva.setPreferredSize(new Dimension(140, 20)); // Generated
-				txtPiva.setBounds(new Rectangle(191, 172, 140, 20)); // Generated
+				txtPiva.setBounds(new Rectangle(152, 170, 140, 20)); // Generated
 				txtPiva.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -548,26 +556,26 @@ public class FornitoriAdd extends JDialog {
 
 	/**
 	 * This method initializes txtProvincia
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
-	private JTextField getTxtProvincia() {
-		if (txtProvincia == null) {
+	private IDJComboBox getCmbProvincia() {
+		if (cmbProvincia == null) {
 			try {
-				txtProvincia = new JTextField();
-				txtProvincia.setPreferredSize(new Dimension(140, 20)); // Generated
-				txtProvincia.setBounds(new Rectangle(377, 131, 180, 20)); // Generated
-				txtProvincia.setDocument(new UpperTextDocument());
+				cmbProvincia = new IDJComboBox();
+				cmbProvincia.setPreferredSize(new Dimension(140, 20)); // Generated
+				cmbProvincia.setBounds(new Rectangle(302, 127, 180, 20)); // Generated
+
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
 		}
-		return txtProvincia;
+		return cmbProvincia;
 	}
 
 	/**
 	 * This method initializes txtTel
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtTel() {
@@ -586,7 +594,7 @@ public class FornitoriAdd extends JDialog {
 
 	/**
 	 * This method initializes txtVia
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtVia() {
@@ -605,7 +613,7 @@ public class FornitoriAdd extends JDialog {
 
 	/**
 	 * This method initializes txtWebSite
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtWebSite() {
@@ -624,7 +632,7 @@ public class FornitoriAdd extends JDialog {
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 * @return void
 	 */
 	private void initialize() {
@@ -633,6 +641,7 @@ public class FornitoriAdd extends JDialog {
 		this.setTitle("Aggiungi Fornitori"); // Generated
 		this.setContentPane(getJContentPane());
 		UtilGUI.centraDialog(this);
+		caricaProvince(cmbProvincia);
 
 	}
 
@@ -644,7 +653,7 @@ public class FornitoriAdd extends JDialog {
 		c.setVia(txtVia.getText());
 		c.setCap(txtCap.getText());
 		c.setCitta(txtCitta.getText());
-		c.setProvincia(txtProvincia.getText());
+		c.setProvincia(new Integer(cmbProvincia.getIDSelectedItem()));
 		c.setTelefono(txtTel.getText());
 		c.setCellulare(txtCell.getText());
 		c.setFax(txtFax.getText());
@@ -661,5 +670,50 @@ public class FornitoriAdd extends JDialog {
 		dispose();
 
 	}
+
+
+	/**
+	 * This method initializes btnProvincia
+	 *
+	 * @return javax.swing.JButton
+	 */
+	private JButton getBtnProvincia() {
+		if (btnProvincia == null) {
+			btnProvincia = new JButton();
+			btnProvincia.setBounds(new Rectangle(494, 127, 53, 22));
+			btnProvincia.setText("...");
+			btnProvincia.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					gestioneProvincia(); // TODO Auto-generated Event stub actionPerformed()
+				}
+			});
+		}
+		return btnProvincia;
+	}
+
+	protected void gestioneProvincia() {
+		ProvinciaGestione pg=new ProvinciaGestione(this);
+		pg.setVisible(true);
+		cmbProvincia.removeAllItems();
+		caricaProvince(cmbProvincia);
+
+	}
+
+
+	private void caricaProvince(JComboBox cmbProvince) {
+		Provincia f = new Provincia();
+		try {
+			String as[] = (String[]) f.allProvincie();
+			// carichiamo tutti i dati in due array
+			// da passre al combobox
+			((IDJComboBox) cmbProvince).caricaNewValueComboBox(as, true);
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(this,
+					"Errore caricamento province nel combobox", "ERRORE", 0);
+			e.printStackTrace();
+		}
+		AutoCompletion.enable(cmbProvince);
+	}
+
 
 } // @jve:decl-index=0:visual-constraint="10,10"

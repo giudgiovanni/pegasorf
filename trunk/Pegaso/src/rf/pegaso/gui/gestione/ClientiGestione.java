@@ -9,6 +9,7 @@ import java.awt.Frame;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -29,10 +30,10 @@ import net.sf.jasperreports.view.JasperViewer;
 
 import org.jdesktop.swingx.JXTable;
 
-import rf.pegaso.db.DBManager;
 import rf.pegaso.db.model.ClienteModel;
 import rf.pegaso.db.tabelle.Cliente;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 
 /**
@@ -137,6 +138,9 @@ public class ClientiGestione extends JDialog {
 			c.deleteCliente(idCliente);
 		} catch (IDNonValido e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage(), "ERRORE", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 

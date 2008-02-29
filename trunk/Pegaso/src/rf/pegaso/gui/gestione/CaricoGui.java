@@ -14,6 +14,8 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
@@ -61,12 +63,10 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.view.JasperViewer;
 
 import org.jdesktop.swingx.JXTable;
+import org.jdesktop.swingx.decorator.AlternateRowHighlighter;
 
 import rf.myswing.IDJComboBox;
 import rf.myswing.util.DoubleEditor;
-import rf.myswing.util.SospesiColorRenderer;
-import rf.pegaso.db.DBManager;
-import rf.pegaso.db.UtilityDBManager;
 import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.pegaso.db.exception.ResultSetVuoto;
 import rf.pegaso.db.model.CarichiViewModel;
@@ -77,9 +77,13 @@ import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.Carico;
 import rf.pegaso.db.tabelle.Documento;
 import rf.pegaso.db.tabelle.Fornitore;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.pegaso.db.tabelle.exception.NumeroCaricoEsistente;
 import rf.pegaso.gui.utility.ModificaQuantitaRiga;
 import rf.utility.ControlloDati;
+import rf.utility.db.DBManager;
+import rf.utility.db.UtilityDBManager;
+import rf.utility.db.eccezzioni.IDNonValido;
+import rf.utility.gui.SospesiColorRenderer;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompleteTextComponent;
 import rf.utility.gui.text.AutoCompletion;
@@ -113,6 +117,17 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		}
 
 	}
+	
+	class MyMouseAdapter extends MouseAdapter{
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			if(e.getSource()==tblViewCarichi && e.getClickCount()==2){
+				modifica();
+			}
+		}
+		
+	}
 
 	class MyComboBoxListener implements ActionListener {
 
@@ -135,6 +150,8 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		}
 
 	}
+
+	private MyMouseAdapter myMouseadapter;
 
 	public CaricoGui(Frame frame) {
 		btnAzzera = null;
@@ -1110,6 +1127,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 				tblCarico.setSelectionMode(0);
 				tblCarico.setModel(caricoModel);
 				caricoModel.addTableModelListener(this);
+				tblCarico.setHighlighters(new AlternateRowHighlighter());
 
 				// impostiamo le varie colonne
 				TableColumn col = tblCarico.getColumnModel().getColumn(0);
@@ -1183,6 +1201,25 @@ public class CaricoGui extends JFrame implements TableModelListener {
 				// SospesiColorRenderer());
 				tblViewCarichi.setDefaultRenderer(Object.class,
 						new SospesiColorRenderer());
+				TableColumn c=tblViewCarichi.getColumnModel().getColumn(1);
+				c.setMaxWidth(100);
+				c.setMinWidth(100);
+				c.setPreferredWidth(100);
+
+				c=tblViewCarichi.getColumnModel().getColumn(2);
+				c.setMaxWidth(60);
+				c.setMinWidth(60);
+				c.setPreferredWidth(60);
+
+				c=tblViewCarichi.getColumnModel().getColumn(6);
+				c.setMaxWidth(60);
+				c.setMinWidth(60);
+				c.setPreferredWidth(60);
+
+				c=tblViewCarichi.getColumnModel().getColumn(7);
+				c.setMaxWidth(60);
+				c.setMinWidth(60);
+				c.setPreferredWidth(60);
 
 			} catch (Throwable throwable) {
 			}
@@ -1269,6 +1306,11 @@ public class CaricoGui extends JFrame implements TableModelListener {
 			try {
 				txtNumDocumento = new JTextField();
 				txtNumDocumento.setBounds(new Rectangle(96, 80, 101, 25));
+				AutoCompleteTextComponent complete = new AutoCompleteTextComponent(
+						txtNumDocumento, dbm, "carichi", "num_documento");
+				dbm.addDBStateChange(complete);
+				txtNumDocumento.setDocument(new UpperAutoCompleteDocument(complete,
+						false));
 			} catch (Throwable throwable) {
 			}
 		return txtNumDocumento;
@@ -1419,11 +1461,13 @@ public class CaricoGui extends JFrame implements TableModelListener {
 	private void inizializzaListeners() {
 		myComboBoxListener = new MyComboBoxListener();
 		myButtonListener = new MyButtonListener();
+		myMouseadapter=new MyMouseAdapter();
 		// cmbFornitori.addActionListener(myComboBoxListener);
 		btnInserisci.addActionListener(myButtonListener);
 		btnElimina.addActionListener(myButtonListener);
 		btnChiudi.addActionListener(myButtonListener);
 		cmbProdotti.addActionListener(myComboBoxListener);
+		tblViewCarichi.addMouseListener(myMouseadapter);
 	}
 
 	private void inserisci() {
@@ -1436,6 +1480,8 @@ public class CaricoGui extends JFrame implements TableModelListener {
 			messaggioCampoMancante("Numero documento non inserito");
 			return;
 		}
+
+
 		String codBarre = txtCodBarre.getText();
 		double tmp = ((Number) txtQta.getValue()).doubleValue();
 		String tmpPrezzo = txtPrezzo.getText();
@@ -1476,9 +1522,13 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		}
 		Carico c = new Carico();
 		try {
+
 			if (!c
 					.isInsert((new Integer(txtNumeroCarico.getText()))
 							.intValue())) {
+				if(Carico.isNumeroCaricoEsistente(txtNumDocumento.getText())){
+					throw new NumeroCaricoEsistente();
+				}
 				c.setIdCarico((new Integer(txtNumeroCarico.getText()))
 						.intValue());
 				c
@@ -1575,6 +1625,8 @@ public class CaricoGui extends JFrame implements TableModelListener {
 			JOptionPane.showMessageDialog(this,
 					"Errore nell'inserimento dinumeri", "NUMERO ERRATO", 0);
 			e.printStackTrace();
+		} catch (NumeroCaricoEsistente e) {
+			JOptionPane.showMessageDialog(this, e.getMessage(), "AVVISO", JOptionPane.INFORMATION_MESSAGE);
 		}
 
 	}
@@ -1755,6 +1807,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 			try {
 				pnlCentro = new JPanel();
 				pnlCentro.setLayout(new BorderLayout());
+				pnlCentro.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED), "Elenco documenti di carico", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Dialog", Font.BOLD, 12), new Color(51, 51, 51)));
 				pnlCentro.add(getJScrollPane2(), "Center");
 			} catch (Throwable throwable) {
 			}
@@ -1825,7 +1878,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 	private MyButtonListener myButtonListener;
 
-	private MyComboBoxListener myComboBoxListener;
+	private MyComboBoxListener myComboBoxListener;  //  @jve:decl-index=0:
 
 	private JPanel pnlCentrale;
 

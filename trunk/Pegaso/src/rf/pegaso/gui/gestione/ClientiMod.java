@@ -13,6 +13,7 @@ import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -23,10 +24,13 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
-import rf.pegaso.db.DBManager;
+import rf.myswing.IDJComboBox;
 import rf.pegaso.db.tabelle.Cliente;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.pegaso.db.tabelle.Provincia;
+import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
+import rf.utility.gui.text.AutoCompletion;
 import rf.utility.gui.text.UpperTextDocument;
 
 /**
@@ -120,13 +124,15 @@ public class ClientiMod extends JDialog {
 
 	private JTextField txtPiva = null;
 
-	private JTextField txtProvincia = null;
+	private IDJComboBox cmbProvincia = null;
 
 	private JTextField txtTel = null;
 
 	private JTextField txtVia = null;
 
 	private JTextField txtWebSite = null;
+
+	private JButton btnProvincia = null;
 
 	/**
 	 * @param owner
@@ -334,10 +340,10 @@ public class ClientiMod extends JDialog {
 				lblCodFisc.setBounds(new Rectangle(6, 156, 80, 16)); // Generated
 				lblProvincia = new JLabel();
 				lblProvincia.setText("Provincia"); // Generated
-				lblProvincia.setBounds(new Rectangle(377, 115, 53, 16)); // Generated
+				lblProvincia.setBounds(new Rectangle(293, 114, 53, 16)); // Generated
 				lblCitta = new JLabel();
 				lblCitta.setText("Città"); // Generated
-				lblCitta.setBounds(new Rectangle(191, 115, 26, 16)); // Generated
+				lblCitta.setBounds(new Rectangle(104, 115, 26, 16)); // Generated
 				lblCap = new JLabel();
 				lblCap.setText("Cap"); // Generated
 				lblCap.setBounds(new Rectangle(6, 115, 22, 16)); // Generated
@@ -365,11 +371,12 @@ public class ClientiMod extends JDialog {
 				pnlDatiPersonali.add(lblCitta, null); // Generated
 				pnlDatiPersonali.add(lblProvincia, null); // Generated
 				pnlDatiPersonali.add(getTxtCitta(), null); // Generated
-				pnlDatiPersonali.add(getTxtProvincia(), null); // Generated
+				pnlDatiPersonali.add(getCmbProvincia(), null); // Generated
 				pnlDatiPersonali.add(lblCodFisc, null); // Generated
 				pnlDatiPersonali.add(lblPiva, null); // Generated
 				pnlDatiPersonali.add(getTxtCodFisc(), null); // Generated
 				pnlDatiPersonali.add(getTxtPiva(), null); // Generated
+				pnlDatiPersonali.add(getBtnProvincia(), null);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -426,7 +433,7 @@ public class ClientiMod extends JDialog {
 			try {
 				txtCitta = new JTextField();
 				txtCitta.setPreferredSize(new Dimension(140, 20)); // Generated
-				txtCitta.setBounds(new Rectangle(191, 131, 180, 20)); // Generated
+				txtCitta.setBounds(new Rectangle(104, 131, 180, 20)); // Generated
 				txtCitta.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -572,18 +579,17 @@ public class ClientiMod extends JDialog {
 	 *
 	 * @return javax.swing.JTextField
 	 */
-	private JTextField getTxtProvincia() {
-		if (txtProvincia == null) {
+	private IDJComboBox getCmbProvincia() {
+		if (cmbProvincia == null) {
 			try {
-				txtProvincia = new JTextField();
-				txtProvincia.setPreferredSize(new Dimension(140, 20)); // Generated
-				txtProvincia.setBounds(new Rectangle(377, 131, 180, 20)); // Generated
-				txtProvincia.setDocument(new UpperTextDocument());
+				cmbProvincia = new IDJComboBox();
+				cmbProvincia.setPreferredSize(new Dimension(140, 20)); // Generated
+				cmbProvincia.setBounds(new Rectangle(293, 130, 199, 20)); // Generated
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
 		}
-		return txtProvincia;
+		return cmbProvincia;
 	}
 
 	/**
@@ -654,7 +660,7 @@ public class ClientiMod extends JDialog {
 		txtVia.setText(c.getVia());
 		txtCap.setText(c.getCap());
 		txtCitta.setText(c.getCitta());
-		txtProvincia.setText(c.getProvincia());
+		cmbProvincia.setSelectedItemByID(c.getProvincia());
 		txtTel.setText(c.getTelefono());
 		txtCell.setText(c.getCellulare());
 		txtFax.setText(c.getFax());
@@ -682,12 +688,30 @@ public class ClientiMod extends JDialog {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		caricaProvince(cmbProvincia);
 		impostaCampi(c);
 
 	}
 
+	private void caricaProvince(JComboBox cmbProvince) {
+
+		Provincia f = new Provincia();
+		try {
+
+			String as[] = (String[]) f.allProvincie();
+			// carichiamo tutti i dati in due array
+			// da passre al combobox
+			((IDJComboBox) cmbProvince).caricaNewValueComboBox(as, true);
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(this,
+					"Errore caricamento documenti nel combobox", "ERRORE", 0);
+			e.printStackTrace();
+		}
+		AutoCompletion.enable(cmbProvince);
+	}
+
 	private void modifica() {
-		if (idCliente <= 0)
+		if (idCliente < 0)
 			JOptionPane.showMessageDialog(this, "Codice idCliente errato",
 					"ERRORE", JOptionPane.ERROR_MESSAGE);
 		int scelta = JOptionPane.showConfirmDialog(this,
@@ -705,7 +729,7 @@ public class ClientiMod extends JDialog {
 		c.setVia(txtVia.getText());
 		c.setCap(txtCap.getText());
 		c.setCitta(txtCitta.getText());
-		c.setProvincia(txtProvincia.getText());
+		c.setProvincia(new Integer(cmbProvincia.getIDSelectedItem()));
 		c.setTelefono(txtTel.getText());
 		c.setCellulare(txtCell.getText());
 		c.setFax(txtFax.getText());
@@ -719,6 +743,33 @@ public class ClientiMod extends JDialog {
 			e.printStackTrace();
 		}
 		dispose();
+
+	}
+
+	/**
+	 * This method initializes btnProvincia
+	 *
+	 * @return javax.swing.JButton
+	 */
+	private JButton getBtnProvincia() {
+		if (btnProvincia == null) {
+			btnProvincia = new JButton();
+			btnProvincia.setBounds(new Rectangle(499, 129, 45, 23));
+			btnProvincia.setText("...");
+			btnProvincia.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					gestioneProvincia(); // TODO Auto-generated Event stub actionPerformed()
+				}
+			});
+		}
+		return btnProvincia;
+	}
+
+	protected void gestioneProvincia() {
+		ProvinciaGestione pg=new ProvinciaGestione(this);
+		pg.setVisible(true);
+		cmbProvincia.removeAllItems();
+		caricaProvince(cmbProvincia);
 
 	}
 

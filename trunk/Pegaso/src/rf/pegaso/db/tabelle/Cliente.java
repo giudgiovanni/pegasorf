@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.db.tabelle;
 
@@ -10,12 +10,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Calendar;
 
-import rf.pegaso.db.DBManager;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.pegaso.db.tabelle.exception.IDClienteNonImpostato;
+import rf.utility.DateManager;
+import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.IDNonValido;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class Cliente {
 
@@ -32,21 +34,29 @@ public class Cliente {
 	private String nome;
 	private String note;
 	private String piva;
-	private String provincia;
+	private int provincia;
 	private String tel;
 	private String via;
 
 	private String website;
+	private Date dataNascita;
+	private String documento;
+	private String numDoc;
+	private Date rilasciatoIl;
+	private String rilasciatoDa;
+	private String nazionalita;
+	private String natoa;
+	private String intestazione;
 
 	/**
 	 * Costruttore di default
-	 * 
+	 *
 	 */
 	public Cliente() {
-		this.dbm=DBManager.getIstanceSingleton(); 
+		this.dbm=DBManager.getIstanceSingleton();
 	}
 
-	
+
 
 	/**
 	 * @param idCliente2
@@ -71,26 +81,133 @@ public class Cliente {
 		this.idCliente = idCliente;
 		this.note = rs.getString("note");
 		this.piva = rs.getString("piva");
-		this.provincia = rs.getString("provincia");
+		this.provincia = rs.getInt("provincia");
 		this.tel = rs.getString("tel");
 		this.via = rs.getString("via");
 		this.website = rs.getString("website");
+		this.dataNascita = rs.getDate("data_nascita");
+		this.documento = rs.getString("documento");
+		this.numDoc = rs.getString("num_doc");
+		this.rilasciatoIl = rs.getDate("rilasciato_il");
+		this.rilasciatoDa = rs.getString("rilasciato_da");
+		this.nazionalita = rs.getString("nazionalita");
+		this.natoa = rs.getString("nato_a");
+		this.intestazione = rs.getString("intestazione");
+
 		if (st != null)
 			st.close();
 
 	}
 
+
+	public Date getDataNascita() {
+		return dataNascita;
+	}
+
+
+
+	public void setDataNascita(Date dataNascita) {
+		this.dataNascita = dataNascita;
+	}
+
+
+
+	public String getDocumento() {
+		return documento;
+	}
+
+
+
+	public void setDocumento(String documento) {
+		this.documento = documento;
+	}
+
+
+
+	public String getIntestazione() {
+		return intestazione;
+	}
+
+
+
+	public void setIntestazione(String intestazione) {
+		this.intestazione = intestazione;
+	}
+
+
+
+	public String getNatoa() {
+		return natoa;
+	}
+
+
+
+	public void setNatoa(String natoa) {
+		this.natoa = natoa;
+	}
+
+
+
+	public String getNazionalita() {
+		return nazionalita;
+	}
+
+
+
+	public void setNazionalita(String nazionalita) {
+		this.nazionalita = nazionalita;
+	}
+
+
+
+	public String getNumDoc() {
+		return numDoc;
+	}
+
+
+
+	public void setNumDoc(String numDoc) {
+		this.numDoc = numDoc;
+	}
+
+
+
+	public String getRilasciatoDa() {
+		return rilasciatoDa;
+	}
+
+
+
+	public void setRilasciatoDa(String rilasciatoDa) {
+		this.rilasciatoDa = rilasciatoDa;
+	}
+
+
+
+	public Date getRilasciatoIl() {
+		return rilasciatoIl;
+	}
+
+
+
+	public void setRilasciatoIl(Date rilasciatoIl) {
+		this.rilasciatoIl = rilasciatoIl;
+	}
+
+
+
 	/**
 	 * Questo metodo cancella un Cliente dalla base di dati Riceve come
 	 * parametro il codice id univoco della riga da cancellare
-	 * 
+	 *
 	 * @param idFornitore
 	 *            è il codice della riga da cancellare
 	 * @return un intero positivo se tutto è andato bene
 	 * @throws IDNonValido
 	 *             eccezzione generata se l'id è <=0
+	 * @throws SQLException
 	 */
-	public int deleteCliente(int idCliente) throws IDNonValido {
+	public int deleteCliente(int idCliente) throws IDNonValido, SQLException {
 
 		String delete = "";
 		Statement st = dbm.getNewStatement();
@@ -99,19 +216,13 @@ public class Cliente {
 			throw new IDNonValido();
 		delete = "DELETE FROM clienti WHERE idCliente=" + idCliente;
 
-		try {
+
 			cancellati = st.executeUpdate(delete);
 			dbm.notifyDBStateChange();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
+
 				if (st != null)
 					st.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+
 		return cancellati;
 	}
 
@@ -170,8 +281,14 @@ public class Cliente {
 		return piva;
 	}
 
-	public String getProvincia() {
+	public int getProvincia() {
 		return provincia;
+	}
+
+	public String getProvinciaToString() throws SQLException{
+		Provincia p=new Provincia();
+		p.caricaDati(this.provincia);
+		return p.getProvincia();
 	}
 
 	public String getTelefono() {
@@ -188,7 +305,7 @@ public class Cliente {
 
 	/**
 	 * Il seguente metodo inserisce nuovo Cliente nella tabella corrispondente
-	 * 
+	 *
 	 * @return un numero inferiore a 0 se ci sono stati problemi oppure maggiore
 	 *         altrimenti (in pratica ritorna il numero delle righe aggiornate)
 	 * @throws IDNonValido
@@ -202,7 +319,7 @@ public class Cliente {
 			throw new IDNonValido();
 		int ok = 0;
 		PreparedStatement pst = null;
-		String update = "insert into clienti values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String update = "insert into clienti values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Calendar c = Calendar.getInstance();
 		dataInserimento = new Date(c.getTimeInMillis());
 		pst = dbm.getNewPreparedStatement(update);
@@ -216,13 +333,21 @@ public class Cliente {
 			pst.setString(7, via);
 			pst.setString(8, cap);
 			pst.setString(9, citta);
-			pst.setString(10, provincia);
-			pst.setString(11, tel);
-			pst.setString(12, cell);
-			pst.setString(13, fax);
-			pst.setString(14, email);
-			pst.setString(15, website);
-			pst.setString(16, note);
+			pst.setString(10, tel);
+			pst.setString(11, cell);
+			pst.setString(12, fax);
+			pst.setString(13, email);
+			pst.setString(14, website);
+			pst.setString(15, note);
+			pst.setDate(16, DateManager.convertDateToSqlDate(this.dataNascita));
+			pst.setString(17, documento);
+			pst.setString(18, numDoc);
+			pst.setDate(19, DateManager.convertDateToSqlDate(rilasciatoIl));
+			pst.setString(20, rilasciatoDa);
+			pst.setString(21, natoa);
+			pst.setString(22, intestazione);
+			pst.setString(23, nazionalita);
+			pst.setInt(24, provincia);
 			ok = pst.executeUpdate();
 			dbm.notifyDBStateChange();
 		} catch (SQLException e) {
@@ -294,7 +419,7 @@ public class Cliente {
 		this.piva = piva;
 	}
 
-	public void setProvincia(String provincia) {
+	public void setProvincia(int provincia) {
 		this.provincia = provincia;
 	}
 
@@ -310,9 +435,128 @@ public class Cliente {
 		this.website = website;
 	}
 
+
+	/**
+	 * @param dbm2
+	 */
+	public Cliente(DBManager dbm) {
+		this.dbm = dbm;
+	}
+
+	public Cliente(String nome, String cognome, DBManager dbm) {
+		this.nome = nome;
+		this.cognome = cognome;
+		this.idCliente = -1;
+		this.dbm = dbm;
+	}
+
+	public int deleteCliente() throws IDClienteNonImpostato, IDNonValido, SQLException {
+		if(idCliente==-1)
+			return -1;
+		return deleteCliente(this.idCliente);
+	}
+
+	public Cliente getCliente(int idCliente) {
+		// ConnectionManager con = new ConnectionManager();
+		// DBManager dbm = new DBManager(con);
+		ResultSet rs = dbm.executeQuery("SELECT * FROM clienti WHERE IDcliente="
+				+ idCliente);
+		Cliente c = new Cliente();
+		try {
+			if (!rs.next())
+				return null;
+			c.setCognome(rs.getString("cognome"));
+			c.setEmail(rs.getString("email"));
+			c.setIdCliente(idCliente);
+			c.setNome(rs.getString("nome"));
+			c.setTelefono(rs.getString("tel"));
+			c.setVia(rs.getString("via"));
+			c.setCellulare(rs.getString("cell"));
+			c.setCodfisc(rs.getString("codfisc"));
+			c.setDataNascita(rs.getDate("data_nascita"));
+			c.setDocumento(rs.getString("documento"));
+			c.setNazionalita(rs.getString("nazionalita"));
+			c.setNumDoc(rs.getString("num_doc"));
+			c.setPiva(rs.getString("piva"));
+			c.setRilasciatoDa(rs.getString("rilasciato_da"));
+			c.setRilasciatoIl(rs.getDate("rilasciato_il"));
+			c.setCap(rs.getString("cap"));
+			c.setDataInserimento(rs.getDate("data_inserimento"));
+			c.setFax(rs.getString("fax"));
+			c.setNote(rs.getString("note"));
+			c.setWebsite(rs.getString("website"));
+			c.setProvincia(rs.getInt("provincia"));
+
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return c;
+	}
+
+	public String getNomeCliente(int id_cliente) {
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		String s = "select nome from clienti where idcliente=?";
+		String nome = "";
+		pst = dbm.getNewPreparedStatement(s);
+		try {
+			pst.setInt(1, id_cliente);
+			rs = pst.executeQuery();
+			rs.next();
+			nome = rs.getString("NOME");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pst != null)
+					pst.close();
+				if (rs != null)
+					rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return nome;
+	}
+
+	/**
+	 * @param id_cliente
+	 * @return
+	 */
+	public String getCognomeCliente(int id_cliente) {
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		String s = "select cognome from clienti where idcliente=?";
+		String nome = "";
+		pst = dbm.getNewPreparedStatement(s);
+		try {
+			pst.setInt(1, id_cliente);
+			rs = pst.executeQuery();
+			rs.next();
+			nome = rs.getString("COGNOME");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pst != null)
+					pst.close();
+				if (rs != null)
+					rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return nome;
+	}
+
+
+
 	/**
 	 * Il seguente metodo aggiorna il Cliente nella tabella corrispondente
-	 * 
+	 *
 	 * @return un numero inferiore a 0 se ci sono stati problemi oppure maggiore
 	 *         altrimenti (in pratica ritorna il numero delle righe aggiornate)
 	 * @throws IDNonValido
@@ -326,7 +570,7 @@ public class Cliente {
 		int ok = 0;
 		PreparedStatement pst = null;
 		String update = "UPDATE clienti SET idCliente=?,"
-				+ "data_inserimento=?,nome=?,cognome=?,piva=?,codfisc=?,via=?,cap=?,citta=?,provincia=?,tel=?,cell=?,fax=?,email=?,website=?,note=? WHERE idCliente=?";
+				+ "data_inserimento=?,nome=?,cognome=?,piva=?,codfisc=?,via=?,cap=?,citta=?,tel=?,cell=?,fax=?,email=?,website=?,note=?,data_nascita=?,documento=?,num_doc=?,rilasciato_il=?,rilasciato_da=?,nato_a=?,intestazione=?,nazionalita=?,provincia=? WHERE idCliente=?";
 		Calendar c = Calendar.getInstance();
 		dataInserimento = new Date(c.getTimeInMillis());
 		pst = dbm.getNewPreparedStatement(update);
@@ -340,14 +584,22 @@ public class Cliente {
 			pst.setString(7, via);
 			pst.setString(8, cap);
 			pst.setString(9, citta);
-			pst.setString(10, provincia);
-			pst.setString(11, tel);
-			pst.setString(12, cell);
-			pst.setString(13, fax);
-			pst.setString(14, email);
-			pst.setString(15, website);
-			pst.setString(16, note);
-			pst.setInt(17, idCliente);
+			pst.setString(10, tel);
+			pst.setString(11, cell);
+			pst.setString(12, fax);
+			pst.setString(13, email);
+			pst.setString(14, website);
+			pst.setString(15, note);
+			pst.setDate(16, dataNascita);
+			pst.setString(17, documento);
+			pst.setString(18, numDoc);
+			pst.setDate(19, rilasciatoIl);
+			pst.setString(20, rilasciatoDa);
+			pst.setString(21, natoa);
+			pst.setString(22, intestazione);
+			pst.setString(23, nazionalita);
+			pst.setInt(24, provincia);
+			pst.setInt(25, idCliente);
 			ok = pst.executeUpdate();
 			dbm.notifyDBStateChange();
 		} catch (SQLException e) {
@@ -362,7 +614,7 @@ public class Cliente {
 		}
 		return ok;
 	}
-	
+
 	/**
 	 * @return
 	 * @throws SQLException

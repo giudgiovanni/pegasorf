@@ -10,8 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import rf.pegaso.db.DBManager;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.IDNonValido;
 
 /**
  * @author Hunter
@@ -91,7 +91,7 @@ public class Documento {
 		String delete = "";
 		Statement st = dbm.getNewStatement();
 		int cancellati = 0;
-		if (iddocumento <= -1)
+		if (iddocumento <= 5)
 			throw new IDNonValido();
 		delete = "DELETE FROM tipo_documento WHERE iddocumento=" + iddocumento;
 

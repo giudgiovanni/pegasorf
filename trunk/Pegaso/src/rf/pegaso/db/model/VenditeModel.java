@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.db.model;
 
@@ -11,15 +11,16 @@ import javax.swing.table.AbstractTableModel;
 import rf.pegaso.db.tabelle.DettaglioVendita;
 import rf.utility.db.DBEvent;
 import rf.utility.db.DBStateChange;
+import rf.utility.db.RowEvent;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class VenditeModel extends AbstractTableModel implements DBStateChange {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private Vector<DettaglioVendita> vendita = null;
@@ -46,7 +47,7 @@ public class VenditeModel extends AbstractTableModel implements DBStateChange {
 	public String getTableName() {
 		return "vendita";
 	}
-	
+
 	public Object getValueAt(int r, int c) {
 		if ( vendita.size() == 0 )
 			return -1;
@@ -54,7 +55,7 @@ public class VenditeModel extends AbstractTableModel implements DBStateChange {
 		Vector<Object> v1 = v.trasformaInArray();
 		Object o = null;
 		o = (Object)v1.get(c);
-		
+
 //		if (o instanceof Double) {
 //			Double d = (Double) o;
 //			DecimalFormat numberFormatter = new DecimalFormat();
@@ -64,7 +65,7 @@ public class VenditeModel extends AbstractTableModel implements DBStateChange {
 //		}
 		return o;
 	}
-	
+
 	public boolean isCellEditable(int r, int c) {
 		if ( c == 1 || c == 2 || c == 4 || c == 9 )
 			return true;
@@ -94,7 +95,7 @@ public class VenditeModel extends AbstractTableModel implements DBStateChange {
 		DettaglioVendita v = vendita.get(r);
 		switch(c) {
 			case 4 :{
-//				if( o instanceof Long) 
+//				if( o instanceof Long)
 //					v.setQta(new Integer(o));
 //				else
 					v.setQta((Integer)o);
@@ -108,6 +109,16 @@ public class VenditeModel extends AbstractTableModel implements DBStateChange {
 				break;
 		}
 		this.fireTableCellUpdated(r, c);
+	}
+
+	public String getNomeTabella() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void rowStateChange(RowEvent re) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

@@ -12,9 +12,10 @@ import java.util.Date;
 import javax.swing.table.AbstractTableModel;
 
 import rf.myswing.GregorianCalendarFormat;
-import rf.pegaso.db.DBManager;
 import rf.utility.db.DBEvent;
+import rf.utility.db.DBManager;
 import rf.utility.db.DBStateChange;
+import rf.utility.db.RowEvent;
 
 /**
  * @author Hunter
@@ -116,7 +117,7 @@ public class ScarichiViewModel extends AbstractTableModel implements
 	 *
 	 */
 	private void recuperaDati() throws SQLException {
-		this.query = "select o.idordine as id,o.data_documento,o.num_documento, d.descrizione,c.nome,c.cognome,o.note from ordini as o,tipo_documento as d,  clienti as c  where o.idordine>0 and o.idcliente=c.idcliente and o.tipo_documento=d.iddocumento order by o.idordine,o.data_documento desc";
+		this.query = "select o.idordine as id,o.data_documento,o.num_documento, d.descrizione,c.nome,c.cognome,o.note from ordini as o,tipo_documento as d,  clienti as c  where o.idordine>0 and o.idcliente=c.idcliente and o.tipo_documento=d.iddocumento order by o.data_documento desc";
 		pst = dbm.getNewPreparedStatement(query);
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();
@@ -126,6 +127,11 @@ public class ScarichiViewModel extends AbstractTableModel implements
 	public String getNomeTabella() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void rowStateChange(RowEvent re) {
+		// TODO Auto-generated method stub
+
 	}
 
 

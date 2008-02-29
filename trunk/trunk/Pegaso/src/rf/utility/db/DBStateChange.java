@@ -1,13 +1,19 @@
+/**
+ * 
+ */
+
 package rf.utility.db;
 
 /**
  * @author hunterbit
  */
 public interface DBStateChange {
-	public String getTableName();
+    public void stateChange();
 
-	public void stateChange();
+    public void rowStateChange(RowEvent re);
 
-	public void stateChange(DBEvent dbe);
+    public String getNomeTabella();
+
+    public void stateChange(DBEvent dbe);
 
 }

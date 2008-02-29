@@ -24,8 +24,8 @@ import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
 
 import rf.pegaso.db.tabelle.Articolo;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
 import rf.utility.ControlloDati;
+import rf.utility.db.eccezzioni.IDNonValido;
 
 /**
  * Implements a cell editor that uses a formatted text field to edit Integer

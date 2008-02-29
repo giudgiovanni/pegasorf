@@ -48,7 +48,6 @@ import org.jdesktop.swingx.JXTable;
 import rf.myswing.IDJComboBox;
 import rf.myswing.util.MyTableCellRendererAlignment;
 import rf.myswing.util.QuantitaDisponibileEditor;
-import rf.pegaso.db.DBManager;
 import rf.pegaso.db.model.FatturaViewModel;
 import rf.pegaso.db.model.VenditeModel;
 import rf.pegaso.db.tabelle.Articolo;
@@ -59,9 +58,9 @@ import rf.pegaso.db.tabelle.DettaglioVendita;
 import rf.pegaso.db.tabelle.Pagamento;
 import rf.pegaso.db.tabelle.Scarico;
 import rf.pegaso.db.tabelle.Vendita;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
 import rf.pegaso.gui.gestione.ClientiAdd;
 import rf.utility.ControlloDati;
+import rf.utility.db.DBManager;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompleteTextComponent;
 import rf.utility.gui.text.AutoCompletion;
@@ -317,7 +316,7 @@ public class FatturaImmediata extends JFrame{
 			if( d.getIdArticolo() == dv.getIdArticolo() ){
 				if ( dv.getDisponibilita() < (dv.getQta() + d.getQta()) )
 					messaggioCampoMancante("Articolo non disponibile, ma gia' presente nel carrello", "AVVISO");
-				
+
 				else{
 					d.setQta(d.getQta() + dv.getQta());
 					d.setDisponibilita(d.getDisponibilita() - dv.getQta());
@@ -375,9 +374,9 @@ public class FatturaImmediata extends JFrame{
 			}
 		}
 		else
-			dispose();		
+			dispose();
 	}
-	
+
 	/**
 	 * This method initializes jContentPane
 	 *
@@ -977,8 +976,13 @@ public class FatturaImmediata extends JFrame{
 								dest += c.getCap()+" ";
 							if ( c.getCitta() != null )
 								dest += c.getCitta()+" ";
-							if ( c.getProvincia() != null )
-								dest += c.getProvincia();
+							try {
+								if ( c.getProvinciaToString() != null )
+									dest += c.getProvincia();
+							} catch (SQLException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 							txtDestinazione.setText(dest);
 						}
 					}
@@ -1678,7 +1682,8 @@ public class FatturaImmediata extends JFrame{
 		vendita.setIdVendita(idfattura);
 		try {
 			vendita.rimuoviDaDb("fattura", "idfattura");
-		} catch (IDNonValido e) {
+		} catch (rf.utility.db.eccezzioni.IDNonValido e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		vendita = new Vendita();

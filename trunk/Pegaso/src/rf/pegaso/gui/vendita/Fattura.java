@@ -41,7 +41,6 @@ import org.jdesktop.swingx.JXTable;
 import rf.myswing.IDJComboBox;
 import rf.myswing.util.MyTableCellRendererAlignment;
 import rf.myswing.util.QuantitaDisponibileEditorSQL;
-import rf.pegaso.db.DBManager;
 import rf.pegaso.db.model.DdtFatturaModel;
 import rf.pegaso.db.model.VenditeModel;
 import rf.pegaso.db.tabelle.Cliente;
@@ -51,6 +50,7 @@ import rf.pegaso.db.tabelle.Scarico;
 import rf.pegaso.db.tabelle.Vendita;
 import rf.pegaso.gui.gestione.ClientiAdd;
 import rf.utility.ControlloDati;
+import rf.utility.db.DBManager;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompletion;
 

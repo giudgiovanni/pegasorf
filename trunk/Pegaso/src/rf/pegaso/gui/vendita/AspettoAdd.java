@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.gui.vendita;
 
@@ -14,19 +14,17 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
 import rf.pegaso.db.tabelle.Aspetto;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.UpperTextDocument;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class AspettoAdd extends JDialog {
 	class MyActionListener implements ActionListener {
@@ -70,18 +68,18 @@ public class AspettoAdd extends JDialog {
 		initialize();
 	}
 
-	
+
 	public AspettoAdd(JFrame owner){//, DBManager dbm) {
 		super(owner, true);
 		//this.dbm = dbm;
 		initialize();
 	}
-	
-	
-	
+
+
+
 	/**
 	 * This method initializes btnChiudi
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnChiudi() {
@@ -99,7 +97,7 @@ public class AspettoAdd extends JDialog {
 
 	/**
 	 * This method initializes btnInserisci
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnInserisci() {
@@ -118,7 +116,7 @@ public class AspettoAdd extends JDialog {
 
 	/**
 	 * This method initializes jContentPane
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
@@ -133,7 +131,7 @@ public class AspettoAdd extends JDialog {
 
 	/**
 	 * This method initializes jPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanel() {
@@ -154,7 +152,7 @@ public class AspettoAdd extends JDialog {
 
 	/**
 	 * This method initializes pnlCentrale
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlCentrale() {
@@ -175,7 +173,7 @@ public class AspettoAdd extends JDialog {
 
 	/**
 	 * This method initializes txtNome
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtNome() {
@@ -193,7 +191,7 @@ public class AspettoAdd extends JDialog {
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 * @return void
 	 */
 	private void initialize() {
@@ -209,10 +207,8 @@ public class AspettoAdd extends JDialog {
 		a.setNome(txtNome.getText());
 		try {
 			a.insertAspetto();
-		} catch (IDNonValido e) {
-			JOptionPane.showMessageDialog(this,
-					"Errore inserimento Nuovo Aspetto", "ERRORE",
-					JOptionPane.ERROR_MESSAGE);
+		} catch (rf.utility.db.eccezzioni.IDNonValido e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		dispose();

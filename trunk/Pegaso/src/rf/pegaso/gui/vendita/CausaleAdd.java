@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rf.pegaso.gui.vendita;
 
@@ -20,13 +20,12 @@ import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
 import rf.pegaso.db.tabelle.Causale;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.UpperTextDocument;
 
 /**
  * @author Hunter
- * 
+ *
  */
 public class CausaleAdd extends JDialog {
 	class MyActionListener implements ActionListener {
@@ -69,17 +68,17 @@ public class CausaleAdd extends JDialog {
 		initialize();
 	}
 
-	
+
 	public CausaleAdd(JFrame owner) {
 		super(owner, true);
 		initialize();
 	}
-	
-	
-	
+
+
+
 	/**
 	 * This method initializes btnChiudi
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnChiudi() {
@@ -97,7 +96,7 @@ public class CausaleAdd extends JDialog {
 
 	/**
 	 * This method initializes btnInserisci
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnInserisci() {
@@ -116,7 +115,7 @@ public class CausaleAdd extends JDialog {
 
 	/**
 	 * This method initializes jContentPane
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
@@ -131,7 +130,7 @@ public class CausaleAdd extends JDialog {
 
 	/**
 	 * This method initializes jPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanel() {
@@ -145,7 +144,7 @@ public class CausaleAdd extends JDialog {
 				jPanel.add(getBtnInserisci(), null); // Generated
 				jPanel.add(getBtnChiudi(), null); // Generated
 			} catch (java.lang.Throwable e) {
-				
+
 			}
 		}
 		return jPanel;
@@ -153,7 +152,7 @@ public class CausaleAdd extends JDialog {
 
 	/**
 	 * This method initializes pnlCentrale
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlCentrale() {
@@ -168,7 +167,7 @@ public class CausaleAdd extends JDialog {
 				pnlCentrale.add(jLabel2, null); // Generated
 				pnlCentrale.add(getTxtNome(), null); // Generated
 			} catch (java.lang.Throwable e) {
-				
+
 			}
 		}
 		return pnlCentrale;
@@ -176,7 +175,7 @@ public class CausaleAdd extends JDialog {
 
 	/**
 	 * This method initializes txtNome
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtNome() {
@@ -187,7 +186,7 @@ public class CausaleAdd extends JDialog {
 				txtNome.setBounds(new Rectangle(30, 42, 230, 20)); // Generated
 				txtNome.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				
+
 			}
 		}
 		return txtNome;
@@ -195,7 +194,7 @@ public class CausaleAdd extends JDialog {
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 * @return void
 	 */
 	private void initialize() {
@@ -211,7 +210,7 @@ public class CausaleAdd extends JDialog {
 		c.setNome(txtNome.getName());
 		try {
 			c.insertCausale();
-		} catch (IDNonValido e) {
+		} catch (rf.utility.db.eccezzioni.IDNonValido e) {
 			JOptionPane.showMessageDialog(this,
 					"Errore inserimento Nuova Causale", "ERRORE",
 					JOptionPane.ERROR_MESSAGE);

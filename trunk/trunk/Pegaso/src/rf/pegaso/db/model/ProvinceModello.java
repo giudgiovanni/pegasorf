@@ -7,7 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -20,8 +19,7 @@ import rf.utility.db.RowEvent;
  * @author Hunter
  *
  */
-public class FornitoriModelRidotto extends AbstractTableModel implements
-		DBStateChange {
+public class ProvinceModello extends AbstractTableModel implements DBStateChange {
 
 	private DBManager dbm;
 	private PreparedStatement pst = null;
@@ -29,8 +27,15 @@ public class FornitoriModelRidotto extends AbstractTableModel implements
 	private ResultSet rs = null;
 	private ResultSetMetaData rsmd = null;
 
-	public FornitoriModelRidotto(DBManager dbm) throws SQLException {
-		this.dbm = dbm;
+	public ProvinceModello() throws SQLException {
+		this.dbm = dbm.getIstanceSingleton();
+		recuperaDati();
+
+	}
+
+	public ProvinceModello(int idListino) throws SQLException {
+		this.dbm = dbm.getIstanceSingleton();
+
 		recuperaDati();
 
 	}
@@ -73,7 +78,7 @@ public class FornitoriModelRidotto extends AbstractTableModel implements
 	}
 
 	public String getTableName() {
-		return "articoli";
+		return "provincia";
 	}
 
 	public Object getValueAt(int r, int c) {
@@ -87,13 +92,6 @@ public class FornitoriModelRidotto extends AbstractTableModel implements
 			o = rs.getObject(c + 1);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-		if (o instanceof Double) {
-			Double d = (Double) o;
-			DecimalFormat numberFormatter = new DecimalFormat("#,##0.00");
-			numberFormatter.setMaximumFractionDigits(2);
-			numberFormatter.setMinimumFractionDigits(2);
-			return numberFormatter.format(d);
 		}
 		return o;
 	}
@@ -118,7 +116,8 @@ public class FornitoriModelRidotto extends AbstractTableModel implements
 	 *
 	 */
 	private void recuperaDati() throws SQLException {
-		this.query = "select a.idfornitore,a.nome,a.via,a.cap,a.citta,a.provincia from fornitori a order by a.nome ASC";
+
+		this.query = "select * from provincia order by provincia";
 		pst = dbm.getNewPreparedStatement(query);
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();
@@ -127,15 +126,13 @@ public class FornitoriModelRidotto extends AbstractTableModel implements
 
 	public String getNomeTabella() {
 		// TODO Auto-generated method stub
-		return null;
+		return "provincia";
 	}
 
 	public void rowStateChange(RowEvent re) {
 		// TODO Auto-generated method stub
 
 	}
-
-
 
 
 }

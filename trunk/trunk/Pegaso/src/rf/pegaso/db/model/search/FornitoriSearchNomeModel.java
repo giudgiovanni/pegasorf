@@ -10,9 +10,10 @@ import java.sql.Statement;
 
 import javax.swing.table.AbstractTableModel;
 
-import rf.pegaso.db.DBManager;
 import rf.utility.db.DBEvent;
+import rf.utility.db.DBManager;
 import rf.utility.db.DBStateChange;
+import rf.utility.db.RowEvent;
 
 /**
  * @author Hunter
@@ -124,6 +125,11 @@ public class FornitoriSearchNomeModel extends AbstractTableModel implements
 	public String getNomeTabella() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void rowStateChange(RowEvent re) {
+		// TODO Auto-generated method stub
+
 	}
 
 

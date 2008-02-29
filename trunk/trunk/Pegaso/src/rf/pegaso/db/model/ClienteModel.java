@@ -10,9 +10,10 @@ import java.sql.SQLException;
 
 import javax.swing.table.AbstractTableModel;
 
-import rf.pegaso.db.DBManager;
 import rf.utility.db.DBEvent;
+import rf.utility.db.DBManager;
 import rf.utility.db.DBStateChange;
+import rf.utility.db.RowEvent;
 
 /**
  * @author Hunter
@@ -120,5 +121,9 @@ public class ClienteModel extends AbstractTableModel implements DBStateChange {
 		return null;
 	}
 
+	public void rowStateChange(RowEvent re) {
+		// TODO Auto-generated method stub
+
+	}
 
 }

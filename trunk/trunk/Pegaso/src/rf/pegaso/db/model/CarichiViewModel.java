@@ -13,9 +13,10 @@ import java.util.Date;
 import javax.swing.table.AbstractTableModel;
 
 import rf.myswing.GregorianCalendarFormat;
-import rf.pegaso.db.DBManager;
 import rf.utility.db.DBEvent;
+import rf.utility.db.DBManager;
 import rf.utility.db.DBStateChange;
+import rf.utility.db.RowEvent;
 
 /**
  * @author Hunter
@@ -131,7 +132,7 @@ public class CarichiViewModel extends AbstractTableModel implements
 	 *
 	 */
 	private void recuperaDati() throws SQLException {
-		this.query = "select c.idcarico as id,c.data_documento,c.num_documento, d.descrizione,f.nome as fornitore,c.note,c.totale_documento,c.sospeso from carichi as c,tipo_documento as d,  fornitori as f  where c.idcarico=c.idcarico and c.idfornitore=f.idfornitore and c.iddocumento=d.iddocumento order by c.data_documento desc";
+		this.query = "select c.idcarico as id,c.data_documento,c.num_documento as numero, d.descrizione,f.nome as fornitore,c.note,c.totale_documento as totale,c.sospeso from carichi as c,tipo_documento as d,  fornitori as f  where c.idcarico=c.idcarico and c.idfornitore=f.idfornitore and c.iddocumento=d.iddocumento order by c.data_documento desc";
 		pst = dbm.getNewPreparedStatement(query);
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();
@@ -141,6 +142,11 @@ public class CarichiViewModel extends AbstractTableModel implements
 	public String getNomeTabella() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void rowStateChange(RowEvent re) {
+		// TODO Auto-generated method stub
+
 	}
 
 

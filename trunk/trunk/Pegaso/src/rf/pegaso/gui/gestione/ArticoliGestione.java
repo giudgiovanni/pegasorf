@@ -30,10 +30,10 @@ import net.sf.jasperreports.view.JasperViewer;
 
 import org.jdesktop.swingx.JXTable;
 
-import rf.pegaso.db.DBManager;
 import rf.pegaso.db.model.ArticoloModel;
 import rf.pegaso.db.tabelle.Articolo;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 
 /**

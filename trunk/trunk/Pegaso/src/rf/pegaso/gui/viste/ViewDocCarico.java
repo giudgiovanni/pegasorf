@@ -14,8 +14,8 @@ import javax.swing.ListSelectionModel;
 
 import org.jdesktop.swingx.JXTable;
 
-import rf.pegaso.db.DBManager;
 import rf.pegaso.db.model.ViewDocCaricoModel;
+import rf.utility.db.DBManager;
 import rf.utility.gui.UtilGUI;
 
 /**

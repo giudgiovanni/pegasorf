@@ -29,9 +29,9 @@ import javax.swing.text.JTextComponent;
 
 import org.jdesktop.swingx.JXTable;
 
-import rf.pegaso.db.DBManager;
 import rf.pegaso.db.model.search.ArticoliByFornitoreModel;
 import rf.pegaso.db.tabelle.Fornitore;
+import rf.utility.db.DBManager;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompletion;
 

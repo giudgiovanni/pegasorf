@@ -41,15 +41,15 @@ import net.sf.jasperreports.view.JasperViewer;
 
 import org.jdesktop.swingx.JXTable;
 
-import rf.pegaso.db.DBManager;
 import rf.pegaso.db.model.GiacenzeModel;
 import rf.pegaso.db.model.search.GiacenzeSearchCodiceModel;
 import rf.pegaso.db.model.search.GiacenzeSearchDescModel;
 import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.Giacenze;
 import rf.pegaso.db.tabelle.Scarico;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
 import rf.utility.ControlloDati;
+import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.UpperTextDocument;
 

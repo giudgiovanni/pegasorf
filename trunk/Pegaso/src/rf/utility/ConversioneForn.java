@@ -21,17 +21,17 @@ import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
-import rf.pegaso.db.DBManager;
 import rf.pegaso.db.tabelle.Fornitore;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.IDNonValido;
 
 /**
- * 
+ *
  */
 
 /**
  * @author hunterbit
- * 
+ *
  */
 public class ConversioneForn extends JDialog {
 
@@ -97,7 +97,7 @@ public class ConversioneForn extends JDialog {
 				a.setCap(cap.getContents());
 				a.setCitta(citta.getContents());
 				a.setNome(descrizione.getContents());
-				a.setProvincia(prov.getContents());
+				//a.setProvincia(prov.getContents());
 				a.setVia(via.getContents());
 				a.setNote(note.getContents());
 				a.setPiva(piva.getContents());
@@ -133,7 +133,7 @@ public class ConversioneForn extends JDialog {
 
 	/**
 	 * This method initializes btnApri
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnApri() {
@@ -159,7 +159,7 @@ public class ConversioneForn extends JDialog {
 
 	/**
 	 * This method initializes btnConverti
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnConverti() {
@@ -183,7 +183,7 @@ public class ConversioneForn extends JDialog {
 
 	/**
 	 * This method initializes jContentPane
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
@@ -198,7 +198,7 @@ public class ConversioneForn extends JDialog {
 
 	/**
 	 * This method initializes jProgressBar
-	 * 
+	 *
 	 * @return javax.swing.JProgressBar
 	 */
 	private JProgressBar getJProgressBar() {
@@ -215,7 +215,7 @@ public class ConversioneForn extends JDialog {
 
 	/**
 	 * This method initializes pnlNord
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlNord() {
@@ -238,7 +238,7 @@ public class ConversioneForn extends JDialog {
 
 	/**
 	 * This method initializes pnlSud
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlSud() {
@@ -265,7 +265,7 @@ public class ConversioneForn extends JDialog {
 
 	/**
 	 * This method initializes txtPathClienti
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtPathClienti() {
@@ -284,7 +284,7 @@ public class ConversioneForn extends JDialog {
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 * @return void
 	 */
 	private void initialize() {
@@ -295,7 +295,7 @@ public class ConversioneForn extends JDialog {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	protected void apri() {
 		JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
@@ -309,7 +309,7 @@ public class ConversioneForn extends JDialog {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	protected void converti() {
 		if (this.path == null || this.path.equalsIgnoreCase("")) {

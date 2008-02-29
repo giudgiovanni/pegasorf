@@ -18,7 +18,7 @@ import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
 
 import rf.pegaso.db.tabelle.Banca;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.UpperTextDocument;
 

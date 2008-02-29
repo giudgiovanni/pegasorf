@@ -28,12 +28,12 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
 
 import rf.myswing.IDJComboBox;
-import rf.pegaso.db.UtilityDBManager;
 import rf.pegaso.db.model.PrimaNotaModelUscite;
 import rf.pegaso.db.tabelle.Banca;
 import rf.pegaso.db.tabelle.ContoCorrente;
 import rf.pegaso.db.tabelle.MovimentoBanca;
-import rf.utility.date.DateManager;
+import rf.utility.DateManager;
+import rf.utility.db.UtilityDBManager;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompletion;
 

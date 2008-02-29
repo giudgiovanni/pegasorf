@@ -18,6 +18,8 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -62,11 +64,10 @@ import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
 import org.jdesktop.swingx.JXTable;
+import org.jdesktop.swingx.decorator.AlternateRowHighlighter;
 
 import rf.myswing.IDJComboBox;
 import rf.myswing.util.QuantitaEditorSql;
-import rf.pegaso.db.DBManager;
-import rf.pegaso.db.UtilityDBManager;
 import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.pegaso.db.exception.ResultSetVuoto;
 import rf.pegaso.db.model.ArticoliScaricatiViewModel;
@@ -75,9 +76,12 @@ import rf.pegaso.db.model.ScaricoModel;
 import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.Fornitore;
 import rf.pegaso.db.tabelle.Scarico;
-import rf.pegaso.db.tabelle.exception.IDNonValido;
+import rf.pegaso.db.tabelle.exception.NumeroOrdineEsistente;
 import rf.pegaso.gui.utility.ModificaQuantitaRiga;
 import rf.utility.ControlloDati;
+import rf.utility.db.DBManager;
+import rf.utility.db.UtilityDBManager;
+import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.ComboBoxUtil;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompleteTextComponent;
@@ -115,7 +119,8 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 				dispose();
 			} else if (e.getSource() == btnApriArticoli) {
 				apriGestioneArticoli();
-			}
+			}else if(e.getSource()==btnAzzera)
+				azzeraTuttiCampi();
 
 		}
 
@@ -123,21 +128,24 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 
 	class MyComboBoxListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == cmbClienti) {
-				int idfornitore = ComboBoxUtil.estraiCodice((String) cmbClienti
-						.getSelectedItem());
-				caricaArticoliByIdFornitore(idfornitore);
-				azzeraCampi();
-			} else if (e.getSource() == cmbProdotti) {
+			 if (e.getSource() == cmbProdotti) {
 				if (((IDJComboBox) cmbProdotti).getIDSelectedItem() != null) {
 					int id = new Integer(((IDJComboBox) cmbProdotti).getIDSelectedItem())
 							.intValue();
 					caricaArticoloByID(id);
 				}
-
 			}
 		}
+	}
 
+	class MyMouseAdapter extends MouseAdapter{
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			if(e.getSource()==tblViewScarichi && e.getClickCount()==2){
+				modifica();
+			}
+		}
 
 	}
 
@@ -150,8 +158,6 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 	private JButton btnInserisci = null;
 
 	private JCheckBox chkInsRapido = null;
-
-	private JComboBox cmbClienti = null;
 
 	private JComboBox cmbProdotti = null;
 
@@ -170,8 +176,6 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 	private JLabel lblDataCarico = null;
 
 	private JLabel lblDescrizioneProdotto = null;
-
-	private JLabel lblFornitore = null;
 
 	private JLabel lblIngImponibile = null;
 
@@ -269,6 +273,8 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 
 	private JLabel lblImpostaTot = null;
 
+	//cliente banco per scarichi manuali
+	private int idCliente=0;
 	private JTextField txtImpostaTot = null;
 
 	private JLabel lblTot = null;
@@ -278,6 +284,10 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 	private JPanel pnlBottoni = null;
 
 	private JButton btnApriArticoli = null;
+
+	private MyMouseAdapter myMouseListener;  //  @jve:decl-index=0:
+
+	private JButton btnAzzera = null;
 
 	/**
 	 * @param frame
@@ -311,7 +321,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 			Scarico c = new Scarico();
 			c.caricaDati(new Integer(txtNumeroScarico.getText()).intValue());
 
-			c.updateArticolo(a.getIdArticolo(), qta[0], 0);
+			c.updateArticolo(a.getIdArticolo(), qta[0], 0,0,0,0);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -334,7 +344,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 			a.caricaDati(id);
 			Fornitore f = new Fornitore();
 			f.caricaDati(a.getIdFornitore());
-			cmbClienti.setSelectedItem(f.getNome());
+
 			txtUm.setText((new Integer(a.getUm())).toString());
 			txtQta.setValue(1.0);
 			txtCodBarre.setText(a.getCodBarre());
@@ -517,8 +527,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 			if (a.findByCodBarre(codBarre)) {
 				Fornitore f = new Fornitore();
 				f.caricaDati(a.getIdFornitore());
-				cmbClienti.setSelectedItem(a.getIdFornitore() + " - "
-						+ f.getNome());
+
 				cmbProdotti.setSelectedItem(a.getDescrizione());
 				txtUm.setText(new Integer(a.getUm()).toString());
 				txtQta.setValue(1.0);
@@ -534,15 +543,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 
 	}
 
-	private void caricaClienti(JComboBox cmbFornitori) {
 
-		// nello scarico manuale usiamo solo il cliente
-		// banco come scarico in quanto il resto si deve fare
-		// dalle vendite.
-		cmbFornitori.removeAll();
-		cmbFornitori.addItem("0 - BANCO");
-
-	}
 
 	/**
 	 *
@@ -695,24 +696,6 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 	}
 
 	/**
-	 * This method initializes cmbClienti
-	 *
-	 * @return javax.swing.JComboBox
-	 */
-	private JComboBox getCmbClienti() {
-		if (cmbClienti == null) {
-			try {
-				cmbClienti = new JComboBox();
-				cmbClienti.setBounds(new Rectangle(68, 84, 521, 21)); // Generated
-				// cmbClienti.addActionListener(new MyComboBoxListener());
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return cmbClienti;
-	}
-
-	/**
 	 * This method initializes cmbProdotti
 	 *
 	 * @return javax.swing.JComboBox
@@ -801,9 +784,6 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 				lblTipoDocumento = new JLabel();
 				lblTipoDocumento.setBounds(new Rectangle(8, 36, 101, 21)); // Generated
 				lblTipoDocumento.setText("Tipo Documento"); // Generated
-				lblFornitore = new JLabel();
-				lblFornitore.setBounds(new Rectangle(8, 84, 57, 21)); // Generated
-				lblFornitore.setText("Cliente"); // Generated
 				lblDataCarico = new JLabel();
 				lblDataCarico.setBounds(new Rectangle(145, 8, 83, 25)); // Generated
 				lblDataCarico.setText("Data Scarico"); // Generated
@@ -816,8 +796,6 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 				pnlNord.add(lblNumeroCarico, null); // Generated
 				pnlNord.add(getTxtNumeroScarico(), null); // Generated
 				pnlNord.add(lblDataCarico, null); // Generated
-				pnlNord.add(lblFornitore, null); // Generated
-				pnlNord.add(getCmbClienti(), null); // Generated
 				pnlNord.add(getPnlProdotto(), null); // Generated
 				pnlNord.add(getBtnChiudi(), null); // Generated
 				pnlNord.add(lblTipoDocumento, null); // Generated
@@ -827,6 +805,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 				pnlNord.add(getDataDocumento(), null); // Generated
 				pnlNord.add(getDataScarico(), null); // Generated
 				pnlNord.add(jLabel, null); // Generated
+				pnlNord.add(getBtnAzzera(), null);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -945,6 +924,8 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 				tblScarico = new JXTable(modello);
 				tblScarico
 						.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				tblScarico.setHighlighters(new AlternateRowHighlighter());
+
 				// impostiamo l'editor di default per il controllo sulla
 				// quantità
 				//tblScarico.setDefaultEditor(Double.class,new QuantitaDisponibileEditorSQL());
@@ -1247,8 +1228,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 		// Imposto il campo codice id che verrà poi inserito
 		txtNumeroScarico.setText(new Integer(idcarico).toString());
 
-		// carico tutti i dati nei combo box
-		caricaClienti(this.cmbClienti);
+
 		caricaArticoli(this.cmbProdotti);
 
 		// inizializzo tutti i listener
@@ -1266,15 +1246,16 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 	private void inizializzaListeners() {
 		myComboBoxListener = new MyComboBoxListener();
 		myButtonListener = new MyButtonListener();
-
+		myMouseListener=new MyMouseAdapter();
 		// aggiungo il listener nei suoi oggetti.
-		cmbClienti.addActionListener(myComboBoxListener);
+
 		btnInserisci.addActionListener(myButtonListener);
+		btnAzzera.addActionListener(myButtonListener);
 		btnElimina.addActionListener(myButtonListener);
 		btnChiudi.addActionListener(myButtonListener);
 		btnApriArticoli.addActionListener(myButtonListener);
 		cmbProdotti.addActionListener(myComboBoxListener);
-
+		tblViewScarichi.addMouseListener(myMouseListener);
 	}
 
 	/**
@@ -1283,6 +1264,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 	 *
 	 */
 	private void inserisci() {
+
 
 		String codBarre = txtCodBarre.getText();
 		if (codBarre.equalsIgnoreCase("")) {
@@ -1314,8 +1296,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 		Scarico c = new Scarico();
 		try {
 			c.setIdScarico(new Integer(txtNumeroScarico.getText()).intValue());
-			c.setIdCliente(new Integer(ComboBoxUtil
-					.estraiCodice((String) cmbClienti.getSelectedItem())));
+			c.setIdCliente(0);
 			c
 					.setDataScarico(new java.sql.Date(dataScarico.getDate()
 							.getTime()));
@@ -1323,11 +1304,15 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 			c.setNote(txtNote.getText());
 			c.setDataDocumento(new java.sql.Date(dataDocumento.getDate()
 					.getTime()));
+
 			c.setNumDocumento(txtNumDocumento.getText());
 			c.setIdDocumento(0);
 
 			if (!c.isInsert(new Integer(txtNumeroScarico.getText()).intValue())) {
 
+				if(Scarico.isNumeroOrdineEsistente(txtNumDocumento.getText())){
+					throw new NumeroOrdineEsistente();
+				}
 				c.insertScarico();
 			} else {
 				try {
@@ -1376,7 +1361,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 					return;
 				} else {
 					c.updateArticolo(a.getIdArticolo(), qta
-							+ ((Number)txtQta.getValue()).doubleValue(), 0);
+							+ ((Number)txtQta.getValue()).doubleValue(), 0,0,0,0);
 					// c.insertArticolo(a.getIdArticolo(),new
 					// Integer(txtQta.getText()).intValue(),0);
 				}
@@ -1391,7 +1376,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 							JOptionPane.INFORMATION_MESSAGE);
 					return;
 				} else {
-					c.insertArticolo(a.getIdArticolo(), ((Number)txtQta.getValue()).doubleValue(), 0);
+					c.insertArticolo(a.getIdArticolo(), ((Number)txtQta.getValue()).doubleValue(), 0,0,0,0);
 
 				}
 
@@ -1405,6 +1390,9 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 		} catch (SQLException e) {
 
 			e.printStackTrace();
+
+		} catch (NumeroOrdineEsistente e) {
+			JOptionPane.showMessageDialog(this, e.getMessage(), "AVVISO", JOptionPane.INFORMATION_MESSAGE);
 
 		}
 
@@ -1567,6 +1555,13 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 
 		try {
 			c.caricaDati(idcarico);
+			if (c.getInsertByPN() == 1) {
+				JOptionPane.showMessageDialog(this,
+						"Impossibile modificare il documento da scarico.\n"
+								+ "modifica permessa solo da prima nota.",
+						"AVVISO", 1);
+				return;
+			}
 			caricaDati(c);
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(this, "Errore nel db", "ERRORE",
@@ -1584,6 +1579,16 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 		ricaricaTableCarico(c.getIdScarico());
 		jTabbedPane.setSelectedIndex(0);
 		calcoli(c.getIdScarico());
+	}
+
+	private void azzeraTuttiCampi() {
+		Scarico c = new Scarico();
+		idcarico = c.getNewID();
+		txtNumeroScarico.setText((new Integer(idcarico)).toString());
+		dataScarico.setDate(new java.util.Date());
+		txtNumDocumento.setText("");
+		ricaricaTableCarico(idcarico);
+		azzeraCampi();
 	}
 
 	private void ricaricaTableCarico(int idCarico) {
@@ -1714,7 +1719,8 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 				tblViewScarichi
 						.setAutoResizeMode(getTblViewScarichi().AUTO_RESIZE_ALL_COLUMNS); // Generated
 				tblViewScarichi
-						.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Generated
+						.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				tblViewScarichi.setHighlighters(new AlternateRowHighlighter());// Generated
 				// scrivere tutta la parte di codice per lo scarico e con il
 				// controllo se la merce è
 				// finita oppure no
@@ -1791,7 +1797,12 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 		if (txtNumDocumento == null) {
 			try {
 				txtNumDocumento = new JTextField();
-				txtNumDocumento.setBounds(new Rectangle(100, 60, 125, 21)); // Generated
+				txtNumDocumento.setBounds(new Rectangle(100, 60, 125, 21));
+				AutoCompleteTextComponent complete = new AutoCompleteTextComponent(
+						txtNumDocumento, dbm, "ordini", "num_documento");
+				dbm.addDBStateChange(complete);
+				txtNumDocumento.setDocument(new UpperAutoCompleteDocument(complete,
+						false));
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -1909,7 +1920,8 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 				tblArticoliScaricati
 						.setAutoResizeMode(JXTable.AUTO_RESIZE_ALL_COLUMNS); // Generated
 				tblArticoliScaricati
-						.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Generated
+						.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				tblArticoliScaricati.setHighlighters(new AlternateRowHighlighter());// Generated
 
 				// scrivere tutta la parte di codice per lo scarico e con il
 				// controllo se la merce è
@@ -2106,6 +2118,20 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 			btnApriArticoli.setText("Vis. Articoli (F2)");
 		}
 		return btnApriArticoli;
+	}
+
+	/**
+	 * This method initializes btnAzzera
+	 *
+	 * @return javax.swing.JButton
+	 */
+	private JButton getBtnAzzera() {
+		if (btnAzzera == null) {
+			btnAzzera = new JButton();
+			btnAzzera.setBounds(new Rectangle(528, 35, 107, 34));
+			btnAzzera.setText("Azzera");
+		}
+		return btnAzzera;
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

@@ -56,7 +56,7 @@ import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.Aspetto;
 import rf.pegaso.db.tabelle.Causale;
 import rf.pegaso.db.tabelle.Cliente;
-import rf.pegaso.db.tabelle.DettaglioVendita;
+import rf.pegaso.db.tabelle.DettaglioOrdine;
 import rf.pegaso.db.tabelle.Vendita;
 import rf.pegaso.gui.gestione.ClientiAdd;
 import rf.utility.ControlloDati;
@@ -104,7 +104,7 @@ public class DocumentoDiTrasporto extends JFrame{
 	private JComboBox cmbProdotti = null;
 	private JLabel lblUtile = null;
 	private JTextField txtUtile = null;
-	private Vector<DettaglioVendita> carrello = null;  //  @jve:decl-index=0:
+	private Vector<DettaglioOrdine> carrello = null;  //  @jve:decl-index=0:
 	private Vector<String> colonne = null;  //  @jve:decl-index=0:
 	private Vendita vendita = null;
 	private VenditeModel model = null;
@@ -164,8 +164,8 @@ public class DocumentoDiTrasporto extends JFrame{
 	 * @return void
 	 */
 	private void initialize() {
-		carrello = new Vector<DettaglioVendita>();
-		DettaglioVendita v = new DettaglioVendita();
+		carrello = new Vector<DettaglioOrdine>();
+		DettaglioOrdine v = new DettaglioOrdine();
 		carrello.add(v);
 		vendita = new Vendita();
 		colonne = new Vector<String>();
@@ -262,7 +262,7 @@ public class DocumentoDiTrasporto extends JFrame{
 
 	}
 
-	private void inserisci(DettaglioVendita dv) {
+	private void inserisci(DettaglioOrdine dv) {
 		dv.setIdVendita(dbm.getNewID("ddt", "idddt"));
 		carrello.add(dv);
 		DBManager.getIstanceSingleton().notifyDBStateChange();
@@ -710,7 +710,7 @@ public class DocumentoDiTrasporto extends JFrame{
 
 		//salviamo i dettagli della fattura
 		carrello.remove(0);
-		for (DettaglioVendita dv : carrello) {
+		for (DettaglioOrdine dv : carrello) {
 			dv.salvaInDb("dettaglio_ddt");
 		}
 		resetCampi();
@@ -720,7 +720,7 @@ public class DocumentoDiTrasporto extends JFrame{
 	private void resetCampi(){
 		txtNumero.setText(String.valueOf(dbm.getNewID("ddt", "idddt")));
 		carrello.removeAllElements();
-		DettaglioVendita v = new DettaglioVendita();
+		DettaglioOrdine v = new DettaglioOrdine();
 		carrello.add(v);
 		calcoliBarraInferiore();
 	}
@@ -1004,7 +1004,7 @@ public class DocumentoDiTrasporto extends JFrame{
 					@Override
 					public void keyPressed(java.awt.event.KeyEvent e) {
 						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-							DettaglioVendita dv = new DettaglioVendita();
+							DettaglioOrdine dv = new DettaglioOrdine();
 							int er = dv.caricaDatiByCodiceBarre(txtCodice.getText());
 							if ( er == 0 )
 								messaggioCampoMancante("Articolo non disponibile", "AVVISO");
@@ -1089,7 +1089,7 @@ public class DocumentoDiTrasporto extends JFrame{
 					public void keyPressed(java.awt.event.KeyEvent e) {
 						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 							int id = Integer.parseInt(((IDJComboBox)cmbProdotti).getIDSelectedItem());
-							DettaglioVendita dv = new DettaglioVendita();
+							DettaglioOrdine dv = new DettaglioOrdine();
 							int er = dv.caricaDatiById(id);
 							if ( er == 0 )
 								messaggioCampoMancante("Articolo non disponibile", "AVVISO");
@@ -1104,7 +1104,7 @@ public class DocumentoDiTrasporto extends JFrame{
 					@Override
 					public void focusLost(java.awt.event.FocusEvent e) {
 						int id = Integer.parseInt(((IDJComboBox)cmbProdotti).getIDSelectedItem());
-						DettaglioVendita dv = new DettaglioVendita();
+						DettaglioOrdine dv = new DettaglioOrdine();
 						int er = dv.caricaDatiById(id);
 						if ( er == 0 )
 							messaggioCampoMancante("Articolo non disponibile", "AVVISO");
@@ -1144,7 +1144,7 @@ public class DocumentoDiTrasporto extends JFrame{
 
 	private void calcoliBarraInferiore() {
 		azzeraCampi();
-		for( DettaglioVendita v : carrello ) {
+		for( DettaglioOrdine v : carrello ) {
 			double prezzoV = 0.00;
 			if(v.getSconto() == 0)
 				prezzoV = v.getPrezzoVendita();
@@ -1411,11 +1411,11 @@ public class DocumentoDiTrasporto extends JFrame{
 			return;
 		int riga = tblViewDdt.getSelectedRow();
 		int idddt = ((Long) tblViewDdt.getValueAt(riga, 0)).intValue();
-		DettaglioVendita dv = new DettaglioVendita();
+		DettaglioOrdine dv = new DettaglioOrdine();
 		try {
-			Vector<DettaglioVendita> c2 = (Vector<DettaglioVendita>)dv.caricaDatiByDB(idddt, "dettaglio_ddt", "idddt");
+			Vector<DettaglioOrdine> c2 = (Vector<DettaglioOrdine>)dv.caricaDatiByDB(idddt, "dettaglio_ddt", "idddt");
 			carrello.removeAllElements();
-			for ( DettaglioVendita d : c2 ){
+			for ( DettaglioOrdine d : c2 ){
 				carrello.add(d);
 			}
 			vendita.caricaDatiDaDdt(idddt);

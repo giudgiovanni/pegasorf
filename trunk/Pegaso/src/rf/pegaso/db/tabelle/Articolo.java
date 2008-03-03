@@ -194,28 +194,30 @@ public class Articolo {
 		String query = "select * from articoli where idArticolo=" + idArticolo;
 		st = dbm.getNewStatement();
 		rs = st.executeQuery(query);
+		//if ( rs.next() ){
 		rs.next();
-		this.caricoIniziale = rs.getInt("carico_Iniziale");
-		this.codBarre = rs.getString("codBarre");
-		this.codFornitore = rs.getString("codFornitore");
-		this.colore = rs.getString("colore");
-		this.dataInserimento = rs.getDate("data_Inserimento");
-		this.descrizione = rs.getString("descrizione");
-		this.idArticolo = rs.getInt("idArticolo");
-		this.idFornitore = rs.getInt("idFornitore");
-		this.idReparto = rs.getInt("idReparto");
-		this.imballo = rs.getString("imballo");
-		this.iva = rs.getInt("iva");
-		this.note = rs.getString("note");
-		this.peso = rs.getDouble("peso");
-		this.prezzoAcquisto = rs.getDouble("prezzo_Acquisto");
-		this.prezzoDettaglio = rs.getDouble("prezzo_Dettaglio");
-		this.prezzoIngrosso = rs.getDouble("prezzo_Ingrosso");
-		this.sconto = rs.getInt("sconto");
-		this.scortaMinima = rs.getInt("scorta_Minima");
-		this.um = rs.getInt("um");
-		if (st != null)
-			st.close();
+			this.caricoIniziale = rs.getInt("carico_Iniziale");
+			this.codBarre = rs.getString("codBarre");
+			this.codFornitore = rs.getString("codFornitore");
+			this.colore = rs.getString("colore");
+			this.dataInserimento = rs.getDate("data_Inserimento");
+			this.descrizione = rs.getString("descrizione");
+			this.idArticolo = rs.getInt("idArticolo");
+			this.idFornitore = rs.getInt("idFornitore");
+			this.idReparto = rs.getInt("idReparto");
+			this.imballo = rs.getString("imballo");
+			this.iva = rs.getInt("iva");
+			this.note = rs.getString("note");
+			this.peso = rs.getDouble("peso");
+			this.prezzoAcquisto = rs.getDouble("prezzo_Acquisto");
+			this.prezzoDettaglio = rs.getDouble("prezzo_Dettaglio");
+			this.prezzoIngrosso = rs.getDouble("prezzo_Ingrosso");
+			this.sconto = rs.getInt("sconto");
+			this.scortaMinima = rs.getInt("scorta_Minima");
+			this.um = rs.getInt("um");
+			if (st != null)
+				st.close();
+		//}
 	}
 
 	/**

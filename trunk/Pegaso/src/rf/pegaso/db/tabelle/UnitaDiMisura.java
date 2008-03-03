@@ -64,12 +64,13 @@ public class UnitaDiMisura {
 		String query = "select * from um where idUm=" + idUm;
 		st = dbm.getNewStatement();
 		rs = st.executeQuery(query);
-		rs.next();
-		this.descrizione = rs.getString("descrizione");
-		this.nome = rs.getString("nome");
-		this.idUm = rs.getInt("idum");
-		if (st != null)
-			st.close();
+		if ( rs.next() ){
+			this.descrizione = rs.getString("descrizione");
+			this.nome = rs.getString("nome");
+			this.idUm = rs.getInt("idum");
+			if (st != null)
+				st.close();
+		}
 
 	}
 

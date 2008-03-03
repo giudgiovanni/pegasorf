@@ -44,7 +44,7 @@ import rf.myswing.util.QuantitaDisponibileEditorSQL;
 import rf.pegaso.db.model.DdtFatturaModel;
 import rf.pegaso.db.model.VenditeModel;
 import rf.pegaso.db.tabelle.Cliente;
-import rf.pegaso.db.tabelle.DettaglioVendita;
+import rf.pegaso.db.tabelle.DettaglioOrdine;
 import rf.pegaso.db.tabelle.Pagamento;
 import rf.pegaso.db.tabelle.Scarico;
 import rf.pegaso.db.tabelle.Vendita;
@@ -96,7 +96,7 @@ public class Fattura extends JFrame{
 	private IDJComboBox cmbPagamento = null;
 	private JLabel lblUtile = null;
 	private JTextField txtUtile = null;
-	private Vector<DettaglioVendita> carrello = null;  //  @jve:decl-index=0:
+	private Vector<DettaglioOrdine> carrello = null;  //  @jve:decl-index=0:
 	private Vector<String> colonne = null;  //  @jve:decl-index=0:
 	private VenditeModel model = null;
 	private DdtFatturaModel ddtModel = null;
@@ -125,7 +125,7 @@ public class Fattura extends JFrame{
 	 * @return void
 	 */
 	private void initialize() {
-		carrello = new Vector<DettaglioVendita>();
+		carrello = new Vector<DettaglioOrdine>();
 		colonne = new Vector<String>();
 		caricaVettoreColonne();
 
@@ -219,10 +219,10 @@ public class Fattura extends JFrame{
 		azzeraCampi();
 		vendita.caricaDatiDaDdt(id_ddt);
 		visualizzaVendita();
-		DettaglioVendita dv = new DettaglioVendita();
+		DettaglioOrdine dv = new DettaglioOrdine();
 		try {
 			carrello.removeAllElements();
-			for ( DettaglioVendita d : dv.caricaDatiByDB(id_ddt, "dettaglio_ddt", "idddt") ){
+			for ( DettaglioOrdine d : dv.caricaDatiByDB(id_ddt, "dettaglio_ddt", "idddt") ){
 				carrello.add(d);
 			}
 			DBManager.getIstanceSingleton().notifyDBStateChange();
@@ -539,7 +539,7 @@ public class Fattura extends JFrame{
 			//non c'è la riga vuota come in fattura immediata e altre
 			//altrimenti elimina la prima riga che è cmq buona
 			//carrello.remove(0);
-			for (DettaglioVendita dettaglio : carrello) {
+			for (DettaglioOrdine dettaglio : carrello) {
 				//dato che in questo dettaglio è presente il codice del ddt
 				//mentre come codice vendita dobbiamo ora usare quello della
 				//fattura lo sostituiamo con il corrente idfattura prima di effettuare
@@ -842,7 +842,7 @@ public class Fattura extends JFrame{
 		azzeraCampi();
 		//for( Vendita v : carrello ) {
 //		for (int i = 0; i < carrello.size(); i++ ){
-		for ( DettaglioVendita v : carrello ) {
+		for ( DettaglioOrdine v : carrello ) {
 			double prezzoV = 0.00;
 			if(v.getSconto() == 0)
 				prezzoV = v.getPrezzoVendita();

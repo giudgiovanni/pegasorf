@@ -44,6 +44,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 
 import org.jdesktop.swingx.JXTable;
+import org.jdesktop.swingx.autocomplete.ComboBoxCellEditor;
 
 import rf.myswing.IDJComboBox;
 import rf.myswing.util.MyTableCellRendererAlignment;
@@ -54,13 +55,14 @@ import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.Aspetto;
 import rf.pegaso.db.tabelle.Causale;
 import rf.pegaso.db.tabelle.Cliente;
-import rf.pegaso.db.tabelle.DettaglioVendita;
+import rf.pegaso.db.tabelle.DettaglioOrdine;
 import rf.pegaso.db.tabelle.Pagamento;
 import rf.pegaso.db.tabelle.Scarico;
 import rf.pegaso.db.tabelle.Vendita;
 import rf.pegaso.gui.gestione.ClientiAdd;
 import rf.utility.ControlloDati;
 import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompleteTextComponent;
 import rf.utility.gui.text.AutoCompletion;
@@ -110,7 +112,7 @@ public class FatturaImmediata extends JFrame{
 	private JComboBox cmbProdotti = null;
 	private JLabel lblUtile = null;
 	private JTextField txtUtile = null;
-	private Vector<DettaglioVendita> carrello = null;
+	private Vector<DettaglioOrdine> carrello = null;
 	private Vector<String> colonne = null;  //  @jve:decl-index=0:
 	private VenditeModel model = null;
 	private JDateChooser dataTrasporto = null;
@@ -154,7 +156,7 @@ public class FatturaImmediata extends JFrame{
 	private JButton btnStampaFattura = null;
 	private JScrollPane jScrollPane1 = null;
 	private JTable tblViewFatture = null;
-	private Vendita vendita = null;  //  @jve:decl-index=0:
+	private Scarico scarico = null;  //  @jve:decl-index=0:
 	private JLabel lblRicerca = null;
 	private JLabel lblDa = null;
 	private JLabel lblA = null;
@@ -181,10 +183,10 @@ public class FatturaImmediata extends JFrame{
 	 * @return void
 	 */
 	private void initialize() {
-		carrello = new Vector<DettaglioVendita>();
-		DettaglioVendita dv = new DettaglioVendita();
+		carrello = new Vector<DettaglioOrdine>();
+		DettaglioOrdine dv = new DettaglioOrdine();
 		carrello.add(dv);
-		vendita = new Vendita();
+		scarico = new Scarico();
 		colonne = new Vector<String>();
 		caricaVettoreColonne();
 		this.setSize(new Dimension(800, 600));
@@ -208,7 +210,7 @@ public class FatturaImmediata extends JFrame{
 		caricaCausale();
 		caricaAspetto();
 		caricaVettoreColonne();
-		txtNumero.setText(String.valueOf(dbm.getNewID("fattura", "idfattura")));
+		txtNumero.setText(String.valueOf(dbm.getNewID("ordini", "idordine")));
 
 		Calendar c=Calendar.getInstance();
 		txtOraTr.setText(String.valueOf(c.get(Calendar.HOUR_OF_DAY)));
@@ -310,9 +312,9 @@ public class FatturaImmediata extends JFrame{
 		}
 	}
 
-	private void inserisci(DettaglioVendita dv){
-		dv.setIdVendita(dbm.getNewID("fattura", "idfattura"));
-		for ( DettaglioVendita d : carrello )
+	private void inserisci(DettaglioOrdine dv){
+		dv.setIdVendita(dbm.getNewID("ordini", "idordine"));
+		for ( DettaglioOrdine d : carrello )
 			if( d.getIdArticolo() == dv.getIdArticolo() ){
 				if ( dv.getDisponibilita() < (dv.getQta() + d.getQta()) )
 					messaggioCampoMancante("Articolo non disponibile, ma gia' presente nel carrello", "AVVISO");
@@ -552,7 +554,7 @@ public class FatturaImmediata extends JFrame{
 		if (btnChiudi == null) {
 			btnChiudi = new JButton();
 			btnChiudi.setText("Chiudi");
-			btnChiudi.setBounds(new Rectangle(709, 7, 73, 26));
+			btnChiudi.setBounds(new Rectangle(704, 7, 78, 26));
 			btnChiudi.addActionListener(new MyButtonListener());
 		}
 		return btnChiudi;
@@ -567,7 +569,7 @@ public class FatturaImmediata extends JFrame{
 		if (btnSalva == null) {
 			btnSalva = new JButton();
 			btnSalva.setText("Salva");
-			btnSalva.setBounds(new Rectangle(551, 7, 71, 26));
+			btnSalva.setBounds(new Rectangle(546, 7, 78, 26));
 			btnSalva.addActionListener(new MyButtonListener());
 		}
 		return btnSalva;
@@ -582,7 +584,7 @@ public class FatturaImmediata extends JFrame{
 		if (btnStampa == null) {
 			btnStampa = new JButton();
 			btnStampa.setText("Stampa");
-			btnStampa.setBounds(new Rectangle(626, 7, 79, 26));
+			btnStampa.setBounds(new Rectangle(625, 7, 78, 26));
 			btnStampa.addActionListener(new MyButtonListener());
 		}
 		return btnStampa;
@@ -676,7 +678,8 @@ public class FatturaImmediata extends JFrame{
 				col.setMaxWidth(0);
 				col.setPreferredWidth(0);
 				TableColumn column = jTable.getColumnModel().getColumn(2);
-				column.setCellEditor(new DefaultCellEditor(getCmbProdotti()));
+				column.setCellEditor(new ComboBoxCellEditor(getCmbProdotti()));
+				//column.setCellEditor(new DefaultCellEditor(getCmbProdotti()));
 				column = jTable.getColumnModel().getColumn(1);
 				column.setCellEditor(new DefaultCellEditor(getTxtCodice()));
 				jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -756,50 +759,75 @@ public class FatturaImmediata extends JFrame{
 		}
 		final Time oraTr = new Time(ora, min, 0);
 
-		Vendita v = new Vendita();
-		v.setIdVendita(dbm.getNewID("fattura", "idfattura"));
-		v.setData_vendita(new java.sql.Date(dataCorrente.getDate().getTime()));
-		v.setOra_vendita(new Time(dataCorrente.getDate().getTime()));
-		v.setCliente(idCliente);
-		v.setIdPagamento(idPagamento);
-		v.setNumVendita(num_fattura);
-		v.setIdCausale(idCausale);
-		v.setSpeseIncasso(speseInc);
-		v.setSpeseTrasporto(speseTr);
-		v.setDataTrasporto(new java.sql.Date(dataTrasporto.getDate().getTime()));
-		v.setOraTrasporto(oraTr);
-		v.setN_colli(colli);
-		v.setPeso(peso);
-		v.setConsegna((String)cmbConsegna.getSelectedItem());
-		v.setPorto((String)cmbPorto.getSelectedItem());
-		v.setDestinazione(txtDestinazione.getText());
-		v.setAspetto(idAspetto);
-		v.setSconto(sconto);
-		if( saved ){
-			v.updateDatiInFattura();
-			saved=false;
-		}else
-			v.salvaDatiInFattura();
-
-		//salviamo i dettagli della fattura
-		carrello.remove(0);
-		for (DettaglioVendita dv : carrello) {
-			dv.salvaInDb("dettaglio_fattura");
-			//carrello.remove(dv);
-		}
-		//----------ROCCO-----------------------------------------------
-		//una volta inserita la fattura aggiorniamo anche la tabella
-		//ordine che serve per tenere traccia delle quantità disponibili
-		//in magazzino
-		// il costruttore accetta una vendita dalla quale preleva tutti i dati
-		// per effettuare le operazioni
-		v.setTipoDocumento(1);
-		Scarico sc=new Scarico();
+		Scarico sc = new Scarico();
+		sc.setIdCliente(idCliente);
+		sc.setDataScarico(new java.sql.Date(dataCorrente.getDate().getTime()));
+		sc.setOraScarico(new Time(dataCorrente.getDate().getTime()));
+		sc.setDocFiscale(1);
+		sc.setNumDocumento(num_fattura);
+		sc.setDataDocumento(new java.sql.Date(dataCorrente.getDate().getTime()));
 		try {
-			sc.insertScarico(v);
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(this, "Errore nell'inserimento del dettaglio vendita", "ERRORE", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
+			sc.setTotaleDocumentoIvato(ControlloDati.convertPrezzoToDouble(txtTotale.getText()));
+		} catch (NumberFormatException e1) {
+			e1.printStackTrace();
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		sc.setIdPagamento(idPagamento);
+		sc.setIdCausale(idCausale);
+		sc.setSpeseIncasso(speseInc);
+		sc.setSpeseTrasporto(speseTr);
+		sc.setDataTrasporto(new java.sql.Date(dataTrasporto.getDate().getTime()));
+		sc.setOraTrasporto(oraTr);
+		sc.setColli(colli);
+		sc.setPeso(peso);
+		sc.setConsegna((String)cmbConsegna.getSelectedItem());
+		sc.setPorto((String)cmbPorto.getSelectedItem());
+		sc.setDestDiversa(txtDestinazione.getText());
+		sc.setIdAspetto(idAspetto);
+		sc.setSconto(sconto);
+		
+		//Vendita v = new Vendita();
+		//v.setIdVendita(dbm.getNewID("fattura", "idfattura"));
+		//v.setData_vendita(new java.sql.Date(dataCorrente.getDate().getTime()));
+		//v.setOra_vendita(new Time(dataCorrente.getDate().getTime()));
+		//v.setCliente(idCliente);
+		//v.setIdPagamento(idPagamento);
+		//v.setNumVendita(num_fattura);
+		//v.setIdCausale(idCausale);
+		//v.setSpeseIncasso(speseInc);
+		//v.setSpeseTrasporto(speseTr);
+		//v.setDataTrasporto(new java.sql.Date(dataTrasporto.getDate().getTime()));
+		//v.setOraTrasporto(oraTr);
+		//v.setN_colli(colli);
+		//v.setPeso(peso);
+		//v.setConsegna((String)cmbConsegna.getSelectedItem());
+		//v.setPorto((String)cmbPorto.getSelectedItem());
+		//v.setDestinazione(txtDestinazione.getText());
+		//v.setAspetto(idAspetto);
+		//v.setSconto(sconto);
+		try{
+			if( saved ){
+				sc.updateScarico();
+				//v.updateDatiInFattura();
+				//saved=false;
+			}else
+				sc.insertScarico();
+				//v.salvaDatiInFattura();
+
+			//salviamo i dettagli della fattura
+			carrello.remove(0);
+			for (DettaglioOrdine dv : carrello) {
+				if ( saved )
+					dv.update();
+				else
+					dv.insert();
+			}
+			saved = false;
+		
+		} catch (IDNonValido e) {
+				e.printStackTrace();
 		}
 		//---------FINE ROCCO-----------------------------------------
 		dbm.notifyDBStateChange();
@@ -810,10 +838,10 @@ public class FatturaImmediata extends JFrame{
 	private void resetCampi(){
 		//txtNumero.setText(String.valueOf(dbm.getNewID("banco", "idvendita")));
 		carrello.removeAllElements();
-		DettaglioVendita v = new DettaglioVendita();
+		DettaglioOrdine v = new DettaglioOrdine();
 		carrello.add(v);
 		calcoliBarraInferiore();
-		txtNumero.setText(String.valueOf(dbm.getNewID("fattura", "idfattura")));
+		txtNumero.setText(String.valueOf(dbm.getNewID("ordini", "idordine")));
 	}
 
 	private void nuovoCliente(){
@@ -980,7 +1008,6 @@ public class FatturaImmediata extends JFrame{
 								if ( c.getProvinciaToString() != null )
 									dest += c.getProvincia();
 							} catch (SQLException e1) {
-								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
 							txtDestinazione.setText(dest);
@@ -1150,8 +1177,9 @@ public class FatturaImmediata extends JFrame{
 					@Override
 					public void keyPressed(java.awt.event.KeyEvent e) {
 						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-							DettaglioVendita dv = new DettaglioVendita();
-							int er = dv.caricaDatiByCodiceBarre(txtCodice.getText());
+							DettaglioOrdine dv = new DettaglioOrdine();
+							int er = dv.loadByCB(txtCodice.getText());
+							System.out.println("codice articolo "+dv.getIdArticolo());
 							if ( er == 0 )
 								messaggioCampoMancante("Articolo non disponibile", "AVVISO");
 							else if ( er == -1 )
@@ -1233,8 +1261,8 @@ public class FatturaImmediata extends JFrame{
 					public void keyPressed(java.awt.event.KeyEvent e) {
 						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 							int id = Integer.parseInt(((IDJComboBox)cmbProdotti).getIDSelectedItem());
-							DettaglioVendita dv = new DettaglioVendita();
-							int er = dv.caricaDatiById(id);
+							DettaglioOrdine dv = new DettaglioOrdine();
+							int er = dv.loadByID(id);
 							if ( er == 0 )
 								messaggioCampoMancante("Articolo non disponibile", "AVVISO");
 							else if ( er == -1 )
@@ -1244,12 +1272,12 @@ public class FatturaImmediata extends JFrame{
 						}
 					}
 				});
-				cmbProdotti.getEditor().getEditorComponent().addFocusListener(new java.awt.event.FocusAdapter() {
+				/*cmbProdotti.getEditor().getEditorComponent().addFocusListener(new java.awt.event.FocusAdapter() {
 					@Override
 					public void focusLost(java.awt.event.FocusEvent e) {
 						int id = Integer.parseInt(((IDJComboBox)cmbProdotti).getIDSelectedItem());
-						DettaglioVendita dv = new DettaglioVendita();
-						int er = dv.caricaDatiById(id);
+						DettaglioOrdine dv = new DettaglioOrdine();
+						int er = dv.loadByID(id);
 						if ( er == 0 )
 							messaggioCampoMancante("Articolo non disponibile", "AVVISO");
 						else if ( er == -1 )
@@ -1257,7 +1285,7 @@ public class FatturaImmediata extends JFrame{
 						else
 							inserisci(dv);
 					}
-				});
+				});*/
 			} catch (java.lang.Throwable e) {
 			}
 		}
@@ -1289,7 +1317,7 @@ public class FatturaImmediata extends JFrame{
 		azzeraCampi();
 		//for( Vendita v : carrello ) {
 		for (int i = 0; i < carrello.size(); i++ ){
-			DettaglioVendita v = (DettaglioVendita)carrello.get(i);
+			DettaglioOrdine v = (DettaglioOrdine)carrello.get(i);
 			double prezzoV = 0.00;
 			if(v.getSconto() == 0)
 				prezzoV = v.getPrezzoVendita();
@@ -1438,6 +1466,12 @@ public class FatturaImmediata extends JFrame{
 			v.add("Vettore");
 			cmbConsegna = new JComboBox(v);
 			cmbConsegna.setBounds(new Rectangle(575, 179, 80, 26));
+			cmbConsegna.addItemListener(new java.awt.event.ItemListener() {
+				public void itemStateChanged(java.awt.event.ItemEvent e) {
+					if (cmbConsegna.getSelectedItem().equals("Vettore"))
+						System.out.println("itemStateChanged()"); // TODO Auto-generated Event stub itemStateChanged()
+				}
+			});
 		}
 		return cmbConsegna;
 	}
@@ -1678,15 +1712,18 @@ public class FatturaImmediata extends JFrame{
 		if (scelta != JOptionPane.YES_OPTION)
 			return;
 		int riga = tblViewFatture.getSelectedRow();
-		int idfattura = ((Long) tblViewFatture.getValueAt(riga, 0)).intValue();
-		vendita.setIdVendita(idfattura);
+		int idOrdine = ((Long) tblViewFatture.getValueAt(riga, 0)).intValue();
+		scarico.setIdScarico(idOrdine);
 		try {
-			vendita.rimuoviDaDb("fattura", "idfattura");
+			scarico.deleteAllArticoliScaricati();
+			scarico.deleteScarico(idOrdine);
+			//scarico.rimuoviDaDb("fattura", "idfattura");
 		} catch (rf.utility.db.eccezzioni.IDNonValido e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		vendita = new Vendita();
+		scarico = new Scarico();
 	}
 
 	private void modificaFattura(){
@@ -1704,16 +1741,17 @@ public class FatturaImmediata extends JFrame{
 		if (scelta != JOptionPane.YES_OPTION)
 			return;
 		int riga = tblViewFatture.getSelectedRow();
-		int idfattura = ((Long) tblViewFatture.getValueAt(riga, 0)).intValue();
-		DettaglioVendita dv = new DettaglioVendita();
+		int idOrdine = ((Long) tblViewFatture.getValueAt(riga, 0)).intValue();
+		DettaglioOrdine dv = new DettaglioOrdine();
 		try {
-			Vector<DettaglioVendita> c2 = (Vector<DettaglioVendita>)dv.caricaDatiByDB(idfattura, "dettaglio_fattura", "idfattura");
+			Vector<DettaglioOrdine> c2 = (Vector<DettaglioOrdine>)dv.caricaDatiByDB(idOrdine);
 			carrello.removeAllElements();
-			carrello.add(new DettaglioVendita());
-			for ( DettaglioVendita d : c2 ){
+			carrello.add(new DettaglioOrdine());
+			for ( DettaglioOrdine d : c2 ){
 				carrello.add(d);
 			}
-			vendita.caricaDatiDaFattura(idfattura);
+			scarico.caricaDati(idOrdine);
+			//scarico.caricaDatiDaFattura(idOrdine);
 			visualizzaVendita();
 			DBManager.getIstanceSingleton().notifyDBStateChange();
 			calcoliBarraInferiore();
@@ -1725,22 +1763,23 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	private void visualizzaVendita(){
-		txtNumero.setText(vendita.getNumVendita());
-		dataCorrente.setDate(vendita.getData_vendita());
-		cmbClienti.setSelectedItemByID(vendita.getCliente());
-		txtDestinazione.setText(vendita.getDestinazione());
-		txtSpeseInc.setText(String.valueOf(vendita.getSpeseIncasso()));
-		txtSpeseTr.setText(String.valueOf(vendita.getSpeseTrasporto()));
-		dataTrasporto.setDate(vendita.getDataTrasporto());
-		txtOraTr.setText(String.valueOf(vendita.getOraTrasporto().getHours()));
-		txtMinTr.setText(String.valueOf(vendita.getOraTrasporto().getMinutes()));
-		txtColli.setText(String.valueOf(vendita.getN_colli()));
-		txtPeso.setText(String.valueOf(vendita.getPeso()));
-		cmbPagamento.setSelectedItemByID(vendita.getIdPagamento());
-		cmbCausale.setSelectedItemByID(vendita.getIdCausale());
-		cmbAspetto.setSelectedItemByID(vendita.getAspetto());
-		cmbConsegna.setSelectedItem(vendita.getConsegna());
-		cmbPorto.setSelectedItem(vendita.getPorto());
+		txtNumero.setText(scarico.getNumDocumento());
+		dataCorrente.setDate(scarico.getDataScarico());
+		cmbClienti.setSelectedItemByID(scarico.getIdCliente());
+		txtDestinazione.setText(scarico.getDestDiversa());
+		txtSpeseInc.setText(String.valueOf(scarico.getSpeseIncasso()));
+		txtSpeseTr.setText(String.valueOf(scarico.getSpeseTrasporto()));
+		dataTrasporto.setDate(scarico.getDataTrasporto());
+		txtOraTr.setText(String.valueOf(scarico.getOraTrasporto().getHours()));
+		txtMinTr.setText(String.valueOf(scarico.getOraTrasporto().getMinutes()));
+		txtColli.setText(String.valueOf(scarico.getColli()));
+		txtPeso.setText(String.valueOf(scarico.getPeso()));
+		cmbPagamento.setSelectedItemByID(scarico.getIdPagamento());
+		cmbCausale.setSelectedItemByID(scarico.getIdCausale());
+		cmbAspetto.setSelectedItemByID(scarico.getIdAspetto());
+		cmbConsegna.setSelectedItem(scarico.getConsegna());
+		cmbPorto.setSelectedItem(scarico.getPorto());
+		txtSconto.setText(String.valueOf(scarico.getSconto()));
 	}
 
 	/**
@@ -1920,7 +1959,7 @@ public class FatturaImmediata extends JFrame{
 	private JButton getBtnAzzera() {
 		if (btnAzzera == null) {
 			btnAzzera = new JButton();
-			btnAzzera.setBounds(new Rectangle(472, 7, 77, 26));
+			btnAzzera.setBounds(new Rectangle(467, 7, 78, 26));
 			btnAzzera.setText("Azzera");
 			btnAzzera.addActionListener(new MyButtonListener());
 		}

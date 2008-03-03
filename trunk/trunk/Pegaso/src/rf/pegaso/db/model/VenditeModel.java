@@ -8,7 +8,7 @@ import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
-import rf.pegaso.db.tabelle.DettaglioVendita;
+import rf.pegaso.db.tabelle.DettaglioOrdine;
 import rf.utility.db.DBEvent;
 import rf.utility.db.DBStateChange;
 import rf.utility.db.RowEvent;
@@ -23,10 +23,10 @@ public class VenditeModel extends AbstractTableModel implements DBStateChange {
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	private Vector<DettaglioVendita> vendita = null;
+	private Vector<DettaglioOrdine> vendita = null;
 	private Vector<String> colonne = null;
 
-	public VenditeModel(Vector<DettaglioVendita> vendita, Vector<String> colonne) throws SQLException {
+	public VenditeModel(Vector<DettaglioOrdine> vendita, Vector<String> colonne) throws SQLException {
 		this.vendita = vendita;
 		this.colonne = colonne;
 	}
@@ -51,7 +51,7 @@ public class VenditeModel extends AbstractTableModel implements DBStateChange {
 	public Object getValueAt(int r, int c) {
 		if ( vendita.size() == 0 )
 			return -1;
-		DettaglioVendita v = vendita.get(r);
+		DettaglioOrdine v = vendita.get(r);
 		Vector<Object> v1 = v.trasformaInArray();
 		Object o = null;
 		o = (Object)v1.get(c);
@@ -67,7 +67,9 @@ public class VenditeModel extends AbstractTableModel implements DBStateChange {
 	}
 
 	public boolean isCellEditable(int r, int c) {
-		if ( c == 1 || c == 2 || c == 4 || c == 9 )
+		if ( r == 0 && ( c == 1 || c == 2 || c == 4 || c == 9 ))
+			return true;
+		else if ( c == 4 || c == 9 )
 			return true;
 		return false;
 	}
@@ -92,19 +94,19 @@ public class VenditeModel extends AbstractTableModel implements DBStateChange {
 	}
 
 	public void setValueAt(Object o, int r, int c) {
-		DettaglioVendita v = vendita.get(r);
+		DettaglioOrdine v = vendita.get(r);
 		switch(c) {
-			case 4 :{
+			/*case 4 :{
 //				if( o instanceof Long)
 //					v.setQta(new Integer(o));
 //				else
 					v.setQta((Integer)o);
 				break;
-			}
+			}*/
 			case 6 :
 				v.setPrezzoVendita((Double)o);
 				break;
-			case 8 :
+			case 9 :
 				v.setSconto((Integer)o);
 				break;
 		}

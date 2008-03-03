@@ -541,7 +541,7 @@ public class Scarico {
 		dbm.notifyDBStateChange();
 	}
 
-	public int insertScarico(Vendita vendita) throws SQLException {
+	/*public int insertScarico(Vendita vendita) throws SQLException {
 		// prepariamo i dati da inserire
 		setDataDocumento(vendita.getData_vendita());
 		setDataScarico(vendita.getData_vendita());
@@ -556,24 +556,24 @@ public class Scarico {
 		int r1 = insertScarico();
 
 		// inseriamo il dettaglio della vendita prelevando i dati
-		DettaglioVendita dv = new DettaglioVendita();
-		Vector<DettaglioVendita> dett = null;
+		DettaglioOrdine dv = new DettaglioOrdine();
+		Vector<DettaglioOrdine> dett = null;
 		// se uguale ad uno è una fattura
 		if (vendita.getTipoDocumento() == 1) {
 			dett = dv.caricaDatiByDB(vendita.getIdVendita(),
-					"dettaglio_fattura", "idfattura");
+					"dettaglio_ordini", "idordine");
 		} else
 		// qui siamo nel caso sia una vendita al banco
 		if (vendita.getTipoDocumento() == 4) {
-			dett = dv.caricaDatiByDB(vendita.getIdVendita(), "dettaglio_banco",
+			dett = dv.caricaDatiByDB(vendita.getIdVendita(), "dettaglio_ordini",
 					"idvendita");
 		}
 
-		for (DettaglioVendita tmp : dett) {
+		for (DettaglioOrdine tmp : dett) {
 			insertArticolo(tmp.getIdArticolo(), tmp.getQta(), tmp.getSconto(),tmp.getPrezzoAcquisto(),tmp.getPrezzoVendita(),tmp.getIva());
 		}
 		return r1;
-	}
+	}*/
 
 	public int insertScarico() {
 

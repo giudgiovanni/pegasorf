@@ -159,9 +159,9 @@ public class FatturaViewModel extends AbstractTableModel implements DBStateChang
 	 */
 	private void recuperaDati() throws SQLException {
 		if ( tabella == 1)
-			this.query = "select f.idfattura,c.cognome,c.nome,f.num_fattura as numero,f.data_vendita as data from fattura as f,clienti as c, ordini as o where f.idfattura=o.idordine and c.idcliente=f.idcliente and f."+colonna+"="+valore+" order by f.data_vendita";
+			this.query = "select o.idordine,c.cognome,c.nome,o.num_documento as numero,o.data_ordine as data from ordini as o,clienti as c where c.idcliente=o.idcliente and o."+colonna+"="+valore+" order by o.data_ordine";
 		else if ( tabella == 2 )
-			this.query = "select f.idfattura,c.cognome,c.nome,f.num_fattura as numero,f.data_vendita as data from fattura as f,clienti as c, ordini as o where f.idfattura=o.idordine and c.idcliente=f.idcliente and f.data_vendita>='"+da+"' and f.data_vendita<='"+a+"' order by f.data_vendita";
+			this.query = "select o.idordine,c.cognome,c.nome,o.num_documento as numero,o.data_ordine as data from clienti as c, ordini as o where c.idcliente=o.idcliente and o.data_ordine>='"+da+"' and o.data_ordine<='"+a+"' order by o.data_ordine";
 		else if ( tabella == 3 )
 			this.query = "select d.idddt,c.cognome,c.nome,d.num_ddt as numero,d.data_ddt as data from ddt as d,clienti as c, ordini as o where d.idddt=o.idordine and c.idcliente=d.idcliente and d."+colonna+"="+valore+" order by d.data_ddt";
 		else if ( tabella == 4 )

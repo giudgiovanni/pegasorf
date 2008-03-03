@@ -9,6 +9,7 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -19,10 +20,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableRowSorter;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -35,6 +38,18 @@ import rf.pegaso.db.tabelle.Articolo;
 import rf.utility.db.DBManager;
 import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
+import rf.utility.gui.text.UpperTextDocument;
+
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.FlowLayout;
+import javax.swing.JTextField;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import java.awt.Font;
+import java.awt.Color;
 
 /**
  * @author Hunter
@@ -86,11 +101,25 @@ public class ArticoliGestione extends JFrame {
 
 	private JPanel pnlNord = null;
 
-	private JXTable tblArticoli = null;
+	private JTable tblArticoli = null;
 
 	private JButton btnDuplica = null;
 
 	private JButton btnStampa = null;
+
+	private JPanel jPanel = null;
+
+	private JPanel jPanel1 = null;
+
+	private JLabel lblFiltroCodice = null;
+
+	private JTextField txtFiltroCodice = null;
+
+	private JLabel lblFiltroDescrizione = null;
+
+	private JTextField txtFiltroDescrizione = null;
+
+	private TableRowSorter<ArticoloModel> sorter;
 
 	/**
 	 * @param owner
@@ -301,8 +330,8 @@ public class ArticoliGestione extends JFrame {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getPnlCentrale(), BorderLayout.CENTER); // Generated
 			jContentPane.add(getPnlNord(), BorderLayout.NORTH); // Generated
+			jContentPane.add(getJPanel(), BorderLayout.CENTER);
 		}
 		return jContentPane;
 	}
@@ -396,11 +425,13 @@ public class ArticoliGestione extends JFrame {
 			try {
 				ArticoloModel modello = new ArticoloModel(dbm);
 				dbm.addDBStateChange(modello);
-				tblArticoli = new JXTable();
+				sorter=new TableRowSorter<ArticoloModel>(modello);
+				tblArticoli = new JTable(modello);
+				tblArticoli.setRowSorter(sorter);
 				// tblArticoli.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				tblArticoli.setModel(modello);
+
 				tblArticoli.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-				tblArticoli.packAll();
+				//tblArticoli.packAll();
 				tblArticoli.getTableHeader().setReorderingAllowed(false);
 
 
@@ -446,8 +477,8 @@ public class ArticoliGestione extends JFrame {
 				col.setMinWidth(0);
 				col.setMaxWidth(250);
 				col.setPreferredWidth(250);
-				
-				
+
+
 			} catch (java.lang.Throwable e) {
 				e.printStackTrace();
 			}
@@ -546,5 +577,167 @@ public class ArticoliGestione extends JFrame {
 		}
 		return btnStampa;
 	}
+
+	/**
+	 * This method initializes jPanel
+	 *
+	 * @return javax.swing.JPanel
+	 */
+	private JPanel getJPanel() {
+		if (jPanel == null) {
+			jPanel = new JPanel();
+			jPanel.setLayout(new BorderLayout());
+			jPanel.add(getPnlCentrale(), BorderLayout.CENTER);
+			jPanel.add(getJPanel1(), BorderLayout.NORTH);
+		}
+		return jPanel;
+	}
+
+	/**
+	 * This method initializes jPanel1
+	 *
+	 * @return javax.swing.JPanel
+	 */
+	private JPanel getJPanel1() {
+		if (jPanel1 == null) {
+			FlowLayout flowLayout = new FlowLayout();
+			flowLayout.setAlignment(FlowLayout.LEFT);
+			lblFiltroDescrizione = new JLabel();
+			lblFiltroDescrizione.setText("descrizione");
+			lblFiltroCodice = new JLabel();
+			lblFiltroCodice.setText("codice");
+			jPanel1 = new JPanel();
+			jPanel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED), "Filtri", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Dialog", Font.BOLD, 12), new Color(51, 51, 51)));
+			jPanel1.setLayout(flowLayout);
+			jPanel1.setPreferredSize(new Dimension(0, 60));
+			jPanel1.add(lblFiltroCodice, null);
+			jPanel1.add(getTxtFiltroCodice(), null);
+			jPanel1.add(lblFiltroDescrizione, null);
+			jPanel1.add(getTxtFiltroDescrizione(), null);
+		}
+		return jPanel1;
+	}
+
+	/**
+	 * This method initializes txtFiltroCodice
+	 *
+	 * @return javax.swing.JTextField
+	 */
+	private JTextField getTxtFiltroCodice() {
+		if (txtFiltroCodice == null) {
+			txtFiltroCodice = new JTextField();
+			txtFiltroCodice.setPreferredSize(new Dimension(150, 20));
+			txtFiltroCodice.setDocument(new UpperTextDocument());
+			//aggiungo gli ascoltatori
+			txtFiltroCodice.getDocument().addDocumentListener(
+	                new DocumentListener() {
+	                    public void changedUpdate(DocumentEvent e) {
+	                        newFilter();
+	                    }
+	                    public void insertUpdate(DocumentEvent e) {
+	                        newFilter();
+	                    }
+	                    public void removeUpdate(DocumentEvent e) {
+	                        newFilter();
+	                    }
+	                });
+		}
+		return txtFiltroCodice;
+	}
+
+
+	/**
+	 * This method initializes txtFiltroDescrizione
+	 *
+	 * @return javax.swing.JTextField
+	 */
+	private JTextField getTxtFiltroDescrizione() {
+		if (txtFiltroDescrizione == null) {
+			txtFiltroDescrizione = new JTextField();
+			txtFiltroDescrizione.setPreferredSize(new Dimension(200, 20));
+			txtFiltroDescrizione.setDocument(new UpperTextDocument());
+			//aggiungo gli ascoltatori
+			txtFiltroDescrizione.getDocument().addDocumentListener(
+	                new DocumentListener() {
+	                    public void changedUpdate(DocumentEvent e) {
+	                        newFilter();
+	                    }
+	                    public void insertUpdate(DocumentEvent e) {
+	                        newFilter();
+	                    }
+	                    public void removeUpdate(DocumentEvent e) {
+	                        newFilter();
+	                    }
+	                });
+
+		}
+		return txtFiltroDescrizione;
+	}
+
+//	private void newFilterDescrizione() {
+//		RowFilter<ArticoloModel, Object> rf = null;
+//        RowFilter<ArticoloModel, Object> rf1 = null;
+//        RowFilter<ArticoloModel, Object> rf2 = null;
+//
+//        //If current expression doesn't parse, don't update.
+//        try {
+//            rf1 = RowFilter.regexFilter(txtFiltroDescrizione.getText(), 2);
+//            rf2 = RowFilter.regexFilter(txtFiltroCodice.getText(), 1);//la X indica la col. Autore nella tabella
+//            ArrayList<RowFilter<ArticoloModel,Object>> filters = new ArrayList<RowFilter<ArticoloModel,Object>>(2);
+//            filters.add(rf1);
+//            filters.add(rf2);
+//            rf = RowFilter.andFilter(filters);
+//        }
+//        catch (java.util.regex.PatternSyntaxException e) {
+//            return;
+//        }
+//        sorter.setRowFilter(rf);
+//
+//
+//
+////		RowFilter<ArticoloModel, Object> rf = null;
+////
+////        //If current expression doesn't parse, don't update.
+////        try {
+////            rf = RowFilter.regexFilter(txtFiltroDescrizione.getText(), 2);//lo 0 indica la prima colonna
+////
+////        } catch (java.util.regex.PatternSyntaxException e) {
+////            return;
+////        }
+////        sorter.setRowFilter(rf);
+//    }
+
+	private void newFilter() {
+		RowFilter<ArticoloModel, Object> rf = null;
+        RowFilter<ArticoloModel, Object> rf1 = null;
+        RowFilter<ArticoloModel, Object> rf2 = null;
+
+        //If current expression doesn't parse, don't update.
+        try {
+            rf1 = RowFilter.regexFilter(txtFiltroDescrizione.getText(), 2);
+            rf2 = RowFilter.regexFilter(txtFiltroCodice.getText(), 1);//la X indica la col. Autore nella tabella
+            ArrayList<RowFilter<ArticoloModel,Object>> filters = new ArrayList<RowFilter<ArticoloModel,Object>>(2);
+            filters.add(rf1);
+            filters.add(rf2);
+            rf = RowFilter.andFilter(filters);
+        }
+        catch (java.util.regex.PatternSyntaxException e) {
+            return;
+        }
+        sorter.setRowFilter(rf);
+
+
+//		RowFilter<ArticoloModel, Object> rf = null;
+//
+//        //If current expression doesn't parse, don't update.
+//        try {
+//            rf = RowFilter.regexFilter(txtFiltroCodice.getText(), 1);//lo 0 indica la prima colonna
+//
+//        } catch (java.util.regex.PatternSyntaxException e) {
+//            return;
+//        }
+//        sorter.setRowFilter(rf);
+    }
+
 
 } // @jve:decl-index=0:visual-constraint="10,10"

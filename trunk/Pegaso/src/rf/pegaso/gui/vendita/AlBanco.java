@@ -40,6 +40,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 
 import org.jdesktop.swingx.JXTable;
+import org.jdesktop.swingx.autocomplete.ComboBoxCellEditor;
 
 import rf.myswing.IDJComboBox;
 import rf.myswing.util.MyTableCellRendererAlignment;
@@ -49,7 +50,6 @@ import rf.pegaso.db.model.VenditeModel;
 import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.DettaglioOrdine;
 import rf.pegaso.db.tabelle.Scarico;
-import rf.pegaso.db.tabelle.Vendita;
 import rf.utility.ControlloDati;
 import rf.utility.db.DBManager;
 import rf.utility.gui.UtilGUI;
@@ -83,8 +83,6 @@ public class AlBanco extends JFrame{
 	private JTextField txtTotale = null;
 	private JLabel lblPezzi = null;
 	private JLabel lblTotale = null;
-	private JLabel lblTipoPrezzo = null;
-	private JComboBox cmbTipoPagamento = null;
 	private JTextField txtCodice = null;
 	private JComboBox cmbProdotti = null;
 	private JLabel lblUtile = null;
@@ -97,7 +95,7 @@ public class AlBanco extends JFrame{
 	private double imposta = 0.00;
 	private JButton btnElimina = null;
 	private int qta = 0;
-	private Vendita vendita = null;  //  @jve:decl-index=0:
+	private Scarico scarico = null;
 	private JTabbedPane jTabbedPane = null;
 	private JPanel pnlVendita = null;
 	private JPanel pnlViewVendita = null;
@@ -135,7 +133,7 @@ public class AlBanco extends JFrame{
 		carrello = new Vector<DettaglioOrdine>();
 		DettaglioOrdine v = new DettaglioOrdine();
 		carrello.add(v);
-		vendita = new Vendita();
+		scarico = new Scarico();
 		colonne = new Vector<String>();
 		caricaVettoreColonne();
 		this.setSize(new Dimension(800, 600));
@@ -159,7 +157,7 @@ public class AlBanco extends JFrame{
 
 		caricaDescrizione();
 		caricaVettoreColonne();
-		txtNumero.setText(String.valueOf(dbm.getNewID("banco", "idvendita")));
+		txtNumero.setText(String.valueOf(dbm.getNewID("ordini", "idordine")));
 	}
 
 	class MyButtonListener implements ActionListener {
@@ -196,65 +194,10 @@ public class AlBanco extends JFrame{
 	}
 
 	private void inserisci(DettaglioOrdine dv) {
-		dv.setIdVendita(dbm.getNewID("banco", "idvendita"));
+		dv.setIdVendita(dbm.getNewID("ordini", "idordine"));
 		carrello.add(dv);
 		DBManager.getIstanceSingleton().notifyDBStateChange();
 		calcoliBarraInferiore();
-
-//		Vendita v  = new Vendita();
-//		Articolo a = new Articolo();
-//		int spinQta = 1;
-//
-//		try {
-//			a.caricaDatiByCodBarre(txtCodice.getText());
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		catch (IDNonValido e) {
-//			e.printStackTrace();
-//		}
-//		try{
-//			if ( a.getGiacenza() < spinQta ){
-//				JOptionPane.showMessageDialog(this,
-//						"Quantità richiesta non disponibile\nDisponibilità magazzino = "+a.getGiacenza(), "AVVISO",
-//						JOptionPane.INFORMATION_MESSAGE);
-//				return;
-//			}
-//		}
-//		catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		v.setCodiceArticolo(a.getIdArticolo());
-//		for ( Vendita v1 : carrello){
-//			if ( v1.getCodiceArticolo() == v.getCodiceArticolo() )
-//				try{
-//					if ( a.getGiacenza() < (spinQta + v1.getQta()) ){
-//						JOptionPane.showMessageDialog(this,
-//								"Quantità richiesta non disponibile\nDisponibilità magazzino = "+a.getGiacenza(), "AVVISO",
-//								JOptionPane.INFORMATION_MESSAGE);
-//						return;
-//					}
-//					else{
-//						long oldQta = v1.getQta();
-//						v1.setQta(oldQta + spinQta);
-//						dbm.notifyDBStateChange();
-//						return;
-//					}
-//				}
-//				catch (SQLException e) {
-//					e.printStackTrace();
-//				}
-//		}
-//		v.setCodiceBarre(txtCodice.getText());
-//		v.setCodiceVendita(dbm.getNewID("fattura", "idfattura"));
-//		v.setDescrizione(a.getDescrizione());//String.valueOf(cmbProdotti.getSelectedItem()));
-//		v.setQta(Long.valueOf(spinQta));
-//		v.setPrezzoAcquisto(prezzoAcquisto);
-//		v.setPrezzoVendita(prezzoVendita);
-//		v.setIva(iva);
-//		carrello.add(v);
-//		DBManager.getIstanceSingleton().notifyDBStateChange();
-//		calcoliBarraInferiore();
 	}
 
 	/**
@@ -265,9 +208,11 @@ public class AlBanco extends JFrame{
 		colonne.add("idArticolo");
 		colonne.add("codice");
 		colonne.add("descrizione");
-		colonne.add("um");
+		colonne.add("UM");
 		colonne.add("quantita'");
-		colonne.add("prezzo");
+		colonne.add("disp.");
+		colonne.add("prezzo acquisto");
+		colonne.add("prezzo vendita");
 		colonne.add("importo");
 		colonne.add("sconto");
 		colonne.add("iva");
@@ -443,7 +388,8 @@ public class AlBanco extends JFrame{
 				col.setMaxWidth(0);
 				col.setPreferredWidth(0);
 				TableColumn column = jTable.getColumnModel().getColumn(2);
-				column.setCellEditor(new DefaultCellEditor(getCmbProdotti()));
+				//column.setCellEditor(new DefaultCellEditor(getCmbProdotti()));
+				column.setCellEditor(new ComboBoxCellEditor(getCmbProdotti()));
 				column = jTable.getColumnModel().getColumn(1);
 				column.setCellEditor(new DefaultCellEditor(getTxtCodice()));
 				jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -475,33 +421,19 @@ public class AlBanco extends JFrame{
 
 	private void salva(){
 		//Salviamo i dati della fattura
-		vendita.setIdVendita(dbm.getNewID("banco", "idvendita"));
-		vendita.setData_vendita( new java.sql.Date(dataCorrente.getDate().getTime()));
-		vendita.setOra_vendita(new Time(dataCorrente.getDate().getTime()));
-		vendita.setTipo_prezzo((String)cmbTipoPagamento.getSelectedItem());
-		vendita.salvaDatiInBanco();
+		scarico.setOraScarico(new Time(dataCorrente.getDate().getTime()));
+		scarico.setDataScarico(new java.sql.Date(dataCorrente.getDate().getTime()));
+		System.out.println("ricordati di settare il tipo di prezzo nella fattura");
+		//scarico.setTipoPrezzo((String)cmbTipoPagamento.getSelectedItem());
+		scarico.setDocFiscale(4);
+		scarico.insertScarico();
 
 		//salviamo i dettagli della fattura
 		carrello.remove(0);
 		for (DettaglioOrdine dv : carrello) {
-			dv.salvaInDb("dettaglio_banco");
+			dv.insert();
+			//dv.salvaInDb("dettaglio_banco");
 		}
-//		----------ROCCO-----------------------------------------------
-		//una volta inserita la fattura aggiorniamo anche la tabella
-		//ordine che serve per tenere traccia delle quantità disponibili
-		//in magazzino
-		// il costruttore accetta una vendita dalla quale preleva tutti i dati
-		// per effettuare le operazioni
-		//codice 4 corrisponde allo scontrino fiscale
-		vendita.setTipoDocumento(4);
-		Scarico sc=new Scarico();
-		try {
-			sc.insertScarico(vendita);
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(this, "Errore nell'inserimento del dettaglio vendita al banco", "ERRORE", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}
-		//---------FINE ROCCO-----------------------------------------
 		resetCampi();
 		dbm.notifyDBStateChange();
 	}
@@ -533,10 +465,6 @@ public class AlBanco extends JFrame{
 			lblPezzi.setBounds(new Rectangle(570, 10, 50, 16));
 			lblPezzi.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 			lblPezzi.setText("n. Pezzi");
-			lblTipoPrezzo = new JLabel();
-			lblTipoPrezzo.setBounds(new Rectangle(200, 10, 70, 16));
-			lblTipoPrezzo.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-			lblTipoPrezzo.setText("Tipo Prezzo");
 			jPanelSud = new JPanel();
 			jPanelSud.setLayout(null);
 			jPanelSud.setPreferredSize(new Dimension(0,60));
@@ -546,10 +474,8 @@ public class AlBanco extends JFrame{
 			jPanelSud.add(lblPezzi, null);
 			jPanelSud.add(lblTotale, null);
 			jPanelSud.add(lblUtile, null);
-			jPanelSud.add(lblTipoPrezzo, null);
 			jPanelSud.add(getTxtUtile2(), null);
 			jPanelSud.add(getBtnElimina(), null);
-			jPanelSud.add(getCmbPagamento(), null);
 		}
 		return jPanelSud;
 	}
@@ -580,23 +506,6 @@ public class AlBanco extends JFrame{
 			txtTotale.setEditable(false);
 		}
 		return txtTotale;
-	}
-
-	/**
-	 * This method initializes cmbPagamento
-	 *
-	 * @return javax.swing.JComboBox
-	 */
-	private JComboBox getCmbPagamento() {
-		if (cmbTipoPagamento == null) {
-			Vector<String> v = new Vector<String>();
-			v.add("");
-			v.add("Ingrosso");
-			v.add("Dettaglio");
-			cmbTipoPagamento = new JComboBox(v);
-			cmbTipoPagamento.setBounds(new Rectangle(200, 29, 140, 22));
-		}
-		return cmbTipoPagamento;
 	}
 
 	private void caricaDescrizione(){
@@ -644,8 +553,8 @@ public class AlBanco extends JFrame{
 					public void keyPressed(java.awt.event.KeyEvent e) {
 						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 							DettaglioOrdine dv = new DettaglioOrdine();
-							dv.caricaDatiByCodiceBarre(txtCodice.getText());
-							int er = dv.caricaDatiByCodiceBarre(txtCodice.getText());
+							dv.loadByCB(txtCodice.getText());
+							int er = dv.loadByCB(txtCodice.getText());
 							if ( er == 0 )
 								messaggioCampoMancante("Articolo non disponibile", "AVVISO");
 							else if ( er == -1 )
@@ -660,76 +569,6 @@ public class AlBanco extends JFrame{
 		}
 		return txtCodice;
 	}
-
-	/**
-	 *
-	 */
-//	private void caricaArticoloByCodBarre(String cod) {
-//		if ( cmbTipoPagamento.getSelectedItem().equals("") ){
-//			JOptionPane.showMessageDialog(this, "Selezionare il tipo di prezzo da applicare",
-//					"AVVISO", JOptionPane.INFORMATION_MESSAGE);
-//
-//			return;
-//		}
-//		String codBarre = txtCodice.getText();
-//		if (cod.equalsIgnoreCase(""))
-//			return;
-//		Articolo a = new Articolo();
-//		try {
-//			if (a.findByCodBarre(cod)) {
-//				prezzoAcquisto = a.getPrezzoAcquisto();
-//				if ( cmbTipoPagamento.getSelectedItem().equals("Ingrosso") )
-//					prezzoVendita = a.getPrezzoIngrosso();
-//				else
-//					prezzoVendita = a.getPrezzoDettaglio();
-//				txtCodice.setText(codBarre);
-//				iva = a.getIva();
-//				inserisci();
-//			}
-//		} catch (SQLException e1) {
-//
-//			e1.printStackTrace();
-//		} catch (CodiceBarreInesistente e1) {
-//			avvisoCodBarreInesistente();
-//			e1.printStackTrace();
-//		}
-//
-//	}
-
-	/**
-	 *
-	 */
-//	private void caricaArticoloByID(int cod) {
-//		if ( cod == 0 )
-//			return;
-//		if ( cmbTipoPagamento.getSelectedItem().equals("") ){
-//			JOptionPane.showMessageDialog(this, "Selezionare il tipo di prezzo da applicare",
-//					"AVVISO", JOptionPane.INFORMATION_MESSAGE);
-//			return;
-//		}
-//		Articolo a = new Articolo();
-//		try {
-//			a.caricaDati(cod);
-//			prezzoAcquisto = a.getPrezzoAcquisto();
-//			if ( cmbTipoPagamento.getSelectedItem().equals("Ingrosso") )
-//				prezzoVendita = a.getPrezzoIngrosso();
-//			else
-//				prezzoVendita = a.getPrezzoDettaglio();
-//			txtCodice.setText(a.getCodBarre());
-//			iva = a.getIva();
-//			inserisci();
-//		} catch (SQLException e1) {
-//
-//			e1.printStackTrace();
-//		}
-//
-//	}
-//
-//	private void avvisoCodBarreInesistente() {
-//		JOptionPane.showMessageDialog(this,
-//				"Codice barre articolo inesistente", "Codice inesistente",
-//				JOptionPane.INFORMATION_MESSAGE);
-//	}
 
 	/**
 	 * This method initializes cmbProdotti
@@ -747,7 +586,7 @@ public class AlBanco extends JFrame{
 						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 							int id = Integer.parseInt(((IDJComboBox)cmbProdotti).getIDSelectedItem());
 							DettaglioOrdine dv = new DettaglioOrdine();
-							int er = dv.caricaDatiById(id);
+							int er = dv.loadByID(id);
 							if ( er == 0 )
 								messaggioCampoMancante("Articolo non disponibile", "AVVISO");
 							else if ( er == -1 )
@@ -757,7 +596,7 @@ public class AlBanco extends JFrame{
 						}
 					}
 				});
-				cmbProdotti.getEditor().getEditorComponent().addFocusListener(new java.awt.event.FocusAdapter() {
+				/*cmbProdotti.getEditor().getEditorComponent().addFocusListener(new java.awt.event.FocusAdapter() {
 					@Override
 					public void focusLost(java.awt.event.FocusEvent e) {
 						int id = Integer.parseInt(((IDJComboBox)cmbProdotti).getIDSelectedItem());
@@ -770,7 +609,7 @@ public class AlBanco extends JFrame{
 						else
 							inserisci(dv);
 					}
-				});
+				});*/
 			} catch (java.lang.Throwable e) {
 			}
 		}

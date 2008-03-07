@@ -46,6 +46,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 
 import org.jdesktop.swingx.JXTable;
+import org.jdesktop.swingx.autocomplete.ComboBoxCellEditor;
 
 import rf.myswing.IDJComboBox;
 import rf.myswing.util.MyTableCellRendererAlignment;
@@ -57,10 +58,12 @@ import rf.pegaso.db.tabelle.Aspetto;
 import rf.pegaso.db.tabelle.Causale;
 import rf.pegaso.db.tabelle.Cliente;
 import rf.pegaso.db.tabelle.DettaglioOrdine;
+import rf.pegaso.db.tabelle.Scarico;
 import rf.pegaso.db.tabelle.Vendita;
 import rf.pegaso.gui.gestione.ClientiAdd;
 import rf.utility.ControlloDati;
 import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompleteTextComponent;
 import rf.utility.gui.text.AutoCompletion;
@@ -106,7 +109,7 @@ public class DocumentoDiTrasporto extends JFrame{
 	private JTextField txtUtile = null;
 	private Vector<DettaglioOrdine> carrello = null;  //  @jve:decl-index=0:
 	private Vector<String> colonne = null;  //  @jve:decl-index=0:
-	private Vendita vendita = null;
+	private Scarico scarico = null;
 	private VenditeModel model = null;
 	private JDateChooser dataTrasporto = null;
 	private double utile = 0.00;
@@ -153,6 +156,7 @@ public class DocumentoDiTrasporto extends JFrame{
 	private JPanel pnlRicercaCliente = null;
 	private IDJComboBox cmbClientiR = null;
 	private JButton btnRicercaCliente = null;
+	private boolean saved = false;
 	public DocumentoDiTrasporto(){
 		this.dbm = DBManager.getIstanceSingleton();
 		initialize();
@@ -167,7 +171,7 @@ public class DocumentoDiTrasporto extends JFrame{
 		carrello = new Vector<DettaglioOrdine>();
 		DettaglioOrdine v = new DettaglioOrdine();
 		carrello.add(v);
-		vendita = new Vendita();
+		scarico = new Scarico();
 		colonne = new Vector<String>();
 		caricaVettoreColonne();
 		this.setSize(new Dimension(800, 600));
@@ -188,7 +192,7 @@ public class DocumentoDiTrasporto extends JFrame{
 		caricaDescrizione();
 		caricaCausale();
 		caricaAspetto();
-		txtNumero.setText(String.valueOf(dbm.getNewID("ddt", "idddt")));
+		txtNumero.setText(String.valueOf(dbm.getNewID("ordini", "idordine")));
 
 		Calendar c=Calendar.getInstance();
 		txtOraTr.setText(String.valueOf(c.get(Calendar.HOUR_OF_DAY)));
@@ -263,7 +267,7 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	private void inserisci(DettaglioOrdine dv) {
-		dv.setIdVendita(dbm.getNewID("ddt", "idddt"));
+		dv.setIdVendita(dbm.getNewID("ordini", "idordine"));
 		carrello.add(dv);
 		DBManager.getIstanceSingleton().notifyDBStateChange();
 		calcoliBarraInferiore();
@@ -331,9 +335,11 @@ public class DocumentoDiTrasporto extends JFrame{
 		colonne.add("idArticolo");
 		colonne.add("codice");
 		colonne.add("descrizione");
-		colonne.add("um");
+		colonne.add("UM");
 		colonne.add("quantita'");
-		colonne.add("prezzo");
+		colonne.add("disp.");
+		colonne.add("prezzo acquisto");
+		colonne.add("prezzo vendita");
 		colonne.add("importo");
 		colonne.add("sconto");
 		colonne.add("iva");
@@ -616,7 +622,7 @@ public class DocumentoDiTrasporto extends JFrame{
 				col.setMaxWidth(0);
 				col.setPreferredWidth(0);
 				TableColumn column = jTable.getColumnModel().getColumn(2);
-				column.setCellEditor(new DefaultCellEditor(getCmbProdotti()));
+				column.setCellEditor(new ComboBoxCellEditor(getCmbProdotti()));
 				column = jTable.getColumnModel().getColumn(1);
 				column.setCellEditor(new DefaultCellEditor(getTxtCodice()));
 				jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -659,7 +665,7 @@ public class DocumentoDiTrasporto extends JFrame{
 			messaggioCampoMancante("Ora Trasporto mal formata.", "AVVISO");
 			return;
 		}
-		int idfattura = dbm.getNewID("ddt", "idddt");
+		int idfattura = dbm.getNewID("ordini", "idordine");
 		try {
 
 			java.sql.Date d = new java.sql.Date(dataCorrente.getDate().getTime());
@@ -683,42 +689,78 @@ public class DocumentoDiTrasporto extends JFrame{
 			if ( !txtSconto.getText().equals("") )
 				sconto = Integer.parseInt(txtSconto.getText());
 			final Time oraTr = new Time(ora, min, 0);
-
-			vendita.setIdVendita(idfattura);
-			vendita.setNumVendita(num_fattura);
-			vendita.setData_vendita(d);
-			vendita.setOra_vendita(t);
-			vendita.setCliente(idCliente);
-			vendita.setDestinazione(txtDestinazione.getText());
-			vendita.setPeso(peso);
-			vendita.setDataTrasporto(new java.sql.Date(dataTrasporto.getDate().getTime()));
-			vendita.setOraTrasporto(oraTr);
-			vendita.setIdCausale(idCausale);
-			vendita.setConsegna((String)cmbConsegna.getSelectedItem());
-			vendita.setN_colli(colli);
-			vendita.setAspetto(idAspetto);
-			vendita.setSconto(sconto);
-
-			vendita.salvaDatiInDdt();
-
-
+			
+			scarico.setNumDocumento(num_fattura);
+			scarico.setDataScarico(d);
+			scarico.setOraScarico(t);
+			scarico.setIdCliente(idCliente);
+			scarico.setDestDiversa(txtDestinazione.getText());
+			scarico.setPeso(peso);
+			scarico.setDataTrasporto(new java.sql.Date(dataTrasporto.getDate().getTime()));
+			scarico.setOraTrasporto(oraTr);
+			scarico.setIdCausale(idCausale);
+			scarico.setConsegna((String)cmbConsegna.getSelectedItem());
+			scarico.setColli(colli);
+			scarico.setIdAspetto(idAspetto);
+			scarico.setSconto(sconto);
+			scarico.setTotaleDocumentoIvato(ControlloDati.convertPrezzoToDouble(txtTotale.getText()));
+			scarico.setDocFiscale(2);
+			
+			int er;
+			try{
+				if( saved ){
+					er = scarico.updateScarico();
+					
+				}else
+					er = scarico.insertScarico();
+				if ( er == -1 ){
+					scarico.deleteScarico(scarico.getIdScarico());
+					messaggioCampoMancante("Si è verificato un errore durante l'inserimento del documento. Riprovare.", "ERRORE");
+					return;
+				}
+				//salviamo i dettagli della fattura
+				carrello.remove(0);
+				for (DettaglioOrdine dv : carrello) {
+					if ( saved )
+						er = dv.update();
+					else
+						er = dv.insert();
+				}
+				if ( er == -1 ){
+					scarico.deleteScarico(scarico.getIdScarico());
+					scarico.deleteAllArticoliScaricati();
+					messaggioCampoMancante("Si è verificato un errore durante l'inserimento della fattura. Riprovare.", "ERRORE");
+					return;
+				}
+				saved = false;
+			} catch (IDNonValido e) {
+				e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-
-		//salviamo i dettagli della fattura
-		carrello.remove(0);
-		for (DettaglioOrdine dv : carrello) {
-			dv.salvaInDb("dettaglio_ddt");
-		}
+		//notifichiamo le modifiche e aggiorniamo
 		resetCampi();
 		dbm.notifyDBStateChange();
 	}
 
 	private void resetCampi(){
-		txtNumero.setText(String.valueOf(dbm.getNewID("ddt", "idddt")));
+		txtNumero.setText(String.valueOf(dbm.getNewID("ordini", "idordine")));
+		caricaClienti();
+		caricaCausale();
+		txtDestinazione.setText("");
+		txtPeso.setText("");
+		txtColli.setText("");
+		getDataTrasporto();
+		getDataCorrente();
+		Calendar c=Calendar.getInstance();
+		txtOraTr.setText(String.valueOf(c.get(Calendar.HOUR_OF_DAY)));
+		txtMinTr.setText(String.valueOf(c.get(Calendar.MINUTE)));
 		carrello.removeAllElements();
 		DettaglioOrdine v = new DettaglioOrdine();
 		carrello.add(v);
@@ -884,7 +926,6 @@ public class DocumentoDiTrasporto extends JFrame{
 								if ( c.getProvinciaToString() != null )
 									dest += c.getProvincia();
 							} catch (SQLException e1) {
-								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
 							txtDestinazione.setText(dest);
@@ -918,8 +959,8 @@ public class DocumentoDiTrasporto extends JFrame{
 			String as[] = (String[]) c.allClienti();
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
-			((IDJComboBox) cmbClienti).caricaNewValueComboBox(as, true);
-			((IDJComboBox) cmbClientiR).caricaNewValueComboBox(as, true);
+			((IDJComboBox) cmbClienti).caricaNewValueComboBox(as, false);
+			((IDJComboBox) cmbClientiR).caricaNewValueComboBox(as, false);
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(this,
 					"Errore caricamento clienti nel combobox", "ERRORE", 0);
@@ -939,7 +980,7 @@ public class DocumentoDiTrasporto extends JFrame{
 			((IDJComboBox) cmbProdotti).caricaNewValueComboBox(as, true);
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(this,
-					"Errore caricamento fornitori nel combobox", "ERRORE", 0);
+					"Errore caricamento descrizione articoli nel combobox", "ERRORE", 0);
 			e.printStackTrace();
 		}
 		AutoCompletion.enable(cmbProdotti);
@@ -952,7 +993,7 @@ public class DocumentoDiTrasporto extends JFrame{
 			String as[] = (String[]) c.allCausali();
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
-			((IDJComboBox) cmbCausale).caricaNewValueComboBox(as, true);
+			((IDJComboBox) cmbCausale).caricaNewValueComboBox(as, false);
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(this,
 					"Errore caricamento causale nel combobox", "ERRORE", 0);
@@ -968,7 +1009,7 @@ public class DocumentoDiTrasporto extends JFrame{
 			String as[] = (String[]) a.allAspetti();
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
-			((IDJComboBox) cmbAspetto).caricaNewValueComboBox(as, true);
+			((IDJComboBox) cmbAspetto).caricaNewValueComboBox(as, false);
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(this,
 					"Errore caricamento aspetto nel combobox", "ERRORE", 0);
@@ -1005,7 +1046,7 @@ public class DocumentoDiTrasporto extends JFrame{
 					public void keyPressed(java.awt.event.KeyEvent e) {
 						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 							DettaglioOrdine dv = new DettaglioOrdine();
-							int er = dv.caricaDatiByCodiceBarre(txtCodice.getText());
+							int er = dv.loadByCB(txtCodice.getText());
 							if ( er == 0 )
 								messaggioCampoMancante("Articolo non disponibile", "AVVISO");
 							else if ( er == -1 )
@@ -1090,7 +1131,7 @@ public class DocumentoDiTrasporto extends JFrame{
 						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 							int id = Integer.parseInt(((IDJComboBox)cmbProdotti).getIDSelectedItem());
 							DettaglioOrdine dv = new DettaglioOrdine();
-							int er = dv.caricaDatiById(id);
+							int er = dv.loadByID(id);
 							if ( er == 0 )
 								messaggioCampoMancante("Articolo non disponibile", "AVVISO");
 							else if ( er == -1 )
@@ -1100,21 +1141,21 @@ public class DocumentoDiTrasporto extends JFrame{
 						}
 					}
 				});
-				cmbProdotti.getEditor().getEditorComponent().addFocusListener(new java.awt.event.FocusAdapter() {
-					@Override
-					public void focusLost(java.awt.event.FocusEvent e) {
-						int id = Integer.parseInt(((IDJComboBox)cmbProdotti).getIDSelectedItem());
-						DettaglioOrdine dv = new DettaglioOrdine();
-						int er = dv.caricaDatiById(id);
-						if ( er == 0 )
-							messaggioCampoMancante("Articolo non disponibile", "AVVISO");
-						else if ( er == -1 )
-							messaggioCampoMancante("Articolo non trovato", "AVVISO");
-						else
-							inserisci(dv);
-
-					}
-				});
+//				cmbProdotti.getEditor().getEditorComponent().addFocusListener(new java.awt.event.FocusAdapter() {
+//					@Override
+//					public void focusLost(java.awt.event.FocusEvent e) {
+//						int id = Integer.parseInt(((IDJComboBox)cmbProdotti).getIDSelectedItem());
+//						DettaglioOrdine dv = new DettaglioOrdine();
+//						int er = dv.loadByID(id);
+//						if ( er == 0 )
+//							messaggioCampoMancante("Articolo non disponibile", "AVVISO");
+//						else if ( er == -1 )
+//							messaggioCampoMancante("Articolo non trovato", "AVVISO");
+//						else
+//							inserisci(dv);
+//
+//					}
+//				});
 			} catch (java.lang.Throwable e) {
 			}
 		}
@@ -1413,37 +1454,39 @@ public class DocumentoDiTrasporto extends JFrame{
 		int idddt = ((Long) tblViewDdt.getValueAt(riga, 0)).intValue();
 		DettaglioOrdine dv = new DettaglioOrdine();
 		try {
-			Vector<DettaglioOrdine> c2 = (Vector<DettaglioOrdine>)dv.caricaDatiByDB(idddt, "dettaglio_ddt", "idddt");
+			Vector<DettaglioOrdine> c2 = (Vector<DettaglioOrdine>)dv.caricaDatiByDB(idddt);
 			carrello.removeAllElements();
+			carrello.add(new DettaglioOrdine());
 			for ( DettaglioOrdine d : c2 ){
 				carrello.add(d);
 			}
-			vendita.caricaDatiDaDdt(idddt);
+			scarico.caricaDati(idddt);
 			visualizzaVendita();
 			DBManager.getIstanceSingleton().notifyDBStateChange();
 			calcoliBarraInferiore();
 			jTabbedPane.setSelectedIndex(0);
+			saved = true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
 	private void visualizzaVendita(){
-		txtNumero.setText(vendita.getNumVendita());
-		dataCorrente.setDate(vendita.getData_vendita());
-		cmbClienti.setSelectedItemByID(vendita.getCliente());
-		txtDestinazione.setText(vendita.getDestinazione());
+		txtNumero.setText(scarico.getNumDocumento());
+		dataCorrente.setDate(scarico.getDataScarico());
+		cmbClienti.setSelectedItemByID(scarico.getIdCliente());
+		txtDestinazione.setText(scarico.getDestDiversa());
 //		txtSpeseInc.setText(String.valueOf(vendita.getSpeseIncasso()));
 //		txtSpeseTr.setText(String.valueOf(vendita.getSpeseTrasporto()));
-		dataTrasporto.setDate(vendita.getDataTrasporto());
-		txtOraTr.setText(String.valueOf(vendita.getOraTrasporto().getHours()));
-		txtMinTr.setText(String.valueOf(vendita.getOraTrasporto().getMinutes()));
-		txtColli.setText(String.valueOf(vendita.getN_colli()));
-		txtPeso.setText(String.valueOf(vendita.getPeso()));
+		dataTrasporto.setDate(scarico.getDataTrasporto());
+		txtOraTr.setText(String.valueOf(scarico.getOraTrasporto().getHours()));
+		txtMinTr.setText(String.valueOf(scarico.getOraTrasporto().getMinutes()));
+		txtColli.setText(String.valueOf(scarico.getColli()));
+		txtPeso.setText(String.valueOf(scarico.getPeso()));
 //		cmbPagamento.setSelectedItemByID(vendita.getIdPagamento());
-		cmbCausale.setSelectedItemByID(vendita.getIdCausale());
-		cmbAspetto.setSelectedItemByID(vendita.getAspetto());
-		cmbConsegna.setSelectedItem(vendita.getConsegna());
+		cmbCausale.setSelectedItemByID(scarico.getIdCausale());
+		cmbAspetto.setSelectedItemByID(scarico.getIdAspetto());
+		cmbConsegna.setSelectedItem(scarico.getConsegna());
 //		cmbPorto.setSelectedItem(vendita.getPorto());
 	}
 
@@ -1460,15 +1503,17 @@ public class DocumentoDiTrasporto extends JFrame{
 		if (scelta != JOptionPane.YES_OPTION)
 			return;
 		int riga = tblViewDdt.getSelectedRow();
-		int idfattura = ((Long) tblViewDdt.getValueAt(riga, 0)).intValue();
-		vendita.setIdVendita(idfattura);
+		int idScarico = ((Long) tblViewDdt.getValueAt(riga, 0)).intValue();
+		scarico.setIdScarico(idScarico);
 		try {
-			vendita.rimuoviDaDb("ddt", "idddt");
+			scarico.deleteAllArticoliScaricati();
+			scarico.deleteScarico(idScarico);
 		} catch (rf.utility.db.eccezzioni.IDNonValido e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		vendita = new Vendita();
+		scarico = new Scarico();
 	}
 
 

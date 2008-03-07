@@ -159,13 +159,13 @@ public class FatturaViewModel extends AbstractTableModel implements DBStateChang
 	 */
 	private void recuperaDati() throws SQLException {
 		if ( tabella == 1)
-			this.query = "select o.idordine,c.cognome,c.nome,o.num_documento as numero,o.data_ordine as data from ordini as o,clienti as c where c.idcliente=o.idcliente and o."+colonna+"="+valore+" order by o.data_ordine";
+			this.query = "select o.idordine,c.cognome,c.nome,o.num_documento as numero,o.data_ordine as data from ordini as o,clienti as c where c.idcliente=o.idcliente and o."+colonna+"="+valore+" and o.doc_fiscale=1 and order by o.data_ordine";
 		else if ( tabella == 2 )
-			this.query = "select o.idordine,c.cognome,c.nome,o.num_documento as numero,o.data_ordine as data from clienti as c, ordini as o where c.idcliente=o.idcliente and o.data_ordine>='"+da+"' and o.data_ordine<='"+a+"' order by o.data_ordine";
+			this.query = "select o.idordine,c.cognome,c.nome,o.num_documento as numero,o.data_ordine as data from clienti as c, ordini as o where c.idcliente=o.idcliente and o.data_ordine>='"+da+"' and o.data_ordine<='"+a+"' and o.doc_fiscale=1 order by o.data_ordine";
 		else if ( tabella == 3 )
-			this.query = "select d.idddt,c.cognome,c.nome,d.num_ddt as numero,d.data_ddt as data from ddt as d,clienti as c, ordini as o where d.idddt=o.idordine and c.idcliente=d.idcliente and d."+colonna+"="+valore+" order by d.data_ddt";
+			this.query = "select o.idordine,c.cognome,c.nome,o.num_documento as numero,o.data_ordine as data from clienti as c, ordini as o where c.idcliente=o.idcliente and o."+colonna+"="+valore+" and o.doc_fiscale=2 order by o.data_ordine";
 		else if ( tabella == 4 )
-			this.query = "select d.idddt,c.cognome,c.nome,d.num_ddt as numero,d.data_ddt as data from ddt as d,clienti as c, ordini as o where d.idddt=o.idordine and c.idcliente=d.idcliente and d.data_ddt>='"+da+"' and d.data_ddt<='"+a+"' order by d.data_ddt";
+			this.query = "select o.idordine,c.cognome,c.nome,o.num_documento as numero,o.data_ordine as data from clienti as c, ordini as o where c.idcliente=o.idcliente and o.data_ordine>='"+da+"' and o.data_ordine<='"+a+"' and o.doc_fiscale=2 order by o.data_ordine";
 		else if ( tabella == 5 )
 			this.query = "select b.idordine as numero,b.data_ordine as data from ordini as b where b.data_ordine>='"+da+"' and b.data_ordine<='"+a+"' order by b.data_ordine";
 		pst = dbm.getNewPreparedStatement(query);

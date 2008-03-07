@@ -683,6 +683,29 @@ public class Articolo {
 			pst.close();
 		return g;
 	}
+	
+	public double getGiacenza2() throws SQLException {
+		PreparedStatement pst=null;
+		ResultSet rs=null;
+		String query="select carico,scarico from giacenza_articoli_all_view where idarticolo=?";
+		pst=dbm.getNewPreparedStatement(query);
+		pst.setInt(1, idArticolo);
+		rs=pst.executeQuery();
+		rs.last();
+		int row=rs.getRow();
+		if(row<1){
+			return -1;
+		}
+		int carico = rs.getInt(1);
+		int scarico = rs.getInt(2);
+		//int g=rs.getInt(1);
+		int g = carico - scarico;
+		if(rs!=null)
+			rs.close();
+		if(pst!=null)
+			pst.close();
+		return g;
+	}
 
 	public static int idByCodiceBarre(String codbarre) throws SQLException {
 		DBManager dbm=DBManager.getIstanceSingleton();

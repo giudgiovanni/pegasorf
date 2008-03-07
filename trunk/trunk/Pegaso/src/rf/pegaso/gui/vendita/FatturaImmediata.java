@@ -787,47 +787,42 @@ public class FatturaImmediata extends JFrame{
 		sc.setDestDiversa(txtDestinazione.getText());
 		sc.setIdAspetto(idAspetto);
 		sc.setSconto(sconto);
+		int er;
 		
-		//Vendita v = new Vendita();
-		//v.setIdVendita(dbm.getNewID("fattura", "idfattura"));
-		//v.setData_vendita(new java.sql.Date(dataCorrente.getDate().getTime()));
-		//v.setOra_vendita(new Time(dataCorrente.getDate().getTime()));
-		//v.setCliente(idCliente);
-		//v.setIdPagamento(idPagamento);
-		//v.setNumVendita(num_fattura);
-		//v.setIdCausale(idCausale);
-		//v.setSpeseIncasso(speseInc);
-		//v.setSpeseTrasporto(speseTr);
-		//v.setDataTrasporto(new java.sql.Date(dataTrasporto.getDate().getTime()));
-		//v.setOraTrasporto(oraTr);
-		//v.setN_colli(colli);
-		//v.setPeso(peso);
-		//v.setConsegna((String)cmbConsegna.getSelectedItem());
-		//v.setPorto((String)cmbPorto.getSelectedItem());
-		//v.setDestinazione(txtDestinazione.getText());
-		//v.setAspetto(idAspetto);
-		//v.setSconto(sconto);
 		try{
 			if( saved ){
-				sc.updateScarico();
-				//v.updateDatiInFattura();
-				//saved=false;
+				er = sc.updateScarico();
+				
 			}else
-				sc.insertScarico();
+				er = sc.insertScarico();
 				//v.salvaDatiInFattura();
 
+			if ( er == -1 ){
+				sc.deleteScarico(sc.getIdScarico());
+				messaggioCampoMancante("Si è verificato un errore durante l'inserimento della fattura. Riprovare.", "ERRORE");
+				return;
+			}
 			//salviamo i dettagli della fattura
 			carrello.remove(0);
 			for (DettaglioOrdine dv : carrello) {
 				if ( saved )
-					dv.update();
+					er = dv.update();
 				else
-					dv.insert();
+					er = dv.insert();
+			}
+			if ( er == -1 ){
+				sc.deleteScarico(sc.getIdScarico());
+				sc.deleteAllArticoliScaricati();
+				messaggioCampoMancante("Si è verificato un errore durante l'inserimento della fattura. Riprovare.", "ERRORE");
+				return;
 			}
 			saved = false;
 		
 		} catch (IDNonValido e) {
 				e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		//---------FINE ROCCO-----------------------------------------
 		dbm.notifyDBStateChange();
@@ -836,12 +831,22 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	private void resetCampi(){
-		//txtNumero.setText(String.valueOf(dbm.getNewID("banco", "idvendita")));
+		txtNumero.setText(String.valueOf(dbm.getNewID("ordini", "idordine")));
+		caricaClienti();
+		caricaPagamento();
+		caricaCausale();
+		caricaAspetto();
+		txtDestinazione.setText("");
+		txtSpeseInc.setText("0,00");
+		txtSpeseTr.setText("0,00");
+		txtColli.setText("0");
+		txtPeso.setText("0,00");
 		carrello.removeAllElements();
 		DettaglioOrdine v = new DettaglioOrdine();
 		carrello.add(v);
 		calcoliBarraInferiore();
-		txtNumero.setText(String.valueOf(dbm.getNewID("ordini", "idordine")));
+		
+		saved = false;
 	}
 
 	private void nuovoCliente(){

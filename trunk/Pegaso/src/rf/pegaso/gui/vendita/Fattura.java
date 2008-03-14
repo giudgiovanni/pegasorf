@@ -222,7 +222,7 @@ public class Fattura extends JFrame{
 		DettaglioOrdine dv = new DettaglioOrdine();
 		try {
 			carrello.removeAllElements();
-			for ( DettaglioOrdine d : dv.caricaDatiByDB(id_ddt, "dettaglio_ddt", "idddt") ){
+			for ( DettaglioOrdine d : dv.caricaDatiByDB(id_ddt) ){
 				carrello.add(d);
 			}
 			DBManager.getIstanceSingleton().notifyDBStateChange();
@@ -545,7 +545,8 @@ public class Fattura extends JFrame{
 				//fattura lo sostituiamo con il corrente idfattura prima di effettuare
 				//l'inserimento
 				dettaglio.setIdVendita(v.getIdVendita());
-				dettaglio.salvaInDb("dettaglio_fattura");
+				dettaglio.insert();
+				//dettaglio.salvaInDb("dettaglio_fattura");
 				//carrello.remove(dettaglio);
 			}
 			carrello.removeAllElements();
@@ -563,12 +564,7 @@ public class Fattura extends JFrame{
 		//codice 4 corrisponde allo scontrino fiscale
 		v.setTipoDocumento(1);
 		Scarico sc=new Scarico();
-		try {
-			sc.insertScarico(v);
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(this, "Errore nell'inserimento del dettaglio vendita nella fattura", "ERRORE", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}
+		sc.insertScarico();
 		//---------FINE ROCCO-----------------------------------------
 		dbm.notifyDBStateChange();
 		txtSpeseIncasso.setText("");

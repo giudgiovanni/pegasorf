@@ -159,7 +159,7 @@ public class FatturaViewModel extends AbstractTableModel implements DBStateChang
 	 */
 	private void recuperaDati() throws SQLException {
 		if ( tabella == 1)
-			this.query = "select o.idordine,c.cognome,c.nome,o.num_documento as numero,o.data_ordine as data from ordini as o,clienti as c where c.idcliente=o.idcliente and o."+colonna+"="+valore+" and o.doc_fiscale=1 and order by o.data_ordine";
+			this.query = "select o.idordine,c.cognome,c.nome,o.num_documento as numero,o.data_ordine as data from ordini as o,clienti as c where c.idcliente=o.idcliente and o."+colonna+"="+valore+" and o.doc_fiscale=1 order by o.data_ordine";
 		else if ( tabella == 2 )
 			this.query = "select o.idordine,c.cognome,c.nome,o.num_documento as numero,o.data_ordine as data from clienti as c, ordini as o where c.idcliente=o.idcliente and o.data_ordine>='"+da+"' and o.data_ordine<='"+a+"' and o.doc_fiscale=1 order by o.data_ordine";
 		else if ( tabella == 3 )

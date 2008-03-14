@@ -267,7 +267,10 @@ public class DocumentoDiTrasporto extends JFrame{
 	}
 
 	private void inserisci(DettaglioOrdine dv) {
-		dv.setIdVendita(dbm.getNewID("ordini", "idordine"));
+		if ( saved )
+			dv.setIdVendita(scarico.getIdScarico());
+		else
+			dv.setIdVendita(dbm.getNewID("ordini", "idordine"));
 		carrello.add(dv);
 		DBManager.getIstanceSingleton().notifyDBStateChange();
 		calcoliBarraInferiore();
@@ -721,7 +724,7 @@ public class DocumentoDiTrasporto extends JFrame{
 				//salviamo i dettagli della fattura
 				carrello.remove(0);
 				for (DettaglioOrdine dv : carrello) {
-					if ( saved )
+					if ( dv.isInsert() )
 						er = dv.update();
 					else
 						er = dv.insert();
@@ -751,8 +754,8 @@ public class DocumentoDiTrasporto extends JFrame{
 
 	private void resetCampi(){
 		txtNumero.setText(String.valueOf(dbm.getNewID("ordini", "idordine")));
-		caricaClienti();
-		caricaCausale();
+		//caricaClienti();
+		//caricaCausale();
 		txtDestinazione.setText("");
 		txtPeso.setText("");
 		txtColli.setText("");

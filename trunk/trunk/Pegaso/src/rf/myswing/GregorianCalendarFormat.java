@@ -15,6 +15,11 @@ import java.util.GregorianCalendar;
 public class GregorianCalendarFormat extends GregorianCalendar {
 
 
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public GregorianCalendarFormat() {
 		super();
 	}

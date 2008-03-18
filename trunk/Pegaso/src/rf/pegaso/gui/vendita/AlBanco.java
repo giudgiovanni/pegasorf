@@ -48,6 +48,7 @@ import rf.myswing.util.QuantitaDisponibileEditor;
 import rf.pegaso.db.model.FatturaViewModel;
 import rf.pegaso.db.model.VenditeModel;
 import rf.pegaso.db.tabelle.Articolo;
+import rf.pegaso.db.tabelle.DettaglioOrdine;
 import rf.pegaso.db.tabelle.Scarico;
 import rf.utility.ControlloDati;
 import rf.utility.db.DBManager;
@@ -86,7 +87,8 @@ public class AlBanco extends JFrame{
 	private JComboBox cmbProdotti = null;
 	private JLabel lblUtile = null;
 	private JTextField txtUtile = null;
-	private Vector<String> colonne = null;  //  @jve:decl-index=0:
+	private Vector<DettaglioOrdine> carrello = null;
+	private Vector<String> colonne = null;
 	private VenditeModel model = null;
 	private double utile = 0.00;
 	private double imponibile = 0.00;
@@ -128,16 +130,16 @@ public class AlBanco extends JFrame{
 	 * @return void
 	 */
 	private void initialize() {
-//		carrello = new Vector<DettaglioOrdine>();
-//		DettaglioOrdine v = new DettaglioOrdine();
-//		carrello.add(v);
+		carrello = new Vector<DettaglioOrdine>();
+		DettaglioOrdine v = new DettaglioOrdine();
+		carrello.add(v);
 		scarico = new Scarico();
 		colonne = new Vector<String>();
 		caricaVettoreColonne();
 		this.setSize(new Dimension(800, 600));
 		//this.setContentPane(getJContentPane());
 		this.setContentPane(getJContentPane1());
-
+		
 		this.setTitle("Al Banco");
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); // Generated
 
@@ -193,7 +195,7 @@ public class AlBanco extends JFrame{
 
 	private void inserisci(DettaglioOrdine dv) {
 		dv.setIdVendita(dbm.getNewID("ordini", "idordine"));
-		//carrello.add(dv);
+		carrello.add(dv);
 		DBManager.getIstanceSingleton().notifyDBStateChange();
 		calcoliBarraInferiore();
 	}
@@ -967,9 +969,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes jContentPane1
-	 *
-	 * @return javax.swing.JPanel
+	 * This method initializes jContentPane1	
+	 * 	
+	 * @return javax.swing.JPanel	
 	 */
 	private JPanel getJContentPane1() {
 		if (jContentPane1 == null) {
@@ -981,9 +983,9 @@ public class AlBanco extends JFrame{
 	}
 
 	/**
-	 * This method initializes pnlCentrale
-	 *
-	 * @return javax.swing.JPanel
+	 * This method initializes pnlCentrale	
+	 * 	
+	 * @return javax.swing.JPanel	
 	 */
 	private JPanel getPnlCentrale() {
 		if (pnlCentrale == null) {

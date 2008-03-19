@@ -11,7 +11,10 @@ public class MathUtility {
 	 */
 	public static double scontoPercentuale(double valore, int percentuale) {
 		return (valore/100)*percentuale;
+	}
 
+	public static double percentualeDaAggiungere(double valore, int percentuale){
+		return scontoPercentuale(valore, percentuale);
 	}
 
 }

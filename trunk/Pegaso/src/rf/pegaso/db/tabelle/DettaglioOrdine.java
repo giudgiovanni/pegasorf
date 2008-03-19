@@ -128,11 +128,11 @@ public class DettaglioOrdine {
 	public void setDisponibilita(double disponibilita) {
 		this.disponibilita = disponibilita;
 	}
-	
+
 	/**
-	 * Questo metodo carica in memoria i dettagli di un articolo 
+	 * Questo metodo carica in memoria i dettagli di un articolo
 	 * identificato tramite il codice a barre
-	 * 
+	 *
 	 * @param codice
 	 * @return int per verifica
 	 */
@@ -165,11 +165,11 @@ public class DettaglioOrdine {
 		}
 		return 1;
 	}
-	
+
 	/**
-	 * Questo metodo carica in memoria i dettagli di un articolo 
+	 * Questo metodo carica in memoria i dettagli di un articolo
 	 * identificato tramite l'indice identificativo
-	 * 
+	 *
 	 * @param id
 	 * @return int per verifica
 	 */
@@ -198,14 +198,14 @@ public class DettaglioOrdine {
 		}
 		return 1;
 	}
-	
+
 	/**
-	 * Questo metodo verifica se un dettaglio_ordine è 
+	 * Questo metodo verifica se un dettaglio_ordine è
 	 * già stato inserito nel db
-	 * 
+	 *
 	 * @param codice
 	 * @return int per verifica
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public boolean isInsert() throws SQLException{
 		Statement st = dbm.getNewStatement();
@@ -218,28 +218,28 @@ public class DettaglioOrdine {
 			return false;
 		return true;
 	}
-	
+
 	/**
-	 * Questo metodo rimuove dal db un articolo 
+	 * Questo metodo rimuove dal db un articolo
 	 * identificato tramite il codice a barre
-	 * 
+	 *
 	 * @param codice
 	 * @return int
 	 */
 	public int remove(String codice){
 		return -1;
 	}
-	
+
 	/**
 	 * Questo metodo inserisce nel db un nuovo dettaglio ordine
-	 * 
+	 *
 	 * @return int per verifica
 	 */
 	public int insert(){
 		PreparedStatement pst = null;
 		try{
 			String insert = "insert into dettaglio_ordini values (?,?,?,?,?,?,?)";
-			
+
 			pst = dbm.getNewPreparedStatement(insert);
 			pst.setInt(2, idArticolo);
 			pst.setInt(1, idOrdine);
@@ -264,10 +264,10 @@ public class DettaglioOrdine {
 		}
 		return 1;
 	}
-	
+
 	/**
 	 * Questo metodo aggiorno un dettaglio ordine già presente nel db
-	 * 
+	 *
 	 * @param codice
 	 * @return
 	 */
@@ -310,7 +310,7 @@ public class DettaglioOrdine {
 
 	/**
 	 * Questo metodo carica dal db tutti i dettagli ordine all'interno di un Vector
-	 * 
+	 *
 	 * @param id
 	 * @return Vector di dettaglio_ordine
 	 */
@@ -438,9 +438,9 @@ public class DettaglioOrdine {
 	}*/
 
 	/**
-	 * Questo metodo aggiorno la disponibilità degli articoli 
+	 * Questo metodo aggiorno la disponibilità degli articoli
 	 * dopo l'inserimento di un dettaglio ordini
-	 * 
+	 *
 	 * @param quantità presente nel db prima di effettuare l'inserimento
 	 */
 	public void updateArticolo(double qtaIniziale)
@@ -475,5 +475,9 @@ public class DettaglioOrdine {
 		v.add(sconto);
 		v.add(iva);
 		return v;
+	}
+
+	public boolean equals(DettaglioOrdine o){
+		return this.getIdArticolo()==o.getIdArticolo();
 	}
 }

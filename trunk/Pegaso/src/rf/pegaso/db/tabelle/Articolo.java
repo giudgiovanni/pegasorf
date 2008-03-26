@@ -131,7 +131,6 @@ public class Articolo {
 		return o;
 	}
 
-
 	public String[] allCodiciBarre() throws SQLException{
 		String[] o = null;
 		ResultSet rs = null;

@@ -22,20 +22,26 @@ import java.util.EventObject;
 
 /**
  *
- * @author adrianromero
+ * @author adrianromero e shock
  * @version 
  */
 public class JNumberEvent extends EventObject {
 
     private char m_cKey;
+    private int m_idArticolo;
     
-    public JNumberEvent(Object source, char cKey) {
+    public JNumberEvent(Object source, char cKey, int idArticolo) {
         super(source);
         m_cKey = cKey;
+        m_idArticolo = idArticolo;
     }
     
     public char getKey() {
         return m_cKey;
+    }
+    
+    public int getIdArticolo(){
+    	return m_idArticolo;
     }
 
 }

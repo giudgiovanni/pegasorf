@@ -69,11 +69,15 @@ public class QuantitaDisponibileEditor extends DefaultCellEditor {
 						//facciamo anche un controllo se è per esempio
 						// un long e nel caso effettuiamo prima delle conversioni
 						Long tmp=null;
-						if(ftf.getValue() instanceof Integer){
+						/*if(ftf.getValue() instanceof Integer){
 							Integer i=(Integer)ftf.getValue();
 							tmp=new Long(i.intValue());
 						}else if(ftf.getValue() instanceof Long){
 							tmp=(Long)ftf.getValue();
+						}*/
+						if ( ftf.getValue() instanceof Number) {
+							Number n = (Number)ftf.getValue();
+							tmp = new Long(n.intValue());
 						}
 						//tmp= new Long((Integer)ftf.getValue());
 						oldValue=tmp;

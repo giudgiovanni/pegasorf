@@ -787,7 +787,7 @@ public class FatturaImmediata extends JFrame{
 		sc.setDestDiversa(txtDestinazione.getText());
 		sc.setIdAspetto(idAspetto);
 		sc.setSconto(sconto);
-		int er;
+		int er, er1 = -1;
 		
 		try{
 			if( saved ){
@@ -806,16 +806,18 @@ public class FatturaImmediata extends JFrame{
 			carrello.remove(0);
 			for (DettaglioOrdine dv : carrello) {
 				if ( saved )
-					er = dv.update();
+					er1 = dv.update();
 				else
-					er = dv.insert();
+					er1 = dv.insert();
 			}
-			if ( er == -1 ){
+			if ( er1 == -1 ){
 				sc.deleteScarico(sc.getIdScarico());
 				sc.deleteAllArticoliScaricati();
 				messaggioCampoMancante("Si è verificato un errore durante l'inserimento della fattura. Riprovare.", "ERRORE");
 				return;
 			}
+			if ( er == 1 && er1 == 1 )
+				messaggioCampoMancante("Inserimento effettuato con successo", "ERRORE");
 			saved = false;
 		
 		} catch (IDNonValido e) {
@@ -1184,7 +1186,6 @@ public class FatturaImmediata extends JFrame{
 						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 							DettaglioOrdine dv = new DettaglioOrdine();
 							int er = dv.loadByCB(txtCodice.getText());
-							System.out.println("codice articolo "+dv.getIdArticolo());
 							if ( er == 0 )
 								messaggioCampoMancante("Articolo non disponibile", "AVVISO");
 							else if ( er == -1 )
@@ -1762,6 +1763,7 @@ public class FatturaImmediata extends JFrame{
 			calcoliBarraInferiore();
 			jTabbedPane.setSelectedIndex(0);
 			saved=true;
+			//tblViewFatture.setModel(null);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -1772,13 +1774,13 @@ public class FatturaImmediata extends JFrame{
 		dataCorrente.setDate(scarico.getDataScarico());
 		cmbClienti.setSelectedItemByID(scarico.getIdCliente());
 		txtDestinazione.setText(scarico.getDestDiversa());
-		txtSpeseInc.setText(String.valueOf(scarico.getSpeseIncasso()));
-		txtSpeseTr.setText(String.valueOf(scarico.getSpeseTrasporto()));
+		txtSpeseInc.setValue(((scarico.getSpeseIncasso())));
+		txtSpeseTr.setValue((scarico.getSpeseTrasporto()));
 		dataTrasporto.setDate(scarico.getDataTrasporto());
-		txtOraTr.setText(String.valueOf(scarico.getOraTrasporto().getHours()));
-		txtMinTr.setText(String.valueOf(scarico.getOraTrasporto().getMinutes()));
-		txtColli.setText(String.valueOf(scarico.getColli()));
-		txtPeso.setText(String.valueOf(scarico.getPeso()));
+		txtOraTr.setValue((scarico.getOraTrasporto().getHours()));
+		txtMinTr.setValue((scarico.getOraTrasporto().getMinutes()));
+		txtColli.setValue((scarico.getColli()));
+		txtPeso.setValue((scarico.getPeso()));
 		cmbPagamento.setSelectedItemByID(scarico.getIdPagamento());
 		cmbCausale.setSelectedItemByID(scarico.getIdCausale());
 		cmbAspetto.setSelectedItemByID(scarico.getIdAspetto());

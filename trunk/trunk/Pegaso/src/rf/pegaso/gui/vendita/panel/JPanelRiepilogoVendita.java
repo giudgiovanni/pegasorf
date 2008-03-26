@@ -1,19 +1,12 @@
 package rf.pegaso.gui.vendita.panel;
 
-import java.awt.GridBagLayout;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
@@ -25,17 +18,13 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import rf.myswing.GregorianCalendarFormat;
-import rf.pegaso.db.model.VenditeModel;
 import rf.pegaso.db.tabelle.DettaglioOrdine;
 import rf.utility.MathUtility;
-import rf.utility.db.DBEvent;
-import rf.utility.db.DBManager;
-import rf.utility.db.RowEvent;
 
 public class JPanelRiepilogoVendita extends JPanel {
 
 	class PrezzoCellRenderer extends DefaultTableCellRenderer{
+		private static final long serialVersionUID = 1L;
 		private DecimalFormat numberFormatter;
 		private Double d;
 
@@ -56,6 +45,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 	}
 
 	class QtaCellRenderer extends DefaultTableCellRenderer{
+		private static final long serialVersionUID = 1L;
 		private DecimalFormat numberFormatter;
 		private Double d;
 
@@ -75,6 +65,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 	}
 
 	class IntegerCellRenderer extends DefaultTableCellRenderer{
+		private static final long serialVersionUID = 1L;
 		private NumberFormat numberFormatter;
 		private Integer d;
 
@@ -172,7 +163,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(300, 200);
+		this.setSize(400, 100);
 		this.setLayout(new BorderLayout());
 		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 		this.add(getJScrollPane(), BorderLayout.CENTER);
@@ -371,6 +362,14 @@ public class JPanelRiepilogoVendita extends JPanel {
 	 */
 	public DettaglioOrdine[] toArray() {
 		return (DettaglioOrdine[]) carrello.toArray();
+	}
+	//gestire i casi di aggiornamento negativo
+	public void aggiornaQtaSelectedItem(int qta){
+		for(DettaglioOrdine dv : carrello){
+			if (dv.getIdArticolo() == idSelectedItem )
+				dv.setQta(qta + dv.getQta());
+		}
+		modello.fireTableDataChanged();
 	}
 
 	/**

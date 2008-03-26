@@ -617,12 +617,14 @@ public class Scarico {
 			ok = pst.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			ok = -1;
 		} finally {
 			try {
 				if (pst != null)
 					pst.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+				ok = -1;
 			}
 		}
 

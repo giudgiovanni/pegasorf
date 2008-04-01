@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
 
 import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.utility.db.DBManager;
@@ -129,6 +130,29 @@ public class Articolo {
 		if (rs != null)
 			rs.close();
 		return o;
+	}
+	
+	
+	/**
+	 * Ritorna tutti gli articoli selezionati per categoria merceologica e ordinati per quantità venduta
+	 * @return
+	 * @throws SQLException
+	 */
+	public LinkedList<Integer> allArticoliByCategoria(int categoria) throws SQLException {
+		LinkedList<Integer> list = new LinkedList<Integer>();
+		ResultSet rs = null;
+		Statement pst = null;
+		String query = "select a.idarticolo from articoli as a, giacenza_articoli_all_view as g where a.idarticolo=g.idarticolo and a.idreparto="+categoria+" group by g.scarico, a.idarticolo order by g.scarico DESC";
+		pst = dbm.getNewStatement();
+		rs = pst.executeQuery(query);
+		while (rs.next()) {
+			list.add(rs.getInt(1));
+		}
+		if (pst != null)
+			pst.close();
+		if (rs != null)
+			rs.close();
+		return list;
 	}
 
 	public String[] allCodiciBarre() throws SQLException{

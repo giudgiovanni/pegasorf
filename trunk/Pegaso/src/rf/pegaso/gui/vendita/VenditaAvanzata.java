@@ -2,27 +2,35 @@ package rf.pegaso.gui.vendita;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
+import rf.myswing.IDJComboBox;
+import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.DettaglioOrdine;
+import rf.pegaso.db.tabelle.Pagamento;
+import rf.pegaso.db.tabelle.Reparto;
 import rf.pegaso.gui.vendita.panel.JNumberEvent;
 import rf.pegaso.gui.vendita.panel.JNumberEventListener;
 import rf.pegaso.gui.vendita.panel.JNumberKeys;
+import rf.pegaso.gui.vendita.panel.JPanelArticoli;
 import rf.pegaso.gui.vendita.panel.JPanelRiepilogoVendita;
 import rf.utility.db.DBManager;
 import rf.utility.gui.UtilGUI;
+import rf.utility.gui.text.AutoCompletion;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.io.File;
-import java.util.Date;
-import java.awt.GridBagConstraints;
+import java.sql.SQLException;
+
 import javax.swing.JButton;
+import javax.swing.JLabel;
 
 public class VenditaAvanzata extends JFrame{
 
@@ -39,7 +47,7 @@ public class VenditaAvanzata extends JFrame{
     private int m_iNumberStatusInput;
     private int m_iNumberStatusPor;
     // Questa variabile viene utilizzata come buffer dei caratteri inseriti
-	private StringBuffer m_sBarcode;
+	private StringBuffer m_sBarcode;  //  @jve:decl-index=0:
 	
 	// Variabili numeriche
     private final static int NUMBERZERO = 0;
@@ -56,7 +64,13 @@ public class VenditaAvanzata extends JFrame{
     
     private JPanelRiepilogoVendita pannelloRiepilogo = null;
     private JNumberKeys tastieraNumerica = null;
-	private JButton btnCodBar = null; 
+    private JPanelArticoli pannelloArticoli = null;
+    private IDJComboBox cmbCategoria = null;
+	private JButton btnCodBar = null;
+	private JPanel pnlOvest = null;
+	private JPanel pnlOvestNord = null;
+	private JPanel pnlOvestSud = null;
+	private JLabel lblCategoria = null; 
 	
 	public VenditaAvanzata(){
 		dbm = DBManager.getIstanceSingleton();
@@ -69,8 +83,12 @@ public class VenditaAvanzata extends JFrame{
 	 * @return void
 	 */
 	private void initialize(){
+		//inizializza i pannelli
 		pannelloRiepilogo = new JPanelRiepilogoVendita();
+		pannelloRiepilogo.setPreferredSize(new Dimension(250,275));
+		pannelloRiepilogo.setVisible(true);
 		tastieraNumerica = new JNumberKeys();
+		pannelloArticoli = new JPanelArticoli();
 		this.setSize(new Dimension(800, 600));
 		this.setTitle("Vendita Avanzata");
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); // Generated
@@ -87,6 +105,15 @@ public class VenditaAvanzata extends JFrame{
 		});
 		UtilGUI.centraFrame(this);
 		stateToZero();
+		caricaCategoria();
+	}
+	
+	/**
+	 * @param string
+	 */
+	private void messaggioCampoMancante(String testo, String tipo) {
+		JOptionPane.showMessageDialog(this, testo, tipo,
+				JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	/**
@@ -99,14 +126,20 @@ public class VenditaAvanzata extends JFrame{
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
 			jContentPane.add(getPnlEst(), BorderLayout.EAST);
+			jContentPane.add(getPnlOvest(), BorderLayout.WEST);
 		}
 		return jContentPane;
 	}
 
 	//evento generato dalla pressione di un tasto della tastiera numerica
 	private void m_jNumberKeysKeyPerformed(JNumberEvent evt) {
-
-		stateTransition(evt.getKey());
+		if ( evt.getKey() == '\0' ){
+			 DettaglioOrdine dv = new DettaglioOrdine();
+             dv.loadByID(evt.getIdArticolo());
+             pannelloRiepilogo.addDettaglioOrdine(dv);
+		}
+		else
+			stateTransition(evt.getKey());
 
 	}//GEN-LAST:event_m_jNumberKeysKeyPerformed
 	
@@ -136,6 +169,7 @@ public class VenditaAvanzata extends JFrame{
                 String sCode = m_sBarcode.toString();
                 DettaglioOrdine dv = new DettaglioOrdine();
                 dv.loadByCB(sCode);
+                //dv.loadByCB("ASTA");
                 pannelloRiepilogo.addDettaglioOrdine(dv);
             } else {
                 Toolkit.getDefaultToolkit().beep();
@@ -388,6 +422,22 @@ public class VenditaAvanzata extends JFrame{
 		if (pnlEst == null) {
 			pnlEst = new JPanel();
 			pnlEst.setLayout(new BorderLayout());
+			GridBagConstraints gridBagConstraints = new GridBagConstraints();
+			gridBagConstraints.gridx = 0;  // Generated
+			gridBagConstraints.insets = new Insets(10, 10, 10, 10);  // Generated
+			gridBagConstraints.gridy = 0;  // Generated
+			
+			GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
+			gridBagConstraints1.gridx = 0;  // Generated
+			gridBagConstraints1.insets = new Insets(10, 10, 10, 10);  // Generated
+			gridBagConstraints1.gridy = 1;  // Generated
+			
+			GridBagConstraints gridBagConstraints2 = new GridBagConstraints();
+			gridBagConstraints2.gridx = 0;  // Generated
+			gridBagConstraints2.insets = new Insets(10, 10, 10, 10);  // Generated
+			gridBagConstraints2.gridy = 2;  // Generated
+			
+			//pnlEst.setLayout(new GridBagLayout());
 			pnlEst.setPreferredSize(new java.awt.Dimension(250, 578));
 			tastieraNumerica.addJNumberEventListener(new JNumberEventListener() {
 	            public void keyPerformed(JNumberEvent evt) {
@@ -397,6 +447,10 @@ public class VenditaAvanzata extends JFrame{
 			pnlEst.add(tastieraNumerica, BorderLayout.NORTH);
 			pnlEst.add(getPnlEstCentro(), BorderLayout.CENTER);
 			pnlEst.add(pannelloRiepilogo, BorderLayout.SOUTH);
+			
+			//pnlEst.add(tastieraNumerica, gridBagConstraints);
+			//pnlEst.add(getPnlEstCentro(), gridBagConstraints1);
+			//pnlEst.add(pannelloRiepilogo, gridBagConstraints2);
 		}
 		return pnlEst;
 	}
@@ -410,7 +464,7 @@ public class VenditaAvanzata extends JFrame{
 		if (pnlEstCentro == null) {
 			pnlEstCentro = new JPanel();
 			pnlEstCentro.setLayout(null);
-			//pnlEstCentro.setPreferredSize(new Dimension(0, 90));
+			pnlEstCentro.setPreferredSize(new Dimension(200, 90));
 			m_jPrice = new javax.swing.JLabel();
 			m_jPrice.setBackground(java.awt.Color.white);
 			m_jPrice.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -456,5 +510,95 @@ public class VenditaAvanzata extends JFrame{
 	        });
 		}
 		return btnCodBar;
+	}
+
+	/**
+	 * This method initializes pnlOvest	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPnlOvest() {
+		if (pnlOvest == null) {
+			pnlOvest = new JPanel();
+			pnlOvest.setPreferredSize(new Dimension(541, 578));
+			pnlOvest.setLayout(new BorderLayout());
+			pnlOvest.add(getPnlOvestNord(), BorderLayout.NORTH);
+			pnlOvest.add(pannelloArticoli, BorderLayout.CENTER);
+			pnlOvest.add(getPnlOvestSud(), BorderLayout.SOUTH);
+		}
+		return pnlOvest;
+	}
+
+	/**
+	 * This method initializes pnlOvestNord	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPnlOvestNord() {
+		if (pnlOvestNord == null) {
+			lblCategoria = new JLabel();
+			lblCategoria.setBounds(new Rectangle(15, 20, 60, 16));
+			lblCategoria.setText("Categoria");
+			pnlOvestNord = new JPanel();
+			pnlOvestNord.setLayout(null);
+			pnlOvestNord.setPreferredSize(new Dimension(0, 60));
+			pnlOvestNord.add(getCmbCategoria(), null);
+			pnlOvestNord.add(lblCategoria, null);
+		}
+		return pnlOvestNord;
+	}
+
+	/**
+	 * This method initializes pnlOvestSud	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPnlOvestSud() {
+		if (pnlOvestSud == null) {
+			pnlOvestSud = new JPanel();
+			pnlOvestSud.setLayout(new GridBagLayout());
+		}
+		return pnlOvestSud;
+	}
+	
+	/**
+	 * This method initializes cmbPagamento
+	 *
+	 * @return javax.swing.JComboBox
+	 */
+	private IDJComboBox getCmbCategoria() {
+		if (cmbCategoria == null) {
+			cmbCategoria = new IDJComboBox();
+			cmbCategoria.setBounds(new Rectangle(100, 15, 150, 26));
+			cmbCategoria.addItemListener(new java.awt.event.ItemListener() {
+				public void itemStateChanged(java.awt.event.ItemEvent e) {
+					System.out.println("itemStateChanged()"); // TODO Auto-generated Event stub itemStateChanged()
+					Articolo a = new Articolo();
+					int categoria = Integer.parseInt(cmbCategoria.getIDSelectedItem());
+					try {
+						pannelloArticoli.caricaArticoli(a.allArticoliByCategoria(categoria));
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			});
+		}
+		return cmbCategoria;
+	}
+	
+	private void caricaCategoria(){
+		Reparto r = new Reparto();
+		try {
+
+			String as[] = (String[]) r.allReparti();
+			// carichiamo tutti i dati in due array
+			// da passre al combobox
+			((IDJComboBox) cmbCategoria).caricaNewValueComboBox(as, false);
+		} catch (SQLException e) {
+			messaggioCampoMancante("Errore caricamento categorie nel combobox", "ERRORE");
+			e.printStackTrace();
+		}
+		AutoCompletion.enable(cmbCategoria);
 	}
 }

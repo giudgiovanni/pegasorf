@@ -1,20 +1,17 @@
 package rf.pegaso.gui.vendita.panel;
 
 import java.awt.GridLayout;
-import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.Vector;
 
 import javax.swing.JPanel;
 
-import rf.pegaso.db.tabelle.Articolo;
-import rf.pegaso.db.tabelle.Icona;
 
 public class JPanelArticoli extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private Vector m_Listeners = new Vector();
+	private Vector<JNumberEventListener> m_Listeners = new Vector<JNumberEventListener>();
 
 	/**
 	 * This is the default constructor
@@ -32,15 +29,14 @@ public class JPanelArticoli extends JPanel {
 	private void initialize() {
 		this.setSize(300, 200);
 		this.setLayout(new GridLayout());
+		this.setVisible(true);
 	}
 	
 	public void caricaArticoli(LinkedList<Integer> articoli){
 		try{
-			Icona ico = new Icona();
-			ico.caricaDati((Integer)articoli.get(1));
 			GridLayout gridLayout = new GridLayout();
-			gridLayout.setRows(calcolaRighe(ico.getWidth()));
-			gridLayout.setColumns(calcolaColonne(ico.getHight()));
+			gridLayout.setRows((articoli.size()/3)+1);
+			gridLayout.setColumns(3);
 			this.setLayout(gridLayout);
 			for(Integer i : articoli){
 				JButtonArticolo btnArticolo = new JButtonArticolo(i);
@@ -48,7 +44,7 @@ public class JPanelArticoli extends JPanel {
 				this.add(btnArticolo, null);
 			}
 		}
-		catch(SQLException exp){
+		catch(Exception exp){
 			exp.printStackTrace();
 		}
 		
@@ -73,20 +69,10 @@ public class JPanelArticoli extends JPanel {
             JNumberEvent oEv = new JNumberEvent(JPanelArticoli.this, '\0', m_idArticolo);            
             JNumberEventListener oListener;
             
-            for (Enumeration e = m_Listeners.elements(); e.hasMoreElements();) {
+            for (Enumeration<JNumberEventListener> e = m_Listeners.elements(); e.hasMoreElements();) {
                 oListener = (JNumberEventListener) e.nextElement();
                 oListener.keyPerformed(oEv);
             }
         }
-	}
-
-	private int calcolaRighe(int width){
-		int righe = this.getWidth() / width;
-		return righe;
-	}
-
-	private int calcolaColonne(int height){
-		int colonne = this.getHeight() / height;
-		return colonne;
 	}
 }

@@ -92,7 +92,7 @@ public class InitialGUI extends JFrame {
 
 	private InitialGUI padre;  //  @jve:decl-index=0:visual-constraint="141,8"
 
-	private JButton jButton = null;
+	//private JButton jButton = null;
 
 	/**
 	 * This is the default constructor

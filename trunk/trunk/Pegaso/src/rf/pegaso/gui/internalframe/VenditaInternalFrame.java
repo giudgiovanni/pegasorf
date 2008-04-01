@@ -15,14 +15,17 @@ import rf.pegaso.gui.vendita.AlBanco;
 import rf.pegaso.gui.vendita.DocumentoDiTrasporto;
 import rf.pegaso.gui.vendita.Fattura;
 import rf.pegaso.gui.vendita.FatturaImmediata;
+import rf.pegaso.gui.vendita.VenditaAvanzata;
 
 public class VenditaInternalFrame extends JInternalFrame {
 
+	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
 	private JButton btnFattura = null;
 	private JButton btnFatturaImmediata = null;
 	private JButton btnAlBanco = null;
 	private JButton btnDDT = null;
+	private JButton btnVenditaSemplice = null;
 
 
 	public VenditaInternalFrame(JFrame padre) {
@@ -49,6 +52,10 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
 			try {
+				GridBagConstraints gridBagConstraints4 = new GridBagConstraints();
+				gridBagConstraints4.gridx = 0;  // Generated
+				gridBagConstraints4.insets = new Insets(10, 10, 10, 10);  // Generated
+				gridBagConstraints4.gridy = 2;  // Generated
 				GridBagConstraints gridBagConstraints3 = new GridBagConstraints();
 				gridBagConstraints3.gridx = 1;  // Generated
 				gridBagConstraints3.insets = new Insets(10, 10, 10, 10);  // Generated
@@ -71,8 +78,8 @@ public class VenditaInternalFrame extends JInternalFrame {
 				jContentPane.add(getBtnFatturaImmediata(), gridBagConstraints1);  // Generated
 				jContentPane.add(getBtnAlBanco(), gridBagConstraints2);  // Generated
 				jContentPane.add(getBtnDDT(), gridBagConstraints3);  // Generated
+				jContentPane.add(getBtnVenditaAvanzata(), gridBagConstraints4);
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
 			}
 		}
 		return jContentPane;
@@ -96,7 +103,6 @@ public class VenditaInternalFrame extends JInternalFrame {
 					}
 				});
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
 			}
 		}
 		return btnFattura;
@@ -119,7 +125,6 @@ public class VenditaInternalFrame extends JInternalFrame {
 					}
 				});
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
 			}
 		}
 		return btnFatturaImmediata;
@@ -142,7 +147,6 @@ public class VenditaInternalFrame extends JInternalFrame {
 					}
 				});
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
 			}
 		}
 		return btnAlBanco;
@@ -165,7 +169,6 @@ public class VenditaInternalFrame extends JInternalFrame {
 					}
 				});
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
 			}
 		}
 		return btnDDT;
@@ -191,5 +194,30 @@ public class VenditaInternalFrame extends JInternalFrame {
 	protected void apriDDT(){
 		DocumentoDiTrasporto ddt = new DocumentoDiTrasporto();
 		ddt.setVisible(true);
+	}
+	
+	protected void apriVenditaSemplice(){
+		VenditaAvanzata va = new VenditaAvanzata();
+		va.setVisible(true);
+	}
+
+
+	/**
+	 * This method initializes btnVenditaAvanzata	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnVenditaAvanzata() {
+		if (btnVenditaSemplice == null) {
+			btnVenditaSemplice = new JButton();
+			btnVenditaSemplice.setPreferredSize(new Dimension(120, 70));  // Generated
+			btnVenditaSemplice.setText("<html><center>Vendita<br>Semplice</html>");  // Generated
+			btnVenditaSemplice.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					apriVenditaSemplice();
+				}
+			});
+		}
+		return btnVenditaSemplice;
 	}
 }  //  @jve:decl-index=0:visual-constraint="10,10"

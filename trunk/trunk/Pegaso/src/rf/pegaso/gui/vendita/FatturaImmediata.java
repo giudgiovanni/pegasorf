@@ -1,5 +1,15 @@
 package rf.pegaso.gui.vendita;
 
+import java.awt.*;
+import java.awt.font.*;
+import java.awt.geom.*;
+import java.awt.image.*;
+import java.io.*;
+import java.net.*;
+import java.text.*;
+import java.util.*;
+import javax.imageio.*;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -7,6 +17,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -225,7 +236,8 @@ public class FatturaImmediata extends JFrame{
 			if ( e.getSource() == btnChiudi )
 				close();
 			else if(e.getSource()==btnAzzera){
-				resetCampi();
+				//resetCampi();
+				getImageText();
 			}
 			else if ( e.getSource() == btnSalva )
 				salva();
@@ -1972,4 +1984,95 @@ public class FatturaImmediata extends JFrame{
 		}
 		return btnAzzera;
 	}
+	
+	private void crea(){
+		try {
+			//URL url = new URL("http://today.java.net/jag/bio/JagHeadshot-small.jpg");
+			
+			String url = "resource/nuovo.png";
+			
+			//InputStream img = getClass().getResourceAsStream("resource/calc/btnce.png");
+
+			BufferedImage im = (ImageIO.read(new File(url)));//ImageIO.read(url);
+			
+			
+			String text = DateFormat.getDateInstance(DateFormat.SHORT).format(new Date());
+
+			Graphics2D g = im.createGraphics();
+			g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+			g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g.setFont(new Font("Lucida Bright", Font.ITALIC, 60));
+			g.rotate(-Math.PI/4, im.getWidth()/2, im.getHeight()/2);
+			TextLayout tl = new TextLayout(text, g.getFont(), g.getFontRenderContext());
+			Rectangle2D bounds = tl.getBounds();
+			double x = (im.getWidth()-bounds.getWidth())/2 - bounds.getX();
+			double y = (im.getHeight()-bounds.getHeight())/2 - bounds.getY();
+			Shape outline = tl.getOutline(AffineTransform.getTranslateInstance(x+2, y+1));
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+			g.setPaint(Color.WHITE);
+			g.draw(outline);
+			g.setPaint(new GradientPaint(0, 0, Color.WHITE, 30, 20, new Color(128,128,255), true));
+			tl.draw(g, (float)x, (float)y);
+			g.dispose();
+
+			ImageIO.write(im, "jpeg", new File("watermark.jpeg"));
+			
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	public void getImageText() {
+        
+        try{
+        	String text = "ciao";
+        	String url = "resource/nuovo.png";
+        	Image img = ImageIO.read(new File(url));
+
+        	BufferedImage imgtext = new BufferedImage(img.getWidth(null), img.getHeight(null),  BufferedImage.TYPE_INT_ARGB);
+        	Graphics2D g2d = imgtext.createGraphics();
+
+        	// The text        
+        	JLabel label = new JLabel();
+        	label.setOpaque(false);
+        	label.setText(text);
+        	//label.setText("<html><center>Line1<br>Line2");
+        	label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        	label.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);            
+        	Dimension d = label.getPreferredSize();
+        	label.setBounds(0, 0, imgtext.getWidth(), d.height);  
+
+        	// The background
+        	Color c1 = new Color(0xff, 0xff, 0xff, 0x40);
+        	Color c2 = new Color(0xff, 0xff, 0xff, 0xd0);
+
+//      	Point2D center = new Point2D.Float(imgtext.getWidth() / 2, label.getHeight());
+//      	float radius = imgtext.getWidth() / 3;
+//      	float[] dist = {0.1f, 1.0f};
+//      	Color[] colors = {c2, c1};        
+//      	Paint gpaint = new RadialGradientPaint(center, radius, dist, colors);
+        	Paint gpaint = new GradientPaint(new Point(0,0), c1, new Point(label.getWidth() / 2, 0), c2, true);
+
+        	g2d.drawImage(img, 0, 0, null);
+        	g2d.translate(0, imgtext.getHeight() - label.getHeight());
+        	g2d.setPaint(gpaint);            
+        	g2d.fillRect(0 , 0, imgtext.getWidth(), label.getHeight());    
+        	label.paint(g2d);
+
+        	g2d.dispose();
+        	ImageIO.write(imgtext, "png", new File("watermark.png"));
+        } catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        
+
+        
+          
+    }
 }

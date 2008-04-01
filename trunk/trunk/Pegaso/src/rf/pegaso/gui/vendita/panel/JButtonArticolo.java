@@ -1,18 +1,15 @@
 package rf.pegaso.gui.vendita.panel;
 
-import java.awt.Dimension;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
 
 import javax.swing.ImageIcon;
-
-import rf.pegaso.db.tabelle.Icona;
+import rf.pegaso.db.tabelle.DettaglioArticolo;
 
 public class JButtonArticolo extends javax.swing.JButton {
 
 	private static final long serialVersionUID = 1L;
 	
-	private Icona icon = null;  //  @jve:decl-index=0:
+	private DettaglioArticolo dettArticolo = null;
 	private int idArticolo = 0;
 	
 	
@@ -24,17 +21,15 @@ public class JButtonArticolo extends javax.swing.JButton {
 	
 	private void initGUI() {
 		try {
-			
-			setIcon(new ImageIcon(icon.getImgdefault()));
+			dettArticolo = new DettaglioArticolo();
+			dettArticolo.caricaDati(idArticolo, true);
+			setIcon(new ImageIcon(dettArticolo.getImgdefault()));
             setFocusPainted(false);
             setFocusable(false);
             setRequestFocusEnabled(false);
             setMargin(new Insets(8, 14, 8, 14));
-			
-			icon = new Icona();
-			icon.caricaDati(idArticolo);
 			//this.addActionListener(new MyButtonListener());
-			setPreferredSize(new Dimension(icon.getWidth(), icon.getHight()));
+			//setPreferredSize(new Dimension(icon.getWidth(), icon.getHight()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -60,13 +55,5 @@ public class JButtonArticolo extends javax.swing.JButton {
 
 	public void setIdArticolo(int idArticolo) {
 		this.idArticolo = idArticolo;
-	}
-
-	public Icona getIcona() {
-		return icon;
-	}
-
-	public void setIcona(Icona icon) {
-		this.icon = icon;
 	}
 }

@@ -80,6 +80,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 				jContentPane.add(getBtnDDT(), gridBagConstraints3);  // Generated
 				jContentPane.add(getBtnVenditaAvanzata(), gridBagConstraints4);
 			} catch (java.lang.Throwable e) {
+				e.printStackTrace();
 			}
 		}
 		return jContentPane;
@@ -103,6 +104,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 					}
 				});
 			} catch (java.lang.Throwable e) {
+				e.printStackTrace();
 			}
 		}
 		return btnFattura;
@@ -125,6 +127,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 					}
 				});
 			} catch (java.lang.Throwable e) {
+				e.printStackTrace();
 			}
 		}
 		return btnFatturaImmediata;
@@ -147,6 +150,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 					}
 				});
 			} catch (java.lang.Throwable e) {
+				e.printStackTrace();
 			}
 		}
 		return btnAlBanco;
@@ -169,6 +173,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 					}
 				});
 			} catch (java.lang.Throwable e) {
+				e.printStackTrace();
 			}
 		}
 		return btnDDT;

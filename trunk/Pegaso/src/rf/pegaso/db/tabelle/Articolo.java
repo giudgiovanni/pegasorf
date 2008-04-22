@@ -132,7 +132,6 @@ public class Articolo {
 		return o;
 	}
 	
-	
 	/**
 	 * Ritorna tutti gli articoli selezionati per categoria merceologica e ordinati per quantità venduta
 	 * @return

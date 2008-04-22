@@ -1,8 +1,6 @@
 package rf.pegaso.gui.vendita.panel;
 
-import java.awt.Insets;
-
-import javax.swing.ImageIcon;
+import java.awt.Dimension;
 import rf.pegaso.db.tabelle.DettaglioArticolo;
 
 public class JButtonArticolo extends javax.swing.JButton {
@@ -23,13 +21,15 @@ public class JButtonArticolo extends javax.swing.JButton {
 		try {
 			dettArticolo = new DettaglioArticolo();
 			dettArticolo.caricaDati(idArticolo, true);
-			setIcon(new ImageIcon(dettArticolo.getImgdefault()));
+			//setIcon(new ImageIcon(dettArticolo.getImgdefault()));
+			this.setText(dettArticolo.getDescrizione());
             setFocusPainted(false);
             setFocusable(false);
             setRequestFocusEnabled(false);
-            setMargin(new Insets(8, 14, 8, 14));
+            //setMargin(new Insets(8, 14, 8, 14));
 			//this.addActionListener(new MyButtonListener());
-			//setPreferredSize(new Dimension(icon.getWidth(), icon.getHight()));
+            setMinimumSize(new Dimension(120, 100));
+			//setPreferredSize(new Dimension(100, 80));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

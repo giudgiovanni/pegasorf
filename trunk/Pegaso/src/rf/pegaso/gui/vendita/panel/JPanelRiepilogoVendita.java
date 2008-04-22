@@ -163,7 +163,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(250, 100);
+		this.setSize(400, 100);
 		this.setLayout(new BorderLayout());
 		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 		this.add(getJScrollPane(), BorderLayout.CENTER);

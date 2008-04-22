@@ -9,7 +9,6 @@ import javax.swing.WindowConstants;
 import rf.myswing.IDJComboBox;
 import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.DettaglioOrdine;
-import rf.pegaso.db.tabelle.Pagamento;
 import rf.pegaso.db.tabelle.Reparto;
 import rf.pegaso.gui.vendita.panel.JNumberEvent;
 import rf.pegaso.gui.vendita.panel.JNumberEventListener;
@@ -35,7 +34,6 @@ import javax.swing.JLabel;
 public class VenditaAvanzata extends JFrame{
 
 	private static final long serialVersionUID = 1L;
-	private DBManager dbm = null;
 	private JPanel jContentPane = null;
 	private JPanel pnlEst = null;
 	private JPanel pnlEstCentro = null;
@@ -70,10 +68,12 @@ public class VenditaAvanzata extends JFrame{
 	private JPanel pnlOvest = null;
 	private JPanel pnlOvestNord = null;
 	private JPanel pnlOvestSud = null;
-	private JLabel lblCategoria = null; 
+	private JLabel lblCategoria = null;
+	private JButton btnFattura = null;
+	private JButton btnDdt = null;
+	private JButton btnPreventivo = null; 
 	
 	public VenditaAvanzata(){
-		dbm = DBManager.getIstanceSingleton();
 		initialize();
 	}
 	
@@ -141,7 +141,7 @@ public class VenditaAvanzata extends JFrame{
 		else
 			stateTransition(evt.getKey());
 
-	}//GEN-LAST:event_m_jNumberKeysKeyPerformed
+	}
 	
 	//evento generato dalla pressione del bottono btnCodBar
 	private void m_jEnterActionPerformed(java.awt.event.ActionEvent evt) {
@@ -495,7 +495,7 @@ public class VenditaAvanzata extends JFrame{
 	private JButton getBtnCodBar() {
 		if (btnCodBar == null) {
 			btnCodBar = new JButton();
-			String userDir = System.getProperty("user.dir");
+			//String userDir = System.getProperty("user.dir");
 			//btnCodBar.setIcon(new ImageIcon(userDir+File.separator+"\\resource\\calc\\barcode.png"));
 			
 			btnCodBar.setIcon(new ImageIcon("resource/calc/barcode.png"));
@@ -522,6 +522,11 @@ public class VenditaAvanzata extends JFrame{
 			pnlOvest = new JPanel();
 			pnlOvest.setPreferredSize(new Dimension(541, 578));
 			pnlOvest.setLayout(new BorderLayout());
+			pannelloArticoli.addJNumberEventListener(new JNumberEventListener() {
+	            public void keyPerformed(JNumberEvent evt) {
+	                m_jNumberKeysKeyPerformed(evt);
+	            }
+	        });
 			pnlOvest.add(getPnlOvestNord(), BorderLayout.NORTH);
 			pnlOvest.add(pannelloArticoli, BorderLayout.CENTER);
 			pnlOvest.add(getPnlOvestSud(), BorderLayout.SOUTH);
@@ -555,8 +560,21 @@ public class VenditaAvanzata extends JFrame{
 	 */
 	private JPanel getPnlOvestSud() {
 		if (pnlOvestSud == null) {
+			GridBagConstraints gridBagConstraints5 = new GridBagConstraints();
+			gridBagConstraints5.gridx = 2;
+			gridBagConstraints5.gridy = 0;
+			GridBagConstraints gridBagConstraints4 = new GridBagConstraints();
+			gridBagConstraints4.gridx = 1;
+			gridBagConstraints4.gridy = 0;
+			GridBagConstraints gridBagConstraints3 = new GridBagConstraints();
+			gridBagConstraints3.gridx = 0;
+			gridBagConstraints3.gridy = 0;
 			pnlOvestSud = new JPanel();
 			pnlOvestSud.setLayout(new GridBagLayout());
+			pnlOvestSud.setPreferredSize(new Dimension(0, 50));
+			pnlOvestSud.add(getBtnFattura(), gridBagConstraints3);
+			pnlOvestSud.add(getBtnDdt(), gridBagConstraints4);
+			pnlOvestSud.add(getBtnPreventivo(), gridBagConstraints5);
 		}
 		return pnlOvestSud;
 	}
@@ -572,13 +590,11 @@ public class VenditaAvanzata extends JFrame{
 			cmbCategoria.setBounds(new Rectangle(100, 15, 150, 26));
 			cmbCategoria.addItemListener(new java.awt.event.ItemListener() {
 				public void itemStateChanged(java.awt.event.ItemEvent e) {
-					System.out.println("itemStateChanged()"); // TODO Auto-generated Event stub itemStateChanged()
 					Articolo a = new Articolo();
 					int categoria = Integer.parseInt(cmbCategoria.getIDSelectedItem());
 					try {
 						pannelloArticoli.caricaArticoli(a.allArticoliByCategoria(categoria));
 					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -600,5 +616,44 @@ public class VenditaAvanzata extends JFrame{
 			e.printStackTrace();
 		}
 		AutoCompletion.enable(cmbCategoria);
+	}
+
+	/**
+	 * This method initializes btnFattura	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnFattura() {
+		if (btnFattura == null) {
+			btnFattura = new JButton();
+			btnFattura.setText("Fattura");
+		}
+		return btnFattura;
+	}
+
+	/**
+	 * This method initializes btnDdt	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnDdt() {
+		if (btnDdt == null) {
+			btnDdt = new JButton();
+			btnDdt.setText("Ddt");
+		}
+		return btnDdt;
+	}
+
+	/**
+	 * This method initializes btnPreventivo	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnPreventivo() {
+		if (btnPreventivo == null) {
+			btnPreventivo = new JButton();
+			btnPreventivo.setText("Preventivo");
+		}
+		return btnPreventivo;
 	}
 }

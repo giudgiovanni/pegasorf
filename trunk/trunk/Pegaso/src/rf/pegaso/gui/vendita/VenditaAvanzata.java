@@ -15,7 +15,6 @@ import rf.pegaso.gui.vendita.panel.JNumberEventListener;
 import rf.pegaso.gui.vendita.panel.JNumberKeys;
 import rf.pegaso.gui.vendita.panel.JPanelArticoli;
 import rf.pegaso.gui.vendita.panel.JPanelRiepilogoVendita;
-import rf.utility.db.DBManager;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompletion;
 
@@ -89,6 +88,7 @@ public class VenditaAvanzata extends JFrame{
 		pannelloRiepilogo.setVisible(true);
 		tastieraNumerica = new JNumberKeys();
 		pannelloArticoli = new JPanelArticoli();
+		pannelloArticoli.setBounds(0, 0, 360, 450);
 		this.setSize(new Dimension(800, 600));
 		this.setTitle("Vendita Avanzata");
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); // Generated
@@ -438,7 +438,7 @@ public class VenditaAvanzata extends JFrame{
 			gridBagConstraints2.gridy = 2;  // Generated
 			
 			//pnlEst.setLayout(new GridBagLayout());
-			pnlEst.setPreferredSize(new java.awt.Dimension(250, 578));
+			pnlEst.setPreferredSize(new java.awt.Dimension(250, 460));
 			tastieraNumerica.addJNumberEventListener(new JNumberEventListener() {
 	            public void keyPerformed(JNumberEvent evt) {
 	                m_jNumberKeysKeyPerformed(evt);

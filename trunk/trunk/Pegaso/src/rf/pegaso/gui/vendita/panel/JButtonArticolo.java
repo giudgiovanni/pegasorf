@@ -28,7 +28,7 @@ public class JButtonArticolo extends javax.swing.JButton {
             setRequestFocusEnabled(false);
             //setMargin(new Insets(8, 14, 8, 14));
 			//this.addActionListener(new MyButtonListener());
-            setMinimumSize(new Dimension(120, 100));
+            setMinimumSize(new Dimension(90, 80));
 			//setPreferredSize(new Dimension(100, 80));
 		} catch (Exception e) {
 			e.printStackTrace();

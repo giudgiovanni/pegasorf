@@ -96,7 +96,7 @@ public class JPanelArticoli extends JPanel{
 	private JScrollPane getJScrollPane() {
 		if (jScrollPane == null) {
 			jScrollPane = new JScrollPane();
-			jScrollPane.setPreferredSize(new Dimension(540, 450));
+			jScrollPane.setPreferredSize(new Dimension(360, 450));
 			jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			jScrollPane.setViewportView(getPnlPulsanti());
 		}

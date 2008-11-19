@@ -26,8 +26,6 @@ public class ConnectionManager {
 
     private String driverJdbc;
 
-    private ServerHSQLDB server;
-
     private Connection con = null;
 
 

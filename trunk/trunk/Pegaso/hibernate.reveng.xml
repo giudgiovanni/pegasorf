@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+  <table-filter match-schema="public" match-name="aggiunta"/>
+  <table-filter match-schema="public" match-name="articoli"/>
+  <table-filter match-schema="public" match-name="aspetto"/>
+  <table-filter match-schema="public" match-name="banca"/>
+  <table-filter match-schema="public" match-name="cam_prenotata"/>
+  <table-filter match-schema="public" match-name="camera"/>
+  <table-filter match-schema="public" match-name="carichi"/>
+  <table-filter match-schema="public" match-name="causale"/>
+  <table-filter match-schema="public" match-name="clienti"/>
+  <table-filter match-schema="public" match-name="conto_bancario"/>
+  <table-filter match-schema="public" match-name="convenzione"/>
+  <table-filter match-schema="public" match-name="dettagli_documenti"/>
+  <table-filter match-schema="public" match-name="dettaglio_articolo"/>
+  <table-filter match-schema="public" match-name="dettaglio_carichi"/>
+  <table-filter match-schema="public" match-name="dettaglio_ordini"/>
+  <table-filter match-schema="public" match-name="documenti"/>
+  <table-filter match-schema="public" match-name="fornitori"/>
+  <table-filter match-schema="public" match-name="listino"/>
+  <table-filter match-schema="public" match-name="movimento_banca"/>
+  <table-filter match-schema="public" match-name="ordini"/>
+  <table-filter match-schema="public" match-name="pagamento"/>
+  <table-filter match-schema="public" match-name="periodo"/>
+  <table-filter match-schema="public" match-name="prenotazione"/>
+  <table-filter match-schema="public" match-name="progressivi"/>
+  <table-filter match-schema="public" match-name="provincia"/>
+  <table-filter match-schema="public" match-name="reparti"/>
+  <table-filter match-schema="public" match-name="scelti"/>
+  <table-filter match-schema="public" match-name="tipo_documento"/>
+  <table-filter match-schema="public" match-name="tmp_etichette"/>
+  <table-filter match-schema="public" match-name="tmp_etichette_fornitori"/>
+  <table-filter match-schema="public" match-name="tmp_scelti"/>
+  <table-filter match-schema="public" match-name="um"/>
+  <table-filter match-schema="public" match-name="utenti"/>
+  <table-filter match-schema="public" match-name="vettore"/>
+</hibernate-reverse-engineering>

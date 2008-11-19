@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 19-nov-2008 20.32.15 by Hibernate Tools 3.2.2.GA -->
+<hibernate-mapping>
+    <class name="erreeffe.entity.CamPrenotata" table="cam_prenotata" schema="public">
+        <composite-id name="id" class="erreeffe.entity.CamPrenotataId">
+            <key-property name="idPrenotazione" type="int">
+                <column name="id_prenotazione" />
+            </key-property>
+            <key-property name="idCamera" type="int">
+                <column name="id_camera" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="prenotazione" class="erreeffe.entity.Prenotazione" update="false" insert="false" fetch="select">
+            <column name="id_prenotazione" not-null="true" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

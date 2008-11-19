@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 19-nov-2008 20.32.15 by Hibernate Tools 3.2.2.GA -->
+<hibernate-mapping>
+    <class name="erreeffe.entity.Aggiunta" table="aggiunta" schema="public">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <property name="descrizione" type="string">
+            <column name="descrizione" length="200" />
+        </property>
+        <property name="prezzo" type="java.lang.Double">
+            <column name="prezzo" precision="17" scale="17" />
+        </property>
+        <property name="info" type="string">
+            <column name="info" length="300" />
+        </property>
+        <property name="cat" type="java.lang.Integer">
+            <column name="cat" />
+        </property>
+        <set name="sceltis" inverse="true">
+            <key>
+                <column name="id_agg" not-null="true" />
+            </key>
+            <one-to-many class="erreeffe.entity.Scelti" />
+        </set>
+    </class>
+</hibernate-mapping>

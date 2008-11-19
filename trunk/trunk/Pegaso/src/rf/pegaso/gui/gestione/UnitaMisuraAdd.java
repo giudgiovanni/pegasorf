@@ -23,6 +23,9 @@ import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
 
+import erreeffe.entity.Um;
+import erreeffe.entity.UmHome;
+
 import rf.pegaso.db.tabelle.UnitaDiMisura;
 import rf.utility.db.DBManager;
 import rf.utility.db.eccezzioni.IDNonValido;
@@ -253,14 +256,21 @@ public class UnitaMisuraAdd extends JDialog {
 		UnitaDiMisura r = new UnitaDiMisura();
 		r.setDescrizione(this.txtDescrizione.getText());
 		r.setNome(this.txtNome.getText());
-		try {
-			r.insertUnitaDiMisura();
-		} catch (IDNonValido e) {
-			JOptionPane.showMessageDialog(this,
-					"Errore inserimento Unità di Misura", "ERRORE",
-					JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}
+//		try {
+			Um um = new Um();
+			um.setDescrizione(this.txtDescrizione.getText());
+			um.setNome(this.txtNome.getText());
+			UmHome.getInstance().begin();
+			UmHome.getInstance().attachDirty(um);
+			UmHome.getInstance().commit();
+			dbm.notifyDBStateChange();
+			//r.insertUnitaDiMisura();
+//		} catch (IDNonValido e) {
+//			JOptionPane.showMessageDialog(this,
+//					"Errore inserimento Unità di Misura", "ERRORE",
+//					JOptionPane.ERROR_MESSAGE);
+//			e.printStackTrace();
+//		}
 		dispose();
 
 	}

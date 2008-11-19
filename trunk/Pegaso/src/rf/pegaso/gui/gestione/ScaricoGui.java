@@ -1297,17 +1297,12 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 		try {
 			c.setIdScarico(new Integer(txtNumeroScarico.getText()).intValue());
 			c.setIdCliente(0);
-			c
-					.setDataScarico(new java.sql.Date(dataScarico.getDate()
-							.getTime()));
+			c.setDataScarico(new java.sql.Date(dataScarico.getDate().getTime()));
 			c.setOraScarico((new Time(dataScarico.getDate().getTime())));
 			c.setNote(txtNote.getText());
-			c.setDataDocumento(new java.sql.Date(dataDocumento.getDate()
-					.getTime()));
-
+			c.setDataDocumento(new java.sql.Date(dataDocumento.getDate().getTime()));
 			c.setNumDocumento(txtNumDocumento.getText());
 			c.setIdDocumento(0);
-
 			if (!c.isInsert(new Integer(txtNumeroScarico.getText()).intValue())) {
 
 				if(Scarico.isNumeroOrdineEsistente(txtNumDocumento.getText())){

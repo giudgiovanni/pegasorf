@@ -290,11 +290,11 @@ public class UtilityDBManager {
 						} else {
 							sb.append(" ");
 							sb.append(line);
-						}
-					}
-				}
-			}
-		}
+						}//fine if...else
+					}//fine while
+				}//fine if...else
+			}//fine if
+		}//fine while
 	}
 
 	public void restoreBackup(String nome) throws IOException, SQLException {

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 19-nov-2008 20.32.15 by Hibernate Tools 3.2.2.GA -->
+<hibernate-mapping>
+    <class name="erreeffe.entity.TipoDocumento" table="tipo_documento" schema="public">
+        <id name="iddocumento" type="long">
+            <column name="iddocumento" />
+            <generator class="assigned" />
+        </id>
+        <property name="tipo" type="string">
+            <column name="tipo" length="40" not-null="true" />
+        </property>
+        <property name="descrizione" type="string">
+            <column name="descrizione" length="200" />
+        </property>
+        <set name="carichis" inverse="true">
+            <key>
+                <column name="iddocumento" />
+            </key>
+            <one-to-many class="erreeffe.entity.Carichi" />
+        </set>
+        <set name="ordinis" inverse="true">
+            <key>
+                <column name="tipo_documento" />
+            </key>
+            <one-to-many class="erreeffe.entity.Ordini" />
+        </set>
+    </class>
+</hibernate-mapping>

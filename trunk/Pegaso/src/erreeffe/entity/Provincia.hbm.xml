@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 19-nov-2008 20.32.15 by Hibernate Tools 3.2.2.GA -->
+<hibernate-mapping>
+    <class name="erreeffe.entity.Provincia" table="provincia" schema="public">
+        <id name="idprovincia" type="long">
+            <column name="idprovincia" />
+            <generator class="assigned" />
+        </id>
+        <property name="provincia" type="string">
+            <column name="provincia" not-null="true" />
+        </property>
+        <property name="targa" type="string">
+            <column name="targa" length="2" />
+        </property>
+    </class>
+</hibernate-mapping>

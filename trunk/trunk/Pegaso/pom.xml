@@ -1,0 +1,254 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>it.infolabs.bookings</groupId>
+	<artifactId>bookings</artifactId>
+	<packaging>jar</packaging>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>BOOKINGS Hotel</name>
+	<description>Programma gestione alberghiera</description>
+	<inceptionYear>2008</inceptionYear>
+
+
+	<organization>
+		<name>InfoLabs</name>
+		<url>http://www.infolabs.it</url>
+	</organization>
+	<developers>
+		<developer>
+			<id>rfusella</id>
+			<name>Rocco Fusella</name>
+			<email>rocco.fusella@gmail.com</email>
+			<roles>
+				<role>Java Developer</role>
+			</roles>
+		</developer>
+	</developers>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>maven.jboss.org</id>
+			<name>JBoss Maven Repository</name>
+			<url>http://repository.jboss.com/maven2</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<build>
+		<directory>etc/out</directory>
+		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>test</testSourceDirectory>
+		<outputDirectory>bin</outputDirectory>
+		<testOutputDirectory>bin</testOutputDirectory>
+		<resources>
+			<resource>
+				<directory>.</directory>
+				<includes>
+					<include>LICENSE.txt</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>test</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</testResource>
+		</testResources>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>hibernate3-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-test-resources</phase>
+						<id>postgresql.sql</id>
+						<goals>
+							<goal>hbm2ddl</goal>
+						</goals>
+						<configuration>
+							<components>
+								<component>
+									<name>hbm2ddl</name>
+									<outputDirectory>
+										etc/sql
+									</outputDirectory>
+								</component>
+							</components>
+							<componentProperties>
+								<configurationfile>
+									/res/smartweb.jar.hcf
+								</configurationfile>
+								<propertyfile>
+									/res/sql/postgresql.properties
+								</propertyfile>
+								<outputfilename>
+									postgresql.sql
+								</outputfilename>
+								<export>false</export>
+								<jdk5>true</jdk5>
+								<format>true</format>
+							</componentProperties>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>postgresql</groupId>
+						<artifactId>postgresql</artifactId>
+						<version>8.3-603.jdbc3</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>precompiled-aop</id>
+						<phase>x-process-classes</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<path id="aop.classpath">
+									<path refid="maven.plugin.classpath" />
+									<path refid="maven.runtime.classpath" />
+								</path>
+								<taskdef name="aopc" classname="org.jboss.aop.ant.AopC"
+									classpathref="maven.compile.classpath" />
+								<aopc compilerclasspathref="maven.runtime.classpath"
+									classpathref="aop.classpath" verbose="false">
+									<classpath path="maven.runtime.classpath" />
+									<src path="bin" />
+									<aoppath path="res/jboss-aop.xml" />
+									<include name="**/Domain.class" />
+								</aopc>
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>jboss.aop</groupId>
+						<artifactId>jboss-aop-jdk50</artifactId>
+						<version>1.5.6.GA</version>
+					</dependency>
+					<dependency>
+						<groupId>jboss</groupId>
+						<artifactId>javassist</artifactId>
+						<version>3.7.ga</version>
+					</dependency>
+					<dependency>
+						<groupId>trove</groupId>
+						<artifactId>trove</artifactId>
+						<version>1.1-beta-5</version>
+					</dependency>
+					<dependency>
+						<groupId>concurrent</groupId>
+						<artifactId>concurrent</artifactId>
+						<version>1.3.4</version>
+					</dependency>
+					<dependency>
+						<groupId>jboss</groupId>
+						<artifactId>jboss-common</artifactId>
+						<version>4.0.2</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<warName>gis</warName>
+					<warSourceDirectory>web</warSourceDirectory>
+					<archive>
+						<addMavenDescriptor>false</addMavenDescriptor>
+					</archive>
+					<webResources>
+						<resource>
+							<directory>res</directory>
+							<targetPath>META-INF</targetPath>
+							<includes>
+								<include>include.properties</include>
+								<include>smartweb.jar.hcf</include>
+								<include>security.xml</include>
+								<include>jboss-aop.xml</include>
+							</includes>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+
+
+		<dependency>
+			<groupId>commons-discovery</groupId>
+			<artifactId>commons-discovery</artifactId>
+			<version>0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.toedter</groupId>
+			<artifactId>jcalendar</artifactId>
+			<version>1.3.2</version>
+		</dependency>
+		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>8.3-603.jdbc3</version>
+		</dependency>
+		<dependency>
+			<groupId>jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.swinglabs</groupId>
+			<artifactId>swingx</artifactId>
+			<version>0.9</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>activation</artifactId>
+			<version>[1.1,]</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sourceforge.jexcelapi</groupId>
+			<artifactId>jxl</artifactId>
+			<version>2.6.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate</artifactId>
+			<version>3.2.6.ga</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.0.4</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+</project>

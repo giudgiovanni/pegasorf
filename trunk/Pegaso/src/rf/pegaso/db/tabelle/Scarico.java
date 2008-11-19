@@ -247,9 +247,8 @@ public class Scarico {
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
-				}
-
-			}
+				}//fine finally
+			}//fine if
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

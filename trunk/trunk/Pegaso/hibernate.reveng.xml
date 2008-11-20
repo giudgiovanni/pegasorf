@@ -2,38 +2,72 @@
 <!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
 
 <hibernate-reverse-engineering>
-  <table-filter match-schema="public" match-name="aggiunta"/>
-  <table-filter match-schema="public" match-name="articoli"/>
-  <table-filter match-schema="public" match-name="aspetto"/>
-  <table-filter match-schema="public" match-name="banca"/>
-  <table-filter match-schema="public" match-name="cam_prenotata"/>
-  <table-filter match-schema="public" match-name="camera"/>
-  <table-filter match-schema="public" match-name="carichi"/>
-  <table-filter match-schema="public" match-name="causale"/>
-  <table-filter match-schema="public" match-name="clienti"/>
-  <table-filter match-schema="public" match-name="conto_bancario"/>
-  <table-filter match-schema="public" match-name="convenzione"/>
-  <table-filter match-schema="public" match-name="dettagli_documenti"/>
-  <table-filter match-schema="public" match-name="dettaglio_articolo"/>
-  <table-filter match-schema="public" match-name="dettaglio_carichi"/>
-  <table-filter match-schema="public" match-name="dettaglio_ordini"/>
-  <table-filter match-schema="public" match-name="documenti"/>
-  <table-filter match-schema="public" match-name="fornitori"/>
-  <table-filter match-schema="public" match-name="listino"/>
-  <table-filter match-schema="public" match-name="movimento_banca"/>
-  <table-filter match-schema="public" match-name="ordini"/>
-  <table-filter match-schema="public" match-name="pagamento"/>
-  <table-filter match-schema="public" match-name="periodo"/>
-  <table-filter match-schema="public" match-name="prenotazione"/>
-  <table-filter match-schema="public" match-name="progressivi"/>
-  <table-filter match-schema="public" match-name="provincia"/>
-  <table-filter match-schema="public" match-name="reparti"/>
-  <table-filter match-schema="public" match-name="scelti"/>
-  <table-filter match-schema="public" match-name="tipo_documento"/>
-  <table-filter match-schema="public" match-name="tmp_etichette"/>
-  <table-filter match-schema="public" match-name="tmp_etichette_fornitori"/>
-  <table-filter match-schema="public" match-name="tmp_scelti"/>
-  <table-filter match-schema="public" match-name="um"/>
-  <table-filter match-schema="public" match-name="utenti"/>
-  <table-filter match-schema="public" match-name="vettore"/>
+	<table-filter match-name="aggiunta" match-schema="public"></table-filter>
+	<table-filter match-name="articoli" match-schema="public"></table-filter>
+	<table-filter match-name="banca" match-schema="public"></table-filter>
+	<table-filter match-name="aspetto" match-schema="public"></table-filter>
+	<table-filter match-name="cam_prenotata" match-schema="public"></table-filter>
+
+
+
+	<table-filter match-name="camera" match-schema="public"></table-filter>
+	<table-filter match-name="carichi" match-schema="public"></table-filter>
+	<table-filter match-name="categoria_portata"
+		match-schema="public">
+	</table-filter>
+	<table-filter match-name="causale" match-schema="public"></table-filter>
+	<table-filter match-name="clienti" match-schema="public"></table-filter>
+	<table-filter match-name="conto" match-schema="public"></table-filter>
+	<table-filter match-name="conto_bancario" match-schema="public"></table-filter>
+	<table-filter match-name="convenzione" match-schema="public"></table-filter>
+	<table-filter match-name="dettagli_documenti"
+		match-schema="public">
+	</table-filter>
+	<table-filter match-name="dettaglio_carichi"
+		match-schema="public">
+	</table-filter>
+	<table-filter match-name="dettaglio_conto" match-schema="public"></table-filter>
+	<table-filter match-name="dettaglio_ordine_manuale"
+		match-schema="public">
+	</table-filter>
+	<table-filter match-name="dettaglio_ordini" match-schema="public"></table-filter>
+	<table-filter match-name="dettaglio_soggiorno"
+		match-schema="public">
+	</table-filter>
+	<table-filter match-name="documenti" match-schema="public"></table-filter>
+	<table-filter match-name="documento_cliente"
+		match-schema="public">
+	</table-filter>
+	<table-filter match-name="ente" match-schema="public"></table-filter>
+	<table-filter match-name="fornitori" match-schema="public"></table-filter>
+	<table-filter match-name="italiani" match-schema="public"></table-filter>
+	<table-filter match-name="italiani_tot" match-schema="public"></table-filter>
+	<table-filter match-name="listino" match-schema="public"></table-filter>
+	<table-filter match-name="modistatc59" match-schema="public"></table-filter>
+	<table-filter match-name="movimento_banca" match-schema="public"></table-filter>
+	<table-filter match-name="nazionalita" match-schema="public"></table-filter>
+	<table-filter match-name="ordini" match-schema="public"></table-filter>
+	<table-filter match-name="pagamento" match-schema="public"></table-filter>
+	<table-filter match-name="periodo" match-schema="public"></table-filter>
+	<table-filter match-name="portata" match-schema="public"></table-filter>
+	<table-filter match-name="prenotazione" match-schema="public"></table-filter>
+	<table-filter match-name="progressivi" match-schema="public"></table-filter>
+	<table-filter match-name="provincia" match-schema="public"></table-filter>
+	<table-filter match-name="reparti" match-schema="public"></table-filter>
+	<table-filter match-name="sala" match-schema="public"></table-filter>
+	<table-filter match-name="scelti" match-schema="public"></table-filter>
+	<table-filter match-name="stranieri" match-schema="public"></table-filter>
+	<table-filter match-name="stranieri_tot" match-schema="public"></table-filter>
+	<table-filter match-name="tavolo" match-schema="public"></table-filter>
+	<table-filter match-name="tipo_documento" match-schema="public"></table-filter>
+	<table-filter match-name="tmp_etichette" match-schema="public"></table-filter>
+	<table-filter match-name="tmp_etichette_fornitori"
+		match-schema="public">
+	</table-filter>
+	<table-filter match-name="tmp_scelti" match-schema="public"></table-filter>
+	<table-filter match-name="totali_modistatc59"
+		match-schema="public">
+	</table-filter>
+	<table-filter match-name="um" match-schema="public"></table-filter>
+	<table-filter match-name="utenti" match-schema="public"></table-filter>
 </hibernate-reverse-engineering>

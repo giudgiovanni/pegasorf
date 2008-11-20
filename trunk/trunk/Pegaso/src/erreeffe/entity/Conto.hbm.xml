@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 20-nov-2008 2.05.45 by Hibernate Tools 3.2.2.GA -->
+<hibernate-mapping>
+    <class name="erreeffe.entity.Conto" table="conto" schema="public">
+        <id name="idconto" type="long">
+            <column name="idconto" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="tavolo" class="erreeffe.entity.Tavolo" fetch="select">
+            <column name="tavolo" />
+        </many-to-one>
+        <many-to-one name="pagamento" class="erreeffe.entity.Pagamento" fetch="select">
+            <column name="pagamento" />
+        </many-to-one>
+        <many-to-one name="ordini" class="erreeffe.entity.Ordini" fetch="select">
+            <column name="ordine" />
+        </many-to-one>
+        <many-to-one name="clienti" class="erreeffe.entity.Clienti" fetch="select">
+            <column name="cliente" />
+        </many-to-one>
+        <property name="totale" type="double">
+            <column name="totale" precision="17" scale="17" not-null="true" />
+        </property>
+        <property name="sconto" type="java.lang.Integer">
+            <column name="sconto" />
+        </property>
+        <property name="coperti" type="java.lang.Integer">
+            <column name="coperti" />
+        </property>
+        <property name="data" type="date">
+            <column name="data" length="13" />
+        </property>
+        <property name="ora" type="time">
+            <column name="ora" length="15" />
+        </property>
+        <property name="stato" type="java.lang.Integer">
+            <column name="stato" />
+        </property>
+        <property name="costoCoperto" type="java.lang.Double">
+            <column name="costo_coperto" precision="17" scale="17" />
+        </property>
+        <property name="tipoDocumento" type="java.lang.Integer">
+            <column name="tipo_documento" />
+        </property>
+        <set name="dettaglioContos" inverse="true">
+            <key>
+                <column name="conto" not-null="true" />
+            </key>
+            <one-to-many class="erreeffe.entity.DettaglioConto" />
+        </set>
+    </class>
+</hibernate-mapping>

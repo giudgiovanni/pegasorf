@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 20-nov-2008 2.05.45 by Hibernate Tools 3.2.2.GA -->
+<hibernate-mapping>
+    <class name="erreeffe.entity.DettaglioSoggiorno" table="dettaglio_soggiorno" schema="public">
+        <id name="id" type="long">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="prenotazione" class="erreeffe.entity.Prenotazione" fetch="select">
+            <column name="idtrattamento" not-null="true" />
+        </many-to-one>
+        <property name="dal" type="date">
+            <column name="dal" length="13" not-null="true" />
+        </property>
+        <property name="al" type="date">
+            <column name="al" length="13" not-null="true" />
+        </property>
+        <property name="convenzione" type="long">
+            <column name="convenzione" not-null="true" />
+        </property>
+        <property name="totale" type="java.lang.Double">
+            <column name="totale" precision="17" scale="17" />
+        </property>
+    </class>
+</hibernate-mapping>

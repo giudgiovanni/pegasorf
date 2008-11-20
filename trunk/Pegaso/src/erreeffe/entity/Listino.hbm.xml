@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 20-nov-2008 2.05.45 by Hibernate Tools 3.2.2.GA -->
+<hibernate-mapping>
+    <class name="erreeffe.entity.Listino" table="listino" schema="public">
+        <id name="idlistino" type="long">
+            <column name="idlistino" />
+            <generator class="assigned" />
+        </id>
+        <property name="descrizione" type="string">
+            <column name="descrizione" not-null="true" />
+        </property>
+        <property name="note" type="string">
+            <column name="note" />
+        </property>
+        <set name="convenziones" inverse="true">
+            <key>
+                <column name="listino" />
+            </key>
+            <one-to-many class="erreeffe.entity.Convenzione" />
+        </set>
+        <set name="convenziones_1" inverse="true">
+            <key>
+                <column name="listino" />
+            </key>
+            <one-to-many class="erreeffe.entity.Convenzione" />
+        </set>
+    </class>
+</hibernate-mapping>

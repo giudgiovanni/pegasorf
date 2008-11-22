@@ -5,7 +5,7 @@
 	<artifactId>pegaso</artifactId>
 	<packaging>jar</packaging>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>PEGASO Gestionale Magazzino</name>
+	<name>PEGASO Gestione Magazzino</name>
 	<description>Programma gestione magazzino</description>
 	<inceptionYear>2008</inceptionYear>
 

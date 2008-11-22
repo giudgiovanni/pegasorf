@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 19-nov-2008 20.32.15 by Hibernate Tools 3.2.2.GA -->
+<!-- Generated 20-nov-2008 2.05.45 by Hibernate Tools 3.2.2.GA -->
 <hibernate-mapping>
     <class name="erreeffe.entity.Utenti" table="utenti" schema="public">
         <composite-id name="id" class="erreeffe.entity.UtentiId">
@@ -14,13 +14,13 @@
             <key-property name="pwd" type="string">
                 <column name="pwd" length="20" />
             </key-property>
-            <key-property name="lettura" type="java.lang.Integer">
+            <key-property name="lettura" type="int">
                 <column name="lettura" />
             </key-property>
-            <key-property name="scrittura" type="java.lang.Integer">
+            <key-property name="scrittura" type="int">
                 <column name="scrittura" />
             </key-property>
-            <key-property name="esecuzione" type="java.lang.Integer">
+            <key-property name="esecuzione" type="int">
                 <column name="esecuzione" />
             </key-property>
             <key-property name="note" type="string">

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 19-nov-2008 20.32.15 by Hibernate Tools 3.2.2.GA -->
+<!-- Generated 20-nov-2008 2.05.45 by Hibernate Tools 3.2.2.GA -->
 <hibernate-mapping>
     <class name="erreeffe.entity.Prenotazione" table="prenotazione" schema="public">
         <id name="id" type="int">
@@ -62,23 +62,38 @@
         <property name="soloCamera" type="string">
             <column name="solo_camera" length="2" />
         </property>
-        <set name="sceltis" inverse="true">
-            <key>
-                <column name="id_pren" not-null="true" />
-            </key>
-            <one-to-many class="erreeffe.entity.Scelti" />
-        </set>
+        <property name="ordine" type="java.lang.Long">
+            <column name="ordine" />
+        </property>
         <set name="documentis" inverse="true">
             <key>
                 <column name="id" not-null="true" unique="true" />
             </key>
             <one-to-many class="erreeffe.entity.Documenti" />
         </set>
+        <set name="sceltis" inverse="true">
+            <key>
+                <column name="id_pren" not-null="true" />
+            </key>
+            <one-to-many class="erreeffe.entity.Scelti" />
+        </set>
         <set name="camPrenotatas" inverse="true">
             <key>
                 <column name="id_prenotazione" not-null="true" />
             </key>
             <one-to-many class="erreeffe.entity.CamPrenotata" />
+        </set>
+        <set name="camPrenotatas_1" inverse="true">
+            <key>
+                <column name="id_prenotazione" not-null="true" />
+            </key>
+            <one-to-many class="erreeffe.entity.CamPrenotata" />
+        </set>
+        <set name="dettaglioSoggiornos" inverse="true">
+            <key>
+                <column name="idtrattamento" not-null="true" />
+            </key>
+            <one-to-many class="erreeffe.entity.DettaglioSoggiorno" />
         </set>
     </class>
 </hibernate-mapping>

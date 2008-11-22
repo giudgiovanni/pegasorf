@@ -1,13 +1,25 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 19-nov-2008 20.32.15 by Hibernate Tools 3.2.2.GA -->
+<!-- Generated 20-nov-2008 2.05.45 by Hibernate Tools 3.2.2.GA -->
 <hibernate-mapping>
     <class name="erreeffe.entity.Clienti" table="clienti" schema="public">
         <id name="idcliente" type="long">
             <column name="idcliente" />
             <generator class="assigned" />
         </id>
+        <many-to-one name="nazionalita" class="erreeffe.entity.Nazionalita" fetch="select">
+            <column name="nazionalita" />
+        </many-to-one>
+        <many-to-one name="documentoCliente" class="erreeffe.entity.DocumentoCliente" fetch="select">
+            <column name="documento" />
+        </many-to-one>
+        <many-to-one name="provincia" class="erreeffe.entity.Provincia" fetch="select">
+            <column name="provincia" />
+        </many-to-one>
+        <many-to-one name="ente" class="erreeffe.entity.Ente" fetch="select">
+            <column name="rilasciato_da" />
+        </many-to-one>
         <property name="dataInserimento" type="date">
             <column name="data_inserimento" length="13" />
         </property>
@@ -32,9 +44,6 @@
         <property name="citta" type="string">
             <column name="citta" length="40" />
         </property>
-        <property name="provincia" type="string">
-            <column name="provincia" length="40" />
-        </property>
         <property name="tel" type="string">
             <column name="tel" length="40" />
         </property>
@@ -56,17 +65,11 @@
         <property name="dataNascita" type="date">
             <column name="data_nascita" length="13" />
         </property>
-        <property name="documento" type="string">
-            <column name="documento" />
-        </property>
         <property name="numDoc" type="string">
             <column name="num_doc" />
         </property>
         <property name="rilasciatoIl" type="date">
             <column name="rilasciato_il" length="13" />
-        </property>
-        <property name="rilasciatoDa" type="string">
-            <column name="rilasciato_da" />
         </property>
         <property name="natoA" type="string">
             <column name="nato_a" />
@@ -74,14 +77,26 @@
         <property name="intestazione" type="string">
             <column name="intestazione" />
         </property>
-        <property name="nazionalita" type="string">
-            <column name="nazionalita" />
+        <property name="rilasciatoDi" type="string">
+            <column name="rilasciato_di" />
         </property>
         <set name="ordinis" inverse="true">
             <key>
                 <column name="idcliente" />
             </key>
             <one-to-many class="erreeffe.entity.Ordini" />
+        </set>
+        <set name="ordinis_1" inverse="true">
+            <key>
+                <column name="idcliente" />
+            </key>
+            <one-to-many class="erreeffe.entity.Ordini" />
+        </set>
+        <set name="contos" inverse="true">
+            <key>
+                <column name="cliente" />
+            </key>
+            <one-to-many class="erreeffe.entity.Conto" />
         </set>
     </class>
 </hibernate-mapping>

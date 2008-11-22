@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 19-nov-2008 20.32.15 by Hibernate Tools 3.2.2.GA -->
+<!-- Generated 20-nov-2008 2.05.45 by Hibernate Tools 3.2.2.GA -->
 <hibernate-mapping>
     <class name="erreeffe.entity.Ordini" table="ordini" schema="public">
         <id name="idordine" type="long">
@@ -14,10 +14,13 @@
         <many-to-one name="aspetto" class="erreeffe.entity.Aspetto" fetch="select">
             <column name="idaspetto" />
         </many-to-one>
+        <many-to-one name="pagamentoByPagamento" class="erreeffe.entity.Pagamento" fetch="select">
+            <column name="pagamento" />
+        </many-to-one>
         <many-to-one name="causale" class="erreeffe.entity.Causale" fetch="select">
             <column name="idcausale" />
         </many-to-one>
-        <many-to-one name="pagamento" class="erreeffe.entity.Pagamento" fetch="select">
+        <many-to-one name="pagamentoByIdpagamento" class="erreeffe.entity.Pagamento" fetch="select">
             <column name="idpagamento" />
         </many-to-one>
         <many-to-one name="clienti" class="erreeffe.entity.Clienti" fetch="select">
@@ -83,7 +86,25 @@
         <property name="sconto" type="java.lang.Integer">
             <column name="sconto" />
         </property>
+        <set name="contos" inverse="true">
+            <key>
+                <column name="ordine" />
+            </key>
+            <one-to-many class="erreeffe.entity.Conto" />
+        </set>
         <set name="dettaglioOrdinis" inverse="true">
+            <key>
+                <column name="idordine" not-null="true" />
+            </key>
+            <one-to-many class="erreeffe.entity.DettaglioOrdini" />
+        </set>
+        <set name="dettaglioOrdineManuales" inverse="true">
+            <key>
+                <column name="ordine" not-null="true" />
+            </key>
+            <one-to-many class="erreeffe.entity.DettaglioOrdineManuale" />
+        </set>
+        <set name="dettaglioOrdinis_1" inverse="true">
             <key>
                 <column name="idordine" not-null="true" />
             </key>

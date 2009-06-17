@@ -93,7 +93,7 @@ public class ProvinciaHome {
 		log.debug("getting Provincia instance with id: " + id);
 		try {
 			Provincia instance = (Provincia) sessionFactory.getCurrentSession()
-					.get("erreeffe.entity.Provincia", id);
+					.get("it.erreeffe.modello.hibernate.Provincia", id);
 			if (instance == null) {
 				log.debug("get successful, no instance found");
 			} else {
@@ -111,7 +111,7 @@ public class ProvinciaHome {
 		try {
 			List<Provincia> results = (List<Provincia>) sessionFactory
 					.getCurrentSession().createCriteria(
-							"erreeffe.entity.Provincia").add(create(instance))
+							"it.erreeffe.modello.hibernate.Provincia").add(create(instance))
 					.list();
 			log.debug("find by example successful, result size: "
 					+ results.size());

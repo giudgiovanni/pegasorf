@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory name="PegasoSessionFactory">
+        <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.password">postgres</property>
+        <property name="hibernate.connection.pool_size">1</property>
+        <property name="hibernate.connection.url">jdbc:postgresql:pegaso</property>
+        <property name="hibernate.connection.username">postgres</property>
+        <property name="hibernate.current_session_context_class">thread</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+        <property name="hibernate.format_sql">false</property>
+        <property name="hibernate.show_sql">true</property>
+        <mapping resource="erreeffe/entity/Aspetto.hbm.xml" />
+        <mapping resource="erreeffe/entity/Scelti.hbm.xml" />
+        <mapping resource="erreeffe/entity/TipoDocumento.hbm.xml" />
+        <mapping resource="erreeffe/entity/DettaglioOrdini.hbm.xml" />
+        <mapping resource="erreeffe/entity/Provincia.hbm.xml" />
+        <mapping resource="erreeffe/entity/Sala.hbm.xml" />
+        <mapping resource="erreeffe/entity/Fornitori.hbm.xml" />
+        <mapping resource="erreeffe/entity/StranieriTot.hbm.xml" />
+        <mapping resource="erreeffe/entity/Causale.hbm.xml" />
+        <mapping resource="erreeffe/entity/DettaglioSoggiorno.hbm.xml" />
+        <mapping resource="erreeffe/entity/TmpEtichette.hbm.xml" />
+        <mapping resource="erreeffe/entity/Periodo.hbm.xml" />
+        <mapping resource="erreeffe/entity/DettagliDocumenti.hbm.xml" />
+        <mapping resource="erreeffe/entity/DettaglioConto.hbm.xml" />
+        <mapping resource="erreeffe/entity/Clienti.hbm.xml" />
+        <mapping resource="erreeffe/entity/Modistatc59.hbm.xml" />
+        <mapping resource="erreeffe/entity/Pagamento.hbm.xml" />
+        <mapping resource="erreeffe/entity/Camera.hbm.xml" />
+        <mapping resource="erreeffe/entity/Ordini.hbm.xml" />
+        <mapping resource="erreeffe/entity/ItalianiTot.hbm.xml" />
+        <mapping resource="erreeffe/entity/Ente.hbm.xml" />
+        <mapping resource="erreeffe/entity/Um.hbm.xml" />
+        <mapping resource="erreeffe/entity/MovimentoBanca.hbm.xml" />
+        <mapping resource="erreeffe/entity/Articoli.hbm.xml" />
+        <mapping resource="erreeffe/entity/Aggiunta.hbm.xml" />
+        <mapping resource="erreeffe/entity/Carichi.hbm.xml" />
+        <mapping resource="erreeffe/entity/Banca.hbm.xml" />
+        <mapping resource="erreeffe/entity/TotaliModistatc59.hbm.xml" />
+        <mapping resource="erreeffe/entity/Progressivi.hbm.xml" />
+        <mapping resource="erreeffe/entity/TmpEtichetteFornitori.hbm.xml" />
+        <mapping resource="erreeffe/entity/TmpScelti.hbm.xml" />
+        <mapping resource="erreeffe/entity/Italiani.hbm.xml" />
+        <mapping resource="erreeffe/entity/ContoBancario.hbm.xml" />
+        <mapping resource="erreeffe/entity/Reparti.hbm.xml" />
+        <mapping resource="erreeffe/entity/Utenti.hbm.xml" />
+        <mapping resource="erreeffe/entity/CamPrenotata.hbm.xml" />
+        <mapping resource="erreeffe/entity/Prenotazione.hbm.xml" />
+        <mapping resource="erreeffe/entity/Documenti.hbm.xml" />
+        <mapping resource="erreeffe/entity/Tavolo.hbm.xml" />
+        <mapping resource="erreeffe/entity/Conto.hbm.xml" />
+        <mapping resource="erreeffe/entity/Stranieri.hbm.xml" />
+        <mapping resource="erreeffe/entity/DettaglioOrdineManuale.hbm.xml" />
+        <mapping resource="erreeffe/entity/Listino.hbm.xml" />
+        <mapping resource="erreeffe/entity/Portata.hbm.xml" />
+        <mapping resource="erreeffe/entity/DocumentoCliente.hbm.xml" />
+        <mapping resource="erreeffe/entity/Convenzione.hbm.xml" />
+        <mapping resource="erreeffe/entity/DettaglioCarichi.hbm.xml" />
+        <mapping resource="erreeffe/entity/Nazionalita.hbm.xml" />
+        <mapping resource="erreeffe/entity/CategoriaPortata.hbm.xml" />
+    </session-factory>
+</hibernate-configuration>

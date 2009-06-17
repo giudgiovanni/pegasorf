@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 19-nov-2008 20.32.15 by Hibernate Tools 3.2.2.GA -->
+<hibernate-mapping>
+    <class name="erreeffe.entity.DettaglioArticolo" table="dettaglio_articolo" schema="public">
+        <id name="iddettaglio" type="long">
+            <column name="iddettaglio" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="articoli" class="erreeffe.entity.Articoli" update="false" insert="false" fetch="select">
+            <column name="iddettaglio" not-null="true" unique="true" />
+        </many-to-one>
+        <property name="descrizione" type="string">
+            <column name="descrizione" />
+        </property>
+        <property name="descrizioneRidotta" type="string">
+            <column name="descrizione_ridotta" length="50" />
+        </property>
+        <property name="imgOriginale" type="binary">
+            <column name="img_originale" />
+        </property>
+        <property name="imgNonDisp" type="binary">
+            <column name="img_non_disp" />
+        </property>
+    </class>
+</hibernate-mapping>

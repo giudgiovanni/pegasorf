@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 20-nov-2008 2.05.45 by Hibernate Tools 3.2.2.GA -->
+<hibernate-mapping>
+    <class name="erreeffe.entity.Ente" table="ente" schema="public">
+        <id name="idente" type="long">
+            <column name="idente" />
+            <generator class="assigned" />
+        </id>
+        <property name="descrizione" type="string">
+            <column name="descrizione" not-null="true" />
+        </property>
+        <set name="clientis" inverse="true">
+            <key>
+                <column name="rilasciato_da" />
+            </key>
+            <one-to-many class="erreeffe.entity.Clienti" />
+        </set>
+        <set name="clientis_1" inverse="true">
+            <key>
+                <column name="rilasciato_da" />
+            </key>
+            <one-to-many class="erreeffe.entity.Clienti" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -31,6 +31,7 @@ import rf.myswing.GregorianCalendarFormat;
 import rf.pegaso.gui.internalframe.ArchivioInternalFrame;
 import rf.pegaso.gui.internalframe.ConfigurazioneInternalFrame;
 import rf.pegaso.gui.internalframe.PrimaNotaInternalFrame;
+import rf.pegaso.gui.internalframe.VenditaInternalFrameOLD;
 import rf.pegaso.gui.internalframe.VenditaInternalFrame;
 import rf.utility.db.DBManager;
 import rf.utility.db.UtilityDBManager;

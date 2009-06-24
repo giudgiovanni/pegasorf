@@ -2,6 +2,7 @@ package rf.pegaso.gui.vendita.panel;
 
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -148,6 +149,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 	private ArrayList<DettaglioOrdine> carrello = null; // @jve:decl-index=0:
 	private VenditaTableModel modello;
 	private int idSelectedItem=-1;
+	private double totaleCarrello = 0.0;
 
 	/**
 	 * This is the default constructor
@@ -163,7 +165,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(400, 100);
+		this.setSize(575, 400);
 		this.setLayout(new BorderLayout());
 		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 		this.add(getJScrollPane(), BorderLayout.CENTER);
@@ -268,6 +270,9 @@ public class JPanelRiepilogoVendita extends JPanel {
 		}
 		//notifichiamo che è stata aggiunta una riga;
 		modello.fireTableRowsInserted(carrello.size(), carrello.size());
+		double tot=ord.getPrezzoVendita() * ord.getQta();
+		tot=tot+MathUtility.percentualeDaAggiungere(tot, ord.getIva());
+		totaleCarrello = totaleCarrello + tot;
 		return ok;
 	}
 
@@ -384,6 +389,14 @@ public class JPanelRiepilogoVendita extends JPanel {
 	public void clearSelectionItem(){
 		tblVendite.clearSelection();
 		idSelectedItem=-1;
+	}
+
+	public Double getTotaleCarrello() {
+		return totaleCarrello;
+	}
+
+	public void setTotaleCarrello(Double totaleCarrello) {
+		this.totaleCarrello = totaleCarrello;
 	}
 
 }

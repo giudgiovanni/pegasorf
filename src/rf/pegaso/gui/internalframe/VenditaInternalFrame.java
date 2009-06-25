@@ -2,7 +2,6 @@ package rf.pegaso.gui.internalframe;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
@@ -18,10 +17,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
-import com.apple.dnssd.TXTRecord;
 
 import rf.pegaso.db.tabelle.DettaglioOrdine;
 import rf.pegaso.gui.vendita.panel.JPanelRiepilogoVendita;

@@ -31,6 +31,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
 
 public class VenditaInternalFrame extends JInternalFrame {
 
@@ -64,17 +65,18 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JLabel lblPer = null;
 	private JTextField txtQta = null;
 	
-	private Vector<DettaglioOrdine> carrelloSpesa = null;
+	private boolean tastieraCassaAttiva = false;
 	private JButton btnModifica = null;
 	private JButton btnAnnullaVendita = null;
 	private JButton btnStorno = null;
 	private JButton btnInsManuale = null;
 	private JButton btnReso = null;
-	private JLabel lblTotale = null;
-	private JLabel lblResto = null;
-	private JLabel lblContanti = null;
 	private JPanel pnlContenitore = null;
 	private JPanel pnlArticoli = null;
+	private JTextField txtFldTotale = null;
+	private JTextField txtFldContanti = null;
+	private JTextField txtFldResto = null;
+	private JButton jButton = null;
 
 	public VenditaInternalFrame(JFrame padre) {
 		initialize();
@@ -90,12 +92,11 @@ public class VenditaInternalFrame extends JInternalFrame {
 		this.setIconifiable(true); // Generated
 		this.setClosable(true); // Generated
 		this.setContentPane(getJContentPane());
-		((CardLayout) pnlContenitore.getLayout()).show(pnlContenitore, "pnlArticoli");
+//		((CardLayout) pnlContenitore.getLayout()).show(pnlContenitore, "pnlArticoli");
 		
 	}
 	
 	private void initializeCarrello(){
-		carrelloSpesa = new Vector<DettaglioOrdine>();
 		pannelloCarrello = new JPanelRiepilogoVendita();
 		pannelloCarrello.setPreferredSize(new Dimension(575, 400));
 		pannelloCarrello.setVisible(true);
@@ -206,7 +207,16 @@ public class VenditaInternalFrame extends JInternalFrame {
 				inserisciDaRepo("Reparto 4");
 			}
 			else if ( e.getSource() == btnInsManuale ){
-				((CardLayout) pnlContenitore.getLayout()).show(pnlContenitore, "pnlFunzioniCassa");
+				if ( tastieraCassaAttiva ){
+					((CardLayout) pnlContenitore.getLayout()).show(pnlContenitore, "pnlArticoli");
+					btnInsManuale.setSelected(true);
+					tastieraCassaAttiva = false;
+				}
+				else{
+					((CardLayout) pnlContenitore.getLayout()).show(pnlContenitore, "pnlFunzioniCassa");
+					btnInsManuale.setSelected(false);
+					tastieraCassaAttiva = true;
+				}
 			}
 		}
 	}
@@ -223,7 +233,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 		}
 		dv.setIva(20);
 		pannelloCarrello.addDettaglioOrdine(dv);
-		lblTotale.setText(String.valueOf(pannelloCarrello.getTotaleCarrello()));
+		txtFldTotale.setText(String.valueOf(pannelloCarrello.getTotaleCarrello()));
 		txtFldImporto.setText("");
 		txtQta.setText("");
 	}
@@ -264,19 +274,6 @@ public class VenditaInternalFrame extends JInternalFrame {
 	 */
 	private JPanel getPnlPulsantiFunzioni() {
 		if (pnlPulsantiFunzioni == null) {
-			lblContanti = new JLabel();
-			lblContanti.setBounds(new Rectangle(760, 30, 170, 40));
-			lblContanti.setIcon(new ImageIcon("resource/contanti.gif"));
-			lblResto = new JLabel();
-			lblResto.setBounds(new Rectangle(760, 70, 170, 40));
-			lblResto.setIcon(new ImageIcon("resource/resto.gif"));
-			lblTotale = new JLabel();//"", new ImageIcon("resource/totale.gif"), SwingConstants.CENTER);
-			lblTotale.setBounds(new Rectangle(590, 30, 170, 80));
-//			lblTotale.setAlignmentX(JLabel.RIGHT_ALIGNMENT);
-//			lblTotale.setAlignmentY(JLabel.BOTTOM_ALIGNMENT);
-//			lblTotale.setIcon(new ImageIcon("resource/totaleT.gif"));
-			lblTotale.setOpaque(true);
-			lblTotale.setBackground(Color.getHSBColor(1, 8, 8));
 			lblCodiceProdotto = new JLabel();
 			lblCodiceProdotto.setBounds(new Rectangle(33, 34, 125, 16));
 			lblCodiceProdotto.setText("Codice Prodotto");
@@ -287,9 +284,9 @@ public class VenditaInternalFrame extends JInternalFrame {
 			pnlPulsantiFunzioni.add(getTxtFieldRicerca(), null);
 			pnlPulsantiFunzioni.add(lblCodiceProdotto, null);
 			pnlPulsantiFunzioni.add(getBtnInsManuale(), null);
-			pnlPulsantiFunzioni.add(lblTotale, null);
-			pnlPulsantiFunzioni.add(lblResto, null);
-			pnlPulsantiFunzioni.add(lblContanti, null);
+			pnlPulsantiFunzioni.add(getTxtFldTotale(), null);
+			pnlPulsantiFunzioni.add(getTxtFldContanti(), null);
+			pnlPulsantiFunzioni.add(getTxtFldResto(), null);
 		}
 		return pnlPulsantiFunzioni;
 	}
@@ -723,6 +720,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 			btnInsManuale = new JButton();
 			btnInsManuale.setBounds(new Rectangle(270, 80, 130, 50));
 			btnInsManuale.setText("<html>Inserimento<P>Manuale</html>");
+			btnInsManuale.addActionListener(new MyButtonListener());
 		}
 		return btnInsManuale;
 	}
@@ -764,11 +762,81 @@ public class VenditaInternalFrame extends JInternalFrame {
 	 */
 	private JPanel getPnlArticoli() {
 		if (pnlArticoli == null) {
+			GridBagConstraints gridBagConstraints = new GridBagConstraints();
+			gridBagConstraints.gridx = 0;
+			gridBagConstraints.gridy = 0;
 			pnlArticoli = new JPanel();
 			pnlArticoli.setLayout(new GridBagLayout());
 			pnlArticoli.setName("pnlArticoli");
+			pnlArticoli.add(getJButton(), gridBagConstraints);
 		}
 		return pnlArticoli;
+	}
+
+	/**
+	 * This method initializes jTextField	
+	 * 	
+	 * @return javax.swing.JTextField	
+	 */
+	private JTextField getTxtFldTotale() {
+		if (txtFldTotale == null) {
+			txtFldTotale = new JTextField();
+			txtFldTotale.setBounds(new Rectangle(590, 30, 170, 80));
+			txtFldTotale.setOpaque(true);
+			txtFldTotale.setBackground(Color.ORANGE);
+			txtFldTotale.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Totale",
+					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
+					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));
+		}
+		return txtFldTotale;
+	}
+
+	/**
+	 * This method initializes jTextField	
+	 * 	
+	 * @return javax.swing.JTextField	
+	 */
+	private JTextField getTxtFldContanti() {
+		if (txtFldContanti == null) {
+			txtFldContanti = new JTextField();
+			txtFldContanti.setBounds(new Rectangle(760, 30, 170, 40));
+			txtFldContanti.setOpaque(true);
+			txtFldContanti.setBackground(Color.decode("435445"));
+			txtFldContanti.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Contanti",
+					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
+					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));
+		}
+		return txtFldContanti;
+	}
+
+	/**
+	 * This method initializes jTextField	
+	 * 	
+	 * @return javax.swing.JTextField	
+	 */
+	private JTextField getTxtFldResto() {
+		if (txtFldResto == null) {
+			txtFldResto = new JTextField();
+			txtFldResto.setBounds(new Rectangle(760, 70, 170, 40));
+			txtFldResto.setBackground(Color.decode("314467"));
+			txtFldResto.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Resto",
+					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
+					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));
+		}
+		return txtFldResto;
+	}
+
+	/**
+	 * This method initializes jButton	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getJButton() {
+		if (jButton == null) {
+			jButton = new JButton();
+			jButton.setText("Ciao");
+		}
+		return jButton;
 	}
 
 }

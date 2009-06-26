@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 
 import javax.swing.AbstractAction;
-import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -14,9 +13,11 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 
@@ -25,7 +26,6 @@ import rf.pegaso.gui.vendita.panel.JPanelRiepilogoVendita;
 
 import java.awt.Font;
 import java.text.DecimalFormat;
-import java.util.Vector;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -77,6 +77,8 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JTextField txtFldContanti = null;
 	private JTextField txtFldResto = null;
 	private JButton jButton = null;
+	private JButton btnElaboraScontrino = null;
+	private JButton btnContanti = null;
 
 	public VenditaInternalFrame(JFrame padre) {
 		initialize();
@@ -85,15 +87,12 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private void initialize() {
 		initializeKeyFunction();
 		initializeCarrello();
-		this.setSize(new Dimension(1000, 700)); // Generated
-		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE); // Generated
-		this.setTitle("Vendita al Banco"); // Generated
-		this.setMaximizable(true); // Generated
-		this.setIconifiable(true); // Generated
-		this.setClosable(true); // Generated
+		this.setSize(new Dimension(1000, 700));
+		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+		this.setTitle("Vendita al Banco");
+		this.setMaximizable(true);
+		this.setClosable(true);
 		this.setContentPane(getJContentPane());
-//		((CardLayout) pnlContenitore.getLayout()).show(pnlContenitore, "pnlArticoli");
-		
 	}
 	
 	private void initializeCarrello(){
@@ -117,7 +116,12 @@ public class VenditaInternalFrame extends JInternalFrame {
 
 		this.getRootPane().getActionMap().put("F1", new AbstractAction() {
 			public void actionPerformed(ActionEvent a) {
-				inserisciDaRepo("Reparto 1");
+				System.out.println("Elabora Scontrino");
+			}
+		});
+		this.getRootPane().getActionMap().put("F2", new AbstractAction() {
+			public void actionPerformed(ActionEvent a) {
+				System.out.println("Contanti - Visualizzare calcolatrice");
 			}
 		});
 		this.getRootPane().getActionMap().put("F3", new AbstractAction() {
@@ -134,15 +138,11 @@ public class VenditaInternalFrame extends JInternalFrame {
 			public void actionPerformed(ActionEvent a) {
 				inserisciDaRepo("Reparto 1");
 			}
-		});
-		this.getRootPane().getActionMap().put("F2", new AbstractAction() {
-			public void actionPerformed(ActionEvent a) {
-				inserisciDaRepo("Reparto 1");
-			}
-		});
+		});		
 		this.getRootPane().getActionMap().put("ESC", new AbstractAction() {
 			public void actionPerformed(ActionEvent a) {
-				dispose();
+				doDefaultCloseAction();
+//				dispose();
 			}
 		});
 	}
@@ -218,6 +218,12 @@ public class VenditaInternalFrame extends JInternalFrame {
 					tastieraCassaAttiva = true;
 				}
 			}
+			else if ( e.getSource() == btnElaboraScontrino ){
+				System.out.println("Elabora Scontrino");
+			}
+			else if ( e.getSource() == btnContanti ){
+				System.out.println("Contanti - Visualizzare Cassa");
+			}
 		}
 	}
 	
@@ -238,15 +244,25 @@ public class VenditaInternalFrame extends JInternalFrame {
 		txtQta.setText("");
 	}
 	
-	private void inserisciNelCarrello(int code){
+	private void inserisciNelCarrello(String codeBarre){
 		if ( txtFieldRicerca.getText() == null || txtFieldRicerca.getText().trim().equals("") ){
 			// Scrivere messaggio campo codice prodotto non valido
 		}
 		else{
 			DettaglioOrdine dv = new DettaglioOrdine();
-			dv.loadByID(code);
-			pannelloCarrello.addDettaglioOrdine(dv);
+			int esito = dv.loadByCB(codeBarre);
+			if ( esito == 1 ){
+				pannelloCarrello.addDettaglioOrdine(dv);
+			}
+			else{
+				messaggioAVideo("Articolo non disponibile", "INFO");
+			}
 		}
+	}
+	
+	private void messaggioAVideo(String testo, String tipo) {
+		JOptionPane.showMessageDialog(this, testo, tipo,
+				JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	/**
@@ -287,6 +303,8 @@ public class VenditaInternalFrame extends JInternalFrame {
 			pnlPulsantiFunzioni.add(getTxtFldTotale(), null);
 			pnlPulsantiFunzioni.add(getTxtFldContanti(), null);
 			pnlPulsantiFunzioni.add(getTxtFldResto(), null);
+			pnlPulsantiFunzioni.add(getBtnElaboraScontrino(), null);
+			pnlPulsantiFunzioni.add(getBtnContanti(), null);
 		}
 		return pnlPulsantiFunzioni;
 	}
@@ -315,10 +333,12 @@ public class VenditaInternalFrame extends JInternalFrame {
 			txtFieldRicerca = new JTextField();
 			txtFieldRicerca.setBounds(new Rectangle(30, 62, 182, 28));
 			txtFieldRicerca.addActionListener(new MyButtonListener());
+			txtFieldRicerca.requestFocus();
 			txtFieldRicerca.addKeyListener(new java.awt.event.KeyAdapter() {
 				public void keyPressed(java.awt.event.KeyEvent e) {
-					if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-						inserisciNelCarrello(Integer.parseInt(txtFieldRicerca.getText()));
+					if ( e.getKeyCode() == KeyEvent.VK_ENTER ) {
+						inserisciNelCarrello(txtFieldRicerca.getText());
+						txtFieldRicerca.setText("");
 					}
 				}
 			});
@@ -749,8 +769,8 @@ public class VenditaInternalFrame extends JInternalFrame {
 			pnlContenitore = new JPanel();
 			pnlContenitore.setLayout(new CardLayout());
 			pnlContenitore.setPreferredSize(new Dimension(400, 618));
-			pnlContenitore.add(getPnlFunzioniCassa(), getPnlFunzioniCassa().getName());
 			pnlContenitore.add(getPnlArticoli(), getPnlArticoli().getName());
+			pnlContenitore.add(getPnlFunzioniCassa(), getPnlFunzioniCassa().getName());
 		}
 		return pnlContenitore;
 	}
@@ -837,6 +857,37 @@ public class VenditaInternalFrame extends JInternalFrame {
 			jButton.setText("Ciao");
 		}
 		return jButton;
+	}
+
+	/**
+	 * This method initializes btlElaboraScontrino	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnElaboraScontrino() {
+		if (btnElaboraScontrino == null) {
+			btnElaboraScontrino = new JButton();
+			btnElaboraScontrino.setBounds(new Rectangle(420, 25, 130, 50));
+			btnElaboraScontrino.setText("<html>Stampa (F1)<P>Scontrino</html>");
+			btnElaboraScontrino.addActionListener(new MyButtonListener());
+			
+		}
+		return btnElaboraScontrino;
+	}
+
+	/**
+	 * This method initializes btnContanti	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnContanti() {
+		if (btnContanti == null) {
+			btnContanti = new JButton();
+			btnContanti.setBounds(new Rectangle(420, 80, 130, 50));
+			btnContanti.setText("Contanti (F2)");
+			btnContanti.addActionListener(new MyButtonListener());
+		}
+		return btnContanti;
 	}
 
 }

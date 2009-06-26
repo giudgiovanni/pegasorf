@@ -138,7 +138,7 @@ public class DettaglioOrdine {
 	 */
 	public int loadByCB(String codice){
 		//verifichiamo che il codice inserito sia valido
-		if (codice.equalsIgnoreCase(""))
+		if (codice.trim().equalsIgnoreCase(""))
 			return -1;
 		//carichiamo l'articolo in memoria
 		Articolo a = new Articolo();
@@ -160,8 +160,10 @@ public class DettaglioOrdine {
 			}
 		} catch (SQLException e1) {
 			e1.printStackTrace();
+			return -2;
 		} catch (CodiceBarreInesistente e1) {
 			e1.printStackTrace();
+			return -2;
 		}
 		return 1;
 	}
@@ -200,8 +202,8 @@ public class DettaglioOrdine {
 	}
 
 	/**
-	 * Questo metodo verifica se un dettaglio_ordine Ë
-	 * gi‡ stato inserito nel db
+	 * Questo metodo verifica se un dettaglio_ordine √®
+	 * gi√† stato inserito nel db
 	 *
 	 * @param codice
 	 * @return int per verifica
@@ -266,7 +268,7 @@ public class DettaglioOrdine {
 	}
 
 	/**
-	 * Questo metodo aggiorno un dettaglio ordine gi‡ presente nel db
+	 * Questo metodo aggiorno un dettaglio ordine gi√† presente nel db
 	 *
 	 * @param codice
 	 * @return
@@ -438,10 +440,10 @@ public class DettaglioOrdine {
 	}*/
 
 	/**
-	 * Questo metodo aggiorno la disponibilit‡ degli articoli
+	 * Questo metodo aggiorno la disponibilit√† degli articoli
 	 * dopo l'inserimento di un dettaglio ordini
 	 *
-	 * @param quantit‡ presente nel db prima di effettuare l'inserimento
+	 * @param quantit√† presente nel db prima di effettuare l'inserimento
 	 */
 	public void updateArticolo(double qtaIniziale)
 	throws SQLException {

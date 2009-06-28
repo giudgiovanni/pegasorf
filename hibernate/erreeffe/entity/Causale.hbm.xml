@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 28-giu-2009 12.52.20 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="erreeffe.entity.Causale" table="causale" schema="public">
+        <id name="idcausale" type="long">
+            <column name="idcausale" />
+            <generator class="assigned" />
+        </id>
+        <property name="nome" type="string">
+            <column name="nome" length="40" not-null="true" />
+        </property>
+        <set name="ordinis" inverse="true" lazy="true" table="ordini" fetch="select">
+            <key>
+                <column name="idcausale" />
+            </key>
+            <one-to-many class="erreeffe.entity.Ordini" />
+        </set>
+    </class>
+</hibernate-mapping>

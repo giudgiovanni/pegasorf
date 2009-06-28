@@ -275,6 +275,10 @@ public class JPanelRiepilogoVendita extends JPanel {
 		totaleCarrello = totaleCarrello + tot;
 		return ok;
 	}
+	
+	public boolean registraScarico(){
+		return true;
+	}
 
 	/**
 	 * sostituisce il carrello corrente con
@@ -295,6 +299,8 @@ public class JPanelRiepilogoVendita extends JPanel {
 	 */
 	public void azzeraCarrello() {
 		carrello.clear();
+		totaleCarrello = 0.0;
+		idSelectedItem = -1;
 		modello.fireTableDataChanged();
 	}
 
@@ -368,6 +374,8 @@ public class JPanelRiepilogoVendita extends JPanel {
 	public DettaglioOrdine[] toArray() {
 		return (DettaglioOrdine[]) carrello.toArray();
 	}
+	
+	
 	//gestire i casi di aggiornamento negativo
 	public void aggiornaQtaSelectedItem(int qta){
 		for(DettaglioOrdine dv : carrello){
@@ -376,6 +384,67 @@ public class JPanelRiepilogoVendita extends JPanel {
 		}
 		modello.fireTableDataChanged();
 	}
+	
+	/**
+	 * Metodo che si occupa di eliminare un articolo dal carrello,
+	 * se una riga e' stata selezionata viene eliminata, altrimenti si elimina l'ultima riga inserita
+	 * 
+	 */
+	public void stornoArticolo(){
+		if ( carrello.size() != 0 ){
+			if ( idSelectedItem == -1 ){
+				DettaglioOrdine ord = carrello.get(carrello.size() -1);
+				carrello.remove(ord);
+				totaleCarrello = totaleCarrello - (ord.getPrezzoVendita() * ord.getQta());
+			}
+			else{
+				for( DettaglioOrdine ord : carrello ){
+					if ( ord.getIdArticolo() == idSelectedItem ){
+						carrello.remove(ord);
+						totaleCarrello = totaleCarrello - (ord.getPrezzoVendita() * ord.getQta());
+					}
+				}
+			}
+			modello.fireTableDataChanged();
+		}
+	}
+	
+	/**
+	 * Metodo che si occupa di ridurre di una unità la quantità della riga selezionata,
+	 * se nessuna line è selezionata diminuisce la quantità dell'ultima riga
+	 * 
+	 */
+	public void stornoQtaArticolo(){
+		if ( carrello.size() != 0 ){
+			if ( idSelectedItem == -1 ){
+				DettaglioOrdine ord = carrello.get(carrello.size()-1);
+				if ( ord.getQta() == 1 ){
+					carrello.remove(ord);
+					totaleCarrello = totaleCarrello - (ord.getPrezzoVendita() * ord.getQta());
+				}
+				else{
+					ord.setQta(ord.getQta() - 1);
+					totaleCarrello = totaleCarrello - (ord.getPrezzoVendita() * ord.getQta());
+				}
+			}
+			else{
+				for( DettaglioOrdine ord : carrello ){
+					if ( ord.getIdArticolo() == idSelectedItem ){
+						if ( ord.getQta() == 1 ){
+							carrello.remove(ord);
+							totaleCarrello = totaleCarrello - (ord.getPrezzoVendita() * ord.getQta());
+						}
+						else{
+							ord.setQta(ord.getQta() - 1);
+							totaleCarrello = totaleCarrello - (ord.getPrezzoVendita() * ord.getQta());
+						}
+					}
+				}
+			}
+			modello.fireTableDataChanged();
+		}
+	}
+	
 
 	/**
 	 * Ritorna id dell'oggetto selezionato nella tabella

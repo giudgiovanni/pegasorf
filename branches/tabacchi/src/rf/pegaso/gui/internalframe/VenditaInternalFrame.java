@@ -279,7 +279,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 				m_iNumberStatus = NUMBER_INPUTDEC;
 				m_iNumberStatusInput = NUMBERVALID;
 			}
-			double d = Double.parseDouble(importo);
+			double d = ControlloDati.convertPrezzoToDouble(importo);
 			if ( inserimentoContanti ){				
 				txtFldContanti.setText(ControlloDati.convertDoubleToPrezzo(d));
 				txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(d - pannelloCarrello.getTotaleCarrello()));
@@ -288,6 +288,9 @@ public class VenditaInternalFrame extends JInternalFrame {
 				txtFldImporto.setText(ControlloDati.convertDoubleToPrezzo(d));
 			}
 		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

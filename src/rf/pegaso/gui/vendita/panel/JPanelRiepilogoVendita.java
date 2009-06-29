@@ -214,7 +214,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 			col.setMaxWidth(100);
 			col.setPreferredWidth(100);
 
-			//formattiamo la colonna quantit‡
+			//formattiamo la colonna quantitÔøΩ
 			col = tblVendite.getColumnModel().getColumn(2);
 			col.setCellRenderer(qtaRenderer);
 			col.setMinWidth(0);
@@ -248,7 +248,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 
 	/**
 	 * Aggiunge un dettaglio ordine al carrello
-	 * e se gi‡ presente aggiorna la quantit‡
+	 * e se giÔøΩ presente aggiorna la quantitÔøΩ
 	 * ed eventuali altri parametri cambiati
 	 *
 	 * @param e
@@ -263,12 +263,12 @@ public class JPanelRiepilogoVendita extends JPanel {
 			DettaglioOrdine tmp= carrello.get(contiene);
 			tmp.setDescrizione(ord.getDescrizione());
 			tmp.setPrezzoVendita(ord.getPrezzoVendita());
-			//aggiungiamo alla quantit‡ gi‡ presente la nuova
-			//quantit‡ da aggiungere
+			//aggiungiamo alla quantitÔøΩ giÔøΩ presente la nuova
+			//quantitÔøΩ da aggiungere
 			tmp.setQta(tmp.getQta()+ord.getQta());
 			tmp.setIva(ord.getIva());
 		}
-		//notifichiamo che Ë stata aggiunta una riga;
+		//notifichiamo che ÔøΩ stata aggiunta una riga;
 		modello.fireTableRowsInserted(carrello.size(), carrello.size());
 		double tot=ord.getPrezzoVendita() * ord.getQta();
 		tot=tot+MathUtility.percentualeDaAggiungere(tot, ord.getIva());
@@ -314,7 +314,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 	}
 
 	/**
-	 * Interroga se il carrello Ë vuoto oppure no
+	 * Interroga se il carrello ÔøΩ vuoto oppure no
 	 *
 	 * @return
 	 */
@@ -395,13 +395,15 @@ public class JPanelRiepilogoVendita extends JPanel {
 			if ( idSelectedItem == -1 ){
 				DettaglioOrdine ord = carrello.get(carrello.size() -1);
 				carrello.remove(ord);
-				totaleCarrello = totaleCarrello - (ord.getPrezzoVendita() * ord.getQta());
+				double tot = ord.getPrezzoVendita() * ord.getQta();
+				totaleCarrello = totaleCarrello - (tot + MathUtility.percentualeDaAggiungere(tot, ord.getIva()));
 			}
 			else{
 				for( DettaglioOrdine ord : carrello ){
 					if ( ord.getIdArticolo() == idSelectedItem ){
 						carrello.remove(ord);
-						totaleCarrello = totaleCarrello - (ord.getPrezzoVendita() * ord.getQta());
+						double tot = ord.getPrezzoVendita() * ord.getQta();
+						totaleCarrello = totaleCarrello - (tot + MathUtility.percentualeDaAggiungere(tot, ord.getIva()));
 					}
 				}
 			}
@@ -410,8 +412,8 @@ public class JPanelRiepilogoVendita extends JPanel {
 	}
 	
 	/**
-	 * Metodo che si occupa di ridurre di una unità la quantità della riga selezionata,
-	 * se nessuna line è selezionata diminuisce la quantità dell'ultima riga
+	 * Metodo che si occupa di ridurre di una unita' la quantita' della riga selezionata,
+	 * se nessuna linea e' selezionata diminuisce la quantita' dell'ultima riga
 	 * 
 	 */
 	public void stornoQtaArticolo(){
@@ -420,11 +422,13 @@ public class JPanelRiepilogoVendita extends JPanel {
 				DettaglioOrdine ord = carrello.get(carrello.size()-1);
 				if ( ord.getQta() == 1 ){
 					carrello.remove(ord);
-					totaleCarrello = totaleCarrello - (ord.getPrezzoVendita() * ord.getQta());
+					double tot = ord.getPrezzoVendita() * ord.getQta();
+					totaleCarrello = totaleCarrello - (tot + MathUtility.percentualeDaAggiungere(tot, ord.getIva()));
 				}
 				else{
 					ord.setQta(ord.getQta() - 1);
-					totaleCarrello = totaleCarrello - (ord.getPrezzoVendita() * ord.getQta());
+					double tot = ord.getPrezzoVendita() * ord.getQta();
+					totaleCarrello = totaleCarrello - (tot + MathUtility.percentualeDaAggiungere(tot, ord.getIva()));
 				}
 			}
 			else{
@@ -432,11 +436,13 @@ public class JPanelRiepilogoVendita extends JPanel {
 					if ( ord.getIdArticolo() == idSelectedItem ){
 						if ( ord.getQta() == 1 ){
 							carrello.remove(ord);
-							totaleCarrello = totaleCarrello - (ord.getPrezzoVendita() * ord.getQta());
+							double tot = ord.getPrezzoVendita() * ord.getQta();
+							totaleCarrello = totaleCarrello - (tot + MathUtility.percentualeDaAggiungere(tot, ord.getIva()));
 						}
 						else{
 							ord.setQta(ord.getQta() - 1);
-							totaleCarrello = totaleCarrello - (ord.getPrezzoVendita() * ord.getQta());
+							double tot = ord.getPrezzoVendita() * ord.getQta();
+							totaleCarrello = totaleCarrello - (tot + MathUtility.percentualeDaAggiungere(tot, ord.getIva()));
 						}
 					}
 				}
@@ -448,8 +454,8 @@ public class JPanelRiepilogoVendita extends JPanel {
 
 	/**
 	 * Ritorna id dell'oggetto selezionato nella tabella
-	 * @return ritorna id se Ë selezionato un oggetto nella tabella
-	 * 			oppure ritorna -1 se non c'Ë nessuna selezione
+	 * @return ritorna id se ÔøΩ selezionato un oggetto nella tabella
+	 * 			oppure ritorna -1 se non c'ÔøΩ nessuna selezione
 	 */
 	public int getIdSelectedItem(){
 		return idSelectedItem;

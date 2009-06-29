@@ -92,6 +92,9 @@ public class VenditaInternalFrame extends JInternalFrame {
     private final static int NUMBER_INPUTZERODEC = 1;
     private final static int NUMBER_INPUTINT = 2;
     private final static int NUMBER_INPUTDEC = 3;
+    
+    // Variabile che contiene l'importo digitato da tastiera
+    private String importo = "";
 
 	public VenditaInternalFrame(JFrame padre) {
 		initialize();
@@ -184,27 +187,29 @@ public class VenditaInternalFrame extends JInternalFrame {
 			// Il primo numero inserito e' zero
 			if ((cTrans == '0') 
 					&& (m_iNumberStatus == NUMBER_INPUTZERO)) {
-				if ( inserimentoContanti ){
-					txtFldContanti.setText("0");
-					double resto = ((ControlloDati.convertPrezzoToDouble(txtFldContanti.getText())) - pannelloCarrello.getTotaleCarrello());
-					txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(resto));
-				}
-				else{
-					txtFldImporto.setText("0");
-				}
+				importo = "0";
+//				if ( inserimentoContanti ){
+//					txtFldContanti.setText("0");
+//					double resto = ((ControlloDati.convertPrezzoToDouble(txtFldContanti.getText())) - pannelloCarrello.getTotaleCarrello());
+//					txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(resto));
+//				}
+//				else{
+//					txtFldImporto.setText("0");
+//				}
 			} 
 			// Il primo numero inserito e' diverso da zero, si setta lo stato parte iniziale intera (m_iNumberStatus = NUMBER_INPUTINT;) 
 			else if ((cTrans == '1' || cTrans == '2' || cTrans == '3' || cTrans == '4' || cTrans == '5' || cTrans == '6' || cTrans == '7' || cTrans == '8' || cTrans == '9')
 					&& (m_iNumberStatus == NUMBER_INPUTZERO)) { 
 				// Un numero intero
-				if ( inserimentoContanti ){
-					txtFldContanti.setText(Character.toString(cTrans));
-					double resto = ((ControlloDati.convertPrezzoToDouble(txtFldContanti.getText())) - pannelloCarrello.getTotaleCarrello());
-					txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(resto));
-				}
-				else{
-					txtFldImporto.setText(Character.toString(cTrans));
-				}
+				importo = Character.toString(cTrans);
+//				if ( inserimentoContanti ){
+//					txtFldContanti.setText(Character.toString(cTrans));
+//					double resto = ((ControlloDati.convertPrezzoToDouble(txtFldContanti.getText())) - pannelloCarrello.getTotaleCarrello());
+//					txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(resto));
+//				}
+//				else{
+//					txtFldImporto.setText(Character.toString(cTrans));
+//				}
 				m_iNumberStatus = NUMBER_INPUTINT;    
 				m_iNumberStatusInput = NUMBERVALID;
 			}
@@ -212,65 +217,77 @@ public class VenditaInternalFrame extends JInternalFrame {
 			else if ((cTrans == '0' || cTrans == '1' || cTrans == '2' || cTrans == '3' || cTrans == '4' || cTrans == '5' || cTrans == '6' || cTrans == '7' || cTrans == '8' || cTrans == '9')
 					&& (m_iNumberStatus == NUMBER_INPUTINT)) { 
 				// Un numero intero
-				if ( inserimentoContanti ){
-					txtFldContanti.setText(txtFldContanti.getText() + cTrans);
-					double resto = ((ControlloDati.convertPrezzoToDouble(txtFldContanti.getText())) - pannelloCarrello.getTotaleCarrello());
-					txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(resto));
-				}
-				else{
-					txtFldImporto.setText(txtFldImporto.getText() + cTrans);
-				}
+				importo = importo + cTrans;
+//				if ( inserimentoContanti ){
+//					txtFldContanti.setText(txtFldContanti.getText() + cTrans);
+//					double resto = ((ControlloDati.convertPrezzoToDouble(txtFldContanti.getText())) - pannelloCarrello.getTotaleCarrello());
+//					txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(resto));
+//				}
+//				else{
+//					txtFldImporto.setText(txtFldImporto.getText() + cTrans);
+//				}
 			} 
 			// Se il primo carattere digitato e' la virgola, si inserisce lo zero in testa, e si setta lo stato in zero iniziale con parte decimale
 			else if (cTrans == ',' && m_iNumberStatus == NUMBER_INPUTZERO) {
-				if ( inserimentoContanti ){
-					txtFldContanti.setText("0,");
-					double resto = ((ControlloDati.convertPrezzoToDouble(txtFldContanti.getText())) - pannelloCarrello.getTotaleCarrello());
-					txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(resto));
-				}
-				else{
-					txtFldImporto.setText("0,");
-				}
+				importo = "0,";
+//				if ( inserimentoContanti ){
+//					txtFldContanti.setText("0,");
+//					double resto = ((ControlloDati.convertPrezzoToDouble(txtFldContanti.getText())) - pannelloCarrello.getTotaleCarrello());
+//					txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(resto));
+//				}
+//				else{
+//					txtFldImporto.setText("0,");
+//				}
 				m_iNumberStatus = NUMBER_INPUTZERODEC;            
 			} 
 			// Se sono stati digitati dei numeri iniziali e si inserisce la virgola, lo stato cambia in intero iniziale e parte decimale
 			else if (cTrans == ',' && m_iNumberStatus == NUMBER_INPUTINT) {
-				if ( inserimentoContanti ){
-					txtFldContanti.setText(txtFldContanti.getText() + ",");
-					double resto = ((ControlloDati.convertPrezzoToDouble(txtFldContanti.getText())) - pannelloCarrello.getTotaleCarrello());
-					txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(resto));
-				}
-				else{
-					txtFldImporto.setText(txtFldImporto.getText() + ",");
-				}
+				importo = importo + ",";
+//				if ( inserimentoContanti ){
+//					txtFldContanti.setText(txtFldContanti.getText() + ",");
+//					double resto = ((ControlloDati.convertPrezzoToDouble(txtFldContanti.getText())) - pannelloCarrello.getTotaleCarrello());
+//					txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(resto));
+//				}
+//				else{
+//					txtFldImporto.setText(txtFldImporto.getText() + ",");
+//				}
 				m_iNumberStatus = NUMBER_INPUTDEC;
 			} 
-			// Si aggiunge il numero selezionato nella parte decimale del numero se i numeri inseriti non sono più di 2		
+			// Si aggiunge il numero selezionato nella parte decimale del numero se i numeri inseriti non sono piÔøΩ di 2		
 			else if ((cTrans == '0' || cTrans == '1' || cTrans == '2' || cTrans == '3' || cTrans == '4' || cTrans == '5' || cTrans == '6' || cTrans == '7' || cTrans == '8' || cTrans == '9')
 					&& (m_iNumberStatus == NUMBER_INPUTZERODEC || m_iNumberStatus == NUMBER_INPUTDEC)) { 
-				// Un numero decimal
-				String decimalPart;
-				if ( inserimentoContanti ){
-					decimalPart = txtFldContanti.getText().substring(txtFldContanti.getText().indexOf(",") + 1);
-					if ( decimalPart.length() < 2 ){
-						txtFldContanti.setText(txtFldContanti.getText() + cTrans);
-						double resto = ((ControlloDati.convertPrezzoToDouble(txtFldContanti.getText())) - pannelloCarrello.getTotaleCarrello());
-						txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(resto));
-					}
+				String decimalPart = importo.substring(importo.indexOf(",") + 1);
+				if ( decimalPart.length() < 2 ){
+					importo = importo + cTrans;
 				}
-				else{
-					decimalPart = txtFldImporto.getText().substring(txtFldImporto.getText().indexOf(",") + 1);
-					if ( decimalPart.length() < 2 ){
-						txtFldImporto.setText(txtFldImporto.getText() + cTrans);
-					}
-				}
+//				// Un numero decimal
+//				String decimalPart;
+//				if ( inserimentoContanti ){
+//					decimalPart = txtFldContanti.getText().substring(txtFldContanti.getText().indexOf(",") + 1);
+//					if ( decimalPart.length() < 2 ){
+//						txtFldContanti.setText(txtFldContanti.getText() + cTrans);
+//						double resto = ((ControlloDati.convertPrezzoToDouble(txtFldContanti.getText())) - pannelloCarrello.getTotaleCarrello());
+//						txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(resto));
+//					}
+//				}
+//				else{
+//					decimalPart = txtFldImporto.getText().substring(txtFldImporto.getText().indexOf(",") + 1);
+//					if ( decimalPart.length() < 2 ){
+//						txtFldImporto.setText(txtFldImporto.getText() + cTrans);
+//					}
+//				}
 				m_iNumberStatus = NUMBER_INPUTDEC;
 				m_iNumberStatusInput = NUMBERVALID;
 			}
+			double d = Double.parseDouble(importo);
+			if ( inserimentoContanti ){				
+				txtFldContanti.setText(ControlloDati.convertDoubleToPrezzo(d));
+				txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(d - pannelloCarrello.getTotaleCarrello()));
+			}
+			else {
+				txtFldImporto.setText(ControlloDati.convertDoubleToPrezzo(d));
+			}
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -383,6 +400,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 			}
 			else if ( e.getSource() == btnStorno ){
 				pannelloCarrello.stornoArticolo();
+				txtFldTotale.setText(ControlloDati.convertDoubleToPrezzo(pannelloCarrello.getTotaleCarrello()));
 			}
 			else if ( e.getSource() == btnAnnullaVendita ){
 				pannelloCarrello.azzeraCarrello();
@@ -1028,7 +1046,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 			txtFldTotale.setBounds(new Rectangle(590, 30, 170, 80));
 			txtFldTotale.setOpaque(true);
 			txtFldTotale.setBackground(Color.ORANGE);
-			txtFldTotale.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Totale €",
+			txtFldTotale.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Totale ÔøΩ",
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));
 		}
@@ -1046,7 +1064,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 			txtFldContanti.setBounds(new Rectangle(760, 30, 170, 40));
 			txtFldContanti.setOpaque(true);
 			txtFldContanti.setBackground(Color.decode("435445"));
-			txtFldContanti.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Contanti €",
+			txtFldContanti.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Contanti ÔøΩ",
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));
 		}
@@ -1063,7 +1081,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 			txtFldResto = new JTextField();
 			txtFldResto.setBounds(new Rectangle(760, 70, 170, 40));
 			txtFldResto.setBackground(Color.decode("314467"));
-			txtFldResto.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Resto €",
+			txtFldResto.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Resto ÔøΩ",
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));
 		}

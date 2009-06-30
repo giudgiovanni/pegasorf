@@ -33,7 +33,7 @@ public class JPanelArticoli extends JPanel{
 	 * @return void
 	 */
 	private void initialize() {
-		//this.setSize(300, 200);
+//		this.setSize(600, 600);
 		//this.setLayout(new GridLayout());
 		this.setVisible(true);
 		this.add(getJScrollPane(), null);
@@ -43,7 +43,7 @@ public class JPanelArticoli extends JPanel{
 		try{
 			pnlPulsanti.removeAll();
 			GridLayout gridLayout = new GridLayout();
-			pnlPulsanti.setSize(new Dimension(540, (articoli.size()*100/3)));
+			pnlPulsanti.setSize(new Dimension(600, (articoli.size()*100/3)));
 			gridLayout.setRows((articoli.size()/3)+1);
 			gridLayout.setColumns(3);
 			pnlPulsanti.setLayout(gridLayout);

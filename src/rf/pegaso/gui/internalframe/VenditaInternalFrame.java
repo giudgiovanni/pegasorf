@@ -21,6 +21,7 @@ import javax.swing.WindowConstants;
 
 
 import rf.pegaso.db.tabelle.DettaglioOrdine;
+import rf.pegaso.gui.vendita.panel.JPanelArticoli;
 import rf.pegaso.gui.vendita.panel.JPanelRiepilogoVendita;
 import rf.utility.ControlloDati;
 
@@ -30,8 +31,6 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 import javax.swing.JTabbedPane;
 
 public class VenditaInternalFrame extends JInternalFrame {
@@ -55,7 +54,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JButton btnOtto = null;
 	private JButton btnNove = null;
 	private JButton btnVirgola = null;
-	private JButton btnDoppioZero = null;
+	private JButton btnCancella = null;
 	private JButton btnAzzera = null;
 	private JButton btnMoltiplica = null;
 	private JButton btnRep1 = null;
@@ -95,7 +94,10 @@ public class VenditaInternalFrame extends JInternalFrame {
     // Variabile che contiene l'importo digitato da tastiera
     private String importo = "";
 	private JTabbedPane jTabbedPane = null;
-	private JPanel pnlVenduti = null;
+	private JPanelArticoli pnlArticoli = null;
+	private JPanel pnlRiepilogo = null;
+	private JButton btnStorno1 = null;
+	
 
 	public VenditaInternalFrame(JFrame padre) {
 		initialize();
@@ -110,17 +112,16 @@ public class VenditaInternalFrame extends JInternalFrame {
 		this.setMaximizable(true);
 		this.setClosable(true);
 		this.setContentPane(getJContentPane());
+		txtFieldRicerca.requestFocusInWindow();
 	}
 	
 	private void initializeCarrello(){
 		pannelloCarrello = new JPanelRiepilogoVendita();
-		pannelloCarrello.setPreferredSize(new Dimension(500, 400));
+		pnlArticoli = new JPanelArticoli();
+		pannelloCarrello.setPreferredSize(new Dimension(500, 450));
+		pannelloCarrello.setBounds(new Rectangle(0, 0, 500, 450));
 		pannelloCarrello.setVisible(true);
-	}
-	
-	
-	
-	
+	}	
 	
 	private void inserisciDaRepo(String repo){
 		try {
@@ -138,10 +139,8 @@ public class VenditaInternalFrame extends JInternalFrame {
 			txtFldTotale.setText(ControlloDati.convertDoubleToPrezzo(pannelloCarrello.getTotaleCarrello()));
 			stateToZero();
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -170,10 +169,12 @@ public class VenditaInternalFrame extends JInternalFrame {
 		else{
 			messaggioAVideo("Si e' verificato un errore durante la registrazione della vendita. Si prega di riprovare", "ERROR");
 		}
+		txtFieldRicerca.requestFocusInWindow();
 	}
 	
 	//inizializza o resetta le variabili iniziali di sistema
 	 private void stateToZero(){
+		 importo = "0";
 		 txtQta.setText("");
 		 txtFldImporto.setText("");
 		 txtFldContanti.setText("");
@@ -182,34 +183,94 @@ public class VenditaInternalFrame extends JInternalFrame {
 		 m_iNumberStatusInput = NUMBERZERO;
 	 }
 	 
+//	 private void tastiFunzione(int cTrans){
+//		 if ( cTrans == KeyEvent.VK_F1 ){
+//				elaboraScontrino();
+//			}
+//			else if ( cTrans == KeyEvent.VK_F2 ){
+//				if ( !tastieraCassaAttiva ){
+//					((CardLayout) pnlContenitore.getLayout()).show(pnlContenitore, "pnlFunzioniCassa");
+//					btnInsManuale.setSelected(false);
+//					tastieraCassaAttiva = true;
+//				}
+//				inserimentoContanti = true;	
+//			}
+//			else if ( cTrans == KeyEvent.VK_F3 ){
+//				inserisciDaRepo("Reparto 1");
+//			}
+//			else if ( cTrans == KeyEvent.VK_F4 ){
+//				inserisciDaRepo("Reparto 1");
+//			}
+//			else if ( cTrans == KeyEvent.VK_F5 ){
+//				inserisciDaRepo("Reparto 1");
+//			}
+//			else if ( cTrans == KeyEvent.VK_ESCAPE ){		
+//				resetGUI();
+//				doDefaultCloseAction();
+//			}
+//			else if ( cTrans == KeyEvent.VK_DELETE || cTrans == KeyEvent.VK_BACK_SPACE ){
+//				stateTransition('\n');
+//			}
+//			else if ( cTrans == KeyEvent.VK_COMMA ){
+//				stateTransition(',');
+//			}
+//			else if ( cTrans == KeyEvent.VK_0 || cTrans == KeyEvent.VK_NUMPAD0 ){
+//				stateTransition('0');
+//			}
+//			else if ( cTrans == KeyEvent.VK_1 || cTrans == KeyEvent.VK_NUMPAD1 ){
+//				stateTransition('1');
+//			}
+//			else if ( cTrans == KeyEvent.VK_2 || cTrans == KeyEvent.VK_NUMPAD2 ){
+//				stateTransition('2');
+//			}
+//			else if ( cTrans == KeyEvent.VK_3 || cTrans == KeyEvent.VK_NUMPAD3 ){
+//				stateTransition('3');
+//			}
+//			else if ( cTrans == KeyEvent.VK_4 || cTrans == KeyEvent.VK_NUMPAD4 ){
+//				stateTransition('4');
+//			}
+//			else if ( cTrans == KeyEvent.VK_5 || cTrans == KeyEvent.VK_NUMPAD5 ){
+//				stateTransition('5');
+//			}
+//			else if ( cTrans == KeyEvent.VK_6 || cTrans == KeyEvent.VK_NUMPAD6 ){
+//				stateTransition('6');
+//			}
+//			else if ( cTrans == KeyEvent.VK_7 || cTrans == KeyEvent.VK_NUMPAD7 ){
+//				stateTransition('7');
+//			}
+//			else if ( cTrans == KeyEvent.VK_8 || cTrans == KeyEvent.VK_NUMPAD8 ){
+//				stateTransition('8');
+//			}
+//			else if ( cTrans == KeyEvent.VK_9 || cTrans == KeyEvent.VK_NUMPAD9 ){
+//				stateTransition('9');
+//			}	
+//	 }
+	 
 	private void stateTransition(char cTrans) {
-		try {
+		try {			
+			// Gestiamo l'evento cancella ultima cifra
+			if ( cTrans == '\n' ){
+				if ( importo.length() > 1 && importo.charAt(importo.length()-1) != ',' ){
+					importo = importo.substring(0, importo.length() - 1);
+				}
+				else if ( importo.length() > 1 && importo.charAt(importo.length()-1) == ',' ){
+					importo = importo.substring(0, importo.length() - 1);
+					m_iNumberStatus = NUMBER_INPUTINT;
+				}
+				else{
+					stateToZero();
+				}
+			}
 			// Il primo numero inserito e' zero
-			if ((cTrans == '0') 
+			else if ((cTrans == '0') 
 					&& (m_iNumberStatus == NUMBER_INPUTZERO)) {
 				importo = "0";
-//				if ( inserimentoContanti ){
-//					txtFldContanti.setText("0");
-//					double resto = ((ControlloDati.convertPrezzoToDouble(txtFldContanti.getText())) - pannelloCarrello.getTotaleCarrello());
-//					txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(resto));
-//				}
-//				else{
-//					txtFldImporto.setText("0");
-//				}
 			} 
 			// Il primo numero inserito e' diverso da zero, si setta lo stato parte iniziale intera (m_iNumberStatus = NUMBER_INPUTINT;) 
 			else if ((cTrans == '1' || cTrans == '2' || cTrans == '3' || cTrans == '4' || cTrans == '5' || cTrans == '6' || cTrans == '7' || cTrans == '8' || cTrans == '9')
 					&& (m_iNumberStatus == NUMBER_INPUTZERO)) { 
 				// Un numero intero
 				importo = Character.toString(cTrans);
-//				if ( inserimentoContanti ){
-//					txtFldContanti.setText(Character.toString(cTrans));
-//					double resto = ((ControlloDati.convertPrezzoToDouble(txtFldContanti.getText())) - pannelloCarrello.getTotaleCarrello());
-//					txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(resto));
-//				}
-//				else{
-//					txtFldImporto.setText(Character.toString(cTrans));
-//				}
 				m_iNumberStatus = NUMBER_INPUTINT;    
 				m_iNumberStatusInput = NUMBERVALID;
 			}
@@ -218,39 +279,15 @@ public class VenditaInternalFrame extends JInternalFrame {
 					&& (m_iNumberStatus == NUMBER_INPUTINT)) { 
 				// Un numero intero
 				importo = importo + cTrans;
-//				if ( inserimentoContanti ){
-//					txtFldContanti.setText(txtFldContanti.getText() + cTrans);
-//					double resto = ((ControlloDati.convertPrezzoToDouble(txtFldContanti.getText())) - pannelloCarrello.getTotaleCarrello());
-//					txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(resto));
-//				}
-//				else{
-//					txtFldImporto.setText(txtFldImporto.getText() + cTrans);
-//				}
 			} 
 			// Se il primo carattere digitato e' la virgola, si inserisce lo zero in testa, e si setta lo stato in zero iniziale con parte decimale
 			else if (cTrans == ',' && m_iNumberStatus == NUMBER_INPUTZERO) {
 				importo = "0,";
-//				if ( inserimentoContanti ){
-//					txtFldContanti.setText("0,");
-//					double resto = ((ControlloDati.convertPrezzoToDouble(txtFldContanti.getText())) - pannelloCarrello.getTotaleCarrello());
-//					txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(resto));
-//				}
-//				else{
-//					txtFldImporto.setText("0,");
-//				}
 				m_iNumberStatus = NUMBER_INPUTZERODEC;            
 			} 
 			// Se sono stati digitati dei numeri iniziali e si inserisce la virgola, lo stato cambia in intero iniziale e parte decimale
 			else if (cTrans == ',' && m_iNumberStatus == NUMBER_INPUTINT) {
 				importo = importo + ",";
-//				if ( inserimentoContanti ){
-//					txtFldContanti.setText(txtFldContanti.getText() + ",");
-//					double resto = ((ControlloDati.convertPrezzoToDouble(txtFldContanti.getText())) - pannelloCarrello.getTotaleCarrello());
-//					txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(resto));
-//				}
-//				else{
-//					txtFldImporto.setText(txtFldImporto.getText() + ",");
-//				}
 				m_iNumberStatus = NUMBER_INPUTDEC;
 			} 
 			// Si aggiunge il numero selezionato nella parte decimale del numero se i numeri inseriti non sono piï¿½ di 2		
@@ -260,38 +297,22 @@ public class VenditaInternalFrame extends JInternalFrame {
 				if ( decimalPart.length() < 2 ){
 					importo = importo + cTrans;
 				}
-//				// Un numero decimal
-//				String decimalPart;
-//				if ( inserimentoContanti ){
-//					decimalPart = txtFldContanti.getText().substring(txtFldContanti.getText().indexOf(",") + 1);
-//					if ( decimalPart.length() < 2 ){
-//						txtFldContanti.setText(txtFldContanti.getText() + cTrans);
-//						double resto = ((ControlloDati.convertPrezzoToDouble(txtFldContanti.getText())) - pannelloCarrello.getTotaleCarrello());
-//						txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(resto));
-//					}
-//				}
-//				else{
-//					decimalPart = txtFldImporto.getText().substring(txtFldImporto.getText().indexOf(",") + 1);
-//					if ( decimalPart.length() < 2 ){
-//						txtFldImporto.setText(txtFldImporto.getText() + cTrans);
-//					}
-//				}
 				m_iNumberStatus = NUMBER_INPUTDEC;
 				m_iNumberStatusInput = NUMBERVALID;
 			}
-			double d = ControlloDati.convertPrezzoToDouble(importo);
-			if ( inserimentoContanti ){				
-				txtFldContanti.setText(ControlloDati.convertDoubleToPrezzo(d));
-				txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(d - pannelloCarrello.getTotaleCarrello()));
-			}
-			else {
-				txtFldImporto.setText(ControlloDati.convertDoubleToPrezzo(d));
+			if ( inserimentoContanti || tastieraCassaAttiva ){
+				double d = ControlloDati.convertPrezzoToDouble(importo);
+				if ( inserimentoContanti ){				
+					txtFldContanti.setText(ControlloDati.convertDoubleToPrezzo(d));
+					txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(d - pannelloCarrello.getTotaleCarrello()));
+				}
+				else {
+					txtFldImporto.setText(ControlloDati.convertDoubleToPrezzo(d));
+				}
 			}
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -308,6 +329,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 		txtFldResto.setText("");
 		txtFldTotale.setText("");
 		txtQta.setText("");
+		importo = "0";
 	}
 	
 	private void messaggioAVideo(String testo, String tipo) {
@@ -333,8 +355,8 @@ public class VenditaInternalFrame extends JInternalFrame {
 			else if ( e.getSource() == btnZero ){
 				stateTransition('0');
 			}
-			else if ( e.getSource() == btnDoppioZero ){
-				stateTransition('0');
+			else if ( e.getSource() == btnCancella ){
+				stateTransition('\n');
 			}
 			else if ( e.getSource() == btnUno ){
 				stateTransition('1');
@@ -380,7 +402,9 @@ public class VenditaInternalFrame extends JInternalFrame {
 					((CardLayout) pnlContenitore.getLayout()).show(pnlContenitore, "pnlArticoli");
 					btnInsManuale.setSelected(false);
 					tastieraCassaAttiva = false;
+					inserimentoContanti = false;
 					stateToZero();
+					txtFieldRicerca.requestFocusInWindow();
 				}
 				else{
 					((CardLayout) pnlContenitore.getLayout()).show(pnlContenitore, "pnlFunzioniCassa");
@@ -405,6 +429,10 @@ public class VenditaInternalFrame extends JInternalFrame {
 				pannelloCarrello.stornoArticolo();
 				txtFldTotale.setText(ControlloDati.convertDoubleToPrezzo(pannelloCarrello.getTotaleCarrello()));
 			}
+			else if ( e.getSource() == btnStorno1 ){
+				pannelloCarrello.stornoQtaArticolo();
+				txtFldTotale.setText(ControlloDati.convertDoubleToPrezzo(pannelloCarrello.getTotaleCarrello()));
+			}
 			else if ( e.getSource() == btnAnnullaVendita ){
 				pannelloCarrello.azzeraCarrello();
 				stateToZero();
@@ -424,6 +452,8 @@ public class VenditaInternalFrame extends JInternalFrame {
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0), "F5");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "ESC");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_COMMA, 0), ",");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "CANC");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), "CANC");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_0, 0), "0");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_1, 0), "1");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_2, 0), "2");
@@ -434,13 +464,28 @@ public class VenditaInternalFrame extends JInternalFrame {
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_7, 0), "7");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_8, 0), "8");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_9, 0), "9");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD0, 0), "0");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD1, 0), "1");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD2, 0), "2");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD3, 0), "3");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD4, 0), "4");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD5, 0), "5");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD6, 0), "6");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD7, 0), "7");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD8, 0), "8");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD9, 0), "9");
 
 		this.getRootPane().getActionMap().put("F1", new AbstractAction() {
+			public void actionPerformed(ActionEvent a) {
+				txtFieldRicerca.requestFocusInWindow();				
+			}
+		});
+		this.getRootPane().getActionMap().put("F2", new AbstractAction() {
 			public void actionPerformed(ActionEvent a) {
 				elaboraScontrino();
 			}
 		});
-		this.getRootPane().getActionMap().put("F2", new AbstractAction() {
+		this.getRootPane().getActionMap().put("F3", new AbstractAction() {
 			public void actionPerformed(ActionEvent a) {
 				if ( !tastieraCassaAttiva ){
 					((CardLayout) pnlContenitore.getLayout()).show(pnlContenitore, "pnlFunzioniCassa");
@@ -448,11 +493,6 @@ public class VenditaInternalFrame extends JInternalFrame {
 					tastieraCassaAttiva = true;
 				}
 				inserimentoContanti = true;	
-			}
-		});
-		this.getRootPane().getActionMap().put("F3", new AbstractAction() {
-			public void actionPerformed(ActionEvent a) {
-				inserisciDaRepo("Reparto 1");
 			}
 		});
 		this.getRootPane().getActionMap().put("F4", new AbstractAction() {
@@ -469,6 +509,11 @@ public class VenditaInternalFrame extends JInternalFrame {
 			public void actionPerformed(ActionEvent a) {
 				resetGUI();
 				doDefaultCloseAction();
+			}
+		});
+		this.getRootPane().getActionMap().put("CANC", new AbstractAction() {
+			public void actionPerformed(ActionEvent a) {
+				stateTransition('\n');
 			}
 		});
 		this.getRootPane().getActionMap().put(",", new AbstractAction() {
@@ -538,8 +583,9 @@ public class VenditaInternalFrame extends JInternalFrame {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
 			jContentPane.add(getPnlPulsantiFunzioni(), BorderLayout.NORTH);
-			jContentPane.add(pannelloCarrello, BorderLayout.WEST);
+//			jContentPane.add(pannelloCarrello, BorderLayout.WEST);
 			jContentPane.add(getPnlContenitore(), BorderLayout.EAST);
+			jContentPane.add(getPnlRiepilogo(), BorderLayout.WEST);
 		}
 		return jContentPane;
 	}
@@ -620,7 +666,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 			lblPer.setText("X");
 			pnlFunzioniCassa = new JPanel();
 			pnlFunzioniCassa.setLayout(null);
-			pnlFunzioniCassa.setPreferredSize(new Dimension(400, 618));
+			pnlFunzioniCassa.setPreferredSize(new Dimension(400, 600));
 			pnlFunzioniCassa.setName("pnlFunzioniCassa");
 			pnlFunzioniCassa.add(getBtnZero(), null);
 			pnlFunzioniCassa.add(getBtnUno(), null);
@@ -633,7 +679,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 			pnlFunzioniCassa.add(getBtnOtto(), null);
 			pnlFunzioniCassa.add(getBtnNove(), null);
 			pnlFunzioniCassa.add(getBtnVirgola(), null);
-			pnlFunzioniCassa.add(getBtnDoppioZero(), null);
+			pnlFunzioniCassa.add(getBtnCancella(), null);
 			pnlFunzioniCassa.add(getBtnAzzera(), null);
 			pnlFunzioniCassa.add(getBtnMoltiplica(), null);
 			pnlFunzioniCassa.add(getBtnRep1(), null);
@@ -643,9 +689,6 @@ public class VenditaInternalFrame extends JInternalFrame {
 			pnlFunzioniCassa.add(getTxtFldImporto(), null);
 			pnlFunzioniCassa.add(lblPer, null);
 			pnlFunzioniCassa.add(getTxtQta(), null);
-			pnlFunzioniCassa.add(getBtnModifica(), null);
-			pnlFunzioniCassa.add(getBtnAnnullaVendita(), null);
-			pnlFunzioniCassa.add(getBtnStorno(), null);
 		}
 		return pnlFunzioniCassa;
 	}
@@ -820,14 +863,14 @@ public class VenditaInternalFrame extends JInternalFrame {
 	 * 
 	 * @return javax.swing.JButton
 	 */
-	private JButton getBtnDoppioZero() {
-		if (btnDoppioZero == null) {
-			btnDoppioZero = new JButton();
-			btnDoppioZero.setBounds(new Rectangle(200, 292, 45, 29));
-			btnDoppioZero.setText("00");
-			btnDoppioZero.addActionListener(new MyButtonListener());
+	private JButton getBtnCancella() {
+		if (btnCancella == null) {
+			btnCancella = new JButton();
+			btnCancella.setBounds(new Rectangle(200, 292, 45, 29));
+			btnCancella.setText("Canc");
+			btnCancella.addActionListener(new MyButtonListener());
 		}
-		return btnDoppioZero;
+		return btnCancella;
 	}
 
 	/**
@@ -956,8 +999,8 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JButton getBtnModifica() {
 		if (btnModifica == null) {
 			btnModifica = new JButton();
-			btnModifica.setBounds(new Rectangle(0, 175, 85, 29));
 			btnModifica.setText("Modifica");
+			btnModifica.setBounds(new Rectangle(140, 465, 90, 35));
 		}
 		return btnModifica;
 	}
@@ -970,8 +1013,8 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JButton getBtnAnnullaVendita() {
 		if (btnAnnullaVendita == null) {
 			btnAnnullaVendita = new JButton();
-			btnAnnullaVendita.setBounds(new Rectangle(0, 253, 85, 29));
 			btnAnnullaVendita.setText("Annulla");
+			btnAnnullaVendita.setBounds(new Rectangle(260, 465, 90, 35));
 			btnAnnullaVendita.addActionListener(new MyButtonListener());
 		}
 		return btnAnnullaVendita;
@@ -985,8 +1028,8 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JButton getBtnStorno() {
 		if (btnStorno == null) {
 			btnStorno = new JButton();
-			btnStorno.setBounds(new Rectangle(0, 214, 85, 29));
 			btnStorno.setText("Storno");
+			btnStorno.setBounds(new Rectangle(20, 465, 90, 35));
 			btnStorno.addActionListener(new MyButtonListener());
 		}
 		return btnStorno;
@@ -1034,7 +1077,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 			txtFldTotale.setBounds(new Rectangle(590, 30, 170, 80));
 			txtFldTotale.setOpaque(true);
 			txtFldTotale.setBackground(Color.ORANGE);
-			txtFldTotale.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Totale Û",
+			txtFldTotale.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Totale ï¿½",
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));
 		}
@@ -1052,7 +1095,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 			txtFldContanti.setBounds(new Rectangle(760, 30, 170, 40));
 			txtFldContanti.setOpaque(true);
 			txtFldContanti.setBackground(Color.decode("435445"));
-			txtFldContanti.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Contanti Û",
+			txtFldContanti.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Contanti ï¿½",
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));
 		}
@@ -1069,7 +1112,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 			txtFldResto = new JTextField();
 			txtFldResto.setBounds(new Rectangle(760, 70, 170, 40));
 			txtFldResto.setBackground(Color.decode("314467"));
-			txtFldResto.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Resto Û",
+			txtFldResto.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Resto ï¿½",
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));
 		}
@@ -1085,7 +1128,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 		if (btnElaboraScontrino == null) {
 			btnElaboraScontrino = new JButton();
 			btnElaboraScontrino.setBounds(new Rectangle(420, 25, 130, 50));
-			btnElaboraScontrino.setText("<html>Stampa (F1)<P>Scontrino</html>");
+			btnElaboraScontrino.setText("<html>Stampa (F2)<P>Scontrino</html>");
 			btnElaboraScontrino.addActionListener(new MyButtonListener());
 			
 		}
@@ -1101,7 +1144,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 		if (btnContanti == null) {
 			btnContanti = new JButton();
 			btnContanti.setBounds(new Rectangle(420, 80, 130, 50));
-			btnContanti.setText("Contanti (F2)");
+			btnContanti.setText("Contanti (F3)");
 			btnContanti.addActionListener(new MyButtonListener());
 		}
 		return btnContanti;
@@ -1116,23 +1159,44 @@ public class VenditaInternalFrame extends JInternalFrame {
 		if (jTabbedPane == null) {
 			jTabbedPane = new JTabbedPane();
 			jTabbedPane.setName("pnlArticoli");
-			jTabbedPane.setPreferredSize(new Dimension(600, 400));
-			jTabbedPane.addTab("Sigarette", null, getPnlVenduti(), null);
+			jTabbedPane.setPreferredSize(new Dimension(600, 600));
+			jTabbedPane.addTab("Sigarette", null, pnlArticoli, null);
 		}
 		return jTabbedPane;
 	}
 
 	/**
-	 * This method initializes pnlVenduti	
+	 * This method initializes jPanel	
 	 * 	
 	 * @return javax.swing.JPanel	
 	 */
-	private JPanel getPnlVenduti() {
-		if (pnlVenduti == null) {
-			pnlVenduti = new JPanel();
-			pnlVenduti.setLayout(new GridBagLayout());
+	private JPanel getPnlRiepilogo() {
+		if (pnlRiepilogo == null) {
+			pnlRiepilogo = new JPanel();
+			pnlRiepilogo.setLayout(null);
+			pnlRiepilogo.setPreferredSize(new Dimension(500, 600));
+			pnlRiepilogo.add(pannelloCarrello, null);
+			pnlRiepilogo.add(getBtnStorno(), null);
+			pnlRiepilogo.add(getBtnModifica(), null);
+			pnlRiepilogo.add(getBtnAnnullaVendita(), null);
+			pnlRiepilogo.add(getBtnStorno1(), null);
 		}
-		return pnlVenduti;
+		return pnlRiepilogo;
+	}
+
+	/**
+	 * This method initializes jButton	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnStorno1() {
+		if (btnStorno1 == null) {
+			btnStorno1 = new JButton();
+			btnStorno1.setBounds(new Rectangle(380, 465, 90, 35));
+			btnStorno1.setText("Storno 1");
+			btnStorno1.addActionListener(new MyButtonListener());
+		}
+		return btnStorno1;
 	}
 
 }

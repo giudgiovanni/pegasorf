@@ -15,21 +15,18 @@ import static org.hibernate.criterion.Example.create;
  * @see erreeffe.entity.Um
  * @author Hibernate Tools
  */
-public class UmHome {
+public class UmHome extends BusinessObjectHome{
 
 	private static final Log log = LogFactory.getLog(UmHome.class);
 
-	private final SessionFactory sessionFactory = getSessionFactory();
+	private static final UmHome instance=new UmHome();
 
-	protected SessionFactory getSessionFactory() {
-		try {
-			return (SessionFactory) new InitialContext()
-					.lookup("SessionFactory");
-		} catch (Exception e) {
-			log.error("Could not locate SessionFactory in JNDI", e);
-			throw new IllegalStateException(
-					"Could not locate SessionFactory in JNDI");
-		}
+	private UmHome() {
+		super();
+	}
+
+	public static UmHome getInstance() {
+		return instance;
 	}
 
 	public void persist(Um transientInstance) {

@@ -3,10 +3,12 @@ package rf.pegaso.gui.vendita.panel;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.math.BigDecimal;
+import java.sql.Time;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 
@@ -20,6 +22,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import rf.pegaso.db.tabelle.DettaglioOrdine;
+import rf.pegaso.db.tabelle.Scarico;
 import rf.utility.MathUtility;
 
 public class JPanelRiepilogoVendita extends JPanel {
@@ -150,6 +153,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 	private VenditaTableModel modello;
 	private int idSelectedItem=-1;
 	private double totaleCarrello = 0.0;
+	private Scarico scarico = null;
 
 	/**
 	 * This is the default constructor
@@ -165,11 +169,11 @@ public class JPanelRiepilogoVendita extends JPanel {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(575, 400);
+		this.setSize(400, 400);
 		this.setLayout(new BorderLayout());
 		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 		this.add(getJScrollPane(), BorderLayout.CENTER);
-
+		scarico = new Scarico();
 		this.carrello = new ArrayList<DettaglioOrdine>();
 	}
 
@@ -204,8 +208,8 @@ public class JPanelRiepilogoVendita extends JPanel {
 			TableColumn col = tblVendite.getColumnModel().getColumn(1);
 			col.setCellRenderer(prezzoRenderer);
 			col.setMinWidth(0);
-			col.setMaxWidth(100);
-			col.setPreferredWidth(100);
+			col.setMaxWidth(90);
+			col.setPreferredWidth(90);
 
 			//formattiamo la colonna totale
 			col = tblVendite.getColumnModel().getColumn(4);
@@ -214,19 +218,19 @@ public class JPanelRiepilogoVendita extends JPanel {
 			col.setMaxWidth(100);
 			col.setPreferredWidth(100);
 
-			//formattiamo la colonna quantit�
+			//formattiamo la colonna quantita'
 			col = tblVendite.getColumnModel().getColumn(2);
 			col.setCellRenderer(qtaRenderer);
 			col.setMinWidth(0);
-			col.setMaxWidth(100);
-			col.setPreferredWidth(100);
+			col.setMaxWidth(50);
+			col.setPreferredWidth(50);
 
 			//formattiamo la colonna iva
 			col = tblVendite.getColumnModel().getColumn(3);
 			col.setCellRenderer(ivaRenderer);
 			col.setMinWidth(0);
-			col.setMaxWidth(100);
-			col.setPreferredWidth(100);
+			col.setMaxWidth(60);
+			col.setPreferredWidth(60);
 
 
 			tblVendite.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -277,7 +281,33 @@ public class JPanelRiepilogoVendita extends JPanel {
 	}
 	
 	public boolean registraScarico(){
-		return true;
+		try{
+			//Salviamo i dati della fattura
+			Date d = new Date();
+			scarico.setOraScarico(new Time(d.getTime()));
+			scarico.setDataScarico(new java.sql.Date(d.getTime()));
+			System.out.println("ricordati di settare il tipo di prezzo nella fattura");
+			//scarico.setTipoPrezzo((String)cmbTipoPagamento.getSelectedItem());
+			scarico.setDocFiscale(4);
+			int ok = scarico.insertScarico();
+
+			if ( ok == -1 ){
+				return false;
+			}
+			//salviamo i dettagli della fattura
+			for (DettaglioOrdine dv : carrello) {
+				ok = dv.insert();
+				if ( ok == -1 ){
+					return false;
+				}
+			}
+			azzeraCarrello();
+			return true;
+		}
+		catch( Exception e ){
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	/**

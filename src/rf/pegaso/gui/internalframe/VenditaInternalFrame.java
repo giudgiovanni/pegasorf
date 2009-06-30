@@ -32,6 +32,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import javax.swing.JTabbedPane;
 
 public class VenditaInternalFrame extends JInternalFrame {
 
@@ -72,11 +73,9 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JButton btnStorno = null;
 	private JButton btnInsManuale = null;
 	private JPanel pnlContenitore = null;
-	private JPanel pnlArticoli = null;
 	private JTextField txtFldTotale = null;
 	private JTextField txtFldContanti = null;
 	private JTextField txtFldResto = null;
-	private JButton jButton = null;
 	private JButton btnElaboraScontrino = null;
 	private JButton btnContanti = null;
 	
@@ -95,6 +94,8 @@ public class VenditaInternalFrame extends JInternalFrame {
     
     // Variabile che contiene l'importo digitato da tastiera
     private String importo = "";
+	private JTabbedPane jTabbedPane = null;
+	private JPanel pnlVenduti = null;
 
 	public VenditaInternalFrame(JFrame padre) {
 		initialize();
@@ -113,9 +114,8 @@ public class VenditaInternalFrame extends JInternalFrame {
 	
 	private void initializeCarrello(){
 		pannelloCarrello = new JPanelRiepilogoVendita();
-		pannelloCarrello.setPreferredSize(new Dimension(575, 400));
+		pannelloCarrello.setPreferredSize(new Dimension(500, 400));
 		pannelloCarrello.setVisible(true);
-//		scarico = new Scarico();
 	}
 	
 	
@@ -126,7 +126,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 		try {
 			DettaglioOrdine dv = new DettaglioOrdine();
 			dv.setDescrizione(repo);
-			dv.setPrezzoVendita(ControlloDati.convertPrezzoToDouble(txtFldImporto.getText()));
+			dv.setPrezzoVendita(ControlloDati.convertPrezzoToDouble(importo));
 			if ( txtQta.getText().trim().equals("")){
 				dv.setQta(1);
 			}
@@ -442,7 +442,12 @@ public class VenditaInternalFrame extends JInternalFrame {
 		});
 		this.getRootPane().getActionMap().put("F2", new AbstractAction() {
 			public void actionPerformed(ActionEvent a) {
-				System.out.println("Contanti - Visualizzare calcolatrice");
+				if ( !tastieraCassaAttiva ){
+					((CardLayout) pnlContenitore.getLayout()).show(pnlContenitore, "pnlFunzioniCassa");
+					btnInsManuale.setSelected(false);
+					tastieraCassaAttiva = true;
+				}
+				inserimentoContanti = true;	
 			}
 		});
 		this.getRootPane().getActionMap().put("F3", new AbstractAction() {
@@ -534,8 +539,6 @@ public class VenditaInternalFrame extends JInternalFrame {
 			jContentPane.setLayout(new BorderLayout());
 			jContentPane.add(getPnlPulsantiFunzioni(), BorderLayout.NORTH);
 			jContentPane.add(pannelloCarrello, BorderLayout.WEST);
-//			jContentPane.add(getPnlRiepilogo(), BorderLayout.WEST);
-//			jContentPane.add(getPnlFunzioniCassa(), BorderLayout.EAST);
 			jContentPane.add(getPnlContenitore(), BorderLayout.EAST);
 		}
 		return jContentPane;
@@ -1013,29 +1016,11 @@ public class VenditaInternalFrame extends JInternalFrame {
 		if (pnlContenitore == null) {
 			pnlContenitore = new JPanel();
 			pnlContenitore.setLayout(new CardLayout());
-			pnlContenitore.setPreferredSize(new Dimension(400, 618));
-			pnlContenitore.add(getPnlArticoli(), getPnlArticoli().getName());
+			pnlContenitore.setPreferredSize(new Dimension(480, 618));
+			pnlContenitore.add(getJTabbedPane(), getJTabbedPane().getName());
 			pnlContenitore.add(getPnlFunzioniCassa(), getPnlFunzioniCassa().getName());
 		}
 		return pnlContenitore;
-	}
-
-	/**
-	 * This method initializes pnlArticoli	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */
-	private JPanel getPnlArticoli() {
-		if (pnlArticoli == null) {
-			GridBagConstraints gridBagConstraints = new GridBagConstraints();
-			gridBagConstraints.gridx = 0;
-			gridBagConstraints.gridy = 0;
-			pnlArticoli = new JPanel();
-			pnlArticoli.setLayout(new GridBagLayout());
-			pnlArticoli.setName("pnlArticoli");
-			pnlArticoli.add(getJButton(), gridBagConstraints);
-		}
-		return pnlArticoli;
 	}
 
 	/**
@@ -1049,7 +1034,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 			txtFldTotale.setBounds(new Rectangle(590, 30, 170, 80));
 			txtFldTotale.setOpaque(true);
 			txtFldTotale.setBackground(Color.ORANGE);
-			txtFldTotale.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Totale ï¿½",
+			txtFldTotale.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Totale Û",
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));
 		}
@@ -1067,7 +1052,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 			txtFldContanti.setBounds(new Rectangle(760, 30, 170, 40));
 			txtFldContanti.setOpaque(true);
 			txtFldContanti.setBackground(Color.decode("435445"));
-			txtFldContanti.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Contanti ï¿½",
+			txtFldContanti.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Contanti Û",
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));
 		}
@@ -1084,24 +1069,11 @@ public class VenditaInternalFrame extends JInternalFrame {
 			txtFldResto = new JTextField();
 			txtFldResto.setBounds(new Rectangle(760, 70, 170, 40));
 			txtFldResto.setBackground(Color.decode("314467"));
-			txtFldResto.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Resto ï¿½",
+			txtFldResto.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Resto Û",
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));
 		}
 		return txtFldResto;
-	}
-
-	/**
-	 * This method initializes jButton	
-	 * 	
-	 * @return javax.swing.JButton	
-	 */
-	private JButton getJButton() {
-		if (jButton == null) {
-			jButton = new JButton();
-			jButton.setText("Ciao");
-		}
-		return jButton;
 	}
 
 	/**
@@ -1133,6 +1105,34 @@ public class VenditaInternalFrame extends JInternalFrame {
 			btnContanti.addActionListener(new MyButtonListener());
 		}
 		return btnContanti;
+	}
+
+	/**
+	 * This method initializes jTabbedPane	
+	 * 	
+	 * @return javax.swing.JTabbedPane	
+	 */
+	private JTabbedPane getJTabbedPane() {
+		if (jTabbedPane == null) {
+			jTabbedPane = new JTabbedPane();
+			jTabbedPane.setName("pnlArticoli");
+			jTabbedPane.setPreferredSize(new Dimension(600, 400));
+			jTabbedPane.addTab("Sigarette", null, getPnlVenduti(), null);
+		}
+		return jTabbedPane;
+	}
+
+	/**
+	 * This method initializes pnlVenduti	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPnlVenduti() {
+		if (pnlVenduti == null) {
+			pnlVenduti = new JPanel();
+			pnlVenduti.setLayout(new GridBagLayout());
+		}
+		return pnlVenduti;
 	}
 
 }

@@ -1,6 +1,6 @@
 package erreeffe.entity;
 
-// Generated 20-nov-2008 2.05.44 by Hibernate Tools 3.2.2.GA
+// Generated 28-giu-2009 12.52.19 by Hibernate Tools 3.2.4.GA
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +13,6 @@ public class Aspetto implements java.io.Serializable {
 	private long idaspetto;
 	private String nome;
 	private Set<Ordini> ordinis = new HashSet<Ordini>(0);
-	private Set<Ordini> ordinis_1 = new HashSet<Ordini>(0);
 
 	public Aspetto() {
 	}
@@ -23,12 +22,10 @@ public class Aspetto implements java.io.Serializable {
 		this.nome = nome;
 	}
 
-	public Aspetto(long idaspetto, String nome, Set<Ordini> ordinis,
-			Set<Ordini> ordinis_1) {
+	public Aspetto(long idaspetto, String nome, Set<Ordini> ordinis) {
 		this.idaspetto = idaspetto;
 		this.nome = nome;
 		this.ordinis = ordinis;
-		this.ordinis_1 = ordinis_1;
 	}
 
 	public long getIdaspetto() {
@@ -53,14 +50,6 @@ public class Aspetto implements java.io.Serializable {
 
 	public void setOrdinis(Set<Ordini> ordinis) {
 		this.ordinis = ordinis;
-	}
-
-	public Set<Ordini> getOrdinis_1() {
-		return this.ordinis_1;
-	}
-
-	public void setOrdinis_1(Set<Ordini> ordinis_1) {
-		this.ordinis_1 = ordinis_1;
 	}
 
 }

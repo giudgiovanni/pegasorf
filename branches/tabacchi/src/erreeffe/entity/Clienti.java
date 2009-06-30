@@ -1,6 +1,6 @@
 package erreeffe.entity;
 
-// Generated 20-nov-2008 2.05.44 by Hibernate Tools 3.2.2.GA
+// Generated 28-giu-2009 12.52.19 by Hibernate Tools 3.2.4.GA
 
 import java.util.Date;
 import java.util.HashSet;
@@ -37,8 +37,6 @@ public class Clienti implements java.io.Serializable {
 	private String intestazione;
 	private String rilasciatoDi;
 	private Set<Ordini> ordinis = new HashSet<Ordini>(0);
-	private Set<Ordini> ordinis_1 = new HashSet<Ordini>(0);
-	private Set<Conto> contos = new HashSet<Conto>(0);
 
 	public Clienti() {
 	}
@@ -55,8 +53,7 @@ public class Clienti implements java.io.Serializable {
 			String codfisc, String via, String cap, String citta, String tel,
 			String cell, String fax, String email, String website, String note,
 			Date dataNascita, String numDoc, Date rilasciatoIl, String natoA,
-			String intestazione, String rilasciatoDi, Set<Ordini> ordinis,
-			Set<Ordini> ordinis_1, Set<Conto> contos) {
+			String intestazione, String rilasciatoDi, Set<Ordini> ordinis) {
 		this.idcliente = idcliente;
 		this.nazionalita = nazionalita;
 		this.documentoCliente = documentoCliente;
@@ -83,8 +80,6 @@ public class Clienti implements java.io.Serializable {
 		this.intestazione = intestazione;
 		this.rilasciatoDi = rilasciatoDi;
 		this.ordinis = ordinis;
-		this.ordinis_1 = ordinis_1;
-		this.contos = contos;
 	}
 
 	public long getIdcliente() {
@@ -293,22 +288,6 @@ public class Clienti implements java.io.Serializable {
 
 	public void setOrdinis(Set<Ordini> ordinis) {
 		this.ordinis = ordinis;
-	}
-
-	public Set<Ordini> getOrdinis_1() {
-		return this.ordinis_1;
-	}
-
-	public void setOrdinis_1(Set<Ordini> ordinis_1) {
-		this.ordinis_1 = ordinis_1;
-	}
-
-	public Set<Conto> getContos() {
-		return this.contos;
-	}
-
-	public void setContos(Set<Conto> contos) {
-		this.contos = contos;
 	}
 
 }

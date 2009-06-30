@@ -1,6 +1,6 @@
 package erreeffe.entity;
 
-// Generated 20-nov-2008 2.05.45 by Hibernate Tools 3.2.2.GA
+// Generated 28-giu-2009 12.52.21 by Hibernate Tools 3.2.4.GA
 
 import java.util.List;
 import javax.naming.InitialContext;

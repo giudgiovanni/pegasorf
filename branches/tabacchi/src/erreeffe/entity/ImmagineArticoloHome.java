@@ -11,14 +11,14 @@ import org.hibernate.SessionFactory;
 import static org.hibernate.criterion.Example.create;
 
 /**
- * Home object for domain model class DettagliDocumenti.
- * @see erreeffe.entity.DettagliDocumenti
+ * Home object for domain model class ImmagineArticolo.
+ * @see erreeffe.entity.ImmagineArticolo
  * @author Hibernate Tools
  */
-public class DettagliDocumentiHome {
+public class ImmagineArticoloHome {
 
 	private static final Log log = LogFactory
-			.getLog(DettagliDocumentiHome.class);
+			.getLog(ImmagineArticoloHome.class);
 
 	private final SessionFactory sessionFactory = getSessionFactory();
 
@@ -33,8 +33,8 @@ public class DettagliDocumentiHome {
 		}
 	}
 
-	public void persist(DettagliDocumenti transientInstance) {
-		log.debug("persisting DettagliDocumenti instance");
+	public void persist(ImmagineArticolo transientInstance) {
+		log.debug("persisting ImmagineArticolo instance");
 		try {
 			sessionFactory.getCurrentSession().persist(transientInstance);
 			log.debug("persist successful");
@@ -44,8 +44,8 @@ public class DettagliDocumentiHome {
 		}
 	}
 
-	public void attachDirty(DettagliDocumenti instance) {
-		log.debug("attaching dirty DettagliDocumenti instance");
+	public void attachDirty(ImmagineArticolo instance) {
+		log.debug("attaching dirty ImmagineArticolo instance");
 		try {
 			sessionFactory.getCurrentSession().saveOrUpdate(instance);
 			log.debug("attach successful");
@@ -55,8 +55,8 @@ public class DettagliDocumentiHome {
 		}
 	}
 
-	public void attachClean(DettagliDocumenti instance) {
-		log.debug("attaching clean DettagliDocumenti instance");
+	public void attachClean(ImmagineArticolo instance) {
+		log.debug("attaching clean ImmagineArticolo instance");
 		try {
 			sessionFactory.getCurrentSession().lock(instance, LockMode.NONE);
 			log.debug("attach successful");
@@ -66,8 +66,8 @@ public class DettagliDocumentiHome {
 		}
 	}
 
-	public void delete(DettagliDocumenti persistentInstance) {
-		log.debug("deleting DettagliDocumenti instance");
+	public void delete(ImmagineArticolo persistentInstance) {
+		log.debug("deleting ImmagineArticolo instance");
 		try {
 			sessionFactory.getCurrentSession().delete(persistentInstance);
 			log.debug("delete successful");
@@ -77,10 +77,10 @@ public class DettagliDocumentiHome {
 		}
 	}
 
-	public DettagliDocumenti merge(DettagliDocumenti detachedInstance) {
-		log.debug("merging DettagliDocumenti instance");
+	public ImmagineArticolo merge(ImmagineArticolo detachedInstance) {
+		log.debug("merging ImmagineArticolo instance");
 		try {
-			DettagliDocumenti result = (DettagliDocumenti) sessionFactory
+			ImmagineArticolo result = (ImmagineArticolo) sessionFactory
 					.getCurrentSession().merge(detachedInstance);
 			log.debug("merge successful");
 			return result;
@@ -90,12 +90,12 @@ public class DettagliDocumentiHome {
 		}
 	}
 
-	public DettagliDocumenti findById(int id) {
-		log.debug("getting DettagliDocumenti instance with id: " + id);
+	public ImmagineArticolo findById(long id) {
+		log.debug("getting ImmagineArticolo instance with id: " + id);
 		try {
-			DettagliDocumenti instance = (DettagliDocumenti) sessionFactory
+			ImmagineArticolo instance = (ImmagineArticolo) sessionFactory
 					.getCurrentSession().get(
-							"erreeffe.entity.DettagliDocumenti", id);
+							"erreeffe.entity.ImmagineArticolo", id);
 			if (instance == null) {
 				log.debug("get successful, no instance found");
 			} else {
@@ -108,12 +108,12 @@ public class DettagliDocumentiHome {
 		}
 	}
 
-	public List<DettagliDocumenti> findByExample(DettagliDocumenti instance) {
-		log.debug("finding DettagliDocumenti instance by example");
+	public List<ImmagineArticolo> findByExample(ImmagineArticolo instance) {
+		log.debug("finding ImmagineArticolo instance by example");
 		try {
-			List<DettagliDocumenti> results = (List<DettagliDocumenti>) sessionFactory
+			List<ImmagineArticolo> results = (List<ImmagineArticolo>) sessionFactory
 					.getCurrentSession().createCriteria(
-							"erreeffe.entity.DettagliDocumenti").add(
+							"erreeffe.entity.ImmagineArticolo").add(
 							create(instance)).list();
 			log.debug("find by example successful, result size: "
 					+ results.size());

@@ -1,11 +1,7 @@
 package erreeffe.entity;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -13,11 +9,11 @@ import org.hibernate.cfg.Configuration;
 
 public abstract class BusinessObjectHome {
 	
-	private static SessionFactory sessionFactory = getSessionFactory();
+	protected static SessionFactory sessionFactory = getSessionFactory();
 
-	private static final Log log = LogFactory.getLog(BusinessObjectHome.class);
+	protected static final Log log = LogFactory.getLog(BusinessObjectHome.class);
 	
-	private static Configuration configuration;
+	protected static Configuration configuration;
 
 	protected static SessionFactory getSessionFactory() {
 		try {
@@ -66,8 +62,10 @@ public abstract class BusinessObjectHome {
 			log.debug("commit() - start");
 		}
 		Transaction transaction = (Transaction)current().getTransaction();
-		
+		if(transaction.isActive()){
 			transaction.commit();
+		}
+		
 		
 	}
 
@@ -81,8 +79,10 @@ public abstract class BusinessObjectHome {
 			log.debug("rollback() - start");
 		}
 		Transaction transaction = (Transaction)current().getTransaction();
-		
+		if(transaction.isActive()){
 			transaction.rollback();
+		}
+		
 		
 	}
 	
@@ -96,7 +96,7 @@ public abstract class BusinessObjectHome {
 	 * @throws DAOException if an error occurs trying to establish the
 	 *         connection.
 	 */
-	protected Session current() {
+	public Session current() {
 		if (log.isDebugEnabled()) {
 			log.debug("current() - start");
 		}
@@ -105,6 +105,29 @@ public abstract class BusinessObjectHome {
 			session = getSessionFactory().openSession();
 		}
 		return session;
+	}
+	
+	public void close() {
+		if (log.isDebugEnabled()) {
+			log.debug("close() - start");
+		}
+		current().close();
+
+		if (log.isDebugEnabled()) {
+			log.debug("close() - end");
+		}
+	}
+	
+	public void commitAndClose() {
+		if (log.isDebugEnabled()) {
+			log.debug("close() - start");
+		}
+		commit();
+		current().close();
+
+		if (log.isDebugEnabled()) {
+			log.debug("close() - end");
+		}
 	}
 
 }

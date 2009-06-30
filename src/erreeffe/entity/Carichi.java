@@ -1,6 +1,6 @@
 package erreeffe.entity;
 
-// Generated 20-nov-2008 2.05.44 by Hibernate Tools 3.2.2.GA
+// Generated 28-giu-2009 12.52.19 by Hibernate Tools 3.2.4.GA
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,8 +27,6 @@ public class Carichi implements java.io.Serializable {
 	private Integer insPn;
 	private Set<DettaglioCarichi> dettaglioCarichis = new HashSet<DettaglioCarichi>(
 			0);
-	private Set<DettaglioCarichi> dettaglioCarichis_1 = new HashSet<DettaglioCarichi>(
-			0);
 
 	public Carichi() {
 	}
@@ -42,8 +40,7 @@ public class Carichi implements java.io.Serializable {
 			String note, String numDocumento, Date dataDocumento,
 			Double totaleDocumento, Integer sospeso, Integer rifDoc,
 			Integer sconto, Integer ivaDocumento, Integer insPn,
-			Set<DettaglioCarichi> dettaglioCarichis,
-			Set<DettaglioCarichi> dettaglioCarichis_1) {
+			Set<DettaglioCarichi> dettaglioCarichis) {
 		this.idcarico = idcarico;
 		this.fornitori = fornitori;
 		this.tipoDocumento = tipoDocumento;
@@ -59,7 +56,6 @@ public class Carichi implements java.io.Serializable {
 		this.ivaDocumento = ivaDocumento;
 		this.insPn = insPn;
 		this.dettaglioCarichis = dettaglioCarichis;
-		this.dettaglioCarichis_1 = dettaglioCarichis_1;
 	}
 
 	public long getIdcarico() {
@@ -180,14 +176,6 @@ public class Carichi implements java.io.Serializable {
 
 	public void setDettaglioCarichis(Set<DettaglioCarichi> dettaglioCarichis) {
 		this.dettaglioCarichis = dettaglioCarichis;
-	}
-
-	public Set<DettaglioCarichi> getDettaglioCarichis_1() {
-		return this.dettaglioCarichis_1;
-	}
-
-	public void setDettaglioCarichis_1(Set<DettaglioCarichi> dettaglioCarichis_1) {
-		this.dettaglioCarichis_1 = dettaglioCarichis_1;
 	}
 
 }

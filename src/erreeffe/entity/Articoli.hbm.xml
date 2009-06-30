@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 20-nov-2008 2.05.45 by Hibernate Tools 3.2.2.GA -->
+<!-- Generated 28-giu-2009 12.52.20 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="erreeffe.entity.Articoli" table="articoli" schema="public">
         <id name="idarticolo" type="long">
@@ -62,25 +62,19 @@
         <property name="caricoIniziale" type="java.lang.Long">
             <column name="carico_iniziale" />
         </property>
-        <set name="dettaglioCarichis" inverse="true">
+        <set name="dettaglioCarichis" inverse="true" lazy="true" table="dettaglio_carichi" fetch="select">
             <key>
                 <column name="idarticolo" not-null="true" />
             </key>
             <one-to-many class="erreeffe.entity.DettaglioCarichi" />
         </set>
-        <set name="dettaglioCarichis_1" inverse="true">
+        <set name="immagineArticolos" inverse="true" lazy="true" table="immagine_articolo" fetch="select">
             <key>
-                <column name="idarticolo" not-null="true" />
+                <column name="articolo" />
             </key>
-            <one-to-many class="erreeffe.entity.DettaglioCarichi" />
+            <one-to-many class="erreeffe.entity.ImmagineArticolo" />
         </set>
-        <set name="dettaglioOrdinis" inverse="true">
-            <key>
-                <column name="idarticolo" not-null="true" />
-            </key>
-            <one-to-many class="erreeffe.entity.DettaglioOrdini" />
-        </set>
-        <set name="dettaglioOrdinis_1" inverse="true">
+        <set name="dettaglioOrdinis" inverse="true" lazy="true" table="dettaglio_ordini" fetch="select">
             <key>
                 <column name="idarticolo" not-null="true" />
             </key>

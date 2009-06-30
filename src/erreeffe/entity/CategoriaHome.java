@@ -11,14 +11,13 @@ import org.hibernate.SessionFactory;
 import static org.hibernate.criterion.Example.create;
 
 /**
- * Home object for domain model class DettagliDocumenti.
- * @see erreeffe.entity.DettagliDocumenti
+ * Home object for domain model class Categoria.
+ * @see erreeffe.entity.Categoria
  * @author Hibernate Tools
  */
-public class DettagliDocumentiHome {
+public class CategoriaHome {
 
-	private static final Log log = LogFactory
-			.getLog(DettagliDocumentiHome.class);
+	private static final Log log = LogFactory.getLog(CategoriaHome.class);
 
 	private final SessionFactory sessionFactory = getSessionFactory();
 
@@ -33,8 +32,8 @@ public class DettagliDocumentiHome {
 		}
 	}
 
-	public void persist(DettagliDocumenti transientInstance) {
-		log.debug("persisting DettagliDocumenti instance");
+	public void persist(Categoria transientInstance) {
+		log.debug("persisting Categoria instance");
 		try {
 			sessionFactory.getCurrentSession().persist(transientInstance);
 			log.debug("persist successful");
@@ -44,8 +43,8 @@ public class DettagliDocumentiHome {
 		}
 	}
 
-	public void attachDirty(DettagliDocumenti instance) {
-		log.debug("attaching dirty DettagliDocumenti instance");
+	public void attachDirty(Categoria instance) {
+		log.debug("attaching dirty Categoria instance");
 		try {
 			sessionFactory.getCurrentSession().saveOrUpdate(instance);
 			log.debug("attach successful");
@@ -55,8 +54,8 @@ public class DettagliDocumentiHome {
 		}
 	}
 
-	public void attachClean(DettagliDocumenti instance) {
-		log.debug("attaching clean DettagliDocumenti instance");
+	public void attachClean(Categoria instance) {
+		log.debug("attaching clean Categoria instance");
 		try {
 			sessionFactory.getCurrentSession().lock(instance, LockMode.NONE);
 			log.debug("attach successful");
@@ -66,8 +65,8 @@ public class DettagliDocumentiHome {
 		}
 	}
 
-	public void delete(DettagliDocumenti persistentInstance) {
-		log.debug("deleting DettagliDocumenti instance");
+	public void delete(Categoria persistentInstance) {
+		log.debug("deleting Categoria instance");
 		try {
 			sessionFactory.getCurrentSession().delete(persistentInstance);
 			log.debug("delete successful");
@@ -77,11 +76,11 @@ public class DettagliDocumentiHome {
 		}
 	}
 
-	public DettagliDocumenti merge(DettagliDocumenti detachedInstance) {
-		log.debug("merging DettagliDocumenti instance");
+	public Categoria merge(Categoria detachedInstance) {
+		log.debug("merging Categoria instance");
 		try {
-			DettagliDocumenti result = (DettagliDocumenti) sessionFactory
-					.getCurrentSession().merge(detachedInstance);
+			Categoria result = (Categoria) sessionFactory.getCurrentSession()
+					.merge(detachedInstance);
 			log.debug("merge successful");
 			return result;
 		} catch (RuntimeException re) {
@@ -90,12 +89,11 @@ public class DettagliDocumentiHome {
 		}
 	}
 
-	public DettagliDocumenti findById(int id) {
-		log.debug("getting DettagliDocumenti instance with id: " + id);
+	public Categoria findById(long id) {
+		log.debug("getting Categoria instance with id: " + id);
 		try {
-			DettagliDocumenti instance = (DettagliDocumenti) sessionFactory
-					.getCurrentSession().get(
-							"erreeffe.entity.DettagliDocumenti", id);
+			Categoria instance = (Categoria) sessionFactory.getCurrentSession()
+					.get("erreeffe.entity.Categoria", id);
 			if (instance == null) {
 				log.debug("get successful, no instance found");
 			} else {
@@ -108,13 +106,13 @@ public class DettagliDocumentiHome {
 		}
 	}
 
-	public List<DettagliDocumenti> findByExample(DettagliDocumenti instance) {
-		log.debug("finding DettagliDocumenti instance by example");
+	public List<Categoria> findByExample(Categoria instance) {
+		log.debug("finding Categoria instance by example");
 		try {
-			List<DettagliDocumenti> results = (List<DettagliDocumenti>) sessionFactory
+			List<Categoria> results = (List<Categoria>) sessionFactory
 					.getCurrentSession().createCriteria(
-							"erreeffe.entity.DettagliDocumenti").add(
-							create(instance)).list();
+							"erreeffe.entity.Categoria").add(create(instance))
+					.list();
 			log.debug("find by example successful, result size: "
 					+ results.size());
 			return results;

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 20-nov-2008 2.05.45 by Hibernate Tools 3.2.2.GA -->
+<!-- Generated 28-giu-2009 12.52.20 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="erreeffe.entity.Banca" table="banca" schema="public">
         <id name="idbanca" type="long">
@@ -14,7 +14,7 @@
         <property name="note" type="string">
             <column name="note" />
         </property>
-        <set name="contoBancarios" inverse="true">
+        <set name="contoBancarios" inverse="true" lazy="true" table="conto_bancario" fetch="select">
             <key>
                 <column name="idbanca" not-null="true" />
             </key>

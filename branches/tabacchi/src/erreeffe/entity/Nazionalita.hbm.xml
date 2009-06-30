@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 30-giu-2009 3.07.23 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="erreeffe.entity.Nazionalita" table="nazionalita" schema="public">
+        <id name="idnazionalita" type="long">
+            <column name="idnazionalita" />
+            <generator class="assigned" />
+        </id>
+        <property name="descrizione" type="string">
+            <column name="descrizione" not-null="true" />
+        </property>
+        <set name="clientis" inverse="true" lazy="true" table="clienti" fetch="select">
+            <key>
+                <column name="nazionalita" />
+            </key>
+            <one-to-many class="erreeffe.entity.Clienti" />
+        </set>
+    </class>
+</hibernate-mapping>

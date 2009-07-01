@@ -3,9 +3,16 @@ package rf.pegaso.gui.internalframe;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.MediaTracker;
 import java.awt.Rectangle;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
+import javax.swing.AbstractButton;
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -20,18 +27,35 @@ import javax.swing.WindowConstants;
 
 
 
+import rf.pegaso.db.exception.CodiceBarreInesistente;
+import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.DettaglioOrdine;
+import rf.pegaso.db.tabelle.UnitaDiMisura;
 import rf.pegaso.gui.vendita.panel.JPanelArticoli;
 import rf.pegaso.gui.vendita.panel.JPanelRiepilogoVendita;
 import rf.utility.ControlloDati;
 
 import java.awt.Font;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.LinkedList;
+import java.util.List;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+
 import javax.swing.JTabbedPane;
+
+import erreeffe.entity.Articoli;
+import erreeffe.entity.ArticoliHome;
+import erreeffe.entity.ImmagineArticolo;
+import erreeffe.entity.ImmagineArticoloHome;
 
 public class VenditaInternalFrame extends JInternalFrame {
 
@@ -115,9 +139,82 @@ public class VenditaInternalFrame extends JInternalFrame {
 		txtFieldRicerca.requestFocusInWindow();
 	}
 	
+	private byte[] loadImageFromURL(String strUrl){
+	    int intPos;
+	    String strFileExt;
+
+	    //guess file extension
+	    intPos = strUrl.lastIndexOf(".");
+	    if (intPos >= 0){
+	       strFileExt = strUrl.substring(intPos + 1);
+	    }else{
+	        //assign default jpg extension
+	        strFileExt = "jpg";
+	    }
+
+	    try {
+
+	        //load the image from the Internet
+	        ImageIcon objImageIcon = new ImageIcon(new URL(strUrl));
+
+	        //wait the loading of the image
+	        MediaTracker objMediaTracker = new MediaTracker(this);
+	        objMediaTracker.addImage(objImageIcon.getImage(), 0);
+	        objMediaTracker.waitForID(0, 5000);
+
+	        //convert the image
+	        BufferedImage objBI = new BufferedImage(objImageIcon.getIconWidth(), objImageIcon.getIconHeight(),
+	                BufferedImage.TYPE_INT_ARGB);
+	        Graphics2D g2 = objBI.createGraphics();
+	        g2.drawImage(objImageIcon.getImage(), 0, 0, null);
+	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	        ImageIO.write(objBI, strFileExt, baos);
+
+	        return baos.toByteArray();
+
+	    } catch (MalformedURLException ex) {
+//	        Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+	        return null;
+	    } catch (IOException ex) {
+//	        Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+	        return null;
+	    } catch (InterruptedException ex) {
+//	        Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+	        return null;
+	    }
+	} 
+	
 	private void initializeCarrello(){
 		pannelloCarrello = new JPanelRiepilogoVendita();
 		pnlArticoli = new JPanelArticoli();
+//		Articolo a = new Articolo();
+//		try {
+////			a.findByCodBarre("ACE2");
+			Articoli art = new Articoli();
+			art.setCodbarre("ACE2");
+			ArticoliHome.getInstance().begin();
+			ArticoliHome articoliHome = ArticoliHome.getInstance();
+			
+			List<Articoli> listArticoli = articoliHome.findByExample(art);
+//			ImmagineArticolo img = new ImmagineArticolo();
+//			img.setArticoli(listArticoli.get(0));
+//			img.setFile(loadImageFromURL("resource/nuovo.png"));
+//			img.setId(0);
+//			ImmagineArticoloHome.getInstance().persist(img);
+//		}
+//		catch ( Exception e ){
+//			e.printStackTrace();
+//		}
+//		} catch (SQLException e1) {
+//			e1.printStackTrace();
+//		} catch (CodiceBarreInesistente e1) {
+//			e1.printStackTrace();
+//		}
+//		LinkedList<Integer> art = new LinkedList<Integer>();
+//		for ( int i = 0; i < 30; i++){
+//			art.add(a.getIdArticolo());
+//		}
+//		pnlArticoli.caricaArticoli(art);
 		pannelloCarrello.setPreferredSize(new Dimension(500, 450));
 		pannelloCarrello.setBounds(new Rectangle(0, 0, 500, 450));
 		pannelloCarrello.setVisible(true);
@@ -1159,7 +1256,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 		if (jTabbedPane == null) {
 			jTabbedPane = new JTabbedPane();
 			jTabbedPane.setName("pnlArticoli");
-			jTabbedPane.setPreferredSize(new Dimension(600, 600));
+			jTabbedPane.setPreferredSize(new Dimension(400, 600));
 			jTabbedPane.addTab("Sigarette", null, pnlArticoli, null);
 		}
 		return jTabbedPane;

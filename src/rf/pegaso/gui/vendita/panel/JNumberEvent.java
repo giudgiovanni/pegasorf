@@ -28,9 +28,9 @@ import java.util.EventObject;
 public class JNumberEvent extends EventObject {
 
     private char m_cKey;
-    private int m_idArticolo;
+    private long m_idArticolo;
     
-    public JNumberEvent(Object source, char cKey, int idArticolo) {
+    public JNumberEvent(Object source, char cKey, long idArticolo) {
         super(source);
         m_cKey = cKey;
         m_idArticolo = idArticolo;
@@ -40,7 +40,7 @@ public class JNumberEvent extends EventObject {
         return m_cKey;
     }
     
-    public int getIdArticolo(){
+    public long getIdArticolo(){
     	return m_idArticolo;
     }
 

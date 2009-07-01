@@ -9,6 +9,9 @@ import java.util.Vector;
 import javax.swing.JPanel;
 
 import javax.swing.JScrollPane;
+
+import erreeffe.entity.Articoli;
+
 import java.awt.GridBagLayout;
 
 
@@ -39,18 +42,18 @@ public class JPanelArticoli extends JPanel{
 		this.add(getJScrollPane(), null);
 	}
 	
-	public void caricaArticoli(LinkedList<Integer> articoli){
+	public void caricaArticoli(LinkedList<Articoli> articoli){
 		try{
 			pnlPulsanti.removeAll();
 			GridLayout gridLayout = new GridLayout();
-			pnlPulsanti.setSize(new Dimension(600, (articoli.size()*100/3)));
-			gridLayout.setRows((articoli.size()/3)+1);
+			pnlPulsanti.setSize(new Dimension(600, (articoli.size()*100/4)));
+			gridLayout.setRows((articoli.size()/4)+1);
 			gridLayout.setColumns(3);
 			pnlPulsanti.setLayout(gridLayout);
-			for(Integer i : articoli){
-				JButtonArticolo btnArticolo = new JButtonArticolo(i);
-				btnArticolo.addActionListener(new MyButtonListener(i));
-				btnArticolo.setPreferredSize(new Dimension(120, 100));
+			for(Articoli art : articoli){
+				JButtonArticolo btnArticolo = new JButtonArticolo(art);
+				btnArticolo.addActionListener(new MyButtonListener(art.getIdarticolo()));
+				btnArticolo.setPreferredSize(new Dimension(100, 80));
 				pnlPulsanti.add(btnArticolo, null);
 			}
 			pnlPulsanti.repaint();
@@ -71,9 +74,9 @@ public class JPanelArticoli extends JPanel{
 	
 	private class MyButtonListener implements java.awt.event.ActionListener {
 
-		private int m_idArticolo;
+		private long m_idArticolo;
 
-		public MyButtonListener(int idArticolo){
+		public MyButtonListener(long idArticolo){
 			m_idArticolo = idArticolo;
 		}
 		public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -96,7 +99,7 @@ public class JPanelArticoli extends JPanel{
 	private JScrollPane getJScrollPane() {
 		if (jScrollPane == null) {
 			jScrollPane = new JScrollPane();
-			jScrollPane.setPreferredSize(new Dimension(360, 450));
+			jScrollPane.setPreferredSize(new Dimension(470, 490));
 			jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			jScrollPane.setViewportView(getPnlPulsanti());
 		}

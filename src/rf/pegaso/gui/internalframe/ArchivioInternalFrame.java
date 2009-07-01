@@ -27,6 +27,7 @@ import rf.pegaso.gui.gestione.FornitoriGestione;
 import rf.pegaso.gui.gestione.RepartiGestione;
 import rf.pegaso.gui.gestione.ScaricoGui;
 import rf.pegaso.gui.gestione.StampeEtichette;
+import rf.pegaso.gui.gestione.TabacchiGestione;
 import rf.pegaso.gui.gestione.UnitaDiMisuraGestione;
 import rf.pegaso.gui.viste.GiacenzeGUI;
 import rf.pegaso.gui.viste.RicercheArchivio;
@@ -41,12 +42,10 @@ import rf.utility.db.DBManager;
 public class ArchivioInternalFrame extends JInternalFrame {
 	class MyActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == btnReparti) {
-				apriReparti();
-			} else if (e.getSource() == btnUnitaMisura) {
-				apriUnitadiMisura();
-			} else if (e.getSource() == btnArticoli) {
+			if (e.getSource() == btnArticoli) {
 				apriArticoli();
+			} else if (e.getSource() == btnTabacchi) {
+				apriTabacchi();
 			} else if (e.getSource() == btnClienti) {
 				apriClienti();
 			} else if (e.getSource() == btnFornitori) {
@@ -57,8 +56,6 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				apriScaricoMerce();
 			} else if (e.getSource() == btnInventario) {
 				apriGiacenze();
-			} else if (e.getSource() == btnDocumento) {
-				apriDocumenti();
 			} else if (e.getSource() == btnStampe) {
 				apriStampe();
 			} else if (e.getSource() == btnRicerche) {
@@ -79,14 +76,11 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	private JButton btnArticoli = null;
 	private JButton btnCarico = null;
 	private JButton btnClienti = null;
-	private JButton btnDocumento = null;
 	private JButton btnFornitori = null;
 	private JButton btnInventario = null;
-	private JButton btnReparti = null;
 	private JButton btnRicerche = null;
 	private JButton btnScarico = null;
 	private JButton btnStampe = null;
-	private JButton btnUnitaMisura = null;
 	private DBManager dbm;
 	private JPanel jContentPane = null;
 	private MyActionListener myActionListener; // @jve:decl-index=0:
@@ -94,7 +88,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	private JPanel pnlCentrale = null;
 	private JButton jButton = null;
 	private JButton btnFtByDdt = null;
-
+	private JButton btnTabacchi = null;
 	/**
 	 * This is the xxx default constructor
 	 */
@@ -103,6 +97,16 @@ public class ArchivioInternalFrame extends JInternalFrame {
 		this.dbm=DBManager.getIstanceSingleton();
 		this.padre = padre;
 		initialize();
+	}
+
+	public void apriTabacchi() {
+		TabacchiGestione cg = new TabacchiGestione();
+		//Apriamo la finestra in modo modale e
+		//la massimizziamo
+		//ModalFrameUtil.showAsModal(cg, padre);
+		cg.setVisible(true);
+		cg.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		
 	}
 
 	/**
@@ -284,25 +288,6 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	}
 
 	/**
-	 * This method initializes btnDocumento
-	 *
-	 * @return javax.swing.JButton
-	 */
-	private JButton getBtnDocumento() {
-		if (btnDocumento == null) {
-			try {
-				btnDocumento = new JButton();
-				btnDocumento.setPreferredSize(new Dimension(120, 70)); // Generated
-				btnDocumento.setText("Documenti");
-				btnDocumento.addActionListener(new MyActionListener());
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return btnDocumento;
-	}
-
-	/**
 	 * This method initializes btnFornitori
 	 *
 	 * @return javax.swing.JButton
@@ -338,25 +323,6 @@ public class ArchivioInternalFrame extends JInternalFrame {
 			}
 		}
 		return btnInventario;
-	}
-
-	/**
-	 * This method initializes btnReparti
-	 *
-	 * @return javax.swing.JButton
-	 */
-	private JButton getBtnReparti() {
-		if (btnReparti == null) {
-			try {
-				btnReparti = new JButton();
-				btnReparti.setText("Categoria"); // Generated
-				btnReparti.setPreferredSize(new Dimension(120, 70)); // Generated
-				btnReparti.addActionListener(myActionListener);
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return btnReparti;
 	}
 
 	/**
@@ -417,25 +383,6 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	}
 
 	/**
-	 * This method initializes btnUnitaMisura
-	 *
-	 * @return javax.swing.JButton
-	 */
-	private JButton getBtnUnitaMisura() {
-		if (btnUnitaMisura == null) {
-			try {
-				btnUnitaMisura = new JButton();
-				btnUnitaMisura.setText("Unita di Misura"); // Generated
-				btnUnitaMisura.setPreferredSize(new Dimension(120, 70)); // Generated
-				btnUnitaMisura.addActionListener(myActionListener);
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return btnUnitaMisura;
-	}
-
-	/**
 	 * This method initializes jContentPane
 	 *
 	 * @return javax.swing.JPanel
@@ -457,32 +404,31 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	private JPanel getPnlCentrale() {
 		if (pnlCentrale == null) {
 			try {
+				GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
+				gridBagConstraints1.gridx = 2;
+				gridBagConstraints1.gridy = 0;
 				GridBagConstraints gridBagConstraints15 = new GridBagConstraints();
-				gridBagConstraints15.gridx = 3;
+				gridBagConstraints15.gridx = 0;
 				gridBagConstraints15.gridy = 2;
 				GridBagConstraints gridBagConstraints14 = new GridBagConstraints();
 				gridBagConstraints14.gridx = 4;
 				gridBagConstraints14.gridy = 2;
 				GridBagConstraints gridBagConstraints18 = new GridBagConstraints();
-				gridBagConstraints18.gridx = 4; // Generated
-				gridBagConstraints18.gridy = 2; // Generated
+				gridBagConstraints18.gridx = 3; // Generated
+				gridBagConstraints18.gridy = 1; // Generated
 				GridBagConstraints gridBagConstraints17 = new GridBagConstraints();
 				gridBagConstraints17.gridx = 2; // Generated
 				gridBagConstraints17.gridy = 2; // Generated
-				GridBagConstraints gridBagConstraints13 = new GridBagConstraints();
-				gridBagConstraints13.gridx = 2; // Generated
-				gridBagConstraints13.insets = new Insets(10, 10, 10, 10); // Generated
-				gridBagConstraints13.gridy = 1; // Generated
 				GridBagConstraints gridBagConstraints21 = new GridBagConstraints();
-				gridBagConstraints21.gridx = 0; // Generated
+				gridBagConstraints21.gridx = 4; // Generated
 				gridBagConstraints21.insets = new Insets(10, 10, 10, 10); // Generated
-				gridBagConstraints21.gridy = 2; // Generated
+				gridBagConstraints21.gridy = 1; // Generated
 				GridBagConstraints gridBagConstraints12 = new GridBagConstraints();
-				gridBagConstraints12.gridx = 4; // Generated
+				gridBagConstraints12.gridx = 2; // Generated
 				gridBagConstraints12.insets = new Insets(10, 10, 10, 10); // Generated
 				gridBagConstraints12.gridy = 1; // Generated
 				GridBagConstraints gridBagConstraints11 = new GridBagConstraints();
-				gridBagConstraints11.gridx = 3; // Generated
+				gridBagConstraints11.gridx = 0; // Generated
 				gridBagConstraints11.gridy = 1; // Generated
 				GridBagConstraints gridBagConstraints4 = new GridBagConstraints();
 				gridBagConstraints4.gridx = 3; // Generated
@@ -500,29 +446,19 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				GridBagConstraints gridBagConstraints2 = new GridBagConstraints();
 				gridBagConstraints2.gridx = 0; // Generated
 				gridBagConstraints2.insets = new Insets(10, 10, 10, 10); // Generated
-				gridBagConstraints2.gridy = 1; // Generated
-				GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
-				gridBagConstraints1.gridx = 2; // Generated
-				gridBagConstraints1.insets = new Insets(10, 10, 10, 10); // Generated
-				gridBagConstraints1.gridy = 0; // Generated
-				GridBagConstraints gridBagConstraints = new GridBagConstraints();
-				gridBagConstraints.gridx = 0; // Generated
-				gridBagConstraints.insets = new Insets(10, 10, 10, 10); // Generated
-				gridBagConstraints.gridy = 0; // Generated
+				gridBagConstraints2.gridy = 0; // Generated
 				pnlCentrale = new JPanel();
 				pnlCentrale.setLayout(new GridBagLayout()); // Generated
-				pnlCentrale.add(getBtnReparti(), gridBagConstraints); // Generated
-				pnlCentrale.add(getBtnUnitaMisura(), gridBagConstraints1); // Generated
-				pnlCentrale.add(getBtnArticoli(), gridBagConstraints2); // Generated
+				pnlCentrale.add(getBtnArticoli(), gridBagConstraints2);
 				pnlCentrale.add(getBtnClienti(), gridBagConstraints3); // Generated
 				pnlCentrale.add(getBtnFornitori(), gridBagConstraints4); // Generated
-				pnlCentrale.add(getBtnCarico(), gridBagConstraints11); // Generated
-				pnlCentrale.add(getBtnScarico(), gridBagConstraints12); // Generated
-				pnlCentrale.add(getBtnInventario(), gridBagConstraints21); // Generated
-				pnlCentrale.add(getBtnDocumento(), gridBagConstraints13); // Generated
+				pnlCentrale.add(getBtnCarico(), gridBagConstraints11);
+				pnlCentrale.add(getBtnScarico(), gridBagConstraints12);
+				pnlCentrale.add(getBtnInventario(), gridBagConstraints21);
 				pnlCentrale.add(getBtnStampe(), gridBagConstraints17); // Generated
 				pnlCentrale.add(getBtnRicerche(), gridBagConstraints18);
 				pnlCentrale.add(getBtnFtByDdt(), gridBagConstraints15);
+				pnlCentrale.add(getBtnTabacchi(), gridBagConstraints1);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -575,6 +511,21 @@ public class ArchivioInternalFrame extends JInternalFrame {
 			});
 		}
 		return btnFtByDdt;
+	}
+
+	/**
+	 * This method initializes btnTabacchi	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnTabacchi() {
+		if (btnTabacchi == null) {
+			btnTabacchi = new JButton();
+			btnTabacchi.setPreferredSize(new Dimension(120, 70));
+			btnTabacchi.setText("Tabacchi");
+			btnTabacchi.addActionListener(myActionListener);
+		}
+		return btnTabacchi;
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

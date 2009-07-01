@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 30-giu-2009 3.07.23 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 1-lug-2009 15.41.20 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="erreeffe.entity.Ordini" table="ordini" schema="public">
-        <id name="idordine" type="long">
+        <id name="idordine" type="long" unsaved-value="0">
             <column name="idordine" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <many-to-one name="tipoDocumento" class="erreeffe.entity.TipoDocumento" fetch="select">
             <column name="tipo_documento" />
@@ -97,6 +97,9 @@
         </property>
         <property name="numeroNonFiscale" type="string">
             <column name="numero_non_fiscale" length="20" />
+        </property>
+        <property name="riferimentoOrdine" type="java.lang.Long">
+            <column name="riferimento_ordine" />
         </property>
         <set name="dettaglioOrdinis" inverse="true" lazy="true" table="dettaglio_ordini" fetch="select">
             <key>

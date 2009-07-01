@@ -1,6 +1,6 @@
 package erreeffe.entity;
 
-// Generated 30-giu-2009 3.07.23 by Hibernate Tools 3.2.4.GA
+// Generated 1-lug-2009 16.57.15 by Hibernate Tools 3.2.4.GA
 
 import java.util.Date;
 import java.util.HashSet;
@@ -25,6 +25,7 @@ public class Carichi implements java.io.Serializable {
 	private Integer sconto;
 	private Integer ivaDocumento;
 	private Integer insPn;
+	private Long riferimentoOrdine;
 	private Set<DettaglioCarichi> dettaglioCarichis = new HashSet<DettaglioCarichi>(
 			0);
 
@@ -40,7 +41,7 @@ public class Carichi implements java.io.Serializable {
 			String note, String numDocumento, Date dataDocumento,
 			Double totaleDocumento, Integer sospeso, Integer rifDoc,
 			Integer sconto, Integer ivaDocumento, Integer insPn,
-			Set<DettaglioCarichi> dettaglioCarichis) {
+			Long riferimentoOrdine, Set<DettaglioCarichi> dettaglioCarichis) {
 		this.idcarico = idcarico;
 		this.fornitori = fornitori;
 		this.tipoDocumento = tipoDocumento;
@@ -55,6 +56,7 @@ public class Carichi implements java.io.Serializable {
 		this.sconto = sconto;
 		this.ivaDocumento = ivaDocumento;
 		this.insPn = insPn;
+		this.riferimentoOrdine = riferimentoOrdine;
 		this.dettaglioCarichis = dettaglioCarichis;
 	}
 
@@ -168,6 +170,14 @@ public class Carichi implements java.io.Serializable {
 
 	public void setInsPn(Integer insPn) {
 		this.insPn = insPn;
+	}
+
+	public Long getRiferimentoOrdine() {
+		return this.riferimentoOrdine;
+	}
+
+	public void setRiferimentoOrdine(Long riferimentoOrdine) {
+		this.riferimentoOrdine = riferimentoOrdine;
 	}
 
 	public Set<DettaglioCarichi> getDettaglioCarichis() {

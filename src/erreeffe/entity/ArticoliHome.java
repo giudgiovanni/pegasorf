@@ -15,21 +15,18 @@ import static org.hibernate.criterion.Example.create;
  * @see erreeffe.entity.Articoli
  * @author Hibernate Tools
  */
-public class ArticoliHome {
+public class ArticoliHome  extends BusinessObjectHome{
 
 	private static final Log log = LogFactory.getLog(ArticoliHome.class);
 
-	private final SessionFactory sessionFactory = getSessionFactory();
+	private static final ArticoliHome instance = new ArticoliHome(); 
 
-	protected SessionFactory getSessionFactory() {
-		try {
-			return (SessionFactory) new InitialContext()
-					.lookup("SessionFactory");
-		} catch (Exception e) {
-			log.error("Could not locate SessionFactory in JNDI", e);
-			throw new IllegalStateException(
-					"Could not locate SessionFactory in JNDI");
-		}
+	public ArticoliHome(){
+		super();
+	}
+	
+	public static ArticoliHome getInstance(){
+		return instance;
 	}
 
 	public void persist(Articoli transientInstance) {

@@ -522,11 +522,11 @@ public class VenditaAvanzata extends JFrame{
 			pnlOvest = new JPanel();
 			pnlOvest.setPreferredSize(new Dimension(541, 578));
 			pnlOvest.setLayout(new BorderLayout());
-			pannelloArticoli.addJNumberEventListener(new JNumberEventListener() {
-	            public void keyPerformed(JNumberEvent evt) {
-	                m_jNumberKeysKeyPerformed(evt);
-	            }
-	        });
+//			pannelloArticoli.addJNumberEventListener(new JNumberEventListener() {
+//	            public void keyPerformed(JNumberEvent evt) {
+//	                m_jNumberKeysKeyPerformed(evt);
+//	            }
+//	        });
 			pnlOvest.add(getPnlOvestNord(), BorderLayout.NORTH);
 			pnlOvest.add(pannelloArticoli, BorderLayout.CENTER);
 			pnlOvest.add(getPnlOvestSud(), BorderLayout.SOUTH);

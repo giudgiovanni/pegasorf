@@ -4,12 +4,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Comparator;
 import java.util.Vector;
 
 import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.utility.db.DBManager;
 
-public class DettaglioOrdine {
+public class DettaglioOrdine implements Comparator<DettaglioOrdine>{
 
 	private int idArticolo;
 	private String codiceBarre;
@@ -482,4 +483,15 @@ public class DettaglioOrdine {
 	public boolean equals(DettaglioOrdine o){
 		return this.getIdArticolo()==o.getIdArticolo();
 	}
+
+	@Override
+	public int compare(DettaglioOrdine o1, DettaglioOrdine o2) {
+		if ( o1.getIdArticolo() == o2.getIdArticolo() )
+			return 0;
+		else if ( o1.getIdArticolo() < o2.getIdArticolo() )
+			return -1;
+		else
+			return 1;
+	}
+	
 }

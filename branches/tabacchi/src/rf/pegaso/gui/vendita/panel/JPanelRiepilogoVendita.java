@@ -2,7 +2,6 @@ package rf.pegaso.gui.vendita.panel;
 
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
-import java.math.BigDecimal;
 import java.sql.Time;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -26,6 +25,32 @@ import rf.pegaso.db.tabelle.Scarico;
 import rf.utility.MathUtility;
 
 public class JPanelRiepilogoVendita extends JPanel {
+	
+	class MyArrayList extends ArrayList<DettaglioOrdine>{
+		
+		@Override
+		public boolean contains(Object o) {
+			for ( DettaglioOrdine ord : carrello ){
+				if ( ord.getIdArticolo() == ((DettaglioOrdine)o).getIdArticolo() )
+					return true;
+			}
+			return false;
+		}
+		
+		@Override
+		public int indexOf(Object o) {
+			if ( o == null ) {
+			    for (int i = 0; i < carrello.size(); i++)
+				if ( carrello.get(i) == null )
+				    return i;
+			} else {
+			    for (int i = 0; i < carrello.size(); i++)
+				if ( ((DettaglioOrdine)o).getIdArticolo() == carrello.get(i).getIdArticolo() )
+				    return i;
+			}
+			return -1;
+		}
+	}
 
 	class PrezzoCellRenderer extends DefaultTableCellRenderer{
 		private static final long serialVersionUID = 1L;
@@ -123,7 +148,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 				break;
 			}
 			case 1:{
-				o = new Double(riga.getPrezzoVendita());
+				// TODO Auto-generated method stub	o = new Double(riga.getPrezzoVendita());
 				break;
 			}
 			case 2:{
@@ -149,7 +174,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JScrollPane jScrollPane = null;
 	private JTable tblVendite = null;
-	private ArrayList<DettaglioOrdine> carrello = null; // @jve:decl-index=0:
+	private MyArrayList carrello = null; // @jve:decl-index=0:
 	private VenditaTableModel modello;
 	private int idSelectedItem=-1;
 	private double totaleCarrello = 0.0;
@@ -174,7 +199,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 		this.add(getJScrollPane(), BorderLayout.CENTER);
 		scarico = new Scarico();
-		this.carrello = new ArrayList<DettaglioOrdine>();
+		this.carrello = new MyArrayList();
 	}
 
 	/**
@@ -258,26 +283,41 @@ public class JPanelRiepilogoVendita extends JPanel {
 	 * @param e
 	 * @return
 	 */
-	public boolean addDettaglioOrdine(DettaglioOrdine ord) {
-		int contiene=carrello.indexOf(ord);
-		boolean ok=true;
-		if(contiene==-1)
-			ok=carrello.add(ord);
+	public int addDettaglioOrdine(DettaglioOrdine ord) {
+		int contiene = carrello.indexOf(ord);
+		if( !carrello.contains(ord) )
+			if ( ord.getDisponibilita() < ord.getQta() ){
+				return -1;
+			}
+			else{
+				carrello.add(ord);
+			}
 		else{
 			DettaglioOrdine tmp= carrello.get(contiene);
-			tmp.setDescrizione(ord.getDescrizione());
-			tmp.setPrezzoVendita(ord.getPrezzoVendita());
-			//aggiungiamo alla quantit� gi� presente la nuova
-			//quantit� da aggiungere
-			tmp.setQta(tmp.getQta()+ord.getQta());
-			tmp.setIva(ord.getIva());
+			// Verifichiamo se la quantita' richiesta e' disponibile
+			if ( ord.getDisponibilita() < (tmp.getQta() + ord.getQta()) ){
+				return -1;
+			}
+			else{
+				//aggiungiamo alla quantita' gia' presente la nuova quantita' da aggiungere
+				tmp.setQta(tmp.getQta()+ord.getQta());
+			}
 		}
-		//notifichiamo che � stata aggiunta una riga;
-		modello.fireTableRowsInserted(carrello.size(), carrello.size());
+		//notifichiamo che e' stata aggiunta/modificata una riga;
+//		modello.fireTableRowsInserted(carrello.size(), carrello.size());
 		double tot=ord.getPrezzoVendita() * ord.getQta();
 		tot=tot+MathUtility.percentualeDaAggiungere(tot, ord.getIva());
 		totaleCarrello = totaleCarrello + tot;
-		return ok;
+		modello.fireTableDataChanged();
+		return 1;
+	}
+	
+	public boolean contains(DettaglioOrdine ord) {
+		for ( DettaglioOrdine dett : carrello ){
+			if ( dett.getIdArticolo() == ord.getIdArticolo() )
+				return true;
+		}
+		return false;
 	}
 	
 	public boolean registraScarico(){
@@ -503,5 +543,6 @@ public class JPanelRiepilogoVendita extends JPanel {
 	public void setTotaleCarrello(Double totaleCarrello) {
 		this.totaleCarrello = totaleCarrello;
 	}
+
 
 }

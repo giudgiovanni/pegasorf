@@ -5,54 +5,48 @@ import java.util.List;
 
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 
-import erreeffe.entity.Articoli;
-import erreeffe.entity.ImmagineArticolo;
-import erreeffe.entity.ImmagineArticoloHome;
 
 import rf.pegaso.db.tabelle.Articolo;
-import rf.pegaso.db.tabelle.DettaglioArticolo;
+import rf.pegaso.db.tabelle.ImmagineArticolo;
 
 public class JButtonArticolo extends javax.swing.JButton {
 
 	private static final long serialVersionUID = 1L;
 	
-	private DettaglioArticolo dettArticolo = null;
 	private ImmagineArticolo imgArticolo;
-	private int idArticolo = 0;
+	private Articolo articolo;
 	
 	
-	public JButtonArticolo(Articoli articolo) {
+	public JButtonArticolo(Articolo articolo) {
 		super();
-		this.idArticolo = idArticolo;
-		imgArticolo.setArticoli(articolo);
-		List<ImmagineArticolo> result = ImmagineArticoloHome.getInstance().findByExample(imgArticolo);
-		if ( result.size() != 0 ){
-			imgArticolo = result.get(0);
-		}
+		this.articolo = articolo;
 		initGUI();
 	}
 	
 	private void initGUI() {
 		try {
-			dettArticolo = new DettaglioArticolo();			
+			imgArticolo = new ImmagineArticolo(articolo);
+			imgArticolo.caricaDati();						
 			this.setText(imgArticolo.getNome());
 			this.setIcon(new ImageIcon(imgArticolo.getFile()));
 			this.setVerticalTextPosition(AbstractButton.BOTTOM);
 			this.setHorizontalTextPosition(AbstractButton.CENTER);
-			//setIcon(new ImageIcon(dettArticolo.getImgdefault()));
-//			this.setText(dettArticolo.getDescrizione());
             setFocusPainted(false);
             setFocusable(false);
             setRequestFocusEnabled(false);
-            //setMargin(new Insets(8, 14, 8, 14));
-			//this.addActionListener(new MyButtonListener());
             setMinimumSize(new Dimension(90, 80));
-			//setPreferredSize(new Dimension(100, 80));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public Articolo getArticolo() {
+		return articolo;
+	}
+
+	public void setArticolo(Articolo articolo) {
+		this.articolo = articolo;
 	}
 	
 //	private class MyButtonListener implements java.awt.event.ActionListener {
@@ -69,11 +63,4 @@ public class JButtonArticolo extends javax.swing.JButton {
 //		
 //	}
 
-	public int getIdArticolo() {
-		return idArticolo;
-	}
-
-	public void setIdArticolo(int idArticolo) {
-		this.idArticolo = idArticolo;
-	}
 }

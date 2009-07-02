@@ -10,6 +10,8 @@ import javax.swing.JPanel;
 
 import javax.swing.JScrollPane;
 
+import rf.pegaso.db.tabelle.Articolo;
+
 import erreeffe.entity.Articoli;
 
 import java.awt.GridBagLayout;
@@ -18,7 +20,7 @@ import java.awt.GridBagLayout;
 public class JPanelArticoli extends JPanel{
 
 	private static final long serialVersionUID = 1L;
-	private Vector<JNumberEventListener> m_Listeners = new Vector<JNumberEventListener>();
+	private Vector<JButtonEventListener> m_Listeners = new Vector<JButtonEventListener>();
 	private JScrollPane jScrollPane = null;
 	private JPanel pnlPulsanti = null;
 
@@ -42,7 +44,7 @@ public class JPanelArticoli extends JPanel{
 		this.add(getJScrollPane(), null);
 	}
 	
-	public void caricaArticoli(LinkedList<Articoli> articoli){
+	public void caricaArticoli(LinkedList<Articolo> articoli){
 		try{
 			pnlPulsanti.removeAll();
 			GridLayout gridLayout = new GridLayout();
@@ -50,9 +52,9 @@ public class JPanelArticoli extends JPanel{
 			gridLayout.setRows((articoli.size()/4)+1);
 			gridLayout.setColumns(3);
 			pnlPulsanti.setLayout(gridLayout);
-			for(Articoli art : articoli){
+			for(Articolo art : articoli){
 				JButtonArticolo btnArticolo = new JButtonArticolo(art);
-				btnArticolo.addActionListener(new MyButtonListener(art.getIdarticolo()));
+				btnArticolo.addActionListener(new MyButtonListener(art));
 				btnArticolo.setPreferredSize(new Dimension(100, 80));
 				pnlPulsanti.add(btnArticolo, null);
 			}
@@ -65,27 +67,27 @@ public class JPanelArticoli extends JPanel{
 		
 	}
 	
-	public void addJNumberEventListener(JNumberEventListener listener) {
+	public void addJButtonEventListener(JButtonEventListener listener) {
         m_Listeners.add(listener);
     }
-    public void removeJNumberEventListener(JNumberEventListener listener) {
+    public void removeJButtonEventListener(JButtonEventListener listener) {
         m_Listeners.remove(listener);
     }
 	
 	private class MyButtonListener implements java.awt.event.ActionListener {
 
-		private long m_idArticolo;
+		private Articolo m_articolo;
 
-		public MyButtonListener(long idArticolo){
-			m_idArticolo = idArticolo;
+		public MyButtonListener(Articolo articolo){
+			m_articolo = articolo;
 		}
 		public void actionPerformed(java.awt.event.ActionEvent evt) {
 	           
-            JNumberEvent oEv = new JNumberEvent(JPanelArticoli.this, '\0', m_idArticolo);            
-            JNumberEventListener oListener;
+            JButtonEvent oEv = new JButtonEvent(JPanelArticoli.this, '\0', m_articolo);            
+            JButtonEventListener oListener;
             
-            for (Enumeration<JNumberEventListener> e = m_Listeners.elements(); e.hasMoreElements();) {
-                oListener = (JNumberEventListener) e.nextElement();
+            for (Enumeration<JButtonEventListener> e = m_Listeners.elements(); e.hasMoreElements();) {
+                oListener = (JButtonEventListener) e.nextElement();
                 oListener.keyPerformed(oEv);
             }
         }

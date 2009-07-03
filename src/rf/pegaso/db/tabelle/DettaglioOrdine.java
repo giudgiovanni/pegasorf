@@ -484,7 +484,7 @@ public class DettaglioOrdine implements Comparator<DettaglioOrdine>{
 		return this.getIdArticolo()==o.getIdArticolo();
 	}
 
-	@Override
+	
 	public int compare(DettaglioOrdine o1, DettaglioOrdine o2) {
 		if ( o1.getIdArticolo() == o2.getIdArticolo() )
 			return 0;

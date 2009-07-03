@@ -26,6 +26,7 @@ import rf.pegaso.gui.vendita.panel.JButtonEvent;
 import rf.pegaso.gui.vendita.panel.JButtonEventListener;
 import rf.pegaso.gui.vendita.panel.JPanelArticoli;
 import rf.pegaso.gui.vendita.panel.JPanelRiepilogoVendita;
+import rf.upload.mapping.ElaborateFileXls;
 import rf.utility.ControlloDati;
 
 import java.awt.Font;
@@ -35,8 +36,12 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JTabbedPane;
+
+import org.xml.sax.SAXException;
 
 
 public class VenditaInternalFrame extends JInternalFrame {
@@ -119,6 +124,47 @@ public class VenditaInternalFrame extends JInternalFrame {
 		this.setClosable(true);
 		this.setContentPane(getJContentPane());
 		txtFieldRicerca.requestFocusInWindow();
+		test();
+	}
+	
+	public void test(){
+//		try {
+			String path = "/home/sergio/completo_20090706.xls";
+			
+			
+			File xlsFile = new File(path);
+			ElaborateFileXls efx = new ElaborateFileXls();
+			try {
+				efx.loadContingent(xlsFile);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SAXException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+////			PDFTextStream stream;
+////
+////			stream = new PDFTextStream(pdfFile);
+////
+////			StringBuffer sb = new StringBuffer(1024);
+////			char[] buf = new char[512];
+////			int cnt;
+////
+////			while ((cnt = (stream.read(buf, 0, 512))) != -1) {
+////				sb.append(buf, 0, cnt);
+////			}
+////
+////			stream.close();
+////			System.out.println(sb.toString());
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+        
 	}
 	
 	private void initializeCarrello(){
@@ -148,6 +194,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private void inserisciDaRepo(String repo){
 		try {
 			DettaglioOrdine dv = new DettaglioOrdine();
+			dv.setIdArticolo(0);
 			dv.setDescrizione(repo);
 			dv.setPrezzoVendita(ControlloDati.convertPrezzoToDouble(importo));
 			if ( txtQta.getText().trim().equals("")){
@@ -694,7 +741,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JPanel getPnlFunzioniCassa() {
 		if (pnlFunzioniCassa == null) {
 			lblPer = new JLabel();
-			lblPer.setBounds(new Rectangle(220, 104, 15, 16));
+			lblPer.setBounds(new Rectangle(248, 37, 15, 16));
 			lblPer.setFont(new Font("Lucida Grande", Font.BOLD, 14));
 			lblPer.setText("X");
 			pnlFunzioniCassa = new JPanel();
@@ -734,7 +781,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JButton getBtnZero() {
 		if (btnZero == null) {
 			btnZero = new JButton();
-			btnZero.setBounds(new Rectangle(145, 292, 45, 29));
+			btnZero.setBounds(new Rectangle(130, 395, 75, 70));
 			btnZero.setText("0");
 			btnZero.addActionListener(new MyButtonListener());
 		}
@@ -749,7 +796,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JButton getBtnUno() {
 		if (btnUno == null) {
 			btnUno = new JButton();
-			btnUno.setBounds(new Rectangle(90, 253, 45, 29));
+			btnUno.setBounds(new Rectangle(40, 315, 75, 70));
 			btnUno.setText("1");
 			btnUno.addActionListener(new MyButtonListener());
 		}
@@ -764,7 +811,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JButton getBtnDue() {
 		if (btnDue == null) {
 			btnDue = new JButton();
-			btnDue.setBounds(new Rectangle(145, 253, 45, 29));
+			btnDue.setBounds(new Rectangle(130, 315, 75, 70));
 			btnDue.setText("2");
 			btnDue.addActionListener(new MyButtonListener());
 		}
@@ -779,7 +826,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JButton getBtnTre() {
 		if (btnTre == null) {
 			btnTre = new JButton();
-			btnTre.setBounds(new Rectangle(200, 253, 45, 29));
+			btnTre.setBounds(new Rectangle(220, 315, 75, 70));
 			btnTre.setText("3");
 			btnTre.addActionListener(new MyButtonListener());
 		}
@@ -794,7 +841,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JButton getBtnQuattro() {
 		if (btnQuattro == null) {
 			btnQuattro = new JButton();
-			btnQuattro.setBounds(new Rectangle(90, 214, 45, 29));
+			btnQuattro.setBounds(new Rectangle(40, 235, 75, 70));
 			btnQuattro.setText("4");
 			btnQuattro.addActionListener(new MyButtonListener());
 		}
@@ -809,7 +856,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JButton getBtnCinque() {
 		if (btnCinque == null) {
 			btnCinque = new JButton();
-			btnCinque.setBounds(new Rectangle(145, 214, 45, 29));
+			btnCinque.setBounds(new Rectangle(130, 235, 75, 70));
 			btnCinque.setText("5");
 			btnCinque.addActionListener(new MyButtonListener());
 		}
@@ -824,7 +871,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JButton getBtnSei() {
 		if (btnSei == null) {
 			btnSei = new JButton();
-			btnSei.setBounds(new Rectangle(200, 214, 45, 29));
+			btnSei.setBounds(new Rectangle(220, 235, 75, 70));
 			btnSei.setText("6");
 			btnSei.addActionListener(new MyButtonListener());
 		}
@@ -839,7 +886,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JButton getBtnSette() {
 		if (btnSette == null) {
 			btnSette = new JButton();
-			btnSette.setBounds(new Rectangle(90, 175, 45, 29));
+			btnSette.setBounds(new Rectangle(40, 155, 75, 70));
 			btnSette.setText("7");
 			btnSette.addActionListener(new MyButtonListener());
 		}
@@ -854,7 +901,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JButton getBtnOtto() {
 		if (btnOtto == null) {
 			btnOtto = new JButton();
-			btnOtto.setBounds(new Rectangle(145, 175, 45, 29));
+			btnOtto.setBounds(new Rectangle(130, 155, 75, 70));
 			btnOtto.setText("8");
 			btnOtto.addActionListener(new MyButtonListener());
 		}
@@ -869,7 +916,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JButton getBtnNove() {
 		if (btnNove == null) {
 			btnNove = new JButton();
-			btnNove.setBounds(new Rectangle(200, 175, 45, 29));
+			btnNove.setBounds(new Rectangle(220, 155, 75, 70));
 			btnNove.setText("9");
 			btnNove.addActionListener(new MyButtonListener());
 		}
@@ -884,7 +931,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JButton getBtnVirgola() {
 		if (btnVirgola == null) {
 			btnVirgola = new JButton();
-			btnVirgola.setBounds(new Rectangle(90, 292, 45, 29));
+			btnVirgola.setBounds(new Rectangle(40, 395, 75, 70));
 			btnVirgola.setText(",");
 			btnVirgola.addActionListener(new MyButtonListener());
 		}
@@ -899,7 +946,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JButton getBtnCancella() {
 		if (btnCancella == null) {
 			btnCancella = new JButton();
-			btnCancella.setBounds(new Rectangle(200, 292, 45, 29));
+			btnCancella.setBounds(new Rectangle(220, 395, 75, 70));
 			btnCancella.setText("Canc");
 			btnCancella.addActionListener(new MyButtonListener());
 		}
@@ -914,7 +961,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JButton getBtnAzzera() {
 		if (btnAzzera == null) {
 			btnAzzera = new JButton();
-			btnAzzera.setBounds(new Rectangle(75, 136, 100, 29));
+			btnAzzera.setBounds(new Rectangle(40, 85, 160, 55));
 			btnAzzera.setText("AZZERA");
 			btnAzzera.addActionListener(new MyButtonListener());
 		}
@@ -929,7 +976,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JButton getBtnMoltiplica() {
 		if (btnMoltiplica == null) {
 			btnMoltiplica = new JButton();
-			btnMoltiplica.setBounds(new Rectangle(200, 136, 45, 29));
+			btnMoltiplica.setBounds(new Rectangle(220, 85, 75, 55));
 			btnMoltiplica.setText("X");
 			btnMoltiplica.addActionListener(new MyButtonListener());
 		}
@@ -944,7 +991,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JButton getBtnRep1() {
 		if (btnRep1 == null) {
 			btnRep1 = new JButton();
-			btnRep1.setBounds(new Rectangle(255, 292, 75, 29));
+			btnRep1.setBounds(new Rectangle(310, 395, 75, 70));
 			btnRep1.setText("Repo1");
 			btnRep1.addActionListener(new MyButtonListener());
 		}
@@ -959,7 +1006,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JButton getBtnRep2() {
 		if (btnRep2 == null) {
 			btnRep2 = new JButton();
-			btnRep2.setBounds(new Rectangle(255, 253, 75, 29));
+			btnRep2.setBounds(new Rectangle(310, 315, 75, 70));
 			btnRep2.setText("Repo2");
 			btnRep2.addActionListener(new MyButtonListener());
 		}
@@ -974,7 +1021,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JButton getBtnRep3() {
 		if (btnRep3 == null) {
 			btnRep3 = new JButton();
-			btnRep3.setBounds(new Rectangle(255, 214, 75, 29));
+			btnRep3.setBounds(new Rectangle(310, 235, 75, 70));
 			btnRep3.setText("Repo3");
 			btnRep3.addActionListener(new MyButtonListener());
 		}
@@ -989,7 +1036,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JButton getBtnRep4() {
 		if (btnRep4 == null) {
 			btnRep4 = new JButton();
-			btnRep4.setBounds(new Rectangle(255, 175, 75, 29));
+			btnRep4.setBounds(new Rectangle(310, 155, 75, 70));
 			btnRep4.setText("Repo4");
 			btnRep4.addActionListener(new MyButtonListener());
 		}
@@ -1004,7 +1051,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JTextField getTxtFldImporto() {
 		if (txtFldImporto == null) {
 			txtFldImporto = new JTextField();
-			txtFldImporto.setBounds(new Rectangle(75, 98, 130, 28));
+			txtFldImporto.setBounds(new Rectangle(40, 20, 160, 45));
 			txtFldImporto.setEditable(false);
 		}
 		return txtFldImporto;
@@ -1018,7 +1065,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JTextField getTxtQta() {
 		if (txtQta == null) {
 			txtQta = new JTextField();
-			txtQta.setBounds(new Rectangle(250, 98, 60, 28));
+			txtQta.setBounds(new Rectangle(310, 20, 75, 45));
 			txtQta.setEditable(false);
 		}
 		return txtQta;

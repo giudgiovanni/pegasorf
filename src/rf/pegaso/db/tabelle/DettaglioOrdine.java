@@ -152,7 +152,7 @@ public class DettaglioOrdine implements Comparator<DettaglioOrdine>{
 				UnitaDiMisura udm = new UnitaDiMisura();
 				udm.caricaDati(a.getUm());
 				um = udm.getNome();
-				prezzoAcquisto = a.getPrezzoAcquisto();
+//				prezzoAcquisto = a.getPrezzoAcquisto();
 				prezzoVendita = a.getPrezzoIngrosso();
 				codiceBarre = a.getCodBarre();
 				iva = a.getIva();

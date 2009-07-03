@@ -22,7 +22,9 @@ import javax.swing.JTable;
 
 import rf.pegaso.db.tabelle.DettaglioOrdine;
 import rf.pegaso.db.tabelle.Scarico;
+import rf.utility.Constant;
 import rf.utility.MathUtility;
+import rf.utility.db.DBManager;
 
 public class JPanelRiepilogoVendita extends JPanel {
 	
@@ -312,23 +314,24 @@ public class JPanelRiepilogoVendita extends JPanel {
 		return 1;
 	}
 	
-	public boolean contains(DettaglioOrdine ord) {
-		for ( DettaglioOrdine dett : carrello ){
-			if ( dett.getIdArticolo() == ord.getIdArticolo() )
-				return true;
-		}
-		return false;
-	}
-	
 	public boolean registraScarico(){
 		try{
 			//Salviamo i dati della fattura
 			Date d = new Date();
+			scarico.setIdScarico(DBManager.getIstanceSingleton().getNewID("ordini", "idordine"));
+			scarico.setIdCliente(0);
 			scarico.setOraScarico(new Time(d.getTime()));
 			scarico.setDataScarico(new java.sql.Date(d.getTime()));
+			scarico.setNote("Vendita al banco");
+			scarico.setDataDocumento(new java.sql.Date(d.getTime()));
+			scarico.setNumDocumento(Constant.getNumeroDocScaricoAlBanco());
+			scarico.setIdDocumento(0);
+			scarico.setTotaleDocumentoIvato(totaleCarrello);
+			
+					
 			System.out.println("ricordati di settare il tipo di prezzo nella fattura");
 			//scarico.setTipoPrezzo((String)cmbTipoPagamento.getSelectedItem());
-			scarico.setDocFiscale(4);
+			scarico.setDocFiscale(Constant.getScarico() );
 			int ok = scarico.insertScarico();
 
 			if ( ok == -1 ){
@@ -336,6 +339,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 			}
 			//salviamo i dettagli della fattura
 			for (DettaglioOrdine dv : carrello) {
+				dv.setIdVendita(scarico.getIdScarico());
 				ok = dv.insert();
 				if ( ok == -1 ){
 					return false;

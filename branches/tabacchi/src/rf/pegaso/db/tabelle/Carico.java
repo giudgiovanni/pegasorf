@@ -245,7 +245,7 @@ public class Carico {
 		DBManager dbm = DBManager.getIstanceSingleton();
 		Statement st = dbm.getNewStatement();
 		ResultSet rs = null;
-		String query = "select num_documento from carichi where num_documento=" + numDocumento;
+		String query = "select num_documento from carichi where num_documento='" + numDocumento+"'";
 		rs = st.executeQuery(query);
 		rs.last();
 		int nRow = rs.getRow();

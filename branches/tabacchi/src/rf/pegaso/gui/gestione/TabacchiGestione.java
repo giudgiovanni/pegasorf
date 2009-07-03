@@ -173,7 +173,7 @@ public class TabacchiGestione extends JFrame {
 			idNewArticolo = r.duplicaArticolo(idArticolo);
 
 			// ora apriamo la finestra per modificare i dati
-			ArticoliAddMod mod = new ArticoliAddMod((JFrame)this, idNewArticolo,ArticoliAddMod.MOD);
+			TabacchiAddMod mod = new TabacchiAddMod((JFrame)this, idNewArticolo,ArticoliAddMod.MOD);
 			mod.setVisible(true);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

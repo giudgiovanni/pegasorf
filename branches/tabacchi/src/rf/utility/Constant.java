@@ -2,34 +2,30 @@ package rf.utility;
 
 public class Constant {
 	
-	private static final int ordine = 0;
-	private static final int carico = 1;
-	private static final int scarico = 2;
-	private static final int fattura = 3;
-	private static final int documentoDiTrasporto = 4;
-	private static final String numeroDocScaricoAlBanco = "1234";
+	public static final int ORDINE = 0;
+	public static final int CARICO = 1;
+	public static final int SCARICO = 2;
+	public static final int FATTURA = 3;
+	public static final int DOCUMENTO_DI_TRASPORTO = 4;
+	private static final String NUM_DOC_SCARICATO_AL_BANCO = "1234";
 	
 	public static int getOrdine() {
-		return ordine;
+		return ORDINE;
 	}
 	public static int getCarico() {
-		return carico;
+		return CARICO;
 	}
 	public static int getScarico() {
-		return scarico;
+		return SCARICO;
 	}
 	public static int getFattura() {
-		return fattura;
+		return FATTURA;
 	}
 	public static int getDocumentoDiTrasporto() {
-		return documentoDiTrasporto;
-	}
-	public static int getDocumentoditrasporto() {
-		return documentoDiTrasporto;
-	}
-	public static String getNumeroDocScaricoAlBanco() {
-		return numeroDocScaricoAlBanco;
+		return DOCUMENTO_DI_TRASPORTO;
 	}
 
-	
+	public static String getNumeroDocScaricoAlBanco() {
+		return NUM_DOC_SCARICATO_AL_BANCO;
+	}
 }

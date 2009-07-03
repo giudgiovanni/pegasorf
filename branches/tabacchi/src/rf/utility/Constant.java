@@ -7,6 +7,7 @@ public class Constant {
 	private static final int scarico = 2;
 	private static final int fattura = 3;
 	private static final int documentoDiTrasporto = 4;
+	private static final String numeroDocScaricoAlBanco = "1234";
 	
 	public static int getOrdine() {
 		return ordine;
@@ -22,6 +23,12 @@ public class Constant {
 	}
 	public static int getDocumentoDiTrasporto() {
 		return documentoDiTrasporto;
+	}
+	public static int getDocumentoditrasporto() {
+		return documentoDiTrasporto;
+	}
+	public static String getNumeroDocScaricoAlBanco() {
+		return numeroDocScaricoAlBanco;
 	}
 
 	

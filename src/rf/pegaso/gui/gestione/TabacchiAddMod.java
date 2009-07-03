@@ -98,19 +98,12 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 		 * @see java.awt.event.FocusListener#focusLost(java.awt.event.FocusEvent)
 		 */
 		public void focusLost(FocusEvent e) {
-			if (e.getSource() == txtCaricoIniziale) {
-				if (!ControlloDati.isNumero(txtCaricoIniziale.getText())) {
-					messaggioCampoErrato("Carico Iniziale Errato");
-					((JTextField) e.getComponent()).setText("");
-				}
-			} else if (e.getSource() == txtScortaMinima) {
+			if (e.getSource() == txtScortaMinima) {
 				if (!ControlloDati.isNumero(txtScortaMinima.getText())) {
 					messaggioCampoErrato("Scorta Minima Errato");
 					((JTextField) e.getComponent()).setText("");
 				}
-			} else if (e.getSource() == txtRicaricoListino) {
-				calcolaPrezzo();
-			}
+			} 
 
 		}
 
@@ -139,43 +132,25 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 
 	private JPanel jPanel = null;
 
-	private JPanel jPanel1 = null;
-
 	private JPanel jPanel2 = null;
 
 	private JScrollPane jScrollPane1 = null;
 
 	private JTabbedPane jTabbedPane = null;
 
-	private JLabel lblCaricoIniziale = null;
-
 	private JLabel lblCodBarre = null;
 
 	private JLabel lblCodFornitore = null;
 
-	private JLabel lblColore = null;
-
 	private JLabel lblDescrizione = null;
-
-	private JLabel lblImballo = null;
-
-	private JLabel lblIngrosso = null;
 
 	private JLabel lblIva = null;
 
 	private JLabel lblNota = null;
 
-	private JLabel lblPeso = null;
-
-	private JLabel lblPrezzoAcquisto = null;
-
 	private JLabel lblPrezzoIngrosso = null;
 
 	private JLabel lblQta = null;
-
-	private JLabel lblRicaricoIngrosso = null;
-
-	private JLabel lblSconto = null;
 
 	private JLabel lblScortaMinima = null;
 
@@ -187,27 +162,16 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 
 	private JPanel pnlDatiPersonali = null;
 
-	private JTextField txtCaricoIniziale = null;
-
 	private JTextField txtCodBarre = null;
 
 	private JTextField txtCodFornitore = null;
 
-	private JTextField txtColore = null;
-
 	private JTextField txtDescrizione = null;
 
-	private JTextField txtImballo = null;
-
-	private JFormattedTextField txtPrezzoFinale = null;
 	private JTextField txtIva = null;
 	private JTextArea txtNote = null;
-	private JTextField txtPeso = null;
-	private JFormattedTextField txtPrezzoAcquisto = null;
 	private JFormattedTextField txtPrezzoListino = null;
 	private JTextField txtQta = null;
-	private JFormattedTextField txtRicaricoListino = null;
-	private JFormattedTextField txtSconto = null;
 	private JTextField txtScortaMinima = null;
 	private String[] codFornitori;
 	private String[] descFornitori;
@@ -322,19 +286,8 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			} else
 				iva = Integer.parseInt(txtIva.getText());
 
-			if (txtSconto.getText().equals("")
-					|| txtSconto.getText().equals("0")) {
-				sconto = ControlloDati.convertPrezzoToDouble("0.00");
-			} else {
-				if (txtSconto.getValue() instanceof Double) {
-					sconto = ((Double) txtSconto.getValue()).doubleValue();
-				} else {
-					long value = ((Long) txtSconto.getValue()).longValue();
-					sconto = new Double(value).doubleValue();
-				}
-			}
-			// sconto = ((Double)txtSconto.getValue()).doubleValue();
-
+			sconto=0;
+			
 		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(this, "Numero malformato",
 					"NUMERO ERRATO", JOptionPane.ERROR_MESSAGE);
@@ -348,7 +301,6 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 
 		double ptot = pListino + (pListino / 100 * iva);
 		ptot = ptot - (ptot / 100 * sconto);
-		txtPrezzoFinale.setValue(new Double(ptot));
 
 	}
 
@@ -393,194 +345,15 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 				JOptionPane.ERROR_MESSAGE);
 	}
 
-	private void calcolaPrezzo() {
-		double per = 0;
-		try {
-			if (txtRicaricoListino.getText().equalsIgnoreCase("")) {
-				per = 0.0;
-			} else
-				per = new Double(txtRicaricoListino.getText()).doubleValue();
-		} catch (NumberFormatException e) {
-			messaggioCampoErrato("Campo Errato (###.##): " + e.getMessage());// TODO:
-			// handle
-			// exception
-		}
+	
 
-		double a = 0;
-		try {
-			if (txtPrezzoAcquisto.getValue() instanceof Double) {
-				a = ((Double) txtPrezzoAcquisto.getValue()).doubleValue();
-			} else {
-				long value = ((Long) txtPrezzoAcquisto.getValue()).longValue();
-				a = new Double(value).doubleValue();
-			}
+	
 
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		double p = ((a * per) / 100) + a;
-		try {
-			// String prezzo = (ControlloDati.convertDoubleToPrezzo(p));
-			txtPrezzoListino.setValue(new Double(p));
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	
 
-	}
+	
 
-	private void calcolaPrezzoDettaglio() {
-		double pDettaglio = 0.0;
-		double sconto = 0.0;
-		try {
-			if (txtSconto.getValue() instanceof Double) {
-				sconto = ((Double) txtSconto.getValue()).doubleValue();
-			} else {
-				long value = ((Long) txtSconto.getValue()).longValue();
-				sconto = new Double(value).doubleValue();
-			}
-
-		} catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(this, "Numero malformato",
-					"NUMERO ERRATO", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}
-
-		int iva = Integer.parseInt(txtIva.getText());
-		double ptot = pDettaglio + (pDettaglio / 100 * iva);
-		ptot = ptot - (ptot / 100 * sconto);
-		// txtDettaglio.setText(ControlloDati.convertDoubleToPrezzo(ptot));
-	}
-
-	private void calcolaPrezzoListinoByPrezzoAcquisto() {
-		double pAcquisto = 0.0;
-		double sconto = 0.0;
-		double ricarico = 0.0;
-		try {
-			if (txtPrezzoAcquisto.getText().equals("")) {
-				pAcquisto = ControlloDati.convertPrezzoToDouble("0.00");
-			} else {
-				if (txtPrezzoAcquisto.getValue() instanceof Double) {
-					pAcquisto = ((Double) txtPrezzoAcquisto.getValue())
-							.doubleValue();
-				} else {
-					long value = ((Long) txtPrezzoAcquisto.getValue())
-							.longValue();
-					pAcquisto = new Double(value).doubleValue();
-				}
-			}
-			// pAcquisto = ((Double)txtPrezzoAcquisto.getValue()).doubleValue();
-
-			if (txtRicaricoListino.getText().equals("")) {
-				ricarico = ControlloDati.convertPrezzoToDouble("0.00");
-			} else {
-				if (txtRicaricoListino.getValue() instanceof Double) {
-					ricarico = ((Double) txtRicaricoListino.getValue())
-							.doubleValue();
-				} else {
-					long value = ((Long) txtRicaricoListino.getValue())
-							.longValue();
-					ricarico = new Double(value).doubleValue();
-				}
-			}
-			// ricarico = ((Double)txtRicaricoListino.getValue()).doubleValue();
-		} catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(this, "Numero malformato",
-					"NUMERO ERRATO", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		} catch (ParseException e) {
-			JOptionPane.showMessageDialog(this, "Campo prezzo errato",
-					"ERRORE", JOptionPane.ERROR_MESSAGE);
-
-			e.printStackTrace();
-		}
-		double ptot = pAcquisto + (pAcquisto / 100 * ricarico);
-		txtPrezzoListino.setValue(new Double(ptot));
-	}
-
-	private void calcolaPrezzoListinoByPrezzoPubblico() {
-		double pAcquisto = 0.0;
-		int iva = 0;
-		try {
-			if (txtPrezzoFinale.getText().equals("")) {
-				pAcquisto = ControlloDati.convertPrezzoToDouble("0.00");
-			} else {
-				if (txtPrezzoFinale.getValue() instanceof Double) {
-					pAcquisto = ((Double) txtPrezzoFinale.getValue())
-							.doubleValue();
-				} else {
-					long value = ((Long) txtPrezzoFinale.getValue())
-							.longValue();
-					pAcquisto = new Double(value).doubleValue();
-				}
-			}
-			// pAcquisto = ((Double)txtPrezzoFinale.getValue()).doubleValue();
-			if (txtIva.getText().equals("")) {
-				JOptionPane.showMessageDialog(this, "Inserire campo iva",
-						"AVVISO", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			} else
-				iva = new Integer(txtIva.getText()).intValue();
-
-		} catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(this, "Numero malformato",
-					"NUMERO ERRATO", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		} catch (ParseException e) {
-			JOptionPane.showMessageDialog(this, "Campo prezzo errato",
-					"ERRORE", JOptionPane.ERROR_MESSAGE);
-
-			e.printStackTrace();
-		}
-		double perc = (double) (iva + 100) / 100;
-		double ptot = pAcquisto / perc;
-		txtPrezzoListino.setValue(new Double(ptot));
-	}
-
-	private void calcoloPercentualeRicarico() {
-		double pPubblico = 0.0;
-		double pAcquisto = 0.0;
-		try {
-			if (txtPrezzoListino.getText().equals("")) {
-				pPubblico = new Double(0.00);
-			} else {
-				if (txtPrezzoListino.getValue() instanceof Double) {
-					pPubblico = ((Double) txtPrezzoListino.getValue())
-							.doubleValue();
-				} else {
-					long value = ((Long) txtPrezzoListino.getValue())
-							.longValue();
-					pPubblico = new Double(value).doubleValue();
-				}
-			}
-			// pPubblico = ((Double)txtPrezzoListino.getValue()).doubleValue();
-
-			if (txtPrezzoAcquisto.getText().equals("")) {
-				pAcquisto = new Double(0.00);
-			} else {
-				if (txtPrezzoAcquisto.getValue() instanceof Double) {
-					pAcquisto = ((Double) txtPrezzoAcquisto.getValue())
-							.doubleValue();
-				} else {
-					long value = ((Long) txtPrezzoAcquisto.getValue())
-							.longValue();
-					pAcquisto = new Double(value).doubleValue();
-				}
-			}
-			// pAcquisto = ((Double)txtPrezzoAcquisto.getValue()).doubleValue();
-
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		double d = 0.0;
-		if ((pPubblico - pAcquisto) > 0 && pAcquisto > 0)
-			d = ((pPubblico - pAcquisto) / pAcquisto) * 100;
-		// d = ControlloDati.arrotondaPrezzo(d);
-		txtRicaricoListino.setValue(new Double(d));
-	}
-
+	
 	/**
 	 * @param cmbFornitori2
 	 */
@@ -790,35 +563,6 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	}
 
 	/**
-	 * This method initializes jPanel1
-	 *
-	 * @return javax.swing.JPanel
-	 */
-	private JPanel getJPanel1() {
-		if (jPanel1 == null) {
-			try {
-				lblIngrosso = new JLabel();
-				lblIngrosso.setBounds(new Rectangle(8, 20, 73, 21)); // Generated
-				lblIngrosso.setText("Pubblico €."); // Generated
-				jPanel1 = new JPanel();
-				jPanel1.setLayout(null); // Generated
-				jPanel1.setBounds(new Rectangle(417, 217, 201, 49)); // Generated
-				jPanel1.setBorder(BorderFactory.createTitledBorder(
-						BorderFactory.createBevelBorder(BevelBorder.RAISED),
-						"Prezzo al Pubblico",
-						TitledBorder.DEFAULT_JUSTIFICATION,
-						TitledBorder.DEFAULT_POSITION, new Font("Dialog",
-								Font.BOLD, 12), new Color(51, 51, 51))); // Generated
-				jPanel1.add(lblIngrosso, null); // Generated
-				jPanel1.add(getTxtIngrosso(), null); // Generated
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return jPanel1;
-	}
-
-	/**
 	 * This method initializes jPanel2
 	 *
 	 * @return javax.swing.JPanel
@@ -831,7 +575,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 				lblQta.setText("Quantità"); // Generated
 				jPanel2 = new JPanel();
 				jPanel2.setLayout(null); // Generated
-				jPanel2.setBounds(new Rectangle(417, 269, 201, 65)); // Generated
+				jPanel2.setBounds(new Rectangle(408, 106, 201, 65)); // Generated
 				jPanel2.setBorder(BorderFactory.createTitledBorder(
 						BorderFactory.createBevelBorder(BevelBorder.RAISED),
 						"Magazzino", TitledBorder.DEFAULT_JUSTIFICATION,
@@ -855,7 +599,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 		if (jScrollPane1 == null) {
 			try {
 				jScrollPane1 = new JScrollPane();
-				jScrollPane1.setBounds(new Rectangle(5, 321, 297, 41)); // Generated
+				jScrollPane1.setBounds(new Rectangle(8, 194, 297, 41)); // Generated
 				jScrollPane1.setViewportView(getTxtNote()); // Generated
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -910,28 +654,10 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			try {
 				lblNota = new JLabel();
 				lblNota.setText("Note"); // Generated
-				lblNota.setBounds(new Rectangle(5, 303, 26, 16)); // Generated
+				lblNota.setBounds(new Rectangle(8, 176, 26, 16)); // Generated
 				lblScortaMinima = new JLabel();
 				lblScortaMinima.setText("Scorta Minima"); // Generated
-				lblScortaMinima.setBounds(new Rectangle(165, 264, 82, 16)); // Generated
-				lblCaricoIniziale = new JLabel();
-				lblCaricoIniziale.setText("Carico Iniziale"); // Generated
-				lblCaricoIniziale.setBounds(new Rectangle(6, 264, 79, 16)); // Generated
-				lblSconto = new JLabel();
-				lblSconto.setText("Sconto %"); // Generated
-				lblSconto.setBounds(new Rectangle(6, 218, 52, 16)); // Generated
-				lblColore = new JLabel();
-				lblColore.setText("Colore"); // Generated
-				lblColore.setBounds(new Rectangle(273, 177, 37, 16)); // Generated
-				lblPeso = new JLabel();
-				lblPeso.setText("Peso (KG)"); // Generated
-				lblPeso.setBounds(new Rectangle(165, 177, 56, 16)); // Generated
-				lblImballo = new JLabel();
-				lblImballo.setText("Imballo"); // Generated
-				lblImballo.setBounds(new Rectangle(6, 177, 41, 16)); // Generated
-				lblRicaricoIngrosso = new JLabel();
-				lblRicaricoIngrosso.setText("Ricarico Listino %"); // Generated
-				lblRicaricoIngrosso.setBounds(new Rectangle(165, 133, 112, 16)); // Generated
+				lblScortaMinima.setBounds(new Rectangle(8, 135, 82, 16)); // Generated
 				lblUnitaMisura = new JLabel();
 				lblUnitaMisura.setText("UM"); // Generated
 				lblUnitaMisura.setBounds(new Rectangle(281, 89, 18, 16)); // Generated
@@ -940,10 +666,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 				lblIva.setBounds(new Rectangle(165, 91, 28, 16)); // Generated
 				lblPrezzoIngrosso = new JLabel();
 				lblPrezzoIngrosso.setText("Prezzo di Listino"); // Generated
-				lblPrezzoIngrosso.setBounds(new Rectangle(5, 133, 113, 16)); // Generated
-				lblPrezzoAcquisto = new JLabel();
-				lblPrezzoAcquisto.setText("Prezzo Acquisto"); // Generated
-				lblPrezzoAcquisto.setBounds(new Rectangle(6, 91, 92, 16)); // Generated
+				lblPrezzoIngrosso.setBounds(new Rectangle(7, 94, 113, 16)); // Generated
 				lblDescrizione = new JLabel();
 				lblDescrizione.setText("Descrizione"); // Generated
 				lblDescrizione.setBounds(new Rectangle(6, 51, 67, 16)); // Generated
@@ -962,32 +685,17 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 				pnlDatiPersonali.add(lblCodBarre, null); // Generated
 				pnlDatiPersonali.add(lblCodFornitore, null); // Generated
 				pnlDatiPersonali.add(lblDescrizione, null); // Generated
-				pnlDatiPersonali.add(lblPrezzoAcquisto, null); // Generated
 				pnlDatiPersonali.add(getTxtDescrizione(), null); // Generated
-				pnlDatiPersonali.add(getTxtPrezzoAcquisto(), null); // Generated
 				pnlDatiPersonali.add(lblPrezzoIngrosso, null); // Generated
 				pnlDatiPersonali.add(getTxtPrezzoIngrosso(), null); // Generated
 				pnlDatiPersonali.add(lblIva, null); // Generated
 				pnlDatiPersonali.add(getTxtIva(), null); // Generated
 				pnlDatiPersonali.add(lblUnitaMisura, null); // Generated
 				pnlDatiPersonali.add(getCmbMisura(), null); // Generated
-				pnlDatiPersonali.add(lblRicaricoIngrosso, null); // Generated
-				pnlDatiPersonali.add(getTxtRicaricoIngrosso(), null); // Generated
-				pnlDatiPersonali.add(lblImballo, null); // Generated
-				pnlDatiPersonali.add(getTxtImballo(), null); // Generated
-				pnlDatiPersonali.add(lblPeso, null); // Generated
-				pnlDatiPersonali.add(getTxtPeso(), null); // Generated
-				pnlDatiPersonali.add(lblColore, null); // Generated
-				pnlDatiPersonali.add(getTxtColore(), null); // Generated
-				pnlDatiPersonali.add(lblSconto, null); // Generated
-				pnlDatiPersonali.add(getTxtSconto(), null); // Generated
-				pnlDatiPersonali.add(lblCaricoIniziale, null); // Generated
-				pnlDatiPersonali.add(getTxtCaricoIniziale(), null); // Generated
 				pnlDatiPersonali.add(lblScortaMinima, null); // Generated
 				pnlDatiPersonali.add(getTxtScortaMinima(), null); // Generated
 				pnlDatiPersonali.add(lblNota, null); // Generated
 				pnlDatiPersonali.add(getJScrollPane1(), null); // Generated
-				pnlDatiPersonali.add(getJPanel1(), null); // Generated
 				pnlDatiPersonali.add(getJPanel2(), null); // Generated
 				pnlDatiPersonali.add(getBtnSuggerimento(), null);  // Generated
 			} catch (java.lang.Throwable e) {
@@ -995,24 +703,6 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			}
 		}
 		return pnlDatiPersonali;
-	}
-
-	/**
-	 * This method initializes txtCaricoIniziale
-	 *
-	 * @return javax.swing.JTextField
-	 */
-	private JTextField getTxtCaricoIniziale() {
-		if (txtCaricoIniziale == null) {
-			try {
-				txtCaricoIniziale = new JTextField();
-				txtCaricoIniziale.setPreferredSize(new Dimension(100, 20)); // Generated
-				txtCaricoIniziale.setBounds(new Rectangle(6, 280, 100, 20)); // Generated
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return txtCaricoIniziale;
 	}
 
 	/**
@@ -1054,25 +744,6 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	}
 
 	/**
-	 * This method initializes txtColore
-	 *
-	 * @return javax.swing.JTextField
-	 */
-	private JTextField getTxtColore() {
-		if (txtColore == null) {
-			try {
-				txtColore = new JTextField();
-				txtColore.setPreferredSize(new Dimension(150, 20)); // Generated
-				txtColore.setBounds(new Rectangle(273, 193, 121, 20)); // Generated
-				txtColore.setDocument(new UpperTextDocument());
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return txtColore;
-	}
-
-	/**
 	 * This method initializes txtDescrizione
 	 *
 	 * @return javax.swing.JTextField
@@ -1089,57 +760,6 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			}
 		}
 		return txtDescrizione;
-	}
-
-	/**
-	 * This method initializes txtImballo
-	 *
-	 * @return javax.swing.JTextField
-	 */
-	private JTextField getTxtImballo() {
-		if (txtImballo == null) {
-			try {
-				txtImballo = new JTextField();
-				txtImballo.setPreferredSize(new Dimension(150, 20)); // Generated
-				txtImballo.setBounds(new Rectangle(6, 193, 150, 20)); // Generated
-				txtImballo.setDocument(new UpperTextDocument());
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return txtImballo;
-	}
-
-	/**
-	 * This method initializes txtIngrosso
-	 *
-	 * @return javax.swing.JTextField
-	 */
-	private JTextField getTxtIngrosso() {
-		if (txtPrezzoFinale == null) {
-			try {
-				DecimalFormat formatPrice = new DecimalFormat();
-				formatPrice.setMaximumFractionDigits(2);
-				formatPrice.setMinimumFractionDigits(2);
-				txtPrezzoFinale = new JFormattedTextField(formatPrice);
-				txtPrezzoFinale.setBounds(new Rectangle(84, 20, 97, 21)); // Generated
-				txtPrezzoFinale.setEditable(true); // Generated
-				txtPrezzoFinale.setBackground(Color.green); // Generated
-				/*
-				 * txtPrezzoFinale.addFocusListener(new
-				 * java.awt.event.FocusAdapter() { public void
-				 * focusLost(java.awt.event.FocusEvent e) {
-				 * calcolaPrezzoListinoByPrezzoPubblico();
-				 * calcoloPercentualeRicarico(); } });
-				 */
-
-				txtPrezzoFinale.addPropertyChangeListener("value", this);
-				txtPrezzoFinale.setValue(new Double(0));
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return txtPrezzoFinale;
 	}
 
 	/**
@@ -1184,61 +804,6 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	}
 
 	/**
-	 * This method initializes txtPeso
-	 *
-	 * @return javax.swing.JTextField
-	 */
-	private JTextField getTxtPeso() {
-		if (txtPeso == null) {
-			try {
-				txtPeso = new JTextField();
-				txtPeso.setPreferredSize(new Dimension(100, 20)); // Generated
-				txtPeso.setBounds(new Rectangle(165, 193, 100, 20)); // Generated
-				txtPeso.addFocusListener(new java.awt.event.FocusAdapter() {
-					public void focusLost(java.awt.event.FocusEvent e) {
-						String prezzo = ((JTextField) e.getComponent())
-								.getText();
-
-						if (ControlloDati.prezzoCorretto(prezzo)) {
-							System.out.println("OK");
-						} else {
-							System.out.println("ERRATO");
-							((JTextField) e.getComponent()).setText("");
-						}
-					}
-				});
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return txtPeso;
-	}
-
-	/**
-	 * This method initializes txtPrezzoAcquisto
-	 *
-	 * @return javax.swing.JTextField
-	 */
-	private JTextField getTxtPrezzoAcquisto() {
-		if (txtPrezzoAcquisto == null) {
-			try {
-				DecimalFormat formatPrice = new DecimalFormat();
-				formatPrice.setMaximumFractionDigits(2);
-				formatPrice.setMinimumFractionDigits(2);
-				txtPrezzoAcquisto = new JFormattedTextField(formatPrice);
-				txtPrezzoAcquisto.setPreferredSize(new Dimension(100, 20)); // Generated
-				txtPrezzoAcquisto.setBounds(new Rectangle(6, 107, 101, 20)); // Generated
-				txtPrezzoAcquisto.setDocument(new UpperTextDocument());
-				txtPrezzoAcquisto.addPropertyChangeListener("value", this);
-				txtPrezzoAcquisto.setValue(new Double(0));
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return txtPrezzoAcquisto;
-	}
-
-	/**
 	 * This method initializes txtPrezzoIngrosso
 	 *
 	 * @return javax.swing.JTextField
@@ -1251,7 +816,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 				formatPrice.setMinimumFractionDigits(2);
 				txtPrezzoListino = new JFormattedTextField(formatPrice);
 				txtPrezzoListino.setPreferredSize(new Dimension(100, 20)); // Generated
-				txtPrezzoListino.setBounds(new Rectangle(5, 149, 113, 20)); // Generated
+				txtPrezzoListino.setBounds(new Rectangle(7, 110, 113, 20)); // Generated
 				/*
 				 * txtPrezzoListino.addFocusListener(new
 				 * java.awt.event.FocusAdapter() { public void
@@ -1287,59 +852,6 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	}
 
 	/**
-	 * This method initializes txtRicaricoIngrosso
-	 *
-	 * @return javax.swing.JTextField
-	 */
-	private JTextField getTxtRicaricoIngrosso() {
-		if (txtRicaricoListino == null) {
-			try {
-				DecimalFormat formatPrice = new DecimalFormat();
-				formatPrice.setMaximumFractionDigits(2);
-				formatPrice.setMinimumFractionDigits(2);
-				txtRicaricoListino = new JFormattedTextField(formatPrice);
-				txtRicaricoListino.setPreferredSize(new Dimension(100, 20)); // Generated
-				txtRicaricoListino.setBounds(new Rectangle(165, 149, 112, 20));
-				/*
-				 * txtRicaricoListino.addFocusListener(new
-				 * java.awt.event.FocusAdapter() { public void
-				 * focusLost(java.awt.event.FocusEvent e) {
-				 * calcolaPrezzoListinoByPrezzoAcquisto();
-				 * calcolaPrezzoPubblico(); } });
-				 */
-
-				txtRicaricoListino.addPropertyChangeListener("value", this);
-				txtRicaricoListino.setValue(new Double(0));
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return txtRicaricoListino;
-	}
-
-	/**
-	 * This method initializes txtSconto
-	 *
-	 * @return javax.swing.JTextField
-	 */
-	private JTextField getTxtSconto() {
-		if (txtSconto == null) {
-			try {
-				NumberFormat f = DecimalFormat
-						.getIntegerInstance(Locale.ITALIAN);
-				f.setMaximumIntegerDigits(2);
-				f.setMaximumFractionDigits(2);
-				txtSconto = new JFormattedTextField(f);
-				txtSconto.setPreferredSize(new Dimension(100, 20)); // Generated
-				txtSconto.setBounds(new Rectangle(6, 234, 100, 20)); // Generated
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return txtSconto;
-	}
-
-	/**
 	 * This method initializes txtScortaMinima
 	 *
 	 * @return javax.swing.JTextField
@@ -1349,7 +861,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			try {
 				txtScortaMinima = new JTextField();
 				txtScortaMinima.setPreferredSize(new Dimension(100, 20)); // Generated
-				txtScortaMinima.setBounds(new Rectangle(165, 280, 100, 20)); // Generated
+				txtScortaMinima.setBounds(new Rectangle(8, 151, 100, 20)); // Generated
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -1371,29 +883,20 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			e.printStackTrace();
 		}
 
-		this.txtCaricoIniziale.setText(new Integer(c.getCaricoIniziale())
-				.toString());
+		
 		this.txtCodBarre.setText(c.getCodBarre());
 		this.txtCodFornitore.setText(c.getCodFornitore());
-		this.txtColore.setText(c.getColore());
+		
 		this.txtDescrizione.setText(c.getDescrizione());
-		this.txtImballo.setText(c.getImballo());
 		this.txtIva.setText(new Integer(c.getIva()).toString());
 		this.txtNote.setText(c.getNote());
-		this.txtPeso.setText(new Double(c.getPeso()).toString());
 		// this.txtPrezzoAcquisto.setText(new
 		// Double(c.getPrezzoAcquisto()).toString());
-
-		// this.txtPrezzoAcquisto.setText((ControlloDati.convertDoubleToPrezzo(c.getPrezzoAcquisto())));
-		this.txtPrezzoAcquisto.setValue(new Double(c.getPrezzoAcquisto()));
 
 		// this.txtPrezzoListino.setText(ControlloDati.convertDoubleToPrezzo(c.getPrezzoIngrosso()));
 		this.txtPrezzoListino.setValue(new Double(c.getPrezzoIngrosso()));
 		// this.txtRicaricoDettaglio.setText(new
 		// Integer(c.getRicaricoDettaglio()).toString());
-		this.txtRicaricoListino.setText(new Integer(c.getRicaricoIngrosso())
-				.toString());
-		this.txtSconto.setText(new Integer(c.getSconto()).toString());
 		this.txtScortaMinima.setText(new Integer(c.getScortaMinima())
 				.toString());
 	}
@@ -1404,7 +907,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(636, 474);
+		this.setSize(636, 350);
 		this.setResizable(false); // Generated
 
 		this.setContentPane(getJContentPane());
@@ -1422,8 +925,6 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 				c.caricaDati(this.idArticolo);
 				ultimoArticolo[0]=c.getCodBarre();
 				impostaCampi(c);
-				calcoloPercentualeRicarico();
-				calcolaPrezzoListinoByPrezzoAcquisto();
 				calcolaPrezzoPubblico();
 				caricaQtaMagazzino();
 			} catch (SQLException e) {
@@ -1570,7 +1071,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 		int cod = new Integer(codUnitaDiMisura[pos]);
 		a.setCodiceUnitaDiMisura(cod);
 
-		a.setColore(txtColore.getText());
+		a.setColore("");
 		a.setDescrizione(txtDescrizione.getText());
 		
 
@@ -1582,7 +1083,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 		//il 3 sta per reparto generale
 		a.setIdReparto(3);
 
-		a.setImballo(txtImballo.getText());
+		a.setImballo("");
 		// impostiamoiva
 		if (txtIva.getText().equalsIgnoreCase(""))
 			a.setIva(0);
@@ -1590,24 +1091,9 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			a.setIva(Integer.parseInt(txtIva.getText()));
 
 		try {
-			if (txtPeso.getText().equalsIgnoreCase("")) {
-				a.setPeso(0.0);
-			} else
-				a.setPeso((ControlloDati.convertPrezzoToDouble(txtPeso
-						.getText())));
-
-			if (txtPrezzoAcquisto.getText().equalsIgnoreCase("")) {
-				a.setPrezzoAcquisto(0.00);
-			} else {
-				if (txtPrezzoAcquisto.getValue() instanceof Double) {
-					a.setPrezzoAcquisto(((Double) txtPrezzoAcquisto.getValue())
-							.doubleValue());
-				} else {
-					long value = ((Long) txtPrezzoAcquisto.getValue())
-							.longValue();
-					a.setPrezzoAcquisto(new Double(value).doubleValue());
-				}
-			}
+			a.setPeso(0.0);
+			a.setPrezzoAcquisto(0.00);
+			
 
 			// a.setPrezzoDettaglio((ControlloDati.convertPrezzoToDouble(txtPrezzoDettaglio.getText())));
 			if (txtPrezzoListino.getText().equalsIgnoreCase("")) {
@@ -1626,30 +1112,17 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			JOptionPane.showMessageDialog(this, "Numero malformato",
 					"NUMERO ERRATO", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
-		} catch (ParseException e) {
-			// JOptionPane.showMessageDialog(this, "Campo prezzo errato",
-			// "ERRORE", JOptionPane.ERROR_MESSAGE);
-
-			e.printStackTrace();
 		}
 
 		// impostiamo sconto
-		if (txtSconto.getText().equalsIgnoreCase(""))
-			a.setSconto(0);
-		else
-			a.setSconto(Integer.parseInt((txtSconto.getText())));
+		a.setSconto(0);
 		// impostiamo sconto
 		if (txtScortaMinima.getText().equalsIgnoreCase(""))
 			a.setScortaMinima(0);
 		else
 			a.setScortaMinima(Integer.parseInt((txtScortaMinima.getText())));
 		// impostiamo sconto
-		if (txtCaricoIniziale.getText().equalsIgnoreCase(""))
-			a.setCaricoIniziale(0);
-		else
-			a
-					.setCaricoIniziale(Integer.parseInt((txtCaricoIniziale
-							.getText())));
+		a.setCaricoIniziale(0);
 		a.setNote(txtNote.getText());
 		return true;
 
@@ -1691,17 +1164,8 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	public void propertyChange(PropertyChangeEvent e) {
 		Object source = e.getSource();
 		if (source == txtPrezzoListino) {
-			calcoloPercentualeRicarico();
 			calcolaPrezzoPubblico();
-		} else if (source == txtRicaricoListino) {
-			calcolaPrezzoListinoByPrezzoAcquisto();
-			calcolaPrezzoPubblico();
-		} else if (source == txtPrezzoFinale) {
-			calcolaPrezzoListinoByPrezzoPubblico();
-			calcoloPercentualeRicarico();
-		} else if (source == txtPrezzoAcquisto) {
-			calcoloPercentualeRicarico();
-		}
+		}  
 	}
 
 	/**

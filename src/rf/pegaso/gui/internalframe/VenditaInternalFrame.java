@@ -124,47 +124,6 @@ public class VenditaInternalFrame extends JInternalFrame {
 		this.setClosable(true);
 		this.setContentPane(getJContentPane());
 		txtFieldRicerca.requestFocusInWindow();
-		test();
-	}
-	
-	public void test(){
-//		try {
-			String path = "/home/sergio/completo_20090706.xls";
-			
-			
-			File xlsFile = new File(path);
-			ElaborateFileXls efx = new ElaborateFileXls();
-			try {
-				efx.loadContingent(xlsFile);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SAXException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-////			PDFTextStream stream;
-////
-////			stream = new PDFTextStream(pdfFile);
-////
-////			StringBuffer sb = new StringBuffer(1024);
-////			char[] buf = new char[512];
-////			int cnt;
-////
-////			while ((cnt = (stream.read(buf, 0, 512))) != -1) {
-////				sb.append(buf, 0, cnt);
-////			}
-////
-////			stream.close();
-////			System.out.println(sb.toString());
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-        
 	}
 	
 	private void initializeCarrello(){
@@ -185,7 +144,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 		catch ( Exception e ){
 			e.printStackTrace();
 		}		
-		pnlArticoli.caricaArticoli(art);
+//		pnlArticoli.caricaArticoli(art);
 		pannelloCarrello.setPreferredSize(new Dimension(500, 450));
 		pannelloCarrello.setBounds(new Rectangle(0, 0, 500, 450));
 		pannelloCarrello.setVisible(true);

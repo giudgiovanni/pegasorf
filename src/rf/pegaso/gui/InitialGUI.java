@@ -324,7 +324,7 @@ public class InitialGUI extends JFrame {
 				jDesktopPane.add(getArchivioInternalFrame(), null);
 				jDesktopPane.add(getConfigurazioneInternalFrame(),null);
 				jDesktopPane.add(getVenditaInternalFrame(), null);
-				jDesktopPane.add(getPrimanotaInternalFrame(), null);
+//				jDesktopPane.add(getPrimanotaInternalFrame(), null);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -382,7 +382,7 @@ public class InitialGUI extends JFrame {
 				jJToolBarBar = new JToolBar();
 				jJToolBarBar.add(getBtnArchivio()); // Generated
 				jJToolBarBar.add(getBtnVendita()); // Generated
-				jJToolBarBar.add(getBtnPrimaNota()); // Generated
+//				jJToolBarBar.add(getBtnPrimaNota()); // Generated
 				jJToolBarBar.add(getBtnConfigurazione());
 			} catch (java.lang.Throwable e) {
 				// TODO: Something

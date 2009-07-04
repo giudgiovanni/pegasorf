@@ -2170,7 +2170,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	private JButton getBtnCaricaOrdine() {
 		if (btnCaricaOrdine == null) {
 			btnCaricaOrdine = new JButton();
-			btnCaricaOrdine.setText("Carica Ordine");
+			btnCaricaOrdine.setText("Carica Ordine In Magazzino");
 			btnCaricaOrdine.addActionListener(new MyButtonListener());
 		}
 		return btnCaricaOrdine;

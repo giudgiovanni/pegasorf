@@ -26,7 +26,7 @@ public class TestPannelloRiepilogoVendita {
 		o.setPrezzoVendita(10.0);
 		o.setQta(5);
 		o.setIva(20);
-		vendita.addDettaglioOrdine(o);
+		vendita.addDettaglioOrdine(o, false);
 	}
 
 }

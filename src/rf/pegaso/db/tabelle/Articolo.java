@@ -15,6 +15,8 @@ import java.sql.Statement;
 import java.util.LinkedList;
 
 import rf.pegaso.db.exception.CodiceBarreInesistente;
+import rf.utility.Constant;
+import rf.utility.ControlloDati;
 import rf.utility.db.DBManager;
 import rf.utility.db.eccezzioni.IDNonValido;
 
@@ -269,6 +271,46 @@ public class Articolo {
 		if (nRow > 0)
 			return true;
 		return false;
+	}
+	
+	/**
+	 * Metodo che verifica se un articolo di tabacchi e' gia' presente nel db
+	 * durante la procedura di aggiornamento del listino dei tabacchi
+	 * 
+	 * @return
+	 * @throws SQLException
+	 */
+	public boolean tabacchiEsistente()  throws SQLException{
+		String query = "select * from articoli a where a.codfornitore = '"+codFornitore+"' and a.descrizione = '"+descrizione+"'";
+		Statement st = dbm.getNewStatement();
+		ResultSet rs = st.executeQuery(query);
+		if ( rs.next() ){
+			this.caricoIniziale = rs.getInt("carico_Iniziale");
+			this.codBarre = rs.getString("codBarre");
+			this.codFornitore = rs.getString("codFornitore");
+			this.colore = rs.getString("colore");
+			this.dataInserimento = rs.getDate("data_Inserimento");
+			this.descrizione = rs.getString("descrizione");
+			this.idArticolo = rs.getInt("idArticolo");
+			this.idFornitore = rs.getInt("idFornitore");
+			this.idReparto = rs.getInt("idReparto");
+			this.imballo = rs.getString("imballo");
+			this.iva = rs.getInt("iva");
+			this.note = rs.getString("note");
+			this.peso = rs.getDouble("peso");
+			this.prezzoAcquisto = rs.getDouble("prezzo_Acquisto");
+			this.prezzoDettaglio = rs.getDouble("prezzo_Dettaglio");
+			this.prezzoIngrosso = rs.getDouble("prezzo_Ingrosso");
+			this.sconto = rs.getInt("sconto");
+			this.scortaMinima = rs.getInt("scorta_Minima");
+			this.um = rs.getInt("um");
+			if (st != null)
+				st.close();
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 
 	/**

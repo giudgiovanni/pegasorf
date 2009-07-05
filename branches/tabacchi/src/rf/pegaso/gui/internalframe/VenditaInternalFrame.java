@@ -26,7 +26,6 @@ import rf.pegaso.gui.vendita.panel.JButtonEvent;
 import rf.pegaso.gui.vendita.panel.JButtonEventListener;
 import rf.pegaso.gui.vendita.panel.JPanelArticoli;
 import rf.pegaso.gui.vendita.panel.JPanelRiepilogoVendita;
-import rf.upload.mapping.ElaborateFileXls;
 import rf.utility.ControlloDati;
 
 import java.awt.Font;
@@ -36,12 +35,9 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.IOException;
 
 import javax.swing.JTabbedPane;
 
-import org.xml.sax.SAXException;
 
 
 public class VenditaInternalFrame extends JInternalFrame {
@@ -164,7 +160,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 			}
 			dv.setDisponibilita(dv.getQta());
 			dv.setIva(20);
-			pannelloCarrello.addDettaglioOrdine(dv);
+			pannelloCarrello.addDettaglioOrdine(dv, true);
 			txtFldTotale.setText(ControlloDati.convertDoubleToPrezzo(pannelloCarrello.getTotaleCarrello()));
 			stateToZero();
 		} catch (NumberFormatException e) {
@@ -182,7 +178,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 			DettaglioOrdine dv = new DettaglioOrdine();
 			int esito = dv.loadByCB(codeBarre);
 			if ( esito == 1 ){
-				if ( pannelloCarrello.addDettaglioOrdine(dv) == -1){
+				if ( pannelloCarrello.addDettaglioOrdine(dv, false) == -1){
 					messaggioAVideo("Quantita' richiesta non disponibile.", "INFO");
 				}
 			}
@@ -213,69 +209,6 @@ public class VenditaInternalFrame extends JInternalFrame {
 		 m_iNumberStatus = NUMBER_INPUTZERO;
 		 m_iNumberStatusInput = NUMBERZERO;
 	 }
-	 
-//	 private void tastiFunzione(int cTrans){
-//		 if ( cTrans == KeyEvent.VK_F1 ){
-//				elaboraScontrino();
-//			}
-//			else if ( cTrans == KeyEvent.VK_F2 ){
-//				if ( !tastieraCassaAttiva ){
-//					((CardLayout) pnlContenitore.getLayout()).show(pnlContenitore, "pnlFunzioniCassa");
-//					btnInsManuale.setSelected(false);
-//					tastieraCassaAttiva = true;
-//				}
-//				inserimentoContanti = true;	
-//			}
-//			else if ( cTrans == KeyEvent.VK_F3 ){
-//				inserisciDaRepo("Reparto 1");
-//			}
-//			else if ( cTrans == KeyEvent.VK_F4 ){
-//				inserisciDaRepo("Reparto 1");
-//			}
-//			else if ( cTrans == KeyEvent.VK_F5 ){
-//				inserisciDaRepo("Reparto 1");
-//			}
-//			else if ( cTrans == KeyEvent.VK_ESCAPE ){		
-//				resetGUI();
-//				doDefaultCloseAction();
-//			}
-//			else if ( cTrans == KeyEvent.VK_DELETE || cTrans == KeyEvent.VK_BACK_SPACE ){
-//				stateTransition('\n');
-//			}
-//			else if ( cTrans == KeyEvent.VK_COMMA ){
-//				stateTransition(',');
-//			}
-//			else if ( cTrans == KeyEvent.VK_0 || cTrans == KeyEvent.VK_NUMPAD0 ){
-//				stateTransition('0');
-//			}
-//			else if ( cTrans == KeyEvent.VK_1 || cTrans == KeyEvent.VK_NUMPAD1 ){
-//				stateTransition('1');
-//			}
-//			else if ( cTrans == KeyEvent.VK_2 || cTrans == KeyEvent.VK_NUMPAD2 ){
-//				stateTransition('2');
-//			}
-//			else if ( cTrans == KeyEvent.VK_3 || cTrans == KeyEvent.VK_NUMPAD3 ){
-//				stateTransition('3');
-//			}
-//			else if ( cTrans == KeyEvent.VK_4 || cTrans == KeyEvent.VK_NUMPAD4 ){
-//				stateTransition('4');
-//			}
-//			else if ( cTrans == KeyEvent.VK_5 || cTrans == KeyEvent.VK_NUMPAD5 ){
-//				stateTransition('5');
-//			}
-//			else if ( cTrans == KeyEvent.VK_6 || cTrans == KeyEvent.VK_NUMPAD6 ){
-//				stateTransition('6');
-//			}
-//			else if ( cTrans == KeyEvent.VK_7 || cTrans == KeyEvent.VK_NUMPAD7 ){
-//				stateTransition('7');
-//			}
-//			else if ( cTrans == KeyEvent.VK_8 || cTrans == KeyEvent.VK_NUMPAD8 ){
-//				stateTransition('8');
-//			}
-//			else if ( cTrans == KeyEvent.VK_9 || cTrans == KeyEvent.VK_NUMPAD9 ){
-//				stateTransition('9');
-//			}	
-//	 }
 	 
 	private void stateTransition(char cTrans) {
 		try {			
@@ -429,20 +362,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 				inserisciDaRepo("Reparto 4");
 			}
 			else if ( e.getSource() == btnInsManuale ){
-				if ( tastieraCassaAttiva ){
-					((CardLayout) pnlContenitore.getLayout()).show(pnlContenitore, "pnlArticoli");
-					btnInsManuale.setSelected(false);
-					tastieraCassaAttiva = false;
-					inserimentoContanti = false;
-					stateToZero();
-					txtFieldRicerca.requestFocusInWindow();
-				}
-				else{
-					((CardLayout) pnlContenitore.getLayout()).show(pnlContenitore, "pnlFunzioniCassa");
-					btnInsManuale.setSelected(true);
-					tastieraCassaAttiva = true;
-					inserimentoContanti = false;
-				}
+				apriChiudiInserimentoManuale();
 			}
 			else if ( e.getSource() == btnElaboraScontrino ){
 				// Registriamo la vendita
@@ -607,11 +527,34 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private void m_jButtonKeysKeyPerformed(JButtonEvent evt) {
 			 DettaglioOrdine dv = new DettaglioOrdine();
              dv.loadByID(evt.getArticolo().getIdArticolo());
-             if ( pannelloCarrello.addDettaglioOrdine(dv) == -1){
+             if ( pannelloCarrello.addDettaglioOrdine(dv, false) == -1){
  				messaggioAVideo("Quantita' richiesta non disponibile.", "INFO");
  			} 			
 	}
 
+	private void apriChiudiInserimentoManuale(){
+		// Verifichiamo se il pannello e' chiuso
+		if ( !tastieraCassaAttiva && !inserimentoContanti){
+			((CardLayout) pnlContenitore.getLayout()).show(pnlContenitore, "pnlFunzioniCassa");
+			btnInsManuale.setSelected(true);
+			tastieraCassaAttiva = true;
+			inserimentoContanti = false;
+		}
+		else if ( tastieraCassaAttiva && inserimentoContanti ){
+			inserimentoContanti = false;
+			importo = "0";
+		}
+		// Verifichiamo se il pannello e' aperto, quindi lo chiudiamo
+		else if ( tastieraCassaAttiva ){
+			((CardLayout) pnlContenitore.getLayout()).show(pnlContenitore, "pnlArticoli");
+			btnInsManuale.setSelected(false);
+			tastieraCassaAttiva = false;
+			inserimentoContanti = false;
+			stateToZero();
+			txtFieldRicerca.requestFocusInWindow();
+		}
+	}
+	
 	/**
 	 * This method initializes jContentPane
 	 * 

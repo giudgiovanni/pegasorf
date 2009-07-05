@@ -136,7 +136,7 @@ public class VenditaAvanzata extends JFrame{
 		if ( evt.getKey() == '\0' ){
 			 DettaglioOrdine dv = new DettaglioOrdine();
 //             dv.loadByID(Integer.parseInt(evt.getIdArticolo()));
-             pannelloRiepilogo.addDettaglioOrdine(dv);
+             pannelloRiepilogo.addDettaglioOrdine(dv, false);
 		}
 		else
 			stateTransition(evt.getKey());
@@ -170,7 +170,7 @@ public class VenditaAvanzata extends JFrame{
                 DettaglioOrdine dv = new DettaglioOrdine();
                 dv.loadByCB(sCode);
                 //dv.loadByCB("ASTA");
-                pannelloRiepilogo.addDettaglioOrdine(dv);
+                pannelloRiepilogo.addDettaglioOrdine(dv, false);
             } else {
                 Toolkit.getDefaultToolkit().beep();
             }

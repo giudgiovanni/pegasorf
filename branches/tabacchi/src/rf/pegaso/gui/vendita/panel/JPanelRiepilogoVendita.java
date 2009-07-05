@@ -285,24 +285,29 @@ public class JPanelRiepilogoVendita extends JPanel {
 	 * @param e
 	 * @return
 	 */
-	public int addDettaglioOrdine(DettaglioOrdine ord) {
-		int contiene = carrello.indexOf(ord);
-		if( !carrello.contains(ord) )
-			if ( ord.getDisponibilita() < ord.getQta() ){
-				return -1;
-			}
-			else{
-				carrello.add(ord);
-			}
+	public int addDettaglioOrdine(DettaglioOrdine ord, boolean insDiretto) {
+		if ( insDiretto ){
+			carrello.add(ord);
+		}
 		else{
-			DettaglioOrdine tmp= carrello.get(contiene);
-			// Verifichiamo se la quantita' richiesta e' disponibile
-			if ( ord.getDisponibilita() < (tmp.getQta() + ord.getQta()) ){
-				return -1;
-			}
+			int contiene = carrello.indexOf(ord);
+			if( !carrello.contains(ord) )
+				if ( ord.getDisponibilita() < ord.getQta() ){
+					return -1;
+				}
+				else{
+					carrello.add(ord);
+				}
 			else{
-				//aggiungiamo alla quantita' gia' presente la nuova quantita' da aggiungere
-				tmp.setQta(tmp.getQta()+ord.getQta());
+				DettaglioOrdine tmp= carrello.get(contiene);
+				// Verifichiamo se la quantita' richiesta e' disponibile
+				if ( ord.getDisponibilita() < (tmp.getQta() + ord.getQta()) ){
+					return -1;
+				}
+				else{
+					//aggiungiamo alla quantita' gia' presente la nuova quantita' da aggiungere
+					tmp.setQta(tmp.getQta()+ord.getQta());
+				}
 			}
 		}
 		//notifichiamo che e' stata aggiunta/modificata una riga;

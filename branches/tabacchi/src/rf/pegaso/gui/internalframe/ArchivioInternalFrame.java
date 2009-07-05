@@ -19,6 +19,7 @@ import javax.swing.WindowConstants;
 
 import rf.myswing.util.ModalFrameUtil;
 import rf.pegaso.gui.gestione.ArticoliGestione;
+import rf.pegaso.gui.gestione.CaricaAggiornaTabacchiGui;
 import rf.pegaso.gui.gestione.CaricoGui;
 import rf.pegaso.gui.gestione.CaricoTabacchiGui;
 import rf.pegaso.gui.gestione.ClientiGestione;
@@ -63,6 +64,8 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				apriStampe();
 			} else if (e.getSource() == btnRicerche) {
 				apriRicerche();
+			}else if (e.getSource() == btnAggiornaTabacchi) {
+				apriAggTabacchi();
 			}
 		}
 
@@ -93,6 +96,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	private JButton btnFtByDdt = null;
 	private JButton btnTabacchi = null;
 	private JButton btnCaricoTabacchi = null;
+	private JButton btnAggiornaTabacchi = null;
 	/**
 	 * This is the xxx default constructor
 	 */
@@ -211,6 +215,11 @@ public class ArchivioInternalFrame extends JInternalFrame {
 		RicercheArchivio ric = new RicercheArchivio(this.padre);
 		ric.setVisible(true);
 
+	}
+	
+	private void apriAggTabacchi(){
+		CaricaAggiornaTabacchiGui cat = new CaricaAggiornaTabacchiGui(this.padre);
+		cat.setVisible(true);
 	}
 
 	/**
@@ -414,6 +423,9 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	private JPanel getPnlCentrale() {
 		if (pnlCentrale == null) {
 			try {
+				GridBagConstraints gridBagConstraints13 = new GridBagConstraints();
+				gridBagConstraints13.gridx = 4;
+				gridBagConstraints13.gridy = 2;
 				GridBagConstraints gridBagConstraints = new GridBagConstraints();
 				gridBagConstraints.gridx = 2;
 				gridBagConstraints.gridy = 1;
@@ -473,6 +485,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				pnlCentrale.add(getBtnFtByDdt(), gridBagConstraints15);
 				pnlCentrale.add(getBtnTabacchi(), gridBagConstraints1);
 				pnlCentrale.add(getBtnCaricoTabacchi(), gridBagConstraints);
+				pnlCentrale.add(getBtnAggiornaTabacchi(), gridBagConstraints13);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -551,10 +564,25 @@ public class ArchivioInternalFrame extends JInternalFrame {
 		if (btnCaricoTabacchi == null) {
 			btnCaricoTabacchi = new JButton();
 			btnCaricoTabacchi.setPreferredSize(new Dimension(120, 70));
-			btnCaricoTabacchi.setText("Ordine Tab.");
+			btnCaricoTabacchi.setText("<html>Ordine<P>Tabacchi</html>");
 			btnCaricoTabacchi.addActionListener(myActionListener);
 		}
 		return btnCaricoTabacchi;
+	}
+
+	/**
+	 * This method initializes btnAggiornaTabacchi	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnAggiornaTabacchi() {
+		if (btnAggiornaTabacchi == null) {
+			btnAggiornaTabacchi = new JButton();
+			btnAggiornaTabacchi.setText("<html>Aggiorna<P>Tabacchi</html>");
+			btnAggiornaTabacchi.setPreferredSize(new Dimension(120, 70));
+			btnAggiornaTabacchi.addActionListener(myActionListener);
+		}
+		return btnAggiornaTabacchi;
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

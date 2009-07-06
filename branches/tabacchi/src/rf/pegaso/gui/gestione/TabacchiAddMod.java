@@ -46,6 +46,7 @@ import rf.pegaso.db.tabelle.Reparto;
 import rf.pegaso.db.tabelle.UnitaDiMisura;
 import rf.pegaso.gui.utility.SuggerimentoCodice;
 import rf.pegaso.gui.viste.ViewDocCarico;
+import rf.utility.Constant;
 import rf.utility.ControlloDati;
 import rf.utility.db.DBManager;
 import rf.utility.db.eccezzioni.IDNonValido;
@@ -1078,10 +1079,10 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 		// Preleviamo il codice fornitore
 		
 		//Uno sta per monopoli di stato
-		a.setIdFornitore(1);
+		a.setIdFornitore(Constant.FORNITORE_TABACCHI);
 
 		//il 3 sta per reparto generale
-		a.setIdReparto(3);
+		a.setIdReparto(Constant.REPARTO_TABACCHI);
 
 		a.setImballo("");
 		// impostiamoiva

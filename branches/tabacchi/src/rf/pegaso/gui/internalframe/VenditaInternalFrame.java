@@ -22,6 +22,7 @@ import javax.swing.WindowConstants;
 
 import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.DettaglioOrdine;
+import rf.pegaso.db.tabelle.ImmagineArticolo;
 import rf.pegaso.gui.vendita.panel.JButtonEvent;
 import rf.pegaso.gui.vendita.panel.JButtonEventListener;
 import rf.pegaso.gui.vendita.panel.JPanelArticoli;
@@ -74,7 +75,6 @@ public class VenditaInternalFrame extends JInternalFrame {
 	
 	private boolean tastieraCassaAttiva = false;
 	private boolean inserimentoContanti = false;
-	private JButton btnModifica = null;
 	private JButton btnAnnullaVendita = null;
 	private JButton btnStorno = null;
 	private JButton btnInsManuale = null;
@@ -128,7 +128,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 		Articolo a = new Articolo();
 		LinkedList<Articolo> art = new LinkedList<Articolo>();
 		try {
-			a.findByCodBarre("ACE2");
+			a.findByCodBarre("000");
 //			ImmagineArticolo imgArt = new ImmagineArticolo(a);
 //			imgArt.setNome("test");
 //			imgArt.loadImageFromURL("resource/nuovo.png");
@@ -140,7 +140,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 		catch ( Exception e ){
 			e.printStackTrace();
 		}		
-//		pnlArticoli.caricaArticoli(art);
+		pnlArticoli.caricaArticoli(art);
 		pannelloCarrello.setPreferredSize(new Dimension(500, 450));
 		pannelloCarrello.setBounds(new Rectangle(0, 0, 500, 450));
 		pannelloCarrello.setVisible(true);
@@ -448,7 +448,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 		});
 		this.getRootPane().getActionMap().put("F4", new AbstractAction() {
 			public void actionPerformed(ActionEvent a) {
-				inserisciDaRepo("Reparto 1");
+				apriChiudiInserimentoManuale();
 			}
 		});
 		this.getRootPane().getActionMap().put("F5", new AbstractAction() {
@@ -974,20 +974,6 @@ public class VenditaInternalFrame extends JInternalFrame {
 	}
 
 	/**
-	 * This method initializes btnModifica	
-	 * 	
-	 * @return javax.swing.JButton	
-	 */
-	private JButton getBtnModifica() {
-		if (btnModifica == null) {
-			btnModifica = new JButton();
-			btnModifica.setText("Modifica");
-			btnModifica.setBounds(new Rectangle(140, 465, 90, 35));
-		}
-		return btnModifica;
-	}
-
-	/**
 	 * This method initializes btnAnnullaVendita	
 	 * 	
 	 * @return javax.swing.JButton	
@@ -996,7 +982,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 		if (btnAnnullaVendita == null) {
 			btnAnnullaVendita = new JButton();
 			btnAnnullaVendita.setText("Annulla");
-			btnAnnullaVendita.setBounds(new Rectangle(260, 465, 90, 35));
+			btnAnnullaVendita.setBounds(new Rectangle(355, 465, 90, 35));
 			btnAnnullaVendita.addActionListener(new MyButtonListener());
 		}
 		return btnAnnullaVendita;
@@ -1011,7 +997,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 		if (btnStorno == null) {
 			btnStorno = new JButton();
 			btnStorno.setText("Storno");
-			btnStorno.setBounds(new Rectangle(20, 465, 90, 35));
+			btnStorno.setBounds(new Rectangle(55, 465, 90, 35));
 			btnStorno.addActionListener(new MyButtonListener());
 		}
 		return btnStorno;
@@ -1026,7 +1012,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 		if (btnInsManuale == null) {
 			btnInsManuale = new JButton();
 			btnInsManuale.setBounds(new Rectangle(270, 80, 130, 50));
-			btnInsManuale.setText("<html>Inserimento<P>Manuale</html>");
+			btnInsManuale.setText("<html>Inserimento<P>Manuale (F4)</html>");
 			btnInsManuale.addActionListener(new MyButtonListener());
 		}
 		return btnInsManuale;
@@ -1164,7 +1150,6 @@ public class VenditaInternalFrame extends JInternalFrame {
 			pnlRiepilogo.setPreferredSize(new Dimension(500, 600));
 			pnlRiepilogo.add(pannelloCarrello, null);
 			pnlRiepilogo.add(getBtnStorno(), null);
-			pnlRiepilogo.add(getBtnModifica(), null);
 			pnlRiepilogo.add(getBtnAnnullaVendita(), null);
 			pnlRiepilogo.add(getBtnStorno1(), null);
 		}
@@ -1179,7 +1164,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JButton getBtnStorno1() {
 		if (btnStorno1 == null) {
 			btnStorno1 = new JButton();
-			btnStorno1.setBounds(new Rectangle(380, 465, 90, 35));
+			btnStorno1.setBounds(new Rectangle(205, 465, 90, 35));
 			btnStorno1.setText("Storno 1");
 			btnStorno1.addActionListener(new MyButtonListener());
 		}

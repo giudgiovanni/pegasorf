@@ -12,8 +12,6 @@ import javax.swing.JScrollPane;
 
 import rf.pegaso.db.tabelle.Articolo;
 
-import erreeffe.entity.Articoli;
-
 import java.awt.GridBagLayout;
 
 

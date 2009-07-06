@@ -27,6 +27,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.AbstractAction;
@@ -119,6 +120,8 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				stampaTuttiCarichi();
 			else if(e.getSource()==btnCaricaOrdine)
 				caricaOrdine();
+			else if( e.getSource()== btnSogliaMinima )
+				caricaArticoliSogliaMinima();
 		}
 
 	}
@@ -149,7 +152,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 	}
 
-	private MyMouseAdapter myMouseadapter;
+	private MyMouseAdapter myMouseadapter;  //  @jve:decl-index=0:
 
 	public CaricoTabacchiGui(Frame frame) {
 		btnAzzera = null;
@@ -835,7 +838,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			c.caricaDati(idcarico);
 			int rifdoc = c.getRiferimentoDoc();
 			int doc = c.getIdDocumento();
-			// in caso il doc è un ddt ed ha un riferimanto ad una
+			// in caso il doc ï¿½ un ddt ed ha un riferimanto ad una
 			// fattura facciamo un update degli articoli impostando
 			// nel dettaglio carico il codce da quello del ddt
 			// a quello della fattura
@@ -847,7 +850,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			c.deleteAllArticoliCaricati();
 			c.deleteCarico(idcarico);
 
-			// se il doc eliminato è una fattura quindi 1 lo eliminiamo ma
+			// se il doc eliminato ï¿½ una fattura quindi 1 lo eliminiamo ma
 			// reimpostiamo
 			// il ddt come senza fattura.
 			if (rifdoc != -1 && doc == 1) {
@@ -1038,7 +1041,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				lblDataCarico.setText("Data Ordine");
 				lblNumeroCarico = new JLabel();
 				lblNumeroCarico.setBounds(new Rectangle(9, 20, 57, 25));
-				lblNumeroCarico.setText("N° Ordine");
+				lblNumeroCarico.setText("Nï¿½ Ordine");
 				pnlNord = new JPanel();
 				pnlNord.setLayout(null);
 				pnlNord.setPreferredSize(new Dimension(1, 260));
@@ -1108,6 +1111,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				pnlProdotto.add(lblInsRapido, null);
 				pnlProdotto.add(getBtnNewArticolo(), null);
 				pnlProdotto.add(getBtnNewArticolo1(), null);
+				pnlProdotto.add(getBtnSogliaMinima(), null);
 			} catch (Throwable throwable) {
 			}
 		return pnlProdotto;
@@ -1585,6 +1589,149 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		}
 
 	}
+	
+	/**
+	 * Metodo che recupera tutti gli articoli che si trovano sotto la soglia
+	 * minima e genera un ordine con tali prodotti
+	 * 
+	 */
+	private void caricaArticoliSogliaMinima(){
+
+		// PUNTO DI BACKUP DA ATTIVARE DA CONFIGURAZIONI
+		try {
+			UtilityDBManager.getSingleInstance().backupDataBase(
+					UtilityDBManager.INSERT);
+		} catch (FileNotFoundException e1) {
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"File di configurazione per backup\nmancante o danneggiato",
+							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"File di configurazione per backup\nmancante o danneggiato",
+							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			e1.printStackTrace();
+		}
+		// FINE PUNTO BACKUP
+		
+		Articolo a = new Articolo();
+		List<Integer> result;
+		try {
+			result = a.allArticoliSottoSogliaMinima();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			JOptionPane.showMessageDialog(
+					this,
+					"Si e' verificato un errore durante il recupero dei dati.",
+					"ERRORE", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		if ( result.size() == 0 ){
+			JOptionPane.showMessageDialog(this,
+					"Non sono presenti articoli sotto la soglia minima.",
+					"INFO", JOptionPane.INFORMATION_MESSAGE);
+		}
+		else{
+			Carico c = new Carico();
+			try {
+
+				if (!c.isInsert((new Integer(txtNumeroCarico.getText()))
+						.intValue())) {
+
+					c.setIdCarico((new Integer(txtNumeroCarico.getText()))
+							.intValue());
+					//uno sta per monopoli
+					c.setIdFornitore(Constant.FORNITORE_TABACCHI);
+					c.setDataCarico(new Date(dataCarico.getDate().getTime()));
+					c.setDataDocumento(new Date(dataCarico.getDate().getTime()));
+					//				c.setNumDocumento(txtNumDocumento.getText());
+					c.setIdDocumento(Constant.ORDINE);
+					c.setOraCarico(new Time((new java.util.Date()).getTime()));
+					c.setNote(txtNote.getText());
+					c.setInsertByPN(0);
+					c.setSconto(0);
+					c.setSospeso(0);
+					c.insertCarico();
+				} else {
+					c.setIdCarico((new Integer(txtNumeroCarico.getText()))
+							.intValue());
+					c
+					.setIdFornitore(Constant.FORNITORE_TABACCHI);
+					c.setDataCarico(new Date(dataCarico.getDate().getTime()));
+					c.setDataDocumento(new Date(dataCarico.getDate().getTime()));
+					//				c.setNumDocumento(txtNumDocumento.getText());
+					c.setIdDocumento(Constant.ORDINE);
+					c.setOraCarico(new Time((new java.util.Date()).getTime()));
+					c.setSconto(0);
+					c.setNote(txtNote.getText());
+					c.setSospeso(0);
+					try {
+						c.updateCarico();
+					} catch (IDNonValido e) {
+						e.printStackTrace();
+					}
+				}
+				controlloAggPrezzo();
+				for ( Integer i : result ){
+					a = new Articolo();
+					//a.caricaDatiByCodBarre(txtCodBarre.getText());
+					a.caricaDati(i);
+					c.setIdCarico((new Integer(txtNumeroCarico.getText())).intValue());
+					if (Carico.codiceBarrePresenteInScarico(txtCodBarre.getText(),
+							Integer.parseInt(txtNumeroCarico.getText()))) {
+						c.caricaDati((new Integer(txtNumeroCarico.getText()))
+								.intValue());
+						double qta = 0;
+						try {
+							qta = c.getQuantitaCaricata(a.getIdArticolo());
+						} catch (IDNonValido e) {
+							JOptionPane.showMessageDialog(this,
+									"Probabile Errore nel codice dell'Articolo",
+									"ERRORE", 0);
+							e.printStackTrace();
+						} catch (ResultSetVuoto e) {
+							JOptionPane
+							.showMessageDialog(
+									this,
+									"Il ResultSet probabilmente non \ncontiene informazioni",
+									"ERRORE", 0);
+							e.printStackTrace();
+						}
+						double price = 0.0D;
+						if (txtPrezzo.getValue() instanceof Double)
+							price = ((Double) txtPrezzo.getValue()).doubleValue();
+						else
+							price = ((Long) txtPrezzo.getValue()).intValue();
+						c.updateArticolo(a.getIdArticolo(), qta
+								+ ((Number) txtQta.getValue()).doubleValue(), price);
+					} else {
+						double price = 0.0D;
+						if (txtPrezzo.getValue() instanceof Double)
+							price = ((Double) txtPrezzo.getValue()).doubleValue();
+						else
+							price = ((Long) txtPrezzo.getValue()).intValue();
+						c.insertArticolo(a.getIdArticolo(),
+								((Number) txtQta.getValue()).doubleValue(), price);
+					}
+					calcoli(c);
+					azzeraCampi();
+					tblCarico.packAll();
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(this,
+						"Errore nell'inserimento dinumeri", "NUMERO ERRATO", 0);
+				e.printStackTrace();
+			}
+		}
+	}
 
 	private void messaggioCampoMancante(String testo) {
 		JOptionPane.showMessageDialog(this, testo, "CAMPO VUOTO", 1);
@@ -1918,6 +2065,8 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 	private JButton btnCaricaOrdine = null;
 
+	private JButton btnSogliaMinima = null;
+
 	protected void nuovoFornitore() {
 		FornitoriAdd add = new FornitoriAdd(this, DBManager
 				.getIstanceSingleton());
@@ -2091,6 +2240,21 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			btnCaricaOrdine.addActionListener(new MyButtonListener());
 		}
 		return btnCaricaOrdine;
+	}
+
+	/**
+	 * This method initializes jButton	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnSogliaMinima() {
+		if (btnSogliaMinima == null) {
+			btnSogliaMinima = new JButton();
+			btnSogliaMinima.setBounds(new Rectangle(645, 26, 170, 48));
+			btnSogliaMinima.setText("<html>Carica Articoli<P>sotto Soglia Minima</html>");
+			btnSogliaMinima.addActionListener(new MyButtonListener());
+		}
+		return btnSogliaMinima;
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

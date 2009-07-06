@@ -207,6 +207,28 @@ public class Articolo {
 			rs.close();
 		return o;
 	}
+	
+	/**
+	 * Ritorna tutti gli articoli che sono scesi sotto la soglia minima
+	 * @return
+	 * @throws SQLException
+	 */
+	public LinkedList<Integer> allArticoliSottoSogliaMinima() throws SQLException {
+		LinkedList<Integer> list = new LinkedList<Integer>();
+		ResultSet rs = null;
+		Statement pst = null;
+		String query = "select a.idarticolo from giacenza_articoli_all_view v, articoli a where v.idarticolo=a.idarticolo and (v.carico-v.scarico) < a.scorta_minima";
+		pst = dbm.getNewStatement();
+		rs = pst.executeQuery(query);
+		while (rs.next()) {
+			list.add(rs.getInt(1));
+		}
+		if (pst != null)
+			pst.close();
+		if (rs != null)
+			rs.close();
+		return list;
+	}
 
 	/**
 	 * @param idCliente

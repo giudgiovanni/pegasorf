@@ -49,7 +49,6 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
@@ -64,6 +63,8 @@ import net.sf.jasperreports.view.JasperViewer;
 
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.AlternateRowHighlighter;
+import org.jdesktop.swingx.decorator.Highlighter;
+import org.jdesktop.swingx.decorator.HighlighterFactory;
 
 import rf.myswing.IDJComboBox;
 import rf.myswing.util.DoubleEditor;
@@ -171,7 +172,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		lblDescrizioneProdotto = null;
 		lblInsRapido = null;
 		lblNote = null;
-		lblNumDocumento = null;
 		lblNumeroCarico = null;
 		lblPrezzo = null;
 		lblQta = null;
@@ -185,14 +185,11 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		tblViewCarichi = null;
 		tbp = null;
 		txtCodBarre = null;
-		dataDocumento = null;
 		txtNote = null;
-		txtNumDocumento = null;
 		txtNumeroCarico = null;
 		txtPrezzo = null;
 		txtQta = null;
 		txtUm = null;
-		lblDataDocumento = null;
 		btnNewArticolo = null;
 		dataCarico = null;
 		btnStampa = null;
@@ -208,96 +205,82 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		JOptionPane.showMessageDialog(this, "da abilitare","AVVISO",JOptionPane.INFORMATION_MESSAGE);
 		
 		// TODO: da implementare
-//		if (tblViewCarichi.getSelectedRow() <= -1) {
-//			JOptionPane.showMessageDialog(this, "Selezionare un righa",
-//					"AVVISO", 1);
-//			return;
-//		}
-//		int scelta = JOptionPane.showConfirmDialog(this,
-//				"Sei sicuro di voler\ncaricare l'ordine??",
-//				"AVVISO", 0, 1);
-//		if (scelta == JOptionPane.NO_OPTION
-//				|| scelta == JOptionPane.CANCEL_OPTION
-//				|| scelta == JOptionPane.CLOSED_OPTION)
-//			return;
-//		// PUNTO DI BACKUP DA ATTIVARE DA CONFIGURAZIONI
-//		try {
-//			UtilityDBManager.getSingleInstance().backupDataBase(
-//					UtilityDBManager.DELETE);
-//		} catch (FileNotFoundException e1) {
-//			JOptionPane
-//					.showMessageDialog(
-//							this,
-//							"File di configurazione per backup\nmancante o danneggiato",
-//							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
-//			e1.printStackTrace();
-//		} catch (IOException e1) {
-//			JOptionPane
-//					.showMessageDialog(
-//							this,
-//							"File di configurazione per backup\nmancante o danneggiato",
-//							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
-//			e1.printStackTrace();
-//		}
-//		// FINE PUNTO BACKUP
-//
-//		int riga = tblViewCarichi.getSelectedRow();
-//		int idcarico = ((Long) tblViewCarichi.getValueAt(riga, 0)).intValue();
-//		Carico c = new Carico();
-//		try {
-//			c.caricaDati(idcarico);
-//			int rifdoc = c.getRiferimentoDoc();
-//			int doc = c.getIdDocumento();
-//			c.setIdCarico(DBManager.getIstanceSingleton().getNewID("carichi"));
+		if (tblViewCarichi.getSelectedRow() <= -1) {
+			JOptionPane.showMessageDialog(this, "Selezionare un righa",
+					"AVVISO", 1);
+			return;
+		}
+		int scelta = JOptionPane.showConfirmDialog(this,
+				"Sei sicuro di voler\ncaricare l'ordine??",
+				"AVVISO", 0, 1);
+		if (scelta == JOptionPane.NO_OPTION
+				|| scelta == JOptionPane.CANCEL_OPTION
+				|| scelta == JOptionPane.CLOSED_OPTION)
+			return;
+		// PUNTO DI BACKUP DA ATTIVARE DA CONFIGURAZIONI
+		try {
+			UtilityDBManager.getSingleInstance().backupDataBase(
+					UtilityDBManager.DELETE);
+		} catch (FileNotFoundException e1) {
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"File di configurazione per backup\nmancante o danneggiato",
+							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"File di configurazione per backup\nmancante o danneggiato",
+							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			e1.printStackTrace();
+		}
+		// FINE PUNTO BACKUP
+
+		int riga = tblViewCarichi.getSelectedRow();
+		int idcarico = ((Long) tblViewCarichi.getValueAt(riga, 0)).intValue();
+		Carico c = new Carico();
+		try {
 			
-//			// in caso il doc è un ddt ed ha un riferimanto ad una
-//			// fattura facciamo un update degli articoli impostando
-//			// nel dettaglio carico il codce da quello del ddt
-//			// a quello della fattura
-//			if (rifdoc != -1 && (doc == 2 || doc == 1)) {
-//				c.moveCaricoToRiferimentoDoc();
-//			}
-
-//			// dopo gli aggiornamenti cancelliamo il tutto
-//			c.deleteAllArticoliCaricati();
-//			c.deleteCarico(idcarico);
-
-//			// se il doc eliminato è una fattura quindi 1 lo eliminiamo ma
-//			// reimpostiamo
-//			// il ddt come senza fattura.
-//			if (rifdoc != -1 && doc == 1) {
-//				c = new Carico();
-//				c.caricaDati(rifdoc);
-//				c.setRiferimentoDoc(-1);
-//				if (c.getIdDocumento() == 2)
-//					c.updateCarico();
-//
-//			}
-//		} catch (IDNonValido e) {
-//			JOptionPane.showMessageDialog(this, "Valore idCliente errato",
-//					"ERRORE", 2);
-//			e.printStackTrace();
-//		} catch (SQLException e) {
-//			JOptionPane.showMessageDialog(this, "Errore nel db", "ERRORE", 2);
-//			e.printStackTrace();
-//		}
+			// Inseriamo il carico come fattura di acquisto
+			c.caricaDati(idcarico);
+			int rifdoc = c.getRiferimentoDoc();
+			int doc = c.getIdDocumento();
+			int newDocumento=DBManager.getIstanceSingleton().getNewID("carichi");
+			c.setIdCarico(newDocumento);
+			c.setIdDocumento(Constant.FATTURA);
+			c.insertCarico();
+			
+			// aggiorniamo anche i dettagli del dell'ordine e li spostiamo nella fattura
+			// appena arrivata.
+			c.setIdCarico(idcarico);
+			c.caricaDati(idcarico);
+			Object[][] articoli= c.getAllArticoliCaricati();
+			c.setIdCarico(newDocumento);
+			c.caricaDati(idcarico);
+			for(int i=0; i<articoli[0].length;i++){
+				for(int k=0;k<articoli.length;k++){
+//					c.insertArticolo(idArticolo, qta, prezzoAcquisto)
+				}
+			}
+			
+			
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(this, "Errore nel db", "ERRORE", 2);
+			e.printStackTrace();
+		}
 		
 	}
 
 	private void salvaFattura() {
 		
-		
-		if (txtNumDocumento.getText().equalsIgnoreCase("")) {
-			messaggioCampoMancante("Numero documento non inserito");
-			return;
-		}
 		Carico c = new Carico();
 		try {
 			c.setIdCarico((new Integer(txtNumeroCarico.getText())).intValue());
 			c.setIdFornitore(1);
 			c.setDataCarico(new Date(dataCarico.getDate().getTime()));
-			c.setDataDocumento(new Date(dataDocumento.getDate().getTime()));
-			c.setNumDocumento(txtNumDocumento.getText());
+			c.setDataDocumento(new Date(dataCarico.getDate().getTime()));
 			c.setIdDocumento(Constant.ORDINE);
 			c.setOraCarico(new Time((new java.util.Date()).getTime()));
 			c.setNote(txtNote.getText());
@@ -506,7 +489,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		idcarico = c.getNewID();
 		txtNumeroCarico.setText((new Integer(idcarico)).toString());
 		dataCarico.setDate(new java.util.Date());
-		txtNumDocumento.setText("");
 		ricaricaTableCarico(idcarico);
 		azzeraCampi();
 	}
@@ -646,8 +628,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	private void caricaDati(Carico c) {
 		txtNumeroCarico.setText((new Integer(c.getIdCarico())).toString());
 		dataCarico.setDate(c.getDataCarico());
-		txtNumDocumento.setText(c.getNumDocumento());
-		dataDocumento.setDate(c.getDataDocumento());
 		txtNote.setText(c.getNote());
 		Documento d = new Documento();
 		Fornitore f = new Fornitore();
@@ -892,7 +872,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		if (btnAzzera == null)
 			try {
 				btnAzzera = new JButton();
-				btnAzzera.setBounds(new Rectangle(725, 45, 103, 29));
+				btnAzzera.setBounds(new Rectangle(724, 10, 103, 29));
 				btnAzzera.setText("Azzera (F1)");
 				btnAzzera.addActionListener(new MyButtonListener());
 			} catch (Throwable throwable) {
@@ -904,7 +884,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		if (btnChiudi == null)
 			try {
 				btnChiudi = new JButton();
-				btnChiudi.setBounds(new Rectangle(725, 10, 104, 29));
+				btnChiudi.setBounds(new Rectangle(613, 9, 104, 29));
 				btnChiudi.setText("Chiudi (ESC)");
 			} catch (Throwable throwable) {
 			}
@@ -1053,12 +1033,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	private JPanel getPnlNord() {
 		if (pnlNord == null)
 			try {
-				lblDataDocumento = new JLabel();
-				lblDataDocumento.setBounds(new Rectangle(201, 50, 101, 25));
-				lblDataDocumento.setText("Data Documento");
-				lblNumDocumento = new JLabel();
-				lblNumDocumento.setBounds(new Rectangle(9, 50, 89, 25));
-				lblNumDocumento.setText("N. Documento");
 				lblDataCarico = new JLabel();
 				lblDataCarico.setBounds(new Rectangle(145, 20, 69, 25));
 				lblDataCarico.setText("Data Ordine");
@@ -1067,17 +1041,13 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				lblNumeroCarico.setText("N° Ordine");
 				pnlNord = new JPanel();
 				pnlNord.setLayout(null);
-				pnlNord.setPreferredSize(new Dimension(1, 340));
+				pnlNord.setPreferredSize(new Dimension(1, 260));
 				pnlNord.add(lblNumeroCarico, null);
 				pnlNord.add(getTxtNumeroCarico(), null);
 				pnlNord.add(lblDataCarico, null);
 				pnlNord.add(getPnlProdotto(), null);
 				pnlNord.add(getBtnChiudi(), null);
-				pnlNord.add(lblNumDocumento, null);
-				pnlNord.add(getTxtNumDocumento(), null);
 				pnlNord.add(getBtnAzzera(), null);
-				pnlNord.add(getDateChooserDocumento(), null);
-				pnlNord.add(lblDataDocumento, null);
 				pnlNord.add(getDataCarico(), null);
 			} catch (Throwable throwable) {
 			}
@@ -1118,7 +1088,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				pnlProdotto.setBorder(BorderFactory.createTitledBorder(
 						BorderFactory.createBevelBorder(0), "Dati prodotto", 0,
 						0, new Font("Dialog", 1, 12), new Color(51, 51, 51)));
-				pnlProdotto.setLocation(new Point(9, 83));
+				pnlProdotto.setLocation(new Point(11, 53));
 				pnlProdotto.setSize(new Dimension(825, 192));
 				pnlProdotto.add(lblCodBarre, null);
 				pnlProdotto.add(getTxtCodBarre(), null);
@@ -1178,7 +1148,8 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				tblCarico.setSelectionMode(0);
 				tblCarico.setModel(caricoModel);
 				caricoModel.addTableModelListener(this);
-				tblCarico.setHighlighters(new AlternateRowHighlighter());
+				Highlighter high=HighlighterFactory.createAlternateStriping();
+				tblCarico.setHighlighters(high);
 
 				// impostiamo le varie colonne
 				TableColumn col = tblCarico.getColumnModel().getColumn(0);
@@ -1320,27 +1291,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		return txtCodBarre;
 	}
 
-	private JDateChooser getDateChooserDocumento() {
-		if (dataDocumento == null)
-			try {
-				dataDocumento = new JDateChooser("dd/MM/yyyy", "##/##/##", '_');
-				dataDocumento.setDate(new java.util.Date());
-				dataDocumento.setBounds(new Rectangle(305, 50, 117, 25));
-				JTextFieldDateEditor f = (JTextFieldDateEditor) dataDocumento
-						.getDateEditor();
-				f.addFocusListener(new java.awt.event.FocusAdapter() {
-					public void focusGained(java.awt.event.FocusEvent e) {
-						JTextFieldDateEditor s = (JTextFieldDateEditor) dataDocumento
-								.getDateEditor();
-						s.setCaretPosition(0);
-					}
-				});
-
-			} catch (Throwable throwable) {
-			}
-		return dataDocumento;
-	}
-
+	 
 	private JTextArea getTxtNote() {
 		if (txtNote == null)
 			try {
@@ -1350,21 +1301,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			} catch (Throwable throwable) {
 			}
 		return txtNote;
-	}
-
-	private JTextField getTxtNumDocumento() {
-		if (txtNumDocumento == null)
-			try {
-				txtNumDocumento = new JTextField();
-				txtNumDocumento.setBounds(new Rectangle(97, 50, 101, 25));
-				AutoCompleteTextComponent complete = new AutoCompleteTextComponent(
-						txtNumDocumento, dbm, "carichi", "num_documento");
-				dbm.addDBStateChange(complete);
-				txtNumDocumento.setDocument(new UpperAutoCompleteDocument(complete,
-						false));
-			} catch (Throwable throwable) {
-			}
-		return txtNumDocumento;
 	}
 
 	private JTextField getTxtNumeroCarico() {
@@ -1516,12 +1452,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 	private void inserisci() {
 		
-		if (txtNumDocumento.getText().equalsIgnoreCase("")) {
-			messaggioCampoMancante("Numero documento non inserito");
-			return;
-		}
-
-
 		String codBarre = txtCodBarre.getText();
 		double tmp = ((Number) txtQta.getValue()).doubleValue();
 		String tmpPrezzo = txtPrezzo.getText();
@@ -1563,19 +1493,16 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		Carico c = new Carico();
 		try {
 
-			if (!c
-					.isInsert((new Integer(txtNumeroCarico.getText()))
+			if (!c.isInsert((new Integer(txtNumeroCarico.getText()))
 							.intValue())) {
-				if(Carico.isNumeroCaricoEsistente(txtNumDocumento.getText())){
-					throw new NumeroCaricoEsistente();
-				}
+				
 				c.setIdCarico((new Integer(txtNumeroCarico.getText()))
 						.intValue());
 				//uno sta per monopoli
 				c.setIdFornitore(1);
 				c.setDataCarico(new Date(dataCarico.getDate().getTime()));
-				c.setDataDocumento(new Date(dataDocumento.getDate().getTime()));
-				c.setNumDocumento(txtNumDocumento.getText());
+				c.setDataDocumento(new Date(dataCarico.getDate().getTime()));
+//				c.setNumDocumento(txtNumDocumento.getText());
 				c.setIdDocumento(Constant.ORDINE);
 				c.setOraCarico(new Time((new java.util.Date()).getTime()));
 				c.setNote(txtNote.getText());
@@ -1589,8 +1516,8 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				c
 						.setIdFornitore(1);
 				c.setDataCarico(new Date(dataCarico.getDate().getTime()));
-				c.setDataDocumento(new Date(dataDocumento.getDate().getTime()));
-				c.setNumDocumento(txtNumDocumento.getText());
+				c.setDataDocumento(new Date(dataCarico.getDate().getTime()));
+//				c.setNumDocumento(txtNumDocumento.getText());
 				c.setIdDocumento(Constant.ORDINE);
 				c.setOraCarico(new Time((new java.util.Date()).getTime()));
 				c.setSconto(0);
@@ -1655,8 +1582,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			JOptionPane.showMessageDialog(this,
 					"Errore nell'inserimento dinumeri", "NUMERO ERRATO", 0);
 			e.printStackTrace();
-		} catch (NumeroCaricoEsistente e) {
-			JOptionPane.showMessageDialog(this, e.getMessage(), "AVVISO", JOptionPane.INFORMATION_MESSAGE);
 		}
 
 	}
@@ -1889,8 +1814,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 	private JLabel lblNote;
 
-	private JLabel lblNumDocumento;
-
 	private JLabel lblNumeroCarico;
 
 	private JLabel lblPrezzo;
@@ -1921,11 +1844,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 	private JTextField txtCodBarre;
 
-	private JDateChooser dataDocumento;
-
 	private JTextArea txtNote;
-
-	private JTextField txtNumDocumento;
 
 	private JTextField txtNumeroCarico;
 
@@ -1934,8 +1853,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	private JFormattedTextField txtQta;
 
 	private JTextField txtUm;
-
-	private JLabel lblDataDocumento;
 
 	private JButton btnNewArticolo;
 

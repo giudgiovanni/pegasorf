@@ -92,14 +92,16 @@ public class CaricaAggiornaTabacchiGui extends JDialog {
 			JOptionPane.showMessageDialog(this, "Inserire il percorso del file da caricare.", "WARN",
 					JOptionPane.INFORMATION_MESSAGE);
 		}
+		else if ( !path.contains(".xls") ){
+			JOptionPane.showMessageDialog(this, "Il documento selezionato non e' di tipo XLS.", "WARN",
+					JOptionPane.INFORMATION_MESSAGE);
+		}
 		else{
 			try {
 				//apro il file
-				Workbook workbook = Workbook.getWorkbook(new File(path));//"/Users/sergiofalcone/Desktop/completo_20090706.xls"));
+				Workbook workbook = Workbook.getWorkbook(new File(path));
 				//prendo il primo foglio
 				Sheet sheet = workbook.getSheet(0);
-//				MapTariffari obj;// = new MapTariffari();
-//				List<MapTariffari> result = new ArrayList<MapTariffari>();
 				int riga = 4;
 				boolean flag = true;
 				while ( flag ){
@@ -155,27 +157,27 @@ public class CaricaAggiornaTabacchiGui extends JDialog {
 						JOptionPane.INFORMATION_MESSAGE);
 			} catch (BiffException e) {
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(this, "Si è verificato un errore durante la lettura del file xls.", "ERROR",
+				JOptionPane.showMessageDialog(this, "Si e' verificato un errore durante la lettura del file xls.", "ERROR",
 						JOptionPane.INFORMATION_MESSAGE);
 			} catch (IOException e) {
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(this, "Si è verificato un errore durante la lettura del file xls.", "ERROR",
+				JOptionPane.showMessageDialog(this, "Si e' verificato un errore durante la lettura del file xls.", "ERROR",
 						JOptionPane.INFORMATION_MESSAGE);
 			} catch (NumberFormatException e) {
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(this, "Si è verificato un errore durante la lettura del file xls.", "ERROR",
+				JOptionPane.showMessageDialog(this, "Si e' verificato un errore durante la lettura del file xls.", "ERROR",
 						JOptionPane.INFORMATION_MESSAGE);
 			} catch (ParseException e) {
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(this, "Si è verificato un errore durante la lettura del file xls.", "ERROR",
+				JOptionPane.showMessageDialog(this, "Si e' verificato un errore durante la lettura del file xls.", "ERROR",
 						JOptionPane.INFORMATION_MESSAGE);
 			} catch (IDNonValido e) {
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(this, "Si è verificato un errore durante la lettura del file xls.", "ERROR",
+				JOptionPane.showMessageDialog(this, "Si e' verificato un errore durante la lettura del file xls.", "ERROR",
 						JOptionPane.INFORMATION_MESSAGE);
 			} catch (SQLException e) {
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(this, "Si è verificato un errore durante la lettura del file xls.", "ERROR",
+				JOptionPane.showMessageDialog(this, "Si e' verificato un errore durante la lettura del file xls.", "ERROR",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 		}

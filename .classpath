@@ -3,8 +3,5 @@
 	<classpathentry kind="src" output="bin" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/jxl.jar"/>
-	<classpathentry kind="lib" path="lib/jxls-core-0.9.6.jar"/>
-	<classpathentry kind="lib" path="lib/jxls-reader-0.9.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

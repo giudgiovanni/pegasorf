@@ -11,6 +11,7 @@ import java.text.DecimalFormat;
 
 import javax.swing.table.AbstractTableModel;
 
+import rf.utility.Constant;
 import rf.utility.db.DBEvent;
 import rf.utility.db.DBManager;
 import rf.utility.db.DBStateChange;
@@ -122,7 +123,7 @@ public class TabacchiModel extends AbstractTableModel implements DBStateChange {
 		//this.query = "select a.idArticolo,a.codbarre as codice,a.descrizione,a.prezzo_acquisto,a.prezzo_ingrosso as prezzo_listino, ((prezzo_ingrosso - prezzo_acquisto) / CASE prezzo_acquisto WHEN 0 THEN NULL ELSE prezzo_acquisto END) * 100 as ricario_listino,f.nome as fornitore from articoli a, fornitori f where a.idfornitore=f.idfornitore order by codice";
 		//
 		// la sostituiamo con questa che elimina quella colonna.
-		this.query = "select a.idArticolo,a.codbarre as codice,a.descrizione,a.prezzo_acquisto,a.prezzo_ingrosso as prezzo_listino, f.nome as fornitore from articoli a, fornitori f where a.idfornitore=f.idfornitore and idreparto=3 order by codice";
+		this.query = "select a.idArticolo,a.codbarre as codice,a.descrizione,a.prezzo_acquisto,a.prezzo_ingrosso as prezzo_listino, f.nome as fornitore from articoli a, fornitori f where a.idfornitore=f.idfornitore and idreparto="+Constant.REPARTO_TABACCHI +" order by codice";
 		pst = dbm.getNewPreparedStatement(query);
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();

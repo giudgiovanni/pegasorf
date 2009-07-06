@@ -23,8 +23,6 @@ import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
 
-import erreeffe.entity.Um;
-import erreeffe.entity.UmHome;
 
 import rf.pegaso.db.tabelle.UnitaDiMisura;
 import rf.utility.db.DBManager;
@@ -257,12 +255,12 @@ public class UnitaMisuraAdd extends JDialog {
 		r.setDescrizione(this.txtDescrizione.getText());
 		r.setNome(this.txtNome.getText());
 //		try {
-			Um um = new Um();
-			um.setDescrizione(this.txtDescrizione.getText());
-			um.setNome(this.txtNome.getText());
-			UmHome.getInstance().begin();
-			UmHome.getInstance().attachDirty(um);
-			UmHome.getInstance().commit();
+//			Um um = new Um();
+//			um.setDescrizione(this.txtDescrizione.getText());
+//			um.setNome(this.txtNome.getText());
+//			UmHome.getInstance().begin();
+//			UmHome.getInstance().attachDirty(um);
+//			UmHome.getInstance().commit();
 			dbm.notifyDBStateChange();
 			//r.insertUnitaDiMisura();
 //		} catch (IDNonValido e) {

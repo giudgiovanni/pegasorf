@@ -21,7 +21,9 @@ import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Date;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Time;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -85,6 +87,7 @@ import rf.pegaso.gui.utility.ModificaQuantitaRiga;
 import rf.utility.Constant;
 import rf.utility.ControlloDati;
 import rf.utility.db.DBManager;
+import rf.utility.db.MyResultSet;
 import rf.utility.db.UtilityDBManager;
 import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.SospesiColorRenderer;
@@ -118,23 +121,23 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				azzeraTuttiCampi();
 			else if (e.getSource() == btnStampa)
 				stampaTuttiCarichi();
-			else if(e.getSource()==btnCaricaOrdine)
+			else if (e.getSource() == btnCaricaOrdine)
 				caricaOrdine();
-			else if( e.getSource()== btnSogliaMinima )
+			else if (e.getSource() == btnSogliaMinima)
 				caricaArticoliSogliaMinima();
 		}
 
 	}
-	
-	class MyMouseAdapter extends MouseAdapter{
+
+	class MyMouseAdapter extends MouseAdapter {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			if(e.getSource()==tblViewCarichi && e.getClickCount()==2){
+			if (e.getSource() == tblViewCarichi && e.getClickCount() == 2) {
 				modifica();
 			}
 		}
-		
+
 	}
 
 	class MyComboBoxListener implements ActionListener {
@@ -152,7 +155,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 	}
 
-	private MyMouseAdapter myMouseadapter;  //  @jve:decl-index=0:
+	private MyMouseAdapter myMouseadapter; // @jve:decl-index=0:
 
 	public CaricoTabacchiGui(Frame frame) {
 		btnAzzera = null;
@@ -205,8 +208,9 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	}
 
 	public void caricaOrdine() {
-		JOptionPane.showMessageDialog(this, "da abilitare","AVVISO",JOptionPane.INFORMATION_MESSAGE);
-		
+		JOptionPane.showMessageDialog(this, "da abilitare", "AVVISO",
+				JOptionPane.INFORMATION_MESSAGE);
+
 		// TODO: da implementare
 		if (tblViewCarichi.getSelectedRow() <= -1) {
 			JOptionPane.showMessageDialog(this, "Selezionare un righa",
@@ -214,8 +218,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			return;
 		}
 		int scelta = JOptionPane.showConfirmDialog(this,
-				"Sei sicuro di voler\ncaricare l'ordine??",
-				"AVVISO", 0, 1);
+				"Sei sicuro di voler\ncaricare l'ordine??", "AVVISO", 0, 1);
 		if (scelta == JOptionPane.NO_OPTION
 				|| scelta == JOptionPane.CANCEL_OPTION
 				|| scelta == JOptionPane.CLOSED_OPTION)
@@ -245,49 +248,61 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		int idcarico = ((Long) tblViewCarichi.getValueAt(riga, 0)).intValue();
 		Carico c = new Carico();
 		try {
-			
+
 			// Inseriamo il carico come fattura di acquisto
 			c.caricaDati(idcarico);
 			int rifdoc = c.getRiferimentoDoc();
 			int doc = c.getIdDocumento();
-			int newDocumento=DBManager.getIstanceSingleton().getNewID("carichi");
+			int newDocumento = DBManager.getIstanceSingleton().getNewID(
+					"carichi", "idcarico");
 			c.setIdCarico(newDocumento);
 			c.setIdDocumento(Constant.FATTURA);
 			c.insertCarico();
-			
-			// aggiorniamo anche i dettagli del dell'ordine e li spostiamo nella fattura
+
+			// aggiorniamo anche i dettagli dell'ordine e li spostiamo nella
+			// fattura
 			// appena arrivata.
-			c.setIdCarico(idcarico);
-			c.caricaDati(idcarico);
-			Object[][] articoli= c.getAllArticoliCaricati();
+			String query = "SELECT A.idarticolo, A.codBarre, A.descrizione, A.iva, A.um, D.qta, D.prezzo_Acquisto "
+					+ "FROM Articoli AS A, Carichi AS C, Dettaglio_Carichi AS D, Fornitori AS F "
+					+ "WHERE A.idArticolo=D.idArticolo AND C.idCarico=D.idCarico AND C.idFornitore=F.idFornitore and C.idcarico="
+					+ idcarico;
+
+			Statement pst = dbm.getNewStatement();
+			ResultSet rs = pst.executeQuery(query);
+			rs.last();
+			int row=rs.getRow();
+			rs.beforeFirst();
 			c.setIdCarico(newDocumento);
-			c.caricaDati(idcarico);
-			for(int i=0; i<articoli[0].length;i++){
-				for(int k=0;k<articoli.length;k++){
-//					c.insertArticolo(idArticolo, qta, prezzoAcquisto)
-				}
+			c.caricaDati(newDocumento);
+			while(rs.next()){
+				c.insertArticolo(rs.getInt("idarticolo"), rs.getDouble("qta"), rs.getDouble("prezzo_acquisto"));
 			}
-			
-			
+			if (pst != null)
+				pst.close();
+			if (rs != null)
+				rs.close();
+
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(this, "Errore nel db", "ERRORE", 2);
 			e.printStackTrace();
 		}
 		
+		JOptionPane.showMessageDialog(this, "Ordine Caricato",	"AVVISO", JOptionPane.INFORMATION_MESSAGE);
+		
+
 	}
 
 	private void salvaFattura() {
-		
+
 		Carico c = new Carico();
 		try {
 			c.setIdCarico((new Integer(txtNumeroCarico.getText())).intValue());
-			c.setIdFornitore(1);
+			c.setIdFornitore(Constant.FORNITORE_TABACCHI);
 			c.setDataCarico(new Date(dataCarico.getDate().getTime()));
 			c.setDataDocumento(new Date(dataCarico.getDate().getTime()));
 			c.setIdDocumento(Constant.ORDINE);
 			c.setOraCarico(new Time((new java.util.Date()).getTime()));
 			c.setNote(txtNote.getText());
-
 
 			c.setSconto(0);
 			double tot = Carico
@@ -298,8 +313,9 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				tot -= (tot / 100 * sconto);
 			}
 			c.setTotaleDocumentoIvato(tot);
-				c.setSospeso(0);
-			if (!c.isInsert((new Integer(txtNumeroCarico.getText()))
+			c.setSospeso(0);
+			if (!c
+					.isInsert((new Integer(txtNumeroCarico.getText()))
 							.intValue()))
 				c.insertCarico();
 			else
@@ -581,14 +597,14 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			e1.printStackTrace();
 		}
 	}
-	
+
 	private void caricaTabacchiByCodBarre() {
 		String codBarre = txtCodBarre.getText();
 		if (codBarre.equalsIgnoreCase(""))
 			return;
 		Articolo a = new Articolo();
 		try {
-			if (a.findByCodBarre(codBarre) && a.getIdReparto()==1) {
+			if (a.findByCodBarre(codBarre) && a.getIdReparto() == 1) {
 				Fornitore f = new Fornitore();
 				f.caricaDati(a.getIdFornitore());
 				cmbProdotti.setSelectedItem(a.getDescrizione());
@@ -596,8 +612,10 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				txtQta.setValue((new Double(1.0)));
 				txtPrezzo.setValue(new Double(a.getPrezzoAcquisto()));
 				txtCodBarre.setText(codBarre);
-			}else{
-				JOptionPane.showMessageDialog(this, "Articolo non presente fra i Tabacchi", "AVVISO", JOptionPane.WARNING_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(this,
+						"Articolo non presente fra i Tabacchi", "AVVISO",
+						JOptionPane.WARNING_MESSAGE);
 				txtCodBarre.setText("");
 				txtCodBarre.requestFocus();
 			}
@@ -608,8 +626,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			e1.printStackTrace();
 		}
 	}
-	
-	
 
 	public void tableChanged(TableModelEvent arg0) {
 		// TODO Auto-generated method stub
@@ -641,12 +657,11 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			messaggioErroreCampo("Errore caricamento dati db");
 			e.printStackTrace();
 		}
- 
+
 		// cmbFornitori.setSelectedItem(f.getNome());
-//		cmbFornitori.setSelectedItemByID(f.getIdFornitore());
-		
-		
-//		txtSconto.setValue(c.getSconto());
+		// cmbFornitori.setSelectedItemByID(f.getIdFornitore());
+
+		// txtSconto.setValue(c.getSconto());
 		ricaricaTableCarico(c.getIdCarico());
 		tbp.setSelectedIndex(0);
 		calcoli(c);
@@ -968,7 +983,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			a.caricaDati(id);
 			Fornitore f = new Fornitore();
 			f.caricaDati(a.getIdFornitore());
-//			cmbFornitori.setSelectedItem(f.getNome());
+			// cmbFornitori.setSelectedItem(f.getNome());
 			txtUm.setText((new Integer(a.getUm())).toString());
 			txtQta.setValue((new Double(1.0)));
 			txtPrezzo.setValue(new Double(a.getPrezzoAcquisto()));
@@ -1041,7 +1056,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				lblDataCarico.setText("Data Ordine");
 				lblNumeroCarico = new JLabel();
 				lblNumeroCarico.setBounds(new Rectangle(9, 20, 57, 25));
-				lblNumeroCarico.setText("Nï¿½ Ordine");
+				lblNumeroCarico.setText("N° Ordine");
 				pnlNord = new JPanel();
 				pnlNord.setLayout(null);
 				pnlNord.setPreferredSize(new Dimension(1, 260));
@@ -1152,7 +1167,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				tblCarico.setSelectionMode(0);
 				tblCarico.setModel(caricoModel);
 				caricoModel.addTableModelListener(this);
-				Highlighter high=HighlighterFactory.createAlternateStriping();
+				Highlighter high = HighlighterFactory.createAlternateStriping();
 				tblCarico.setHighlighters(high);
 
 				// impostiamo le varie colonne
@@ -1227,22 +1242,22 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				// SospesiColorRenderer());
 				tblViewCarichi.setDefaultRenderer(Object.class,
 						new SospesiColorRenderer());
-				TableColumn c=tblViewCarichi.getColumnModel().getColumn(1);
+				TableColumn c = tblViewCarichi.getColumnModel().getColumn(1);
 				c.setMaxWidth(100);
 				c.setMinWidth(100);
 				c.setPreferredWidth(100);
 
-				c=tblViewCarichi.getColumnModel().getColumn(2);
+				c = tblViewCarichi.getColumnModel().getColumn(2);
 				c.setMaxWidth(60);
 				c.setMinWidth(60);
 				c.setPreferredWidth(60);
 
-				c=tblViewCarichi.getColumnModel().getColumn(6);
+				c = tblViewCarichi.getColumnModel().getColumn(6);
 				c.setMaxWidth(60);
 				c.setMinWidth(60);
 				c.setPreferredWidth(60);
 
-				c=tblViewCarichi.getColumnModel().getColumn(7);
+				c = tblViewCarichi.getColumnModel().getColumn(7);
 				c.setMaxWidth(60);
 				c.setMinWidth(60);
 				c.setPreferredWidth(60);
@@ -1257,8 +1272,9 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			try {
 				tbp = new JTabbedPane();
 				tbp.addTab("Ordine Tabacchi", null, getPnlCentrale(), null);
-				tbp.addTab("Visualizza Ordini", null, getPnlViewCarichi(),
-						null);
+				tbp
+						.addTab("Visualizza Ordini", null, getPnlViewCarichi(),
+								null);
 			} catch (Throwable throwable) {
 			}
 		return tbp;
@@ -1295,7 +1311,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		return txtCodBarre;
 	}
 
-	 
 	private JTextArea getTxtNote() {
 		if (txtNote == null)
 			try {
@@ -1348,7 +1363,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				txtQta.setValue(0.0);
 				/*
 				 * txtQta.addFocusListener(new FocusAdapter() {
-				 *
+				 * 
 				 * public void focusLost(FocusEvent e) { String numero =
 				 * txtQta.getText(); if (!ControlloDati.isNumero(numero)) {
 				 * txtQta.selectAll(); messaggioErroreCampo("Errore campo
@@ -1433,19 +1448,17 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		UtilGUI.centraFrame(this);
 		txtNumeroCarico.setText((new Integer(idcarico)).toString());
 		dataCarico.setDate(new java.util.Date());
-//		caricaFornitori(cmbFornitori);
+		// caricaFornitori(cmbFornitori);
 		caricaArticoli(cmbProdotti);
-//		caricaDocumenti(cmbTipoDocumento);
+		// caricaDocumenti(cmbTipoDocumento);
 		inizializzaListeners();
-		
 
 	}
-
 
 	private void inizializzaListeners() {
 		myComboBoxListener = new MyComboBoxListener();
 		myButtonListener = new MyButtonListener();
-		myMouseadapter=new MyMouseAdapter();
+		myMouseadapter = new MyMouseAdapter();
 		// cmbFornitori.addActionListener(myComboBoxListener);
 		btnInserisci.addActionListener(myButtonListener);
 		btnElimina.addActionListener(myButtonListener);
@@ -1455,7 +1468,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	}
 
 	private void inserisci() {
-		
+
 		String codBarre = txtCodBarre.getText();
 		double tmp = ((Number) txtQta.getValue()).doubleValue();
 		String tmpPrezzo = txtPrezzo.getText();
@@ -1497,16 +1510,17 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		Carico c = new Carico();
 		try {
 
-			if (!c.isInsert((new Integer(txtNumeroCarico.getText()))
+			if (!c
+					.isInsert((new Integer(txtNumeroCarico.getText()))
 							.intValue())) {
-				
+
 				c.setIdCarico((new Integer(txtNumeroCarico.getText()))
 						.intValue());
-				//uno sta per monopoli
-				c.setIdFornitore(1);
+				// uno sta per monopoli
+				c.setIdFornitore(Constant.FORNITORE_TABACCHI);
 				c.setDataCarico(new Date(dataCarico.getDate().getTime()));
 				c.setDataDocumento(new Date(dataCarico.getDate().getTime()));
-//				c.setNumDocumento(txtNumDocumento.getText());
+				// c.setNumDocumento(txtNumDocumento.getText());
 				c.setIdDocumento(Constant.ORDINE);
 				c.setOraCarico(new Time((new java.util.Date()).getTime()));
 				c.setNote(txtNote.getText());
@@ -1517,11 +1531,10 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			} else {
 				c.setIdCarico((new Integer(txtNumeroCarico.getText()))
 						.intValue());
-				c
-						.setIdFornitore(1);
+				c.setIdFornitore(Constant.FORNITORE_TABACCHI);
 				c.setDataCarico(new Date(dataCarico.getDate().getTime()));
 				c.setDataDocumento(new Date(dataCarico.getDate().getTime()));
-//				c.setNumDocumento(txtNumDocumento.getText());
+				// c.setNumDocumento(txtNumDocumento.getText());
 				c.setIdDocumento(Constant.ORDINE);
 				c.setOraCarico(new Time((new java.util.Date()).getTime()));
 				c.setSconto(0);
@@ -1589,13 +1602,13 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		}
 
 	}
-	
+
 	/**
 	 * Metodo che recupera tutti gli articoli che si trovano sotto la soglia
 	 * minima e genera un ordine con tali prodotti
 	 * 
 	 */
-	private void caricaArticoliSogliaMinima(){
+	private void caricaArticoliSogliaMinima() {
 
 		// PUNTO DI BACKUP DA ATTIVARE DA CONFIGURAZIONI
 		try {
@@ -1617,26 +1630,24 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			e1.printStackTrace();
 		}
 		// FINE PUNTO BACKUP
-		
+
 		Articolo a = new Articolo();
 		List<Integer> result;
 		try {
 			result = a.allArticoliSottoSogliaMinima();
 		} catch (SQLException e1) {
 			e1.printStackTrace();
-			JOptionPane.showMessageDialog(
-					this,
+			JOptionPane.showMessageDialog(this,
 					"Si e' verificato un errore durante il recupero dei dati.",
 					"ERRORE", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		
-		if ( result.size() == 0 ){
+
+		if (result.size() == 0) {
 			JOptionPane.showMessageDialog(this,
 					"Non sono presenti articoli sotto la soglia minima.",
 					"INFO", JOptionPane.INFORMATION_MESSAGE);
-		}
-		else{
+		} else {
 			Carico c = new Carico();
 			try {
 
@@ -1645,11 +1656,13 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 					c.setIdCarico((new Integer(txtNumeroCarico.getText()))
 							.intValue());
-					//uno sta per monopoli
+					// uno sta per monopoli
 					c.setIdFornitore(Constant.FORNITORE_TABACCHI);
 					c.setDataCarico(new Date(dataCarico.getDate().getTime()));
-					c.setDataDocumento(new Date(dataCarico.getDate().getTime()));
-					//				c.setNumDocumento(txtNumDocumento.getText());
+					c
+							.setDataDocumento(new Date(dataCarico.getDate()
+									.getTime()));
+					// c.setNumDocumento(txtNumDocumento.getText());
 					c.setIdDocumento(Constant.ORDINE);
 					c.setOraCarico(new Time((new java.util.Date()).getTime()));
 					c.setNote(txtNote.getText());
@@ -1660,11 +1673,12 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				} else {
 					c.setIdCarico((new Integer(txtNumeroCarico.getText()))
 							.intValue());
-					c
-					.setIdFornitore(Constant.FORNITORE_TABACCHI);
+					c.setIdFornitore(Constant.FORNITORE_TABACCHI);
 					c.setDataCarico(new Date(dataCarico.getDate().getTime()));
-					c.setDataDocumento(new Date(dataCarico.getDate().getTime()));
-					//				c.setNumDocumento(txtNumDocumento.getText());
+					c
+							.setDataDocumento(new Date(dataCarico.getDate()
+									.getTime()));
+					// c.setNumDocumento(txtNumDocumento.getText());
 					c.setIdDocumento(Constant.ORDINE);
 					c.setOraCarico(new Time((new java.util.Date()).getTime()));
 					c.setSconto(0);
@@ -1677,46 +1691,53 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 					}
 				}
 				controlloAggPrezzo();
-				for ( Integer i : result ){
+				for (Integer i : result) {
 					a = new Articolo();
-					//a.caricaDatiByCodBarre(txtCodBarre.getText());
+					// a.caricaDatiByCodBarre(txtCodBarre.getText());
 					a.caricaDati(i);
-					c.setIdCarico((new Integer(txtNumeroCarico.getText())).intValue());
-					if (Carico.codiceBarrePresenteInScarico(txtCodBarre.getText(),
-							Integer.parseInt(txtNumeroCarico.getText()))) {
+					c.setIdCarico((new Integer(txtNumeroCarico.getText()))
+							.intValue());
+					if (Carico.codiceBarrePresenteInScarico(txtCodBarre
+							.getText(), Integer.parseInt(txtNumeroCarico
+							.getText()))) {
 						c.caricaDati((new Integer(txtNumeroCarico.getText()))
 								.intValue());
 						double qta = 0;
 						try {
 							qta = c.getQuantitaCaricata(a.getIdArticolo());
 						} catch (IDNonValido e) {
-							JOptionPane.showMessageDialog(this,
-									"Probabile Errore nel codice dell'Articolo",
-									"ERRORE", 0);
+							JOptionPane
+									.showMessageDialog(
+											this,
+											"Probabile Errore nel codice dell'Articolo",
+											"ERRORE", 0);
 							e.printStackTrace();
 						} catch (ResultSetVuoto e) {
 							JOptionPane
-							.showMessageDialog(
-									this,
-									"Il ResultSet probabilmente non \ncontiene informazioni",
-									"ERRORE", 0);
+									.showMessageDialog(
+											this,
+											"Il ResultSet probabilmente non \ncontiene informazioni",
+											"ERRORE", 0);
 							e.printStackTrace();
 						}
 						double price = 0.0D;
 						if (txtPrezzo.getValue() instanceof Double)
-							price = ((Double) txtPrezzo.getValue()).doubleValue();
+							price = ((Double) txtPrezzo.getValue())
+									.doubleValue();
 						else
 							price = ((Long) txtPrezzo.getValue()).intValue();
 						c.updateArticolo(a.getIdArticolo(), qta
-								+ ((Number) txtQta.getValue()).doubleValue(), price);
+								+ ((Number) txtQta.getValue()).doubleValue(),
+								price);
 					} else {
 						double price = 0.0D;
 						if (txtPrezzo.getValue() instanceof Double)
-							price = ((Double) txtPrezzo.getValue()).doubleValue();
+							price = ((Double) txtPrezzo.getValue())
+									.doubleValue();
 						else
 							price = ((Long) txtPrezzo.getValue()).intValue();
-						c.insertArticolo(a.getIdArticolo(),
-								((Number) txtQta.getValue()).doubleValue(), price);
+						c.insertArticolo(a.getIdArticolo(), ((Number) txtQta
+								.getValue()).doubleValue(), price);
 					}
 					calcoli(c);
 					azzeraCampi();
@@ -1910,7 +1931,12 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			try {
 				pnlCentro = new JPanel();
 				pnlCentro.setLayout(new BorderLayout());
-				pnlCentro.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED), "Elenco documenti di carico", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Dialog", Font.BOLD, 12), new Color(51, 51, 51)));
+				pnlCentro.setBorder(BorderFactory.createTitledBorder(
+						BorderFactory.createBevelBorder(BevelBorder.RAISED),
+						"Elenco documenti di carico",
+						TitledBorder.DEFAULT_JUSTIFICATION,
+						TitledBorder.DEFAULT_POSITION, new Font("Dialog",
+								Font.BOLD, 12), new Color(51, 51, 51)));
 				pnlCentro.add(getJScrollPane2(), "Center");
 			} catch (Throwable throwable) {
 			}
@@ -1971,7 +1997,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 	private MyButtonListener myButtonListener;
 
-	private MyComboBoxListener myComboBoxListener;  //  @jve:decl-index=0:
+	private MyComboBoxListener myComboBoxListener; // @jve:decl-index=0:
 
 	private JPanel pnlCentrale;
 
@@ -2071,13 +2097,13 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		FornitoriAdd add = new FornitoriAdd(this, DBManager
 				.getIstanceSingleton());
 		add.setVisible(true);
-//		caricaFornitori(cmbFornitori);
+		// caricaFornitori(cmbFornitori);
 
 	}
 
 	/**
 	 * This method initializes jPanel
-	 *
+	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanel() {
@@ -2128,7 +2154,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 	/**
 	 * This method initializes pnlSud1
-	 *
+	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPnlSud1() {
@@ -2159,7 +2185,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 	/**
 	 * This method initializes txtImponibileIng
-	 *
+	 * 
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtImponibileIng() {
@@ -2176,7 +2202,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 	/**
 	 * This method initializes txtImpostaIng
-	 *
+	 * 
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtImpostaIng() {
@@ -2193,7 +2219,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 	/**
 	 * This method initializes txtTotaleIng
-	 *
+	 * 
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTxtTotaleIng() {
@@ -2218,7 +2244,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 	/**
 	 * This method initializes time1
-	 *
+	 * 
 	 * @return java.util.GregorianCalendar
 	 */
 	private GregorianCalendar getTime1() {
@@ -2229,9 +2255,9 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	}
 
 	/**
-	 * This method initializes btnCaricaOrdine	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes btnCaricaOrdine
+	 * 
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnCaricaOrdine() {
 		if (btnCaricaOrdine == null) {
@@ -2243,15 +2269,16 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	}
 
 	/**
-	 * This method initializes jButton	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes jButton
+	 * 
+	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnSogliaMinima() {
 		if (btnSogliaMinima == null) {
 			btnSogliaMinima = new JButton();
 			btnSogliaMinima.setBounds(new Rectangle(645, 26, 170, 48));
-			btnSogliaMinima.setText("<html>Carica Articoli<P>sotto Soglia Minima</html>");
+			btnSogliaMinima
+					.setText("<html>Carica Articoli<P>sotto Soglia Minima</html>");
 			btnSogliaMinima.addActionListener(new MyButtonListener());
 		}
 		return btnSogliaMinima;

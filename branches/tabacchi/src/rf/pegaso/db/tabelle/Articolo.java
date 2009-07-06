@@ -96,6 +96,8 @@ public class Articolo {
 	// ---------------------------------------------
 
 	private int scortaMinima;
+	
+	private int scortaMassima;
 
 	private int um;
 
@@ -135,7 +137,7 @@ public class Articolo {
 	}
 	
 	/**
-	 * Ritorna tutti gli articoli selezionati per categoria merceologica e ordinati per quantità venduta
+	 * Ritorna tutti gli articoli selezionati per categoria merceologica e ordinati per quantitï¿½ venduta
 	 * @return
 	 * @throws SQLException
 	 */
@@ -238,6 +240,7 @@ public class Articolo {
 			this.prezzoIngrosso = rs.getDouble("prezzo_Ingrosso");
 			this.sconto = rs.getInt("sconto");
 			this.scortaMinima = rs.getInt("scorta_Minima");
+			this.scortaMassima = rs.getInt("scorta_Massima");
 			this.um = rs.getInt("um");
 			if (st != null)
 				st.close();
@@ -303,6 +306,7 @@ public class Articolo {
 			this.prezzoIngrosso = rs.getDouble("prezzo_Ingrosso");
 			this.sconto = rs.getInt("sconto");
 			this.scortaMinima = rs.getInt("scorta_Minima");
+			this.scortaMassima = rs.getInt("scorta_Massima");
 			this.um = rs.getInt("um");
 			if (st != null)
 				st.close();
@@ -319,9 +323,9 @@ public class Articolo {
 	 *
 	 * @param idArticolo
 	 *            il codice della riga da cancellare
-	 * @return un intero positivo se tutto è andato bene
+	 * @return un intero positivo se tutto ï¿½ andato bene
 	 * @throws IDNonValido
-	 *             eccezzione generata se l'id è <=0
+	 *             eccezzione generata se l'id ï¿½ <=0
 	 */
 	public int deleteArticolo(int idArticolo) throws IDNonValido {
 
@@ -464,6 +468,10 @@ public class Articolo {
 	public int getScortaMinima() {
 		return scortaMinima;
 	}
+	
+	public int getScortaMassima() {
+		return scortaMassima;
+	}
 
 	/**
 	 * @return the um
@@ -478,8 +486,8 @@ public class Articolo {
 	 * @return un numero inferiore a 0 se ci sono stati problemi oppure maggiore
 	 *         altrimenti (in pratica ritorna il numero delle righe aggiornate)
 	 * @throws IDNonValido
-	 *             viene lanciata se l'attributo idArticolo è errato e quindi
-	 *             non si può effettuare l'aggiornamento della riga
+	 *             viene lanciata se l'attributo idArticolo ï¿½ errato e quindi
+	 *             non si puï¿½ effettuare l'aggiornamento della riga
 	 */
 	public int insertArticolo() throws IDNonValido {
 
@@ -488,7 +496,7 @@ public class Articolo {
 			throw new IDNonValido();
 		int ok = 0;
 		PreparedStatement pst = null;
-		String insert = "insert into articoli values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String insert = "insert into articoli values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		dataInserimento = new Date(new java.util.Date().getTime());
 		pst = dbm.getNewPreparedStatement(insert);
 		try {
@@ -511,6 +519,7 @@ public class Articolo {
 			pst.setDate(17, dataInserimento);
 			pst.setInt(18, idFornitore);
 			pst.setInt(19, caricoIniziale);
+			pst.setInt(20, scortaMassima);
 			ok = pst.executeUpdate();
 			dbm.notifyDBStateChange();
 		} catch (SQLException e) {
@@ -631,6 +640,10 @@ public class Articolo {
 	public void setScortaMinima(int scortaMinima) {
 		this.scortaMinima = scortaMinima;
 	}
+	
+	public void setScortaMassima(int scortaMassima) {
+		this.scortaMassima = scortaMassima;
+	}
 
 	/**
 	 * @param um
@@ -646,8 +659,8 @@ public class Articolo {
 	 * @return un numero inferiore a 0 se ci sono stati problemi oppure maggiore
 	 *         altrimenti (in pratica ritorna il numero delle righe aggiornate)
 	 * @throws IDNonValido
-	 *             viene lanciata se l'attributo idArticolo è errato e quindi
-	 *             non si può effettuare l'aggiornamento della riga
+	 *             viene lanciata se l'attributo idArticolo ï¿½ errato e quindi
+	 *             non si puï¿½ effettuare l'aggiornamento della riga
 	 */
 	public int updateArticolo() throws IDNonValido {
 
@@ -659,7 +672,7 @@ public class Articolo {
 				+ "codFornitore=?,codBarre=?,descrizione=?,prezzo_acquisto=?,"
 				+ "iva=?,um=?,prezzo_dettaglio=?,prezzo_ingrosso=?,imballo=?,"
 				+ "peso=?,sconto=?,idReparto=?,colore=?,scorta_minima=?,note=?,"
-				+ "data_inserimento=?,idFornitore=?,carico_iniziale=? WHERE idArticolo=?";
+				+ "data_inserimento=?,idFornitore=?,carico_iniziale=?,scorta_massima=? WHERE idArticolo=?";
 
 		pst = dbm.getNewPreparedStatement(update);
 		try {
@@ -682,7 +695,8 @@ public class Articolo {
 			pst.setDate(17, dataInserimento);
 			pst.setInt(18, idFornitore);
 			pst.setInt(19, caricoIniziale);
-			pst.setInt(20, idArticolo);
+			pst.setInt(20, scortaMassima);
+			pst.setInt(21, idArticolo);
 			ok = pst.executeUpdate();
 			dbm.notifyDBStateChange();
 		} catch (SQLException e) {

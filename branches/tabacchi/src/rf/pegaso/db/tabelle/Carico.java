@@ -90,21 +90,23 @@ public class Carico {
 		String query = "select * from carichi where idcarico=" + idCarico;
 		st = dbm.getNewStatement();
 		rs = st.executeQuery(query);
-		rs.next();
-		this.idCarico = rs.getInt("idcarico");
-		this.idFornitore = rs.getInt("idfornitore");
-		this.dataCarico = rs.getDate("data_carico");
-		this.oraCarico = rs.getTime("ora_carico");
-		this.note = rs.getString("note");
-		this.dataDocumento = rs.getDate("data_documento");
-		this.idDocumento = rs.getInt("iddocumento");
-		this.numDocumento = rs.getString("num_documento");
-		this.totDocumento = rs.getDouble("totale_documento");
-		this.sospeso = rs.getInt("sospeso");
-		this.rifDoc = rs.getInt("rif_doc");
-		this.iva_doc=rs.getInt("iva_documento");
-		this.sconto=rs.getInt("sconto");
-		primaNota=rs.getInt("ins_pn");
+		if(rs.next()){
+			this.idCarico = rs.getInt("idcarico");
+			this.idFornitore = rs.getInt("idfornitore");
+			this.dataCarico = rs.getDate("data_carico");
+			this.oraCarico = rs.getTime("ora_carico");
+			this.note = rs.getString("note");
+			this.dataDocumento = rs.getDate("data_documento");
+			this.idDocumento = rs.getInt("iddocumento");
+			this.numDocumento = rs.getString("num_documento");
+			this.totDocumento = rs.getDouble("totale_documento");
+			this.sospeso = rs.getInt("sospeso");
+			this.rifDoc = rs.getInt("rif_doc");
+			this.iva_doc=rs.getInt("iva_documento");
+			this.sconto=rs.getInt("sconto");
+			primaNota=rs.getInt("ins_pn");
+		}
+		
 		if (st != null)
 			st.close();
 	}
@@ -180,6 +182,24 @@ public class Carico {
 			rs.close();
 		return o;
 	}
+	
+	public Object[][] getAllArticoliCaricatiByIdDocumento(long id) throws SQLException {
+		String query = "SELECT A.idarticolo, A.codBarre, A.descrizione, A.iva, A.um, D.qta, D.prezzo_Acquisto "
+				+ "FROM Articoli AS A, Carichi AS C, Dettaglio_Carichi AS D, Fornitori AS F "
+				+ "WHERE A.idArticolo=D.idArticolo AND C.idCarico=D.idCarico AND C.idFornitore=F.idFornitore and C.idcarico="+id;
+
+		Statement pst = dbm.getNewStatement();
+		ResultSet rs = pst.executeQuery(query);
+		MyResultSet mrs = new MyResultSet(rs);
+		Object[][] o = mrs.getAllObject();
+		if (pst != null)
+			pst.close();
+		if (rs != null)
+			rs.close();
+		return o;
+	}
+	
+	
 
 	/**
 	 * @return the dataCarico

@@ -154,6 +154,8 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	private JLabel lblQta = null;
 
 	private JLabel lblScortaMinima = null;
+	
+	private JLabel lblScortaMassima = null;
 
 	private JLabel lblUnitaMisura = null;
 
@@ -174,6 +176,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	private JFormattedTextField txtPrezzoListino = null;
 	private JTextField txtQta = null;
 	private JTextField txtScortaMinima = null;
+	private JTextField txtScortaMassima = null;
 	private String[] codFornitori;
 	private String[] descFornitori;
 	private String[] codReparti;
@@ -208,7 +211,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 
 
 	// in questo metodo costruttore passiamo oltre i vari parametri
-	// che già abbiamo inpostato anche un terzo parametro che
+	// che giï¿½ abbiamo inpostato anche un terzo parametro che
 	// ci serve per memorizzare l'ultimo codArticolo lavorato
 	// questo viene particolarmente usato nel caso di un nuovo articolo
 	// quando ci si trova nel carico merce.
@@ -223,7 +226,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	}
 
 	// in questo metodo costruttore passiamo oltre i vari parametri
-	// che già abbiamo inpostato anche un quarto parametro che
+	// che giï¿½ abbiamo inpostato anche un quarto parametro che
 	// ci serve per memorizzare l'ultimo codArticolo lavorato
 	// questo viene particolarmente usato nel caso di un nuovo articolo
 	// quando ci si trova nel carico merce.
@@ -573,7 +576,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			try {
 				lblQta = new JLabel();
 				lblQta.setBounds(new Rectangle(8, 24, 57, 21)); // Generated
-				lblQta.setText("Quantità"); // Generated
+				lblQta.setText("Quantitï¿½"); // Generated
 				jPanel2 = new JPanel();
 				jPanel2.setLayout(null); // Generated
 				jPanel2.setBounds(new Rectangle(408, 106, 201, 65)); // Generated
@@ -658,7 +661,10 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 				lblNota.setBounds(new Rectangle(8, 176, 26, 16)); // Generated
 				lblScortaMinima = new JLabel();
 				lblScortaMinima.setText("Scorta Minima"); // Generated
-				lblScortaMinima.setBounds(new Rectangle(8, 135, 82, 16)); // Generated
+				lblScortaMinima.setBounds(new Rectangle(8, 135, 100, 16)); // Generated
+				lblScortaMassima = new JLabel();
+				lblScortaMassima.setText("Scorta Massima"); // Generated
+				lblScortaMassima.setBounds(new Rectangle(140, 135, 100, 16)); // Generated
 				lblUnitaMisura = new JLabel();
 				lblUnitaMisura.setText("UM"); // Generated
 				lblUnitaMisura.setBounds(new Rectangle(281, 89, 18, 16)); // Generated
@@ -694,7 +700,9 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 				pnlDatiPersonali.add(lblUnitaMisura, null); // Generated
 				pnlDatiPersonali.add(getCmbMisura(), null); // Generated
 				pnlDatiPersonali.add(lblScortaMinima, null); // Generated
+				pnlDatiPersonali.add(lblScortaMassima, null); // Generated
 				pnlDatiPersonali.add(getTxtScortaMinima(), null); // Generated
+				pnlDatiPersonali.add(getTxtScortaMassima(), null); // Generated
 				pnlDatiPersonali.add(lblNota, null); // Generated
 				pnlDatiPersonali.add(getJScrollPane1(), null); // Generated
 				pnlDatiPersonali.add(getJPanel2(), null); // Generated
@@ -869,6 +877,24 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 		}
 		return txtScortaMinima;
 	}
+	
+	/**
+	 * This method initializes txtScortaMassima
+	 *
+	 * @return javax.swing.JTextField
+	 */
+	private JTextField getTxtScortaMassima() {
+		if (txtScortaMassima == null) {
+			try {
+				txtScortaMassima = new JTextField();
+				txtScortaMassima.setPreferredSize(new Dimension(100, 20)); // Generated
+				txtScortaMassima.setBounds(new Rectangle(140, 151, 100, 20)); // Generated
+			} catch (java.lang.Throwable e) {
+				e.printStackTrace();
+			}
+		}
+		return txtScortaMassima;
+	}
 
 	private void impostaCampi(Articolo c) {
 		Fornitore f = new Fornitore();
@@ -898,8 +924,8 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 		this.txtPrezzoListino.setValue(new Double(c.getPrezzoIngrosso()));
 		// this.txtRicaricoDettaglio.setText(new
 		// Integer(c.getRicaricoDettaglio()).toString());
-		this.txtScortaMinima.setText(new Integer(c.getScortaMinima())
-				.toString());
+		this.txtScortaMinima.setText(new Integer(c.getScortaMinima()).toString());
+		this.txtScortaMassima.setText(new Integer(c.getScortaMassima()).toString());
 	}
 
 	/**
@@ -917,7 +943,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 		// Combo box con i relativi dati dal DB
 		caricaComboBox();
 
-		// se selezionata la modalità modifica
+		// se selezionata la modalitï¿½ modifica
 		// carichiamo i cari dati negli oggetti
 		if (modalita == MOD) {
 			this.setTitle("Modifica Articolo Tabacchi");
@@ -1056,17 +1082,17 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 
 		a.setCodBarre(txtCodBarre.getText());
 		a.setCodFornitore(txtCodFornitore.getText());
-		// Controllo se è stato selezionato l'unità di misura
+		// Controllo se ï¿½ stato selezionato l'unitï¿½ di misura
 		if (((String) cmbMisura.getSelectedItem()).equalsIgnoreCase("")) {
-			messaggioCampoErrato("Selezionare l'unità di misura");
+			messaggioCampoErrato("Selezionare l'unitï¿½ di misura");
 			return false;
 		}
 
-		// Preleviamo il codice unità di misura
+		// Preleviamo il codice unitï¿½ di misura
 		int pos = cmbMisura.getSelectedIndex();
 		if (pos == 0)
 			return false;
-		// descrementiamo di uno perchè nel combobox è presente
+		// descrementiamo di uno perchï¿½ nel combobox ï¿½ presente
 		// anche un oggetto vuoto
 		pos--;
 		int cod = new Integer(codUnitaDiMisura[pos]);
@@ -1122,6 +1148,10 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			a.setScortaMinima(0);
 		else
 			a.setScortaMinima(Integer.parseInt((txtScortaMinima.getText())));
+		if (txtScortaMassima.getText().equalsIgnoreCase(""))
+			a.setScortaMassima(0);
+		else
+			a.setScortaMassima(Integer.parseInt((txtScortaMassima.getText())));
 		// impostiamo sconto
 		a.setCaricoIniziale(0);
 		a.setNote(txtNote.getText());

@@ -14,7 +14,6 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import rf.pegaso.db.tabelle.Articolo;
-import rf.upload.mapping.MapTariffari;
 import rf.utility.Constant;
 import rf.utility.ControlloDati;
 import rf.utility.db.DBManager;
@@ -25,9 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.swing.JTextField;
 
@@ -106,7 +103,7 @@ public class CaricaAggiornaTabacchiGui extends JDialog {
 				boolean flag = true;
 				while ( flag ){
 					Articolo a = new Articolo();
-					a.setDescrizione(sheet.getCell(2, riga).getContents());
+					a.setDescrizione((sheet.getCell(2, riga).getContents()).replaceAll("'", ""));
 					a.setCodFornitore(sheet.getCell(1, riga).getContents());
 					// Verifichiamo se il prodotto e' gia' presente e nel caso lo aggiorniamo
 					if ( a.tabacchiEsistente() ){

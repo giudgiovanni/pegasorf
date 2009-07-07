@@ -110,6 +110,7 @@ public class CaricaAggiornaTabacchiGui extends JDialog {
 						if ( Double.compare(a.getPrezzoDettaglio(), ControlloDati.convertPrezzoToDouble(sheet.getCell(4, riga).getContents())) != 0
 								|| !a.getNote().equals(sheet.getCell(5, riga).getContents()) ) {
 							a.setPrezzoDettaglio(ControlloDati.convertPrezzoToDouble(sheet.getCell(4, riga).getContents()));
+							a.setPrezzoIngrosso(ControlloDati.convertPrezzoToDouble(sheet.getCell(4, riga).getContents()));
 							a.setNote(sheet.getCell(5, riga).getContents());
 							a.updateArticolo();
 						}
@@ -124,6 +125,7 @@ public class CaricaAggiornaTabacchiGui extends JDialog {
 						a.setIva(0);
 						
 						a.setPrezzoDettaglio(ControlloDati.convertPrezzoToDouble(sheet.getCell(4, riga).getContents()));
+						a.setPrezzoIngrosso(ControlloDati.convertPrezzoToDouble(sheet.getCell(4, riga).getContents()));
 						a.setNote(sheet.getCell(5, riga).getContents());
 
 						System.out.println("Settare il codice a barre, codice fornitore");

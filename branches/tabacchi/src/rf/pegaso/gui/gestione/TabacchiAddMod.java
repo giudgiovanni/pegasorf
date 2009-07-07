@@ -80,9 +80,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 				apriDocCarico();
 			}else if(e.getSource()==btnSuggerimento){
 				suggerimentoCodice();
-			}else if( e.getSource() == btnCaricaQtaIniziale ){
-				inserisciQuantitaIniziale();
-			}
+			} 
 
 		}
 
@@ -195,8 +193,6 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	private boolean close=false;
 	private JFormattedTextField txtFldQtaIniziale;
 	private JLabel jLabel = null;
-	private JButton btnCaricaQtaIniziale = null;
-
 	/**
 	 * @param owner
 	 */
@@ -722,7 +718,6 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 				pnlDatiPersonali.add(getBtnSuggerimento(), null);  // Generated
 				pnlDatiPersonali.add(jLabel, null);
 				pnlDatiPersonali.add(getTxtFldQtaIniziale(), null);
-				pnlDatiPersonali.add(getBtnCaricaQtaIniziale(), null);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -1044,6 +1039,8 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 		if (ok) {
 			try {
 				a.insertArticolo();
+				idArticolo=a.getIdArticolo();
+				inserisciQuantitaIniziale();
 			} catch (IDNonValido e) {
 				JOptionPane.showMessageDialog(this, "Valore idCliente errato",
 						"ERRORE", JOptionPane.ERROR_MESSAGE);
@@ -1141,6 +1138,9 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 		}
 		// ultimo articolo appunto lavorato
 		this.ultimoArticolo[0]=a.getCodBarre();
+		if(txtFldQtaIniziale.getText()!=""){
+			inserisciQuantitaIniziale();
+		}
 		this.dispose();
 
 	}
@@ -1308,21 +1308,6 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			} catch (Throwable throwable) {
 			}
 		return txtFldQtaIniziale;
-	}
-
-	/**
-	 * This method initializes jButton	
-	 * 	
-	 * @return javax.swing.JButton	
-	 */
-	private JButton getBtnCaricaQtaIniziale() {
-		if (btnCaricaQtaIniziale == null) {
-			btnCaricaQtaIniziale = new JButton();
-			btnCaricaQtaIniziale.setBounds(new Rectangle(144, 188, 207, 23));
-			btnCaricaQtaIniziale.setText("Carica Quantita' Iniziale");
-			btnCaricaQtaIniziale.addActionListener(new MyActionListener());
-		}
-		return btnCaricaQtaIniziale;
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,8"

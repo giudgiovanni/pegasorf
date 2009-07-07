@@ -213,15 +213,19 @@ public class Articolo {
 	 * @return
 	 * @throws SQLException
 	 */
-	public LinkedList<Integer> allArticoliSottoSogliaMinima() throws SQLException {
-		LinkedList<Integer> list = new LinkedList<Integer>();
+	public LinkedList<Object[]> allArticoliSottoSogliaMinima() throws SQLException {
+		LinkedList<Object[]> list = new LinkedList<Object[]>();
 		ResultSet rs = null;
 		Statement pst = null;
-		String query = "select a.idarticolo from giacenza_articoli_all_view v, articoli a where v.idarticolo=a.idarticolo and (v.carico-v.scarico) < a.scorta_minima";
+		String query = "select a.idarticolo, (v.carico-v.scarico) from giacenza_articoli_all_view v, articoli a where v.idarticolo=a.idarticolo and (v.carico-v.scarico) < a.scorta_minima";
 		pst = dbm.getNewStatement();
 		rs = pst.executeQuery(query);
+		Object [] obj;
 		while (rs.next()) {
-			list.add(rs.getInt(1));
+			obj = new Object[2];
+			obj[0] = rs.getInt(1);
+			obj[1] = rs.getInt(2);
+			list.add(obj);
 		}
 		if (pst != null)
 			pst.close();

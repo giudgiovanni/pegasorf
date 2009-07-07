@@ -400,7 +400,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), "F2");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "F3");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0), "F4");
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0), "F5");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), "F5");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "ESC");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_COMMA, 0), ",");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "CANC");
@@ -1042,9 +1042,10 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JTextField getTxtFldTotale() {
 		if (txtFldTotale == null) {
 			txtFldTotale = new JTextField();
-			txtFldTotale.setBounds(new Rectangle(590, 30, 170, 80));
+			txtFldTotale.setBounds(new Rectangle(590, 25, 190, 105));
 			txtFldTotale.setOpaque(true);
 			txtFldTotale.setBackground(Color.ORANGE);
+			txtFldTotale.setFont(new Font("Dialog", Font.BOLD, 26));
 			txtFldTotale.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Totale �",
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));
@@ -1060,9 +1061,10 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JTextField getTxtFldContanti() {
 		if (txtFldContanti == null) {
 			txtFldContanti = new JTextField();
-			txtFldContanti.setBounds(new Rectangle(760, 30, 170, 40));
+			txtFldContanti.setBounds(new Rectangle(780, 25, 170, 52));
 			txtFldContanti.setOpaque(true);
 			txtFldContanti.setBackground(Color.decode("435445"));
+			txtFldContanti.setFont(new Font("Dialog", Font.PLAIN, 22));
 			txtFldContanti.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Contanti �",
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));
@@ -1078,8 +1080,9 @@ public class VenditaInternalFrame extends JInternalFrame {
 	private JTextField getTxtFldResto() {
 		if (txtFldResto == null) {
 			txtFldResto = new JTextField();
-			txtFldResto.setBounds(new Rectangle(760, 70, 170, 40));
+			txtFldResto.setBounds(new Rectangle(780, 77, 170, 53));
 			txtFldResto.setBackground(Color.decode("314467"));
+			txtFldResto.setFont(new Font("Dialog", Font.PLAIN, 22));
 			txtFldResto.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Resto �",
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));

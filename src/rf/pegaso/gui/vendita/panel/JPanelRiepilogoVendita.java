@@ -150,7 +150,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 				break;
 			}
 			case 1:{
-				// TODO Auto-generated method stub	o = new Double(riga.getPrezzoVendita());
+				o = new Double(riga.getPrezzoVendita());
 				break;
 			}
 			case 2:{

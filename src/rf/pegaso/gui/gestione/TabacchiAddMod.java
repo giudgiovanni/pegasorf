@@ -17,6 +17,7 @@ import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -40,7 +41,9 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.JTextComponent;
 
+import rf.pegaso.db.exception.ResultSetVuoto;
 import rf.pegaso.db.tabelle.Articolo;
+import rf.pegaso.db.tabelle.Carico;
 import rf.pegaso.db.tabelle.Fornitore;
 import rf.pegaso.db.tabelle.Reparto;
 import rf.pegaso.db.tabelle.UnitaDiMisura;
@@ -48,7 +51,9 @@ import rf.pegaso.gui.utility.SuggerimentoCodice;
 import rf.pegaso.gui.viste.ViewDocCarico;
 import rf.utility.Constant;
 import rf.utility.ControlloDati;
+import rf.utility.MathUtility;
 import rf.utility.db.DBManager;
+import rf.utility.db.UtilityDBManager;
 import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompletion;
@@ -75,6 +80,8 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 				apriDocCarico();
 			}else if(e.getSource()==btnSuggerimento){
 				suggerimentoCodice();
+			}else if( e.getSource() == btnCaricaQtaIniziale ){
+				inserisciQuantitaIniziale();
 			}
 
 		}
@@ -186,6 +193,9 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	private JButton btnSuggerimento = null;
 	private String[] ultimoArticolo;
 	private boolean close=false;
+	private JFormattedTextField txtFldQtaIniziale;
+	private JLabel jLabel = null;
+	private JButton btnCaricaQtaIniziale = null;
 
 	/**
 	 * @param owner
@@ -603,7 +613,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 		if (jScrollPane1 == null) {
 			try {
 				jScrollPane1 = new JScrollPane();
-				jScrollPane1.setBounds(new Rectangle(8, 194, 297, 41)); // Generated
+				jScrollPane1.setBounds(new Rectangle(8, 233, 297, 41)); // Generated
 				jScrollPane1.setViewportView(getTxtNote()); // Generated
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -656,9 +666,12 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	private JPanel getPnlDatiPersonali() {
 		if (pnlDatiPersonali == null) {
 			try {
+				jLabel = new JLabel();
+				jLabel.setBounds(new Rectangle(8, 176, 105, 16));
+				jLabel.setText("Carico Iniziale");
 				lblNota = new JLabel();
 				lblNota.setText("Note"); // Generated
-				lblNota.setBounds(new Rectangle(8, 176, 26, 16)); // Generated
+				lblNota.setBounds(new Rectangle(8, 217, 26, 16)); // Generated
 				lblScortaMinima = new JLabel();
 				lblScortaMinima.setText("Scorta Minima"); // Generated
 				lblScortaMinima.setBounds(new Rectangle(8, 135, 100, 16)); // Generated
@@ -707,6 +720,9 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 				pnlDatiPersonali.add(getJScrollPane1(), null); // Generated
 				pnlDatiPersonali.add(getJPanel2(), null); // Generated
 				pnlDatiPersonali.add(getBtnSuggerimento(), null);  // Generated
+				pnlDatiPersonali.add(jLabel, null);
+				pnlDatiPersonali.add(getTxtFldQtaIniziale(), null);
+				pnlDatiPersonali.add(getBtnCaricaQtaIniziale(), null);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -934,7 +950,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(636, 350);
+		this.setSize(636, 400);
 		this.setResizable(false); // Generated
 
 		this.setContentPane(getJContentPane());
@@ -1047,6 +1063,60 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 		if(this.close)
 			dispose();
 
+	}
+	
+	/**
+	 * Metodo che carica la quantita' iniziale per un determinato articolo
+	 * 
+	 */
+	private void inserisciQuantitaIniziale() {
+		
+		// PUNTO DI BACKUP DA ATTIVARE DA CONFIGURAZIONI
+		try {
+			UtilityDBManager.getSingleInstance().backupDataBase(
+					UtilityDBManager.INSERT);
+		} catch (FileNotFoundException e1) {
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"File di configurazione per backup\nmancante o danneggiato",
+							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"File di configurazione per backup\nmancante o danneggiato",
+							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			e1.printStackTrace();
+		}
+		// FINE PUNTO BACKUP
+		double tmp = ((Number) txtFldQtaIniziale.getValue()).doubleValue();
+		
+		if (tmp == 0.0) {
+			messaggioCampoMancante("Inserire la quantit\340 iniziale da caricare.");
+			return;
+		}
+		Carico c = new Carico();
+		try {
+
+			c.caricaDati(Constant.CARICO_INIZIALE);
+			Articolo a = new Articolo();
+			a.caricaDati(idArticolo);
+			c.insertArticolo(idArticolo, tmp, a.getPrezzoDettaglio()-MathUtility.percentualeDaAggiungere(a.getPrezzoDettaglio(), 10));
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(this,
+					"Errore nell'inserimento dinumeri", "NUMERO ERRATO", 0);
+			e.printStackTrace();
+		}
+
+	}
+	
+	private void messaggioCampoMancante(String testo) {
+		JOptionPane.showMessageDialog(this, testo, "CAMPO VUOTO", 1);
 	}
 
 	private void modifica() {
@@ -1216,6 +1286,43 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			}
 		}
 		return btnSuggerimento;
+	}
+	
+	private JFormattedTextField getTxtFldQtaIniziale() {
+		if (txtFldQtaIniziale == null)
+			try {
+				DecimalFormat formatPrice = new DecimalFormat();
+				formatPrice.setMaximumFractionDigits(2);
+				formatPrice.setMinimumFractionDigits(2);
+				txtFldQtaIniziale = new JFormattedTextField(formatPrice);
+				txtFldQtaIniziale.setBounds(new Rectangle(8, 192, 100, 20));
+				txtFldQtaIniziale.setValue(0.0);
+				/*
+				 * txtQta.addFocusListener(new FocusAdapter() {
+				 *
+				 * public void focusLost(FocusEvent e) { String numero =
+				 * txtQta.getText(); if (!ControlloDati.isNumero(numero)) {
+				 * txtQta.selectAll(); messaggioErroreCampo("Errore campo
+				 * quantit\340"); } } });
+				 */
+			} catch (Throwable throwable) {
+			}
+		return txtFldQtaIniziale;
+	}
+
+	/**
+	 * This method initializes jButton	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnCaricaQtaIniziale() {
+		if (btnCaricaQtaIniziale == null) {
+			btnCaricaQtaIniziale = new JButton();
+			btnCaricaQtaIniziale.setBounds(new Rectangle(144, 188, 207, 23));
+			btnCaricaQtaIniziale.setText("Carica Quantita' Iniziale");
+			btnCaricaQtaIniziale.addActionListener(new MyActionListener());
+		}
+		return btnCaricaQtaIniziale;
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,8"

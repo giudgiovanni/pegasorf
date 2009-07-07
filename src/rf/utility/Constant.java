@@ -11,6 +11,7 @@ public class Constant {
 	public static final int FORNITORE_TABACCHI = 0;
 	public static final int REPARTO_TABACCHI = 1;
 	public static final int UNITA_MISURA_PEZZI = 2;
+	public static final int CARICO_INIZIALE = 0;
 	
 	public static int getOrdine() {
 		return ORDINE;
@@ -46,5 +47,9 @@ public class Constant {
 
 	public static int getUnitaMisuraPezzi() {
 		return UNITA_MISURA_PEZZI;
+	}
+
+	public static int getCaricoIniziale() {
+		return CARICO_INIZIALE;
 	}
 }

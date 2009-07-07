@@ -2,6 +2,8 @@ package rf.pegaso.gui.vendita.panel;
 
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Time;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -17,6 +19,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
@@ -25,6 +28,7 @@ import rf.pegaso.db.tabelle.Scarico;
 import rf.utility.Constant;
 import rf.utility.MathUtility;
 import rf.utility.db.DBManager;
+import rf.utility.db.UtilityDBManager;
 
 public class JPanelRiepilogoVendita extends JPanel {
 	
@@ -320,6 +324,26 @@ public class JPanelRiepilogoVendita extends JPanel {
 	}
 	
 	public boolean registraScarico(){
+		// PUNTO DI BACKUP DA ATTIVARE DA CONFIGURAZIONI
+		try {
+			UtilityDBManager.getSingleInstance().backupDataBase(
+					UtilityDBManager.INSERT);
+		} catch (FileNotFoundException e1) {
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"File di configurazione per backup\nmancante o danneggiato",
+							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"File di configurazione per backup\nmancante o danneggiato",
+							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			e1.printStackTrace();
+		}
+		// FINE PUNTO BACKUP
 		try{
 			//Salviamo i dati della fattura
 			Date d = new Date();
@@ -332,9 +356,6 @@ public class JPanelRiepilogoVendita extends JPanel {
 			scarico.setNumDocumento(Constant.getNumeroDocScaricoAlBanco());
 			scarico.setIdDocumento(0);
 			scarico.setTotaleDocumentoIvato(totaleCarrello);
-			
-					
-			System.out.println("ricordati di settare il tipo di prezzo nella fattura");
 			//scarico.setTipoPrezzo((String)cmbTipoPagamento.getSelectedItem());
 			scarico.setDocFiscale(Constant.getScarico() );
 			int ok = scarico.insertScarico();
@@ -347,6 +368,8 @@ public class JPanelRiepilogoVendita extends JPanel {
 				dv.setIdVendita(scarico.getIdScarico());
 				ok = dv.insert();
 				if ( ok == -1 ){
+					scarico.deleteAllArticoliScaricati();
+					scarico.deleteScarico(scarico.getIdScarico());
 					return false;
 				}
 			}

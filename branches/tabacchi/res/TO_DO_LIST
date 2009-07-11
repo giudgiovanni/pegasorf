@@ -1,0 +1,21 @@
+ROCCO - invece di codice fornitore inserire codice aams
+- usare sempre pezzi come unità di misura nei tabacchi
+- quando si deve fare un riordino se i pacchetti sono da 10 ordinare quindi multipli di 10 oppure 20 nell'altro caso
+	se nel caso abbiamo da riordinarne meno o + di 10 / 20 usare il se e quindi < 5 arrotonda per difetto >=5 per eccesso
+- aggiungere campi per grammatura stecca e per numero pacchetti
+- nell'inventario aggiungere prezzo venditA
+- possibilità di duplicare un ordine da uno già esistente
+- textfield non visualizzato nel carivo tabacchi
+- se la scorta massima è < di scorta minima fare la differenza per il riordino da scortaminima-scortamassima
+- Quando si carica un ordine richiedere i dati fattura come numero data e riferimento ordine
+Possibilità di fare aggiornamenti direttamente dal sito FIT
+- filtro ricerca ordini per data
+- chiusura annuale programma con possibilità di riaprire un anno chiuso
+- abilitare nelle giacenze le due date per fare il filtro per data sull'effetica giancenza
+- Possibilità di modificare progressivo ordine
+- statistiche giornaliere, settimanali, mensili, abbuali
+- Quando si sparano le sigarette al 2pacchetto se qta>1 aprire finistrache richiede la qta totale
+- Spostare i totali grafici al centro nel pannello vendite in modo da averli più grandi possibilit.
+- possibilità con un tasto di cancellare l'ultima riga inserita
+- errore nello scarico perchèanche se c'è ne uno ancora in magazzino e si tenta di risalvarlonon 
+	non visualizza niente.

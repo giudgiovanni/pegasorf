@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 10-lug-2009 2.12.16 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="it.infolabs.hibernate.U88fax" table="u88fax" schema="public">
+        <id name="id" type="long" unsaved-value="0">
+            <column name="id" />
+            <generator class="increment" />
+        </id>
+        <property name="codiceAams" type="string">
+            <column name="codice_aams" length="1" />
+        </property>
+        <property name="kilogrammi" type="java.lang.Integer">
+            <column name="kilogrammi" />
+        </property>
+        <property name="grammi" type="java.lang.Integer">
+            <column name="grammi" />
+        </property>
+    </class>
+</hibernate-mapping>

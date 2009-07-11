@@ -122,6 +122,10 @@ public class TabacchiGestione extends JFrame {
 
 	private TableRowSorter<TabacchiModel> sorter;  //  @jve:decl-index=0:
 
+	private JLabel lblAams = null;
+
+	private JTextField txtFldCodAams = null;
+
 	/**
 	 * @param owner
 	 */
@@ -454,6 +458,11 @@ public class TabacchiGestione extends JFrame {
 				DefaultTableCellRenderer ColTipoRenderer = new DefaultTableCellRenderer();
 				ColTipoRenderer.setHorizontalAlignment(JLabel.LEFT);
 				col.setCellRenderer(ColTipoRenderer);
+				
+				col = tblTabacchi.getColumn("aams");
+				DefaultTableCellRenderer aamsCellRenderer = new DefaultTableCellRenderer();
+				aamsCellRenderer.setHorizontalAlignment(JLabel.LEFT);
+				col.setCellRenderer(aamsCellRenderer);
 
 				col = tblTabacchi.getColumn("prezzo_acquisto");
 				DefaultTableCellRenderer prezzoColumnRenderer = new DefaultTableCellRenderer();
@@ -601,6 +610,8 @@ public class TabacchiGestione extends JFrame {
 	 */
 	private JPanel getJPanel1() {
 		if (jPanel1 == null) {
+			lblAams = new JLabel();
+			lblAams.setText("aams");
 			FlowLayout flowLayout = new FlowLayout();
 			flowLayout.setAlignment(FlowLayout.LEFT);
 			lblFiltroDescrizione = new JLabel();
@@ -615,6 +626,8 @@ public class TabacchiGestione extends JFrame {
 			jPanel1.add(getTxtFiltroCodice(), null);
 			jPanel1.add(lblFiltroDescrizione, null);
 			jPanel1.add(getTxtFiltroDescrizione(), null);
+			jPanel1.add(lblAams, null);
+			jPanel1.add(getTxtFldCodAams(), null);
 		}
 		return jPanel1;
 	}
@@ -712,14 +725,17 @@ public class TabacchiGestione extends JFrame {
 		RowFilter<TabacchiModel, Object> rf = null;
         RowFilter<TabacchiModel, Object> rf1 = null;
         RowFilter<TabacchiModel, Object> rf2 = null;
+        RowFilter<TabacchiModel, Object> rf3 = null;
 
         //If current expression doesn't parse, don't update.
         try {
             rf1 = RowFilter.regexFilter(txtFiltroDescrizione.getText(), 2);
             rf2 = RowFilter.regexFilter(txtFiltroCodice.getText(), 1);//la X indica la col. Autore nella tabella
+            rf3 = RowFilter.regexFilter(txtFldCodAams.getText(), 3);
             ArrayList<RowFilter<TabacchiModel,Object>> filters = new ArrayList<RowFilter<TabacchiModel,Object>>(2);
             filters.add(rf1);
             filters.add(rf2);
+            filters.add(rf3);
             rf = RowFilter.andFilter(filters);
         }
         catch (java.util.regex.PatternSyntaxException e) {
@@ -739,6 +755,32 @@ public class TabacchiGestione extends JFrame {
 //        }
 //        sorter.setRowFilter(rf);
     }
+
+	/**
+	 * This method initializes txtFldCodAams	
+	 * 	
+	 * @return javax.swing.JTextField	
+	 */
+	private JTextField getTxtFldCodAams() {
+		if (txtFldCodAams == null) {
+			txtFldCodAams = new JTextField();
+			txtFldCodAams.setPreferredSize(new Dimension(100, 20));
+			//aggiungo gli ascoltatori
+			txtFldCodAams.getDocument().addDocumentListener(
+	                new DocumentListener() {
+	                    public void changedUpdate(DocumentEvent e) {
+	                        newFilter();
+	                    }
+	                    public void insertUpdate(DocumentEvent e) {
+	                        newFilter();
+	                    }
+	                    public void removeUpdate(DocumentEvent e) {
+	                        newFilter();
+	                    }
+	                });
+		}
+		return txtFldCodAams;
+	}
 
 
 } // @jve:decl-index=0:visual-constraint="10,10"

@@ -66,7 +66,8 @@ public class AutoCompleteTextComponent extends AbstractAutoCompleteAdaptor
 	try {
 	    while (rs.next()) {
 		Object o = rs.getObject(colonna);
-		if (o instanceof String)
+		if ( o == null ){}
+		else if (o instanceof String)
 		    set.add((String) o);
 		else
 		    set.add(o.toString());

@@ -582,7 +582,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			try {
 				lblQta = new JLabel();
 				lblQta.setBounds(new Rectangle(8, 24, 57, 21)); // Generated
-				lblQta.setText("Quantitï¿½"); // Generated
+				lblQta.setText("Quantità"); // Generated
 				jPanel2 = new JPanel();
 				jPanel2.setLayout(null); // Generated
 				jPanel2.setBounds(new Rectangle(408, 106, 201, 65)); // Generated

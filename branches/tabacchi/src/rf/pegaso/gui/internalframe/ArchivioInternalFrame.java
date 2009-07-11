@@ -31,6 +31,7 @@ import rf.pegaso.gui.gestione.ScaricoGui;
 import rf.pegaso.gui.gestione.StampeEtichette;
 import rf.pegaso.gui.gestione.TabacchiGestione;
 import rf.pegaso.gui.gestione.UnitaDiMisuraGestione;
+import rf.pegaso.gui.gestione.VenditeGui;
 import rf.pegaso.gui.viste.GiacenzeGUI;
 import rf.pegaso.gui.viste.RicercheArchivio;
 import rf.utility.ConversioneArt;
@@ -57,7 +58,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 			} else if (e.getSource() == btnCaricoTabacchi) {
 				apriCaricoMerceTabacchi();
 			} else if (e.getSource() == btnScarico) {
-				apriScaricoMerce();
+				apriVenditeGUI();
 			} else if (e.getSource() == btnInventario) {
 				apriGiacenze();
 			} else if (e.getSource() == btnStampe) {
@@ -129,8 +130,8 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	/**
 	 *
 	 */
-	public void apriScaricoMerce() {
-		ScaricoGui ordine = new ScaricoGui();
+	public void apriVenditeGUI() {
+		VenditeGui ordine = new VenditeGui();
 		//Apriamo il Frame in modo modale
 		ModalFrameUtil.showAsModal(ordine, padre);
 		//ordine.setVisible(true);
@@ -260,6 +261,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				btnArticoli = new JButton();
 				btnArticoli.setText("Articoli"); // Generated
 				btnArticoli.setPreferredSize(new Dimension(120, 70)); // Generated
+				btnArticoli.setVisible(false);
 				btnArticoli.addActionListener(myActionListener);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -279,6 +281,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				btnCarico = new JButton();
 				btnCarico.setText("Carico"); // Generated
 				btnCarico.setPreferredSize(new Dimension(120, 70)); // Generated
+				btnCarico.setVisible(false);
 				btnCarico.addActionListener(myActionListener);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -298,6 +301,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				btnClienti = new JButton();
 				btnClienti.setText("Clienti"); // Generated
 				btnClienti.setPreferredSize(new Dimension(120, 70)); // Generated
+				btnClienti.setVisible(false);
 				btnClienti.addActionListener(myActionListener);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -317,6 +321,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				btnFornitori = new JButton();
 				btnFornitori.setText("Fornitori"); // Generated
 				btnFornitori.setPreferredSize(new Dimension(120, 70)); // Generated
+				btnFornitori.setVisible(false);
 				btnFornitori.addActionListener(myActionListener);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -372,8 +377,9 @@ public class ArchivioInternalFrame extends JInternalFrame {
 		if (btnScarico == null) {
 			try {
 				btnScarico = new JButton();
-				btnScarico.setText("Scarico"); // Generated
+				btnScarico.setText("Vendite"); // Generated
 				btnScarico.setPreferredSize(new Dimension(120, 70)); // Generated
+//				btnScarico.setVisible(false);
 				btnScarico.addActionListener(myActionListener);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -424,13 +430,15 @@ public class ArchivioInternalFrame extends JInternalFrame {
 		if (pnlCentrale == null) {
 			try {
 				GridBagConstraints gridBagConstraints13 = new GridBagConstraints();
-				gridBagConstraints13.gridx = 4;
-				gridBagConstraints13.gridy = 2;
+				gridBagConstraints13.gridx = 3;
+				gridBagConstraints13.insets = new Insets(10, 10, 10, 10);
+				gridBagConstraints13.gridy = 0;
 				GridBagConstraints gridBagConstraints = new GridBagConstraints();
 				gridBagConstraints.gridx = 2;
-				gridBagConstraints.gridy = 1;
+				gridBagConstraints.insets = new Insets(10, 10, 10, 10);
+				gridBagConstraints.gridy = 0;
 				GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
-				gridBagConstraints1.gridx = 2;
+				gridBagConstraints1.gridx = 0;
 				gridBagConstraints1.gridy = 0;
 				GridBagConstraints gridBagConstraints15 = new GridBagConstraints();
 				gridBagConstraints15.gridx = 0;
@@ -439,48 +447,50 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				gridBagConstraints14.gridx = 4;
 				gridBagConstraints14.gridy = 2;
 				GridBagConstraints gridBagConstraints18 = new GridBagConstraints();
-				gridBagConstraints18.gridx = 3; // Generated
-				gridBagConstraints18.gridy = 2; // Generated
+				gridBagConstraints18.gridx = 2; // Generated
+				gridBagConstraints18.insets = new Insets(10, 10, 10, 10);
+				gridBagConstraints18.gridy = 1; // Generated
 				GridBagConstraints gridBagConstraints17 = new GridBagConstraints();
-				gridBagConstraints17.gridx = 2; // Generated
-				gridBagConstraints17.gridy = 2; // Generated
+				gridBagConstraints17.gridx = 3; // Generated
+				gridBagConstraints17.insets = new Insets(10, 10, 10, 10);
+				gridBagConstraints17.gridy = 1; // Generated
 				GridBagConstraints gridBagConstraints21 = new GridBagConstraints();
-				gridBagConstraints21.gridx = 4; // Generated
+				gridBagConstraints21.gridx = 0; // Generated
 				gridBagConstraints21.insets = new Insets(10, 10, 10, 10); // Generated
 				gridBagConstraints21.gridy = 1; // Generated
 				GridBagConstraints gridBagConstraints12 = new GridBagConstraints();
-				gridBagConstraints12.gridx = 3; // Generated
+				gridBagConstraints12.gridx = 4; // Generated
 				gridBagConstraints12.insets = new Insets(10, 10, 10, 10); // Generated
-				gridBagConstraints12.gridy = 1; // Generated
+				gridBagConstraints12.gridy = 0; // Generated
 				GridBagConstraints gridBagConstraints11 = new GridBagConstraints();
-				gridBagConstraints11.gridx = 0; // Generated
-				gridBagConstraints11.gridy = 1; // Generated
+				gridBagConstraints11.gridx = 2; // Generated
+				gridBagConstraints11.gridy = 2; // Generated
 				GridBagConstraints gridBagConstraints4 = new GridBagConstraints();
-				gridBagConstraints4.gridx = 3; // Generated
+				gridBagConstraints4.gridx = 4; // Generated
 				gridBagConstraints4.insets = new Insets(10, 10, 10, 10); // Generated
 				gridBagConstraints4.gridwidth = 1; // Generated
 				gridBagConstraints4.fill = GridBagConstraints.NONE; // Generated
 				gridBagConstraints4.gridheight = 1; // Generated
 				gridBagConstraints4.ipadx = 0; // Generated
 				gridBagConstraints4.weightx = 0.0; // Generated
-				gridBagConstraints4.gridy = 0; // Generated
+				gridBagConstraints4.gridy = 1; // Generated
 				GridBagConstraints gridBagConstraints3 = new GridBagConstraints();
-				gridBagConstraints3.gridx = 4; // Generated
+				gridBagConstraints3.gridx = 3; // Generated
 				gridBagConstraints3.insets = new Insets(10, 10, 10, 10); // Generated
-				gridBagConstraints3.gridy = 0; // Generated
+				gridBagConstraints3.gridy = 2; // Generated
 				GridBagConstraints gridBagConstraints2 = new GridBagConstraints();
-				gridBagConstraints2.gridx = 0; // Generated
+				gridBagConstraints2.gridx = 4; // Generated
 				gridBagConstraints2.insets = new Insets(10, 10, 10, 10); // Generated
-				gridBagConstraints2.gridy = 0; // Generated
+				gridBagConstraints2.gridy = 2; // Generated
 				pnlCentrale = new JPanel();
 				pnlCentrale.setLayout(new GridBagLayout()); // Generated
 				pnlCentrale.add(getBtnArticoli(), gridBagConstraints2);
-				pnlCentrale.add(getBtnClienti(), gridBagConstraints3); // Generated
-				pnlCentrale.add(getBtnFornitori(), gridBagConstraints4); // Generated
+				pnlCentrale.add(getBtnClienti(), gridBagConstraints3);
+				pnlCentrale.add(getBtnFornitori(), gridBagConstraints4);
 				pnlCentrale.add(getBtnCarico(), gridBagConstraints11);
 				pnlCentrale.add(getBtnScarico(), gridBagConstraints12);
 				pnlCentrale.add(getBtnInventario(), gridBagConstraints21);
-				pnlCentrale.add(getBtnStampe(), gridBagConstraints17); // Generated
+				pnlCentrale.add(getBtnStampe(), gridBagConstraints17);
 				pnlCentrale.add(getBtnRicerche(), gridBagConstraints18);
 				pnlCentrale.add(getBtnFtByDdt(), gridBagConstraints15);
 				pnlCentrale.add(getBtnTabacchi(), gridBagConstraints1);
@@ -531,6 +541,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 			btnFtByDdt = new JButton();
 			btnFtByDdt.setPreferredSize(new Dimension(120, 70));
 			btnFtByDdt.setText("Fattura da DDT");
+			btnFtByDdt.setVisible(false);
 			btnFtByDdt.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					apriDdtAFattura();

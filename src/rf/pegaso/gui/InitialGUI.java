@@ -521,19 +521,6 @@ public class InitialGUI extends JFrame {
 		// Centriamo il frame sullo schermo
 		UtilGUI.centraFrame(this);
 
-		//effettuiamo alcune modifiche alla base di dati per adattarla
-		File f=new File("modificheok4");
-		if(!f.exists()){
-			//creiamo la tabella per la stampa delle etichette
-			DBManager.getIstanceSingleton().executeQuery("CREATE TABLE tmp_etichette_fornitori(idfornitore bigint NOT NULL,nome character varying,via character varying,cap character varying,  citta character varying,  provincia character varying,CONSTRAINT key_fornitori PRIMARY KEY (idfornitore)) WITHOUT OIDS;");
-			DBManager.getIstanceSingleton().executeQuery("ALTER TABLE tmp_etichette_fornitori OWNER TO postgres;");
-			try {
-				f.createNewFile();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
 
 		//effettuiamo il backup del db all'apertura se impostato si
 		try {

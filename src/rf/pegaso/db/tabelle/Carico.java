@@ -184,7 +184,7 @@ public class Carico {
 	}
 	
 	public Object[][] getAllArticoliCaricatiByIdDocumento(long id) throws SQLException {
-		String query = "SELECT A.idarticolo, A.codBarre, A.descrizione, A.iva, A.um, D.qta, D.prezzo_Acquisto "
+		String query = "SELECT A.idarticolo, a.codFornitore, A.codBarre, A.descrizione, A.iva, A.um, D.qta, D.prezzo_Acquisto "
 				+ "FROM Articoli AS A, Carichi AS C, Dettaglio_Carichi AS D, Fornitori AS F "
 				+ "WHERE A.idArticolo=D.idArticolo AND C.idCarico=D.idCarico AND C.idFornitore=F.idFornitore and C.idcarico="+id;
 
@@ -329,10 +329,10 @@ public class Carico {
 		pst.setInt(1, idArticolo);
 		pst.setInt(2, this.idCarico);
 		ResultSet rs = pst.executeQuery();
-		rs.next();
-		if (rs.getRow() < 1)
-			throw new ResultSetVuoto();
-		double qta = rs.getDouble(1);
+		double qta=0;
+		while(rs.next()){
+			qta = rs.getDouble(1);
+		}
 		if (pst != null)
 			pst.close();
 		if (rs != null)

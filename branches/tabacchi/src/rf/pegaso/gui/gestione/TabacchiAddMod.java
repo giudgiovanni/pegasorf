@@ -687,7 +687,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 				lblDescrizione.setText("Descrizione"); // Generated
 				lblDescrizione.setBounds(new Rectangle(6, 51, 67, 16)); // Generated
 				lblCodFornitore = new JLabel();
-				lblCodFornitore.setText("Codice Fornitore"); // Generated
+				lblCodFornitore.setText("Codice AAMS"); // Generated
 				lblCodFornitore.setBounds(new Rectangle(205, 9, 93, 16)); // Generated
 				lblCodBarre = new JLabel();
 				lblCodBarre.setText("Codice Articolo"); // Generated

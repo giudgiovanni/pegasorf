@@ -281,7 +281,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				btnCarico = new JButton();
 				btnCarico.setText("Carico"); // Generated
 				btnCarico.setPreferredSize(new Dimension(120, 70)); // Generated
-				btnCarico.setVisible(false);
+				btnCarico.setVisible(true);
 				btnCarico.addActionListener(myActionListener);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something

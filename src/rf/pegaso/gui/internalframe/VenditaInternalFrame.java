@@ -28,6 +28,7 @@ import rf.pegaso.gui.vendita.panel.JButtonEventListener;
 import rf.pegaso.gui.vendita.panel.JPanelArticoli;
 import rf.pegaso.gui.vendita.panel.JPanelRiepilogoVendita;
 import rf.utility.ControlloDati;
+import rf.utility.gui.text.UpperTextDocument;
 
 import java.awt.Font;
 import java.text.ParseException;
@@ -36,12 +37,14 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JTabbedPane;
 
 
 
-public class VenditaInternalFrame extends JInternalFrame {
+public class VenditaInternalFrame extends JInternalFrame implements WindowListener{
 
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
@@ -119,7 +122,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 		this.setMaximizable(true);
 		this.setClosable(true);
 		this.setContentPane(getJContentPane());
-		txtFieldRicerca.requestFocusInWindow();
+		txtFieldRicerca.requestFocus();
 	}
 	
 	private void initializeCarrello(){
@@ -622,7 +625,7 @@ public class VenditaInternalFrame extends JInternalFrame {
 			txtFieldRicerca = new JTextField();
 			txtFieldRicerca.setBounds(new Rectangle(30, 62, 182, 28));
 			txtFieldRicerca.addActionListener(new MyButtonListener());
-			txtFieldRicerca.requestFocus();
+			txtFieldRicerca.setDocument(new UpperTextDocument());
 			txtFieldRicerca.addKeyListener(new java.awt.event.KeyAdapter() {
 				public void keyPressed(java.awt.event.KeyEvent e) {
 					if ( e.getKeyCode() == KeyEvent.VK_ENTER ) {
@@ -1172,6 +1175,48 @@ public class VenditaInternalFrame extends JInternalFrame {
 			btnStorno1.addActionListener(new MyButtonListener());
 		}
 		return btnStorno1;
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		txtFieldRicerca.requestFocus();
+		
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		txtFieldRicerca.requestFocus();
+		
 	}
 
 }

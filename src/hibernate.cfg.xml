@@ -1,60 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
-                                         "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
- <session-factory >
-  <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
-  <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-  <property name="hibernate.connection.password">postgres</property>
-  <property name="hibernate.connection.url">jdbc:postgresql:pegaso</property>
-  <property name="hibernate.connection.username">postgres</property>
-  <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
-  <!-- JDBC connection pool (use the built-in) -->
-  <property name="connection.pool_size">1</property>
-  <!-- Enable Hibernate's automatic session context management -->
-  <property name="current_session_context_class">thread</property>
-  <!-- Echo all executed SQL to stdout -->
-  <property name="show_sql">false</property>
-  <property name="hibernate.format_sql">false</property>
-  <!-- Drop and re-create the database schema on startup 
-<property name="hbm2ddl.auto">update</property>  -->
-
-<mapping resource="it/infolabs/hibernate/TmpScelti.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/DettaglioOrdineManuale.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/DettaglioCarichi.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/DettaglioOrdini.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/Causale.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/Articoli.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/Prenotazione.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/Um.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/Carichi.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/DettagliDocumenti.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/ContoBancario.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/Ente.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/Categoria.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/Clienti.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/GiacenzaArticoliView.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/ArticoliScaricatiView.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/ArticoliCaricatiView.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/ImmagineArticolo.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/DocumentoCliente.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/QtaScaricateView.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/Utenti.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/Ordini.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/TmpEtichette.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/MovimentoBanca.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/TipoDocumento.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/Banca.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/GiacenzaArticoliAllView.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/Reparti.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/Progressivi.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/Pagamento.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/Provincia.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/Aspetto.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/TmpEtichetteFornitori.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/QtaCaricateView.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/Documenti.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/Nazionalita.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/Fornitori.hbm.xml" />
- </session-factory>
+    <session-factory>
+        <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.password">postgres</property>
+        <property name="hibernate.connection.pool_size">1</property>
+        <property name="hibernate.connection.url">jdbc:postgresql:pegaso</property>
+        <property name="hibernate.connection.username">postgres</property>
+        <property name="hibernate.current_session_context_class">thread</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+        <property name="hibernate.format_sql">false</property>
+        <property name="hibernate.show_sql">true</property>
+        <mapping resource="it/infolabs/hibernate/U88fax.hbm.xml" />
+    </session-factory>
 </hibernate-configuration>

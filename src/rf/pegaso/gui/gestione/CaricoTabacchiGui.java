@@ -198,6 +198,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		tblViewCarichi = null;
 		tbp = null;
 		txtCodBarre = null;
+		txtFldCodiceAams = null;
 		txtNote = null;
 		txtNumeroCarico = null;
 		txtPrezzo = null;
@@ -488,6 +489,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 	private void azzeraCampi() {
 		txtCodBarre.setText("");
+		txtFldCodiceAams.setText("");
 		txtUm.setText("");
 		txtQta.setValue(0.0);
 		txtPrezzo.setValue(0.0);
@@ -498,6 +500,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 	private void azzeraTesto() {
 		txtCodBarre.setText("");
+		txtFldCodiceAams.setText("");
 		txtUm.setText("");
 		txtQta.setValue(new Double(0.0));
 		txtPrezzo.setText("");
@@ -590,6 +593,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				txtQta.setValue((new Double(1.0)));
 				txtPrezzo.setValue(new Double(a.getPrezzoAcquisto()));
 				txtCodBarre.setText(codBarre);
+				txtFldCodiceAams.setText(a.getCodFornitore());
 			}
 		} catch (SQLException e1) {
 			e1.printStackTrace();
@@ -615,12 +619,44 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 						- MathUtility.percentualeDaAggiungere(a
 								.getPrezzoDettaglio(), 10)));
 				txtCodBarre.setText(codBarre);
+				txtFldCodiceAams.setText(a.getCodFornitore());
 			} else {
 				JOptionPane.showMessageDialog(this,
 						"Articolo non presente fra i Tabacchi", "AVVISO",
 						JOptionPane.WARNING_MESSAGE);
 				txtCodBarre.setText("");
 				txtCodBarre.requestFocus();
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		} catch (CodiceBarreInesistente e1) {
+			avvisoCodBarreInesistente();
+			e1.printStackTrace();
+		}
+	}
+	
+	private void caricaTabacchiByCodAams() {
+		String codAams = txtFldCodiceAams.getText();
+		if (codAams.equalsIgnoreCase(""))
+			return;
+		Articolo a = new Articolo();
+		try {
+			if (a.findByCodFornitore(codAams) && a.getIdReparto() == 1) {
+				Fornitore f = new Fornitore();
+				f.caricaDati(a.getIdFornitore());
+				cmbProdotti.setSelectedItem(a.getDescrizione());
+				txtUm.setText((new Integer(a.getUm())).toString());
+				txtQta.setValue((new Double(1.0)));
+				txtPrezzo.setValue(new Double(a.getPrezzoDettaglio()
+						- MathUtility.percentualeDaAggiungere(a
+								.getPrezzoDettaglio(), 10)));
+				txtCodBarre.setText(a.getCodBarre());
+			} else {
+				JOptionPane.showMessageDialog(this,
+						"Articolo non presente fra i Tabacchi", "AVVISO",
+						JOptionPane.WARNING_MESSAGE);
+				txtFldCodiceAams.setText("");
+				txtFldCodiceAams.requestFocus();
 			}
 		} catch (SQLException e1) {
 			e1.printStackTrace();
@@ -676,6 +712,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		try {
 			a.caricaDati(idarticolo);
 			txtCodBarre.setText(a.getCodBarre());
+			txtFldCodiceAams.setText(a.getCodFornitore());
 			txtUm.setText((new Integer(a.getUm())).toString());
 			txtQta.setValue((new Double(1.0)));
 			txtPrezzo.setValue(new Double(a.getPrezzoAcquisto()));
@@ -993,6 +1030,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 					- MathUtility.percentualeDaAggiungere(a
 							.getPrezzoDettaglio(), 10)));
 			txtCodBarre.setText(a.getCodBarre());
+			txtFldCodiceAams.setText(a.getCodFornitore());
 
 		} catch (SQLException e1) {
 			e1.printStackTrace();
@@ -1080,6 +1118,9 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	private JPanel getPnlProdotto() {
 		if (pnlProdotto == null)
 			try {
+				lblCodiceAams = new JLabel();
+				lblCodiceAams.setBounds(new Rectangle(623, 24, 90, 13));
+				lblCodiceAams.setText("Codice AAMS");
 				lblInsRapido = new JLabel();
 				lblInsRapido.setBounds(new Rectangle(243, 103, 121, 21));
 				lblInsRapido.setText("Inserimento Rapido");
@@ -1133,6 +1174,8 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				pnlProdotto.add(getBtnNewArticolo1(), null);
 				pnlProdotto.add(getBtnSogliaMinima(), null);
 				pnlProdotto.add(getBtnStampaU88Fax(), null);
+				pnlProdotto.add(getTxtFldCodiceAams(), null);
+				pnlProdotto.add(lblCodiceAams, null);
 			} catch (Throwable throwable) {
 			}
 		return pnlProdotto;
@@ -1313,6 +1356,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 					}
 				});
 			} catch (Throwable throwable) {
+				throwable.printStackTrace();
 			}
 		return txtCodBarre;
 	}
@@ -2115,6 +2159,10 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 	private JButton btnStampaU88Fax = null;
 
+	private JTextField txtFldCodiceAams;
+
+	private JLabel lblCodiceAams = null;
+
 	protected void nuovoFornitore() {
 		FornitoriAdd add = new FornitoriAdd(this, DBManager
 				.getIstanceSingleton());
@@ -2298,7 +2346,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	private JButton getBtnSogliaMinima() {
 		if (btnSogliaMinima == null) {
 			btnSogliaMinima = new JButton();
-			btnSogliaMinima.setBounds(new Rectangle(645, 26, 170, 48));
+			btnSogliaMinima.setBounds(new Rectangle(645, 65, 170, 48));
 			btnSogliaMinima
 					.setText("<html>Carica Articoli<P>sotto Soglia Minima</html>");
 			btnSogliaMinima.addActionListener(new MyButtonListener());
@@ -2314,7 +2362,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	private JButton getBtnStampaU88Fax() {
 		if (btnStampaU88Fax == null) {
 			btnStampaU88Fax = new JButton();
-			btnStampaU88Fax.setBounds(new Rectangle(646, 81, 168, 53));
+			btnStampaU88Fax.setBounds(new Rectangle(646, 120, 168, 53));
 			btnStampaU88Fax.setText("<html>Stampa Modello<P>U88 FAX</html>");
 			btnStampaU88Fax
 					.addActionListener(new java.awt.event.ActionListener() {
@@ -2405,6 +2453,43 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			e.printStackTrace();
 		}
 
+	}
+
+	/**
+	 * This method initializes txtFldCodiceAams	
+	 * 	
+	 * @return javax.swing.JTextField	
+	 */
+	private JTextField getTxtFldCodiceAams() {
+		if (txtFldCodiceAams == null)
+			try {
+				txtFldCodiceAams = new JTextField();
+				AutoCompleteTextComponent complete = new AutoCompleteTextComponent(
+						txtFldCodiceAams, dbm, "articoli", "codfornitore");
+				dbm.addDBStateChange(complete);
+				txtFldCodiceAams.setDocument(new UpperAutoCompleteDocument(complete,
+						true));
+				txtFldCodiceAams.setBounds(new Rectangle(623, 40, 146, 21));
+				txtFldCodiceAams.addFocusListener(new FocusAdapter() {
+
+					public void focusLost(FocusEvent e) {
+						caricaTabacchiByCodAams();
+					}
+				});
+				txtFldCodiceAams.addKeyListener(new KeyAdapter() {
+
+					public void keyPressed(KeyEvent e) {
+						if (e.getKeyCode() == 10) {
+							caricaTabacchiByCodAams();
+							if (chkInsRapido.isSelected())
+								inserisci();
+						}
+					}
+				});
+			} catch (Throwable throwable) {
+				throwable.printStackTrace();
+			}
+		return txtFldCodiceAams;
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

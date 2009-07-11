@@ -1023,6 +1023,14 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 				.getEditorComponent();
 		//new ComboBoxAutoComplete(cmbMisura);
 		AutoCompletion.enable(cmbMisura);
+		Articolo a = new Articolo();
+		try {
+			a.caricaDati(idArticolo);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		cmbMisura.setSelectedIndex(a.getUm());
 
 	}
 

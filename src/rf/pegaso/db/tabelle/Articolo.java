@@ -398,6 +398,27 @@ public class Articolo {
 			return true;
 		return false;
 	}
+	
+	public boolean findByCodFornitore(String codFornitore) throws SQLException,
+	CodiceBarreInesistente {
+
+		String query = "select idArticolo from articoli where codfornitore=?";
+		PreparedStatement st = dbm.getNewPreparedStatement(query);
+		st.setString(1, codFornitore);
+		ResultSet rs = st.executeQuery();
+		rs.last();
+		if (rs.getRow() < 1)
+			throw new CodiceBarreInesistente();
+		rs.beforeFirst();
+		rs.next();
+		this.idArticolo = rs.getInt(1);
+		caricaDati(idArticolo);
+		if (st != null)
+			st.close();
+		if (idArticolo > 0)
+			return true;
+		return false;
+	}
 
 	/**
 	 * @return the caricoIniziale

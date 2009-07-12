@@ -345,7 +345,7 @@ public class Carico {
 
 	public boolean haArticoli() throws SQLException,
 			IDNonValido, ResultSetVuoto {
-		if (this.idCarico <= 0)
+		if (this.idCarico < 0)
 			throw new IDNonValido();
 		String query = "select * from dettaglio_carichi where idcarico=?";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);

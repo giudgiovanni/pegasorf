@@ -39,6 +39,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.beans.PropertyVetoException;
 
 import javax.swing.JTabbedPane;
 
@@ -116,13 +117,15 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 	private void initialize() {
 		initializeKeyFunction();
 		initializeCarrello();
-		this.setSize(new Dimension(1000, 700));
+		this.setSize(new Dimension(1024, 800));
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		this.setTitle("Vendita al Banco");
 		this.setMaximizable(true);
 		this.setClosable(true);
+		this.setIconifiable(true);
 		this.setContentPane(getJContentPane());
 		txtFieldRicerca.requestFocus();
+		
 	}
 	
 	private void initializeCarrello(){

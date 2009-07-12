@@ -144,6 +144,9 @@ public class Carico {
 
 	public int deleteCarico(int idCarico) throws IDNonValido {
 
+		if(idCarico==0){
+			return -1;
+		}
 		String delete = "";
 		Statement st = dbm.getNewStatement();
 		int cancellati = 0;

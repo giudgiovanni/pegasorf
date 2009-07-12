@@ -128,22 +128,22 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 	private void initializeCarrello(){
 		pannelloCarrello = new JPanelRiepilogoVendita();
 		pnlArticoli = new JPanelArticoli();
-		Articolo a = new Articolo();
-		LinkedList<Articolo> art = new LinkedList<Articolo>();
-		try {
-			a.findByCodBarre("000");
+//		Articolo a = new Articolo();
+//		LinkedList<Articolo> art = new LinkedList<Articolo>();
+//		try {
+//			a.findByCodBarre("000");
 //			ImmagineArticolo imgArt = new ImmagineArticolo(a);
 //			imgArt.setNome("test");
 //			imgArt.loadImageFromURL("resource/nuovo.png");
 //			imgArt.inserisci();
-			for ( int i = 0; i < 30; i++){
-				art.add(a);
-			}
-		}
-		catch ( Exception e ){
-			e.printStackTrace();
-		}		
-		pnlArticoli.caricaArticoli(art);
+//			for ( int i = 0; i < 30; i++){
+//				art.add(a);
+//			}
+//		}
+//		catch ( Exception e ){
+//			e.printStackTrace();
+//		}		
+//		pnlArticoli.caricaArticoli(art);
 		pannelloCarrello.setPreferredSize(new Dimension(500, 450));
 		pannelloCarrello.setBounds(new Rectangle(0, 0, 500, 450));
 		pannelloCarrello.setVisible(true);

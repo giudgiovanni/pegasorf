@@ -1471,6 +1471,10 @@ public class CaricoGui extends JFrame implements TableModelListener {
 	}
 
 	private void inserisci() {
+		if ( new Integer(txtNumeroCarico.getText()) == 0 ){
+			messaggioCampoMancante("Impossibile modificare il carico iniziale.", "WARNING");
+			return;
+		}
 		String doc = cmbTipoDocumento.getSelectedItem().toString();
 		if (doc.equalsIgnoreCase("")) {
 			messaggioCampoMancante("Tipo di documento non selezionato");

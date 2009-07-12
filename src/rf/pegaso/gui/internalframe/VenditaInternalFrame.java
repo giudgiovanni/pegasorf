@@ -168,6 +168,7 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 			dv.setIva(20);
 			pannelloCarrello.addDettaglioOrdine(dv, true);
 			txtFldTotale.setText(ControlloDati.convertDoubleToPrezzo(pannelloCarrello.getTotaleCarrello()));
+			aggiornaResto();
 			stateToZero();
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
@@ -191,6 +192,21 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 			else{
 				messaggioAVideo("Articolo non disponibile", "INFO");
 			}
+		}
+		txtFldTotale.setText(ControlloDati.convertDoubleToPrezzo(pannelloCarrello.getTotaleCarrello()));
+		aggiornaResto();
+	}
+	
+	private void aggiornaResto(){
+		try {
+			double d = ControlloDati.convertPrezzoToDouble(txtFldContanti.getText());
+			txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(d - pannelloCarrello.getTotaleCarrello()));
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	

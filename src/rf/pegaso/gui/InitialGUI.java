@@ -183,8 +183,8 @@ public class InitialGUI extends JFrame {
 
 			venditaInternalFrame.setVisible(true);
 			try {
-				venditaInternalFrame.setMaximum(false);
-				venditaInternalFrame.setSize(new Dimension(1000, 700));
+				venditaInternalFrame.setMaximum(true);
+//				venditaInternalFrame.setSize(new Dimension(1000, 700));
 			} catch (PropertyVetoException e1) {
 
 				e1.printStackTrace();
@@ -192,8 +192,8 @@ public class InitialGUI extends JFrame {
 		} else if (!venditaInternalFrame.isFocusOwner()) {
 			try {
 				venditaInternalFrame.setSelected(true);
-				venditaInternalFrame.setMaximum(false);
-				venditaInternalFrame.setSize(new Dimension(1000, 700));
+				venditaInternalFrame.setMaximum(true);
+//				venditaInternalFrame.setSize(new Dimension(1000, 700));
 			} catch (PropertyVetoException e) {
 				e.printStackTrace();
 			}

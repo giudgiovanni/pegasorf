@@ -1068,7 +1068,7 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 			txtFldTotale.setOpaque(true);
 			txtFldTotale.setBackground(Color.ORANGE);
 			txtFldTotale.setFont(new Font("Dialog", Font.BOLD, 30));
-			txtFldTotale.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Totale ï¿½",
+			txtFldTotale.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Totale €",
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));
 		}
@@ -1087,7 +1087,7 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 			txtFldContanti.setOpaque(true);
 			txtFldContanti.setBackground(Color.decode("435445"));
 			txtFldContanti.setFont(new Font("Dialog", Font.BOLD, 28));
-			txtFldContanti.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Contanti ï¿½",
+			txtFldContanti.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Contanti €",
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));
 		}
@@ -1105,7 +1105,7 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 			txtFldResto.setBounds(new Rectangle(770, 75, 200, 65));
 			txtFldResto.setBackground(Color.decode("314467"));
 			txtFldResto.setFont(new Font("Dialog", Font.BOLD, 28));
-			txtFldResto.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Resto ï¿½",
+			txtFldResto.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Resto €",
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));
 		}

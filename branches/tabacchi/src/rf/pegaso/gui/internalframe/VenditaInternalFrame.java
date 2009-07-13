@@ -628,7 +628,7 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 	private JButton getBtnRicercaAvanzata() {
 		if (btnRicercaAvanzata == null) {
 			btnRicercaAvanzata = new JButton();
-			btnRicercaAvanzata.setBounds(new Rectangle(270, 25, 130, 50));
+			btnRicercaAvanzata.setBounds(new Rectangle(240, 25, 130, 50));
 			btnRicercaAvanzata.setText("<html>Ricerca"+"<P>"+"Avanzata</html>");
 		}
 		return btnRicercaAvanzata;
@@ -1033,7 +1033,7 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 	private JButton getBtnInsManuale() {
 		if (btnInsManuale == null) {
 			btnInsManuale = new JButton();
-			btnInsManuale.setBounds(new Rectangle(270, 80, 130, 50));
+			btnInsManuale.setBounds(new Rectangle(240, 80, 130, 50));
 			btnInsManuale.setText("<html>Inserimento<P>Manuale (F4)</html>");
 			btnInsManuale.addActionListener(new MyButtonListener());
 		}
@@ -1064,10 +1064,10 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 	private JTextField getTxtFldTotale() {
 		if (txtFldTotale == null) {
 			txtFldTotale = new JTextField();
-			txtFldTotale.setBounds(new Rectangle(590, 25, 190, 105));
+			txtFldTotale.setBounds(new Rectangle(540, 10, 230, 130));
 			txtFldTotale.setOpaque(true);
 			txtFldTotale.setBackground(Color.ORANGE);
-			txtFldTotale.setFont(new Font("Dialog", Font.BOLD, 26));
+			txtFldTotale.setFont(new Font("Dialog", Font.BOLD, 30));
 			txtFldTotale.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Totale �",
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));
@@ -1083,10 +1083,10 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 	private JTextField getTxtFldContanti() {
 		if (txtFldContanti == null) {
 			txtFldContanti = new JTextField();
-			txtFldContanti.setBounds(new Rectangle(780, 25, 170, 52));
+			txtFldContanti.setBounds(new Rectangle(770, 10, 200, 65));
 			txtFldContanti.setOpaque(true);
 			txtFldContanti.setBackground(Color.decode("435445"));
-			txtFldContanti.setFont(new Font("Dialog", Font.PLAIN, 22));
+			txtFldContanti.setFont(new Font("Dialog", Font.BOLD, 28));
 			txtFldContanti.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Contanti �",
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));
@@ -1102,9 +1102,9 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 	private JTextField getTxtFldResto() {
 		if (txtFldResto == null) {
 			txtFldResto = new JTextField();
-			txtFldResto.setBounds(new Rectangle(780, 77, 170, 53));
+			txtFldResto.setBounds(new Rectangle(770, 75, 200, 65));
 			txtFldResto.setBackground(Color.decode("314467"));
-			txtFldResto.setFont(new Font("Dialog", Font.PLAIN, 22));
+			txtFldResto.setFont(new Font("Dialog", Font.BOLD, 28));
 			txtFldResto.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Resto �",
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));
@@ -1120,7 +1120,7 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 	private JButton getBtnElaboraScontrino() {
 		if (btnElaboraScontrino == null) {
 			btnElaboraScontrino = new JButton();
-			btnElaboraScontrino.setBounds(new Rectangle(420, 25, 130, 50));
+			btnElaboraScontrino.setBounds(new Rectangle(390, 25, 130, 50));
 			btnElaboraScontrino.setText("<html>Stampa (F2)<P>Scontrino</html>");
 			btnElaboraScontrino.addActionListener(new MyButtonListener());
 			
@@ -1136,7 +1136,7 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 	private JButton getBtnContanti() {
 		if (btnContanti == null) {
 			btnContanti = new JButton();
-			btnContanti.setBounds(new Rectangle(420, 80, 130, 50));
+			btnContanti.setBounds(new Rectangle(390, 80, 130, 50));
 			btnContanti.setText("Contanti (F3)");
 			btnContanti.addActionListener(new MyButtonListener());
 		}

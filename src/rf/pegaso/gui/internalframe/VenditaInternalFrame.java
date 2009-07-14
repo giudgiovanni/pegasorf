@@ -165,7 +165,7 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 				dv.setQta(Double.valueOf(txtQta.getText().trim()));
 			}
 			dv.setDisponibilita(dv.getQta());
-			dv.setIva(20);
+			dv.setIva(0);
 			pannelloCarrello.addDettaglioOrdine(dv, true);
 			txtFldTotale.setText(ControlloDati.convertDoubleToPrezzo(pannelloCarrello.getTotaleCarrello()));
 			aggiornaResto();
@@ -199,8 +199,10 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 	
 	private void aggiornaResto(){
 		try {
-			double d = ControlloDati.convertPrezzoToDouble(txtFldContanti.getText());
-			txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(d - pannelloCarrello.getTotaleCarrello()));
+			if ( !txtFldContanti.getText().equals("") ){
+				double d = ControlloDati.convertPrezzoToDouble(txtFldContanti.getText());
+				txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(d - pannelloCarrello.getTotaleCarrello()));
+			}
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -408,6 +410,7 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 			}
 			else if ( e.getSource() == btnAnnullaVendita ){
 				pannelloCarrello.azzeraCarrello();
+				txtFldContanti.setText("");
 				stateToZero();
 			}
 		}

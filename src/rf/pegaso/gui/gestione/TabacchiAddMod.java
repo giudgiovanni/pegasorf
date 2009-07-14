@@ -582,7 +582,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			try {
 				lblQta = new JLabel();
 				lblQta.setBounds(new Rectangle(8, 24, 57, 21)); // Generated
-				lblQta.setText("Quantità"); // Generated
+				lblQta.setText("Quantitï¿½"); // Generated
 				jPanel2 = new JPanel();
 				jPanel2.setLayout(null); // Generated
 				jPanel2.setBounds(new Rectangle(408, 106, 201, 65)); // Generated
@@ -1207,10 +1207,13 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 				if (txtPrezzoListino.getValue() instanceof Double) {
 					a.setPrezzoIngrosso(((Double) txtPrezzoListino.getValue())
 							.doubleValue());
+					a.setPrezzoDettaglio(((Double) txtPrezzoListino.getValue())
+							.doubleValue());
 				} else {
 					long value = ((Long) txtPrezzoListino.getValue())
 							.longValue();
 					a.setPrezzoIngrosso(new Double(value).doubleValue());
+					a.setPrezzoDettaglio(new Double(value).doubleValue());
 				}
 			}
 		} catch (NumberFormatException e) {

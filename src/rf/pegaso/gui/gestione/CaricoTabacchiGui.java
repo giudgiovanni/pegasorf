@@ -286,7 +286,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				pst.close();
 			if (rs != null)
 				rs.close();
-
+			JOptionPane.showMessageDialog(this, "Procedura di Carico Ordine in Magazzino effettuata con successo.", "INFO", 2);
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(this, "Errore nel db", "ERRORE", 2);
 			e.printStackTrace();

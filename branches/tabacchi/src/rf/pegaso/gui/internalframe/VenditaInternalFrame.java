@@ -20,9 +20,7 @@ import javax.swing.WindowConstants;
 
 
 
-import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.DettaglioOrdine;
-import rf.pegaso.db.tabelle.ImmagineArticolo;
 import rf.pegaso.gui.vendita.panel.JButtonEvent;
 import rf.pegaso.gui.vendita.panel.JButtonEventListener;
 import rf.pegaso.gui.vendita.panel.JPanelArticoli;
@@ -32,20 +30,16 @@ import rf.utility.gui.text.UpperTextDocument;
 
 import java.awt.Font;
 import java.text.ParseException;
-import java.util.LinkedList;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.beans.PropertyVetoException;
 
 import javax.swing.JTabbedPane;
 
 
 
-public class VenditaInternalFrame extends JInternalFrame implements WindowListener{
+public class VenditaInternalFrame extends JInternalFrame{
 
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
@@ -108,7 +102,6 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 	private JPanelArticoli pnlArticoli = null;
 	private JPanel pnlRiepilogo = null;
 	private JButton btnStorno1 = null;
-	
 
 	public VenditaInternalFrame(JFrame padre) {
 		initialize();
@@ -125,7 +118,6 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 		this.setIconifiable(true);
 		this.setContentPane(getJContentPane());
 		txtFieldRicerca.requestFocus();
-		
 	}
 	
 	private void initializeCarrello(){
@@ -398,7 +390,9 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 					btnInsManuale.setSelected(false);
 					tastieraCassaAttiva = true;
 				}
-				inserimentoContanti = true;				
+				inserimentoContanti = true;
+				txtFldImporto.requestFocusInWindow();
+				importo = "";
 			}
 			else if ( e.getSource() == btnStorno ){
 				pannelloCarrello.stornoArticolo();
@@ -410,7 +404,7 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 			}
 			else if ( e.getSource() == btnAnnullaVendita ){
 				pannelloCarrello.azzeraCarrello();
-				txtFldContanti.setText("");
+				txtFldTotale.setText("");
 				stateToZero();
 			}
 		}
@@ -469,6 +463,8 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 					tastieraCassaAttiva = true;
 				}
 				inserimentoContanti = true;	
+				txtFldImporto.requestFocusInWindow();
+				importo = "";
 			}
 		});
 		this.getRootPane().getActionMap().put("F4", new AbstractAction() {
@@ -578,6 +574,10 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 			stateToZero();
 			txtFieldRicerca.requestFocusInWindow();
 		}
+	}
+	
+	public void setFocusRicerca(){
+		txtFieldRicerca.requestFocus();
 	}
 	
 	/**
@@ -1069,9 +1069,10 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 			txtFldTotale = new JTextField();
 			txtFldTotale.setBounds(new Rectangle(540, 10, 230, 130));
 			txtFldTotale.setOpaque(true);
+			txtFldTotale.setEditable(false);
 			txtFldTotale.setBackground(Color.ORANGE);
 			txtFldTotale.setFont(new Font("Dialog", Font.BOLD, 30));
-			txtFldTotale.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Totale €",
+			txtFldTotale.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Totale \u20AC",
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));
 		}
@@ -1088,9 +1089,10 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 			txtFldContanti = new JTextField();
 			txtFldContanti.setBounds(new Rectangle(770, 10, 200, 65));
 			txtFldContanti.setOpaque(true);
+			txtFldContanti.setEditable(false);
 			txtFldContanti.setBackground(Color.decode("435445"));
 			txtFldContanti.setFont(new Font("Dialog", Font.BOLD, 28));
-			txtFldContanti.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Contanti €",
+			txtFldContanti.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Contanti \u20AC",
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));
 		}
@@ -1105,10 +1107,11 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 	private JTextField getTxtFldResto() {
 		if (txtFldResto == null) {
 			txtFldResto = new JTextField();
+			txtFldResto.setEditable(false);
 			txtFldResto.setBounds(new Rectangle(770, 75, 200, 65));
 			txtFldResto.setBackground(Color.decode("314467"));
 			txtFldResto.setFont(new Font("Dialog", Font.BOLD, 28));
-			txtFldResto.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Resto €",
+			txtFldResto.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Resto \u20AC",
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
 					javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));
 		}
@@ -1198,47 +1201,4 @@ public class VenditaInternalFrame extends JInternalFrame implements WindowListen
 		}
 		return btnStorno1;
 	}
-
-	@Override
-	public void windowActivated(WindowEvent e) {
-		txtFieldRicerca.requestFocus();
-		
-	}
-
-	@Override
-	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowClosing(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowOpened(WindowEvent e) {
-		txtFieldRicerca.requestFocus();
-		
-	}
-
 }

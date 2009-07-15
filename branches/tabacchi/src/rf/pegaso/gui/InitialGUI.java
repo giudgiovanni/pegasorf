@@ -198,6 +198,7 @@ public class InitialGUI extends JFrame {
 				e.printStackTrace();
 			}
 		}
+		venditaInternalFrame.setFocusRicerca();
 	}
 
 	/**

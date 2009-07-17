@@ -144,21 +144,23 @@ public class DettaglioOrdine implements Comparator<DettaglioOrdine>{
 		//carichiamo l'articolo in memoria
 		Articolo a = new Articolo();
 		try {
-			if (a.findByCodBarre(codice)) {
-				if ( a.getGiacenza2() < 1 )
-					return 0;
+			if (a.findByCodBarreWithPrezzoAcquisto(codice)) {
+//				if ( a.getGiacenza2() < 1 )
+//					return 0;
 				idArticolo = a.getIdArticolo();
 				descrizione = a.getDescrizione();
 				UnitaDiMisura udm = new UnitaDiMisura();
 				udm.caricaDati(a.getUm());
 				um = udm.getNome();
-//				prezzoAcquisto = a.getPrezzoAcquisto();
-				prezzoVendita = a.getPrezzoIngrosso();
+				prezzoAcquisto = a.getPrezzoAcquisto();
+				prezzoVendita = a.getPrezzoDettaglio();
 				codiceBarre = a.getCodBarre();
 				iva = a.getIva();
 				qta = 1.0;
 				disponibilita = a.getGiacenza2() - 1;
 			}
+			else 
+				return 0;
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 			return -2;

@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
+import java.util.List;
 
 import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.utility.Constant;
@@ -100,6 +101,8 @@ public class Articolo {
 	private int scortaMassima;
 
 	private int um;
+	
+	private int disponibilita;
 
 	/**
 	 * Metodo Costruttore di default
@@ -419,6 +422,45 @@ public class Articolo {
 			return true;
 		return false;
 	}
+	
+	public boolean findByCodBarreWithPrezzoAcquisto(String codBarre) throws SQLException,
+	CodiceBarreInesistente {
+		StringBuilder query = new StringBuilder();
+		query.append("select d.qta, d.prezzo_acquisto, c.data_carico, c.ora_carico, (carico - scarico) as giacenza, a.idarticolo, a.descrizione, a.um, a.prezzo_dettaglio, a.iva ");
+		query.append("from carichi c, dettaglio_carichi d, articoli a, giacenza_articoli_all_view v ");
+		query.append("where a.codbarre = ? ");
+		query.append("and a.idarticolo = d.idarticolo ");
+		query.append("and c.idcarico = d.idcarico ");
+		query.append("and v.idarticolo = d.idarticolo ");
+		query.append("order by c.data_carico desc, c.ora_carico desc ");
+		PreparedStatement st = dbm.getNewPreparedStatement(query.toString());
+		st.setString(1, codBarre);
+		ResultSet rs = st.executeQuery();
+		int qtaC = 0;
+		while ( rs.next() ){
+			if ( rs.getInt("giacenza") <= 0 )
+				return false;
+			else if ( rs.getInt("giacenza") <= (rs.getInt("qta") + qtaC) ){
+				this.idArticolo = rs.getInt("idarticolo");
+				this.descrizione = rs.getString("descrizione");
+				this.um = rs.getInt("um");
+				this.prezzoAcquisto = rs.getDouble("prezzo_acquisto");
+				this.prezzoDettaglio = rs.getDouble("prezzo_dettaglio");
+				this.codBarre = codBarre;
+				this.iva = rs.getInt("iva");
+				this.disponibilita = rs.getInt("giacenza");
+				if (st != null)
+					st.close();
+				return true;
+			}
+			else{
+				qtaC = qtaC + rs.getInt("qta");
+			}
+		}				
+		if (st != null)
+			st.close();		
+		return false;
+	}	
 
 	/**
 	 * @return the caricoIniziale
@@ -878,6 +920,18 @@ public class Articolo {
 		if (rs != null)
 			rs.close();
 		return qta;
+	}
+
+
+
+	public int getDisponibilita() {
+		return disponibilita;
+	}
+
+
+
+	public void setDisponibilita(int disponibilita) {
+		this.disponibilita = disponibilita;
 	}
 
 }

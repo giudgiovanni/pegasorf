@@ -5,7 +5,7 @@ ROCCO - invece di codice fornitore inserire codice aams
 ROCCO - aggiungere campi per grammatura stecca e per numero pacchetti
 ROCCO - nell'inventario aggiungere prezzo venditA
 ROCCO - possibilit‡ di duplicare un ordine da uno gi‡ esistente
-- textfield non visualizzato nel carivo tabacchi
+SERGIO (FATTO) - textfield non visualizzato nel carivo tabacchi
 - se la scorta massima Ë < di scorta minima fare la differenza per il riordino da scortaminima-scortamassima
 ROCCO - Quando si carica un ordine richiedere i dati fattura come numero data e riferimento ordine
 Possibilit‡ di fare aggiornamenti direttamente dal sito FIT
@@ -19,3 +19,6 @@ ROCCO - Quando si sparano le sigarette al 2pacchetto se qta>1 aprire finistrache
 ROCCO - possibilit‡ con un tasto di cancellare l'ultima riga inserita
 ROCCO - errore nello scarico perchË anche se c'Ë ne uno ancora in magazzino e si tenta di risalvarlonon 
 	non visualizza niente.
+SERGIO - Aggiungere i filtri nel riepilogo vendite per data (data inizio filtro - data inizio filtro) mettendo di default quella giornaliera.
+SERGIO - Nel riepilogo vendite visualizzare l'agio.
+- Possibilità di attivare più casse, per la gestione di conti multipli contemporanei.

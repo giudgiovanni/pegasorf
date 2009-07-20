@@ -1,24 +1,24 @@
 ROCCO - invece di codice fornitore inserire codice aams
-- usare sempre pezzi come unit‡ di misura nei tabacchi
+- usare sempre pezzi come unitÔøΩ di misura nei tabacchi
 - quando si deve fare un riordino se i pacchetti sono da 10 ordinare quindi multipli di 10 oppure 20 nell'altro caso
 	se nel caso abbiamo da riordinarne meno o + di 10 / 20 usare il se e quindi < 5 arrotonda per difetto >=5 per eccesso
 ROCCO - aggiungere campi per grammatura stecca e per numero pacchetti
 ROCCO - nell'inventario aggiungere prezzo venditA
-ROCCO - possibilit‡ di duplicare un ordine da uno gi‡ esistente
+ROCCO - possibilitÔøΩ di duplicare un ordine da uno giÔøΩ esistente
 SERGIO (FATTO) - textfield non visualizzato nel carivo tabacchi
-- se la scorta massima Ë < di scorta minima fare la differenza per il riordino da scortaminima-scortamassima
+- se la scorta massima ÔøΩ < di scorta minima fare la differenza per il riordino da scortaminima-scortamassima
 ROCCO - Quando si carica un ordine richiedere i dati fattura come numero data e riferimento ordine
-Possibilit‡ di fare aggiornamenti direttamente dal sito FIT
+PossibilitÔøΩ di fare aggiornamenti direttamente dal sito FIT
 ROCCO - filtro ricerca ordini per data
-- chiusura annuale programma con possibilit‡ di riaprire un anno chiuso
+- chiusura annuale programma con possibilitÔøΩ di riaprire un anno chiuso
 ROCCO - abilitare nelle giacenze le due date per fare il filtro per data sull'effetica giancenza
-ROCCO - Possibilit‡ di modificare progressivo ordine
+ROCCO - PossibilitÔøΩ di modificare progressivo ordine
 - statistiche giornaliere, settimanali, mensili, abbuali
 ROCCO - Quando si sparano le sigarette al 2pacchetto se qta>1 aprire finistrache richiede la qta totale
-- Spostare i totali grafici al centro nel pannello vendite in modo da averli pi˘ grandi possibilit.
-ROCCO - possibilit‡ con un tasto di cancellare l'ultima riga inserita
-ROCCO - errore nello scarico perchË anche se c'Ë ne uno ancora in magazzino e si tenta di risalvarlonon 
+- Spostare i totali grafici al centro nel pannello vendite in modo da averli piÔøΩ grandi possibilit.
+ROCCO - possibilitÔøΩ con un tasto di cancellare l'ultima riga inserita
+ROCCO - errore nello scarico perchÔøΩ anche se c'ÔøΩ ne uno ancora in magazzino e si tenta di risalvarlonon 
 	non visualizza niente.
-SERGIO - Aggiungere i filtri nel riepilogo vendite per data (data inizio filtro - data inizio filtro) mettendo di default quella giornaliera.
-SERGIO - Nel riepilogo vendite visualizzare l'agio.
-- Possibilità di attivare più casse, per la gestione di conti multipli contemporanei.
+ROCCO - Aggiungere i filtri nel riepilogo vendite per data (data inizio filtro - data inizio filtro) mettendo di default quella giornaliera.
+ROCCO - Nel riepilogo vendite visualizzare l'agio.
+- Possibilita' di attivare piu' casse, per la gestione di conti multipli contemporanei.

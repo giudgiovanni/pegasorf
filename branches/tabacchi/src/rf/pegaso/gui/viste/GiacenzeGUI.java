@@ -395,13 +395,13 @@ public class GiacenzeGUI extends JFrame {
 			try {
 				lblTotale = new JLabel();
 				lblTotale.setBounds(new Rectangle(484, 10, 57, 25)); // Generated
-				lblTotale.setText("Totale €."); // Generated
+				lblTotale.setText("Totale \u20AC"); // Generated
 				lblImposta = new JLabel();
 				lblImposta.setBounds(new Rectangle(312, 10, 67, 25)); // Generated
-				lblImposta.setText("Imposta €."); // Generated
+				lblImposta.setText("Imposta \u20AC"); // Generated
 				lblImponibile = new JLabel();
 				lblImponibile.setBounds(new Rectangle(128, 10, 77, 25)); // Generated
-				lblImponibile.setText("Imponibile €."); // Generated
+				lblImponibile.setText("Imponibile \u20AC"); // Generated
 				lblValoreDeposito = new JLabel();
 				lblValoreDeposito.setBounds(new Rectangle(11, 10, 114, 25)); // Generated
 				lblValoreDeposito.setFont(new Font("Dialog", Font.BOLD, 12)); // Generated

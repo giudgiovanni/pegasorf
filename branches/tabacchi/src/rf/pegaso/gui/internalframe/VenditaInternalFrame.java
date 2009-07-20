@@ -151,7 +151,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 			DettaglioOrdine dv = new DettaglioOrdine();
 			dv.setIdArticolo(0);
 			dv.setDescrizione(repo);
-			dv.setPrezzoVendita(ControlloDati.convertPrezzoToDouble(importo));
+			dv.setPrezzoVendita(ControlloDati.convertPrezzoToDouble(ControlloDati.costruisciPrezzoLikePOS(importo)));
 			if ( txtQta.getText().trim().equals("")){
 				dv.setQta(1);
 			}
@@ -163,7 +163,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 			pannelloCarrello.addDettaglioOrdine(dv, true);
 			txtFldTotale.setText(ControlloDati.convertDoubleToPrezzo(pannelloCarrello.getTotaleCarrello()));
 			aggiornaResto();
-			importo = "0";
+			importo = "";
 			txtQta.setText("");
 			txtFldImporto.setText("");
 			m_iNumberStatus = NUMBER_INPUTZERO;
@@ -224,7 +224,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 	
 	//inizializza o resetta le variabili iniziali di sistema
 	 private void stateToZero(){
-		 importo = "0";
+		 importo = "";
 		 txtQta.setText("");
 		 txtFldImporto.setText("");
 		 txtFldContanti.setText("");
@@ -237,21 +237,24 @@ public class VenditaInternalFrame extends JInternalFrame{
 		try {			
 			// Gestiamo l'evento cancella ultima cifra
 			if ( cTrans == '\n' ){
-				if ( importo.length() > 1 && importo.charAt(importo.length()-1) != ',' ){
+				if ( importo.length() > 0 ){
 					importo = importo.substring(0, importo.length() - 1);
 				}
-				else if ( importo.length() > 1 && importo.charAt(importo.length()-1) == ',' ){
-					importo = importo.substring(0, importo.length() - 1);
-					m_iNumberStatus = NUMBER_INPUTINT;
-				}
-				else{
-					stateToZero();
-				}
+//				if ( importo.length() > 1 && importo.charAt(importo.length()-1) != ',' ){
+//					importo = importo.substring(0, importo.length() - 1);
+//				}
+//				else if ( importo.length() > 1 && importo.charAt(importo.length()-1) == ',' ){
+//					importo = importo.substring(0, importo.length() - 1);
+//					m_iNumberStatus = NUMBER_INPUTINT;
+//				}
+//				else{
+//					stateToZero();
+//				}
 			}
 			// Il primo numero inserito e' zero
 			else if ((cTrans == '0') 
 					&& (m_iNumberStatus == NUMBER_INPUTZERO)) {
-				importo = "0";
+				importo = "";
 			} 
 			// Il primo numero inserito e' diverso da zero, si setta lo stato parte iniziale intera (m_iNumberStatus = NUMBER_INPUTINT;) 
 			else if ((cTrans == '1' || cTrans == '2' || cTrans == '3' || cTrans == '4' || cTrans == '5' || cTrans == '6' || cTrans == '7' || cTrans == '8' || cTrans == '9')
@@ -287,14 +290,14 @@ public class VenditaInternalFrame extends JInternalFrame{
 				m_iNumberStatus = NUMBER_INPUTDEC;
 				m_iNumberStatusInput = NUMBERVALID;
 			}
-			if ( inserimentoContanti || tastieraCassaAttiva ){
-				double d = ControlloDati.convertPrezzoToDouble(importo);
+			if ( inserimentoContanti || tastieraCassaAttiva ){				
+//				double d = ControlloDati.convertPrezzoToDouble(ControlloDati.costruisciPrezzoLikePOS(importo));
 				if ( inserimentoContanti ){				
-					txtFldContanti.setText(ControlloDati.convertDoubleToPrezzo(d));
-					txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(d - pannelloCarrello.getTotaleCarrello()));
+					txtFldContanti.setText(ControlloDati.costruisciPrezzoLikePOS(importo));
+					txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(ControlloDati.convertPrezzoToDouble(ControlloDati.costruisciPrezzoLikePOS(importo)) - pannelloCarrello.getTotaleCarrello()));
 				}
 				else {
-					txtFldImporto.setText(ControlloDati.convertDoubleToPrezzo(d));
+					txtFldImporto.setText(ControlloDati.costruisciPrezzoLikePOS(importo));
 				}
 			}
 		} catch (NumberFormatException e) {
@@ -328,7 +331,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 		txtFldResto.setText("");
 		txtFldTotale.setText("");
 		txtQta.setText("");
-		importo = "0";
+		importo = "";
 	}
 	
 	private void messaggioAVideo(String testo, String tipo) {
@@ -412,6 +415,9 @@ public class VenditaInternalFrame extends JInternalFrame{
 				inserimentoContanti = true;
 				txtFieldRicerca.setText("");
 				txtFldContanti.requestFocusInWindow();
+				txtFieldRicerca.setBackground(Color.white);
+				txtFldImporto.setBackground(Color.white);
+				txtFldContanti.setBackground(Color.pink);
 				importo = "";
 			}
 			else if ( e.getSource() == btnStorno ){
@@ -441,9 +447,12 @@ public class VenditaInternalFrame extends JInternalFrame{
 				btnInsManuale.setSelected(false);
 				tastieraCassaAttiva = false;
 				inserimentoContanti = false;
-				importo = "0";
+				importo = "";
 				txtQta.setText("");
 				txtFldImporto.setText("");
+				txtFieldRicerca.setBackground(Color.pink);
+				txtFldImporto.setBackground(Color.white);
+				txtFldContanti.setBackground(Color.decode("435445"));
 				m_iNumberStatus = NUMBER_INPUTZERO;
 				m_iNumberStatusInput = NUMBERZERO;
 			}
@@ -464,6 +473,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 		// ed altri pulsanti
 		InputMap im = this.getRootPane().getInputMap(
 				JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "OK");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), "F1");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), "F2");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "F3");
@@ -471,9 +481,9 @@ public class VenditaInternalFrame extends JInternalFrame{
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), "F5");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F8, 0), "F8");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "ESC");
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_COMMA, 0), ",");
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_PERIOD, 0), ",");
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DECIMAL, 0), ",");
+//		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_COMMA, 0), ",");
+//		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_PERIOD, 0), ",");
+//		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DECIMAL, 0), ",");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "CANC");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), "CANC");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_0, 0), "0");
@@ -497,6 +507,13 @@ public class VenditaInternalFrame extends JInternalFrame{
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD8, 0), "8");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD9, 0), "9");
 
+		this.getRootPane().getActionMap().put("OK", new AbstractAction() {
+			public void actionPerformed(ActionEvent a) {
+				if ( a.getSource() != txtFieldRicerca && tastieraCassaAttiva && !inserimentoContanti && importo.length() > 0 ){
+					inserisciDaRepo("Reparto 1");
+				}
+			}
+		});
 		this.getRootPane().getActionMap().put("F1", new AbstractAction() {
 			public void actionPerformed(ActionEvent a) {
 				txtFieldRicerca.requestFocusInWindow();				
@@ -517,6 +534,9 @@ public class VenditaInternalFrame extends JInternalFrame{
 				inserimentoContanti = true;
 				txtFieldRicerca.setText("");
 				txtFldContanti.requestFocusInWindow();
+				txtFieldRicerca.setBackground(Color.white);
+				txtFldImporto.setBackground(Color.white);
+				txtFldContanti.setBackground(Color.pink);
 				importo = "";
 			}
 		});
@@ -546,11 +566,11 @@ public class VenditaInternalFrame extends JInternalFrame{
 				stateTransition('\n');
 			}
 		});
-		this.getRootPane().getActionMap().put(",", new AbstractAction() {
-			public void actionPerformed(ActionEvent a) {
-				stateTransition(',');
-			}
-		});
+//		this.getRootPane().getActionMap().put(",", new AbstractAction() {
+//			public void actionPerformed(ActionEvent a) {
+//				stateTransition(',');
+//			}
+//		});
 		this.getRootPane().getActionMap().put("0", new AbstractAction() {
 			public void actionPerformed(ActionEvent a) {
 				stateTransition('0');
@@ -618,15 +638,21 @@ public class VenditaInternalFrame extends JInternalFrame{
 			btnInsManuale.setSelected(true);
 			tastieraCassaAttiva = true;
 			inserimentoContanti = false;
-			importo = "0";
+			importo = "";
 			txtFieldRicerca.setText("");
+			txtFieldRicerca.setBackground(Color.white);
+			txtFldImporto.setBackground(Color.pink);
+			txtFldContanti.setBackground(Color.decode("435445"));
 			txtFldImporto.requestFocusInWindow();
 		}
 		else if ( tastieraCassaAttiva && inserimentoContanti ){
 			inserimentoContanti = false;
-			importo = "0";
+			importo = "";
 			txtFieldRicerca.setText("");
 			txtFldImporto.requestFocusInWindow();
+			txtFieldRicerca.setBackground(Color.white);
+			txtFldImporto.setBackground(Color.pink);
+			txtFldContanti.setBackground(Color.decode("435445"));
 		}
 		// Verifichiamo se il pannello e' aperto, quindi lo chiudiamo
 		else if ( tastieraCassaAttiva ){
@@ -641,6 +667,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 	
 	public void setFocusRicerca(){
 		txtFieldRicerca.requestFocus();
+		txtFieldRicerca.setBackground(Color.pink);
 	}
 	
 	/**
@@ -1043,14 +1070,16 @@ public class VenditaInternalFrame extends JInternalFrame{
 		if (txtFldImporto == null) {
 			txtFldImporto = new JTextField();
 			txtFldImporto.setBounds(new Rectangle(40, 0, 160, 45));
+			txtFldImporto.setBackground(Color.white);
+			txtFldImporto.setOpaque(true);
 			txtFldImporto.setEditable(false);
-			txtFldImporto.addKeyListener(new java.awt.event.KeyAdapter() {
-				public void keyPressed(java.awt.event.KeyEvent e) {
-					if ( e.getKeyCode() == KeyEvent.VK_ENTER && tastieraCassaAttiva && !inserimentoContanti ) {
-						inserisciDaRepo("Reparto 1");
-					}
-				}
-			});
+//			txtFldImporto.addKeyListener(new java.awt.event.KeyAdapter() {
+//				public void keyPressed(java.awt.event.KeyEvent e) {
+//					if ( e.getKeyCode() == KeyEvent.VK_ENTER && tastieraCassaAttiva && !inserimentoContanti ) {
+//						inserisciDaRepo("Reparto 1");
+//					}
+//				}
+//			});
 		}
 		return txtFldImporto;
 	}
@@ -1065,6 +1094,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 			txtQta = new JTextField();
 			txtQta.setBounds(new Rectangle(310, 0, 75, 45));
 			txtQta.setEditable(false);
+			txtQta.setBackground(Color.white);
 		}
 		return txtQta;
 	}

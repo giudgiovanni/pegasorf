@@ -121,7 +121,7 @@ public class Scarico {
 		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
-		String query = "select sum(prezzo_acquisto*qta) from articoli_scaricati_view";
+		String query = "select sum(prezzo_vendita*qta) from articoli_scaricati_view";
 		rs = st.executeQuery(query);
 		rs.next();
 		double tot = rs.getDouble(1);

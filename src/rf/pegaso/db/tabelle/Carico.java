@@ -110,6 +110,23 @@ public class Carico {
 		if (st != null)
 			st.close();
 	}
+	
+	public Object [] getQtaPrezzoArticoloCaricata(int idarticolo) throws SQLException{
+		Object [] obj = new Object[2];
+		Statement st = null;
+		ResultSet rs = null;
+		String query = "select qta, prezzo_acquisto from dettaglio_carichi where idcarico = " + idCarico +" and idarticolo = "+idarticolo;
+		st = dbm.getNewStatement();
+		rs = st.executeQuery(query);
+		if(rs.next()){
+			obj[0] = rs.getInt("qta");
+			obj[1] = rs.getDouble("prezzo_acquisto");
+		}
+		
+		if (st != null)
+			st.close();
+		return obj;
+	}
 
 	public int getSconto() {
 		return sconto;

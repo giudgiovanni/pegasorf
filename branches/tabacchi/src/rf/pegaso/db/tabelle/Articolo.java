@@ -140,7 +140,7 @@ public class Articolo {
 	}
 	
 	/**
-	 * Ritorna tutti gli articoli selezionati per categoria merceologica e ordinati per quantit� venduta
+	 * Ritorna tutti gli articoli selezionati per categoria merceologica e ordinati per quantit\340 venduta
 	 * @return
 	 * @throws SQLException
 	 */

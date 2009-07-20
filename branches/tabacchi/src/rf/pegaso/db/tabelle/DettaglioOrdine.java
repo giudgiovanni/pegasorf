@@ -157,7 +157,7 @@ public class DettaglioOrdine implements Comparator<DettaglioOrdine>{
 				codiceBarre = a.getCodBarre();
 				iva = a.getIva();
 				qta = 1.0;
-				disponibilita = a.getGiacenza2() - 1;
+				disponibilita = a.getGiacenza2();
 			}
 			else 
 				return 0;

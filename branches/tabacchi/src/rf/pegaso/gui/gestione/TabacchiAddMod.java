@@ -196,6 +196,10 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	private JFormattedTextField txtFldQtaIniziale;
 	private JLabel jLabel = null;
 	private JButton btnAddQtaIniziale = null;
+	private JLabel lblPacchetti = null;
+	private JLabel lblPesoStecca = null;
+	private JFormattedTextField txtNumeroPacchetti = null;
+	private JFormattedTextField txtPesoStecca = null;
 	/**
 	 * @param owner
 	 */
@@ -665,6 +669,12 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	private JPanel getPnlDatiPersonali() {
 		if (pnlDatiPersonali == null) {
 			try {
+				lblPesoStecca = new JLabel();
+				lblPesoStecca.setBounds(new Rectangle(269, 176, 115, 16));
+				lblPesoStecca.setText("Peso Stecca");
+				lblPacchetti = new JLabel();
+				lblPacchetti.setBounds(new Rectangle(136, 176, 111, 16));
+				lblPacchetti.setText("Numero Pacchetti");
 				jLabel = new JLabel();
 				jLabel.setBounds(new Rectangle(8, 176, 105, 16));
 				jLabel.setText("Carico Iniziale");
@@ -722,6 +732,10 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 				pnlDatiPersonali.add(jLabel, null);
 				pnlDatiPersonali.add(getTxtFldQtaIniziale(), null);
 				pnlDatiPersonali.add(getBtnAddQtaIniziale(), null);
+				pnlDatiPersonali.add(lblPacchetti, null);
+				pnlDatiPersonali.add(lblPesoStecca, null);
+				pnlDatiPersonali.add(getTxtNumeroPacchetti(), null);
+				pnlDatiPersonali.add(getTxtPesoStecca(), null);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -1336,11 +1350,45 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	private JButton getBtnAddQtaIniziale() {
 		if (btnAddQtaIniziale == null) {
 			btnAddQtaIniziale = new JButton();
-			btnAddQtaIniziale.setBounds(new Rectangle(140, 187, 199, 29));
+			btnAddQtaIniziale.setBounds(new Rectangle(323, 232, 199, 29));
 			btnAddQtaIniziale.setText("Aggiungi Al Carico Iniziale");
 			btnAddQtaIniziale.addActionListener(new MyActionListener());
 		}
 		return btnAddQtaIniziale;
+	}
+
+	/**
+	 * This method initializes txtNumeroPacchetti	
+	 * 	
+	 * @return javax.swing.JTextField	
+	 */
+	private JFormattedTextField getTxtNumeroPacchetti() {
+		if (txtNumeroPacchetti == null) {
+			DecimalFormat formatPrice = new DecimalFormat();
+			formatPrice.setMaximumFractionDigits(0);
+			formatPrice.setMinimumFractionDigits(0);
+			txtNumeroPacchetti = new JFormattedTextField(formatPrice);
+			txtNumeroPacchetti.setBounds(new Rectangle(137, 192, 111, 20));
+			
+		}
+		return txtNumeroPacchetti;
+	}
+
+	/**
+	 * This method initializes txtPesoStecca	
+	 * 	
+	 * @return javax.swing.JTextField	
+	 */
+	private JFormattedTextField getTxtPesoStecca() {
+		if (txtPesoStecca == null) {
+			DecimalFormat formatPrice = new DecimalFormat();
+			formatPrice.setMaximumFractionDigits(2);
+			formatPrice.setMinimumFractionDigits(2);
+			
+			txtPesoStecca = new JFormattedTextField(formatPrice);
+			txtPesoStecca.setBounds(new Rectangle(268, 192, 117, 20));
+		}
+		return txtPesoStecca;
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,8"

@@ -512,7 +512,7 @@ public class VenditeGui extends JFrame implements TableModelListener {
 				gridBagConstraints4.gridy = 0; // Generated
 				gridBagConstraints4.insets = new Insets(0, 20, 0, 0); // Generated
 				lblTot = new JLabel();
-				lblTot.setText("Totale €."); // Generated
+				lblTot.setText("Totale \u20AC"); // Generated
 				GridBagConstraints gridBagConstraints3 = new GridBagConstraints();
 				gridBagConstraints3.anchor = GridBagConstraints.WEST; // Generated
 				gridBagConstraints3.insets = new Insets(0, 2, 0, 0); // Generated
@@ -526,7 +526,7 @@ public class VenditeGui extends JFrame implements TableModelListener {
 				gridBagConstraints2.gridy = 0; // Generated
 				gridBagConstraints2.insets = new Insets(0, 20, 0, 0); // Generated
 				lblImpostaTot = new JLabel();
-				lblImpostaTot.setText("Imposta tot. €."); // Generated
+				lblImpostaTot.setText("Imposta tot. \u20AC"); // Generated
 				GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
 				gridBagConstraints1.anchor = GridBagConstraints.WEST; // Generated
 				gridBagConstraints1.insets = new Insets(0, 2, 0, 0); // Generated
@@ -540,7 +540,7 @@ public class VenditeGui extends JFrame implements TableModelListener {
 				gridBagConstraints.insets = new Insets(0, 10, 0, 0); // Generated
 				gridBagConstraints.gridy = 0; // Generated
 				lblImponibile = new JLabel();
-				lblImponibile.setText("Imponibile tot. €."); // Generated
+				lblImponibile.setText("Imponibile tot. \u20AC"); // Generated
 				jPanel1 = new JPanel();
 				jPanel1.setLayout(new GridBagLayout()); // Generated
 				jPanel1.setPreferredSize(new Dimension(0, 50)); // Generated

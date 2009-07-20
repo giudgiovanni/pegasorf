@@ -1,9 +1,8 @@
-ROCCO - invece di codice fornitore inserire codice aams
+ok ROCCO - invece di codice fornitore inserire codice aams
 - usare sempre pezzi come unit� di misura nei tabacchi
 - quando si deve fare un riordino se i pacchetti sono da 10 ordinare quindi multipli di 10 oppure 20 nell'altro caso
 	se nel caso abbiamo da riordinarne meno o + di 10 / 20 usare il se e quindi < 5 arrotonda per difetto >=5 per eccesso
-ROCCO - aggiungere campi per grammatura stecca e per numero pacchetti
-ROCCO - nell'inventario aggiungere prezzo venditA
+->ok manca ancora il salvataggio vero e proprio ROCCO - aggiungere campi per grammatura stecca e per numero pacchetti
 ROCCO - possibilit� di duplicare un ordine da uno gi� esistente
 SERGIO (FATTO) - textfield non visualizzato nel carivo tabacchi
 - se la scorta massima � < di scorta minima fare la differenza per il riordino da scortaminima-scortamassima

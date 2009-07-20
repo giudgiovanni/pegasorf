@@ -33,6 +33,8 @@ import java.text.ParseException;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JTabbedPane;
@@ -161,7 +163,11 @@ public class VenditaInternalFrame extends JInternalFrame{
 			pannelloCarrello.addDettaglioOrdine(dv, true);
 			txtFldTotale.setText(ControlloDati.convertDoubleToPrezzo(pannelloCarrello.getTotaleCarrello()));
 			aggiornaResto();
-			stateToZero();
+			importo = "0";
+			txtQta.setText("");
+			txtFldImporto.setText("");
+			m_iNumberStatus = NUMBER_INPUTZERO;
+			m_iNumberStatusInput = NUMBERZERO;
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (ParseException e) {
@@ -187,6 +193,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 		}
 		txtFldTotale.setText(ControlloDati.convertDoubleToPrezzo(pannelloCarrello.getTotaleCarrello()));
 		aggiornaResto();
+		importo = "";
 	}
 	
 	private void aggiornaResto(){
@@ -297,6 +304,18 @@ public class VenditaInternalFrame extends JInternalFrame{
 		}
 	}
 	
+	private void annullaVendita(){
+		pannelloCarrello.azzeraCarrello();
+		txtFldTotale.setText("");
+		txtFieldRicerca.setText("");
+		((CardLayout) pnlContenitore.getLayout()).show(pnlContenitore, "pnlArticoli");
+		btnInsManuale.setSelected(false);
+		tastieraCassaAttiva = false;
+		inserimentoContanti = false;
+		txtFieldRicerca.requestFocusInWindow();
+		stateToZero();
+	}
+	
 	private void resetGUI(){
 		// Visualizziamo l'elenco degli articoli se era stato selezionato il pannello funzioni cassa
 		((CardLayout) pnlContenitore.getLayout()).show(pnlContenitore, "pnlArticoli");
@@ -391,7 +410,8 @@ public class VenditaInternalFrame extends JInternalFrame{
 					tastieraCassaAttiva = true;
 				}
 				inserimentoContanti = true;
-				txtFldImporto.requestFocusInWindow();
+				txtFieldRicerca.setText("");
+				txtFldContanti.requestFocusInWindow();
 				importo = "";
 			}
 			else if ( e.getSource() == btnStorno ){
@@ -403,11 +423,40 @@ public class VenditaInternalFrame extends JInternalFrame{
 				txtFldTotale.setText(ControlloDati.convertDoubleToPrezzo(pannelloCarrello.getTotaleCarrello()));
 			}
 			else if ( e.getSource() == btnAnnullaVendita ){
-				pannelloCarrello.azzeraCarrello();
-				txtFldTotale.setText("");
-				stateToZero();
+				annullaVendita();
 			}
 		}
+	}
+	
+	class MyFocusListener implements FocusListener {
+
+		/*
+		 * (non-Javadoc)
+		 *
+		 * @see java.awt.event.FocusListener#focusGained(java.awt.event.FocusEvent)
+		 */
+		public void focusGained(FocusEvent e) {
+			if ( e.getSource() == txtFieldRicerca ){
+				((CardLayout) pnlContenitore.getLayout()).show(pnlContenitore, "pnlArticoli");
+				btnInsManuale.setSelected(false);
+				tastieraCassaAttiva = false;
+				inserimentoContanti = false;
+				importo = "0";
+				txtQta.setText("");
+				txtFldImporto.setText("");
+				m_iNumberStatus = NUMBER_INPUTZERO;
+				m_iNumberStatusInput = NUMBERZERO;
+			}
+		}
+
+		/*
+		 * (non-Javadoc)
+		 *
+		 * @see java.awt.event.FocusListener#focusLost(java.awt.event.FocusEvent)
+		 */
+		public void focusLost(FocusEvent e) {
+		}
+
 	}
 	
 	private void initializeKeyFunction(){
@@ -420,8 +469,11 @@ public class VenditaInternalFrame extends JInternalFrame{
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "F3");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0), "F4");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), "F5");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F8, 0), "F8");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "ESC");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_COMMA, 0), ",");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_PERIOD, 0), ",");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DECIMAL, 0), ",");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "CANC");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), "CANC");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_0, 0), "0");
@@ -462,8 +514,9 @@ public class VenditaInternalFrame extends JInternalFrame{
 					btnInsManuale.setSelected(false);
 					tastieraCassaAttiva = true;
 				}
-				inserimentoContanti = true;	
-				txtFldImporto.requestFocusInWindow();
+				inserimentoContanti = true;
+				txtFieldRicerca.setText("");
+				txtFldContanti.requestFocusInWindow();
 				importo = "";
 			}
 		});
@@ -474,9 +527,14 @@ public class VenditaInternalFrame extends JInternalFrame{
 		});
 		this.getRootPane().getActionMap().put("F5", new AbstractAction() {
 			public void actionPerformed(ActionEvent a) {
-				inserisciDaRepo("Reparto 1");
+				
 			}
-		});		
+		});
+		this.getRootPane().getActionMap().put("F8", new AbstractAction() {
+			public void actionPerformed(ActionEvent a) {
+				annullaVendita();
+			}
+		});	
 		this.getRootPane().getActionMap().put("ESC", new AbstractAction() {
 			public void actionPerformed(ActionEvent a) {
 				resetGUI();
@@ -560,10 +618,15 @@ public class VenditaInternalFrame extends JInternalFrame{
 			btnInsManuale.setSelected(true);
 			tastieraCassaAttiva = true;
 			inserimentoContanti = false;
+			importo = "0";
+			txtFieldRicerca.setText("");
+			txtFldImporto.requestFocusInWindow();
 		}
 		else if ( tastieraCassaAttiva && inserimentoContanti ){
 			inserimentoContanti = false;
 			importo = "0";
+			txtFieldRicerca.setText("");
+			txtFldImporto.requestFocusInWindow();
 		}
 		// Verifichiamo se il pannello e' aperto, quindi lo chiudiamo
 		else if ( tastieraCassaAttiva ){
@@ -571,7 +634,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 			btnInsManuale.setSelected(false);
 			tastieraCassaAttiva = false;
 			inserimentoContanti = false;
-			stateToZero();
+//			stateToZero();
 			txtFieldRicerca.requestFocusInWindow();
 		}
 	}
@@ -648,6 +711,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 			txtFieldRicerca.setBounds(new Rectangle(30, 62, 182, 28));
 			txtFieldRicerca.addActionListener(new MyButtonListener());
 			txtFieldRicerca.setDocument(new UpperTextDocument());
+			txtFieldRicerca.addFocusListener(new MyFocusListener());
 			txtFieldRicerca.addKeyListener(new java.awt.event.KeyAdapter() {
 				public void keyPressed(java.awt.event.KeyEvent e) {
 					if ( e.getKeyCode() == KeyEvent.VK_ENTER ) {
@@ -980,6 +1044,13 @@ public class VenditaInternalFrame extends JInternalFrame{
 			txtFldImporto = new JTextField();
 			txtFldImporto.setBounds(new Rectangle(40, 0, 160, 45));
 			txtFldImporto.setEditable(false);
+			txtFldImporto.addKeyListener(new java.awt.event.KeyAdapter() {
+				public void keyPressed(java.awt.event.KeyEvent e) {
+					if ( e.getKeyCode() == KeyEvent.VK_ENTER && tastieraCassaAttiva && !inserimentoContanti ) {
+						inserisciDaRepo("Reparto 1");
+					}
+				}
+			});
 		}
 		return txtFldImporto;
 	}
@@ -1006,7 +1077,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 	private JButton getBtnAnnullaVendita() {
 		if (btnAnnullaVendita == null) {
 			btnAnnullaVendita = new JButton();
-			btnAnnullaVendita.setText("Annulla");
+			btnAnnullaVendita.setText("Annulla (F8)");
 			btnAnnullaVendita.setBounds(new Rectangle(355, 410, 90, 35));
 			btnAnnullaVendita.addActionListener(new MyButtonListener());
 		}

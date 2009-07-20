@@ -283,7 +283,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 
 	/**
 	 * Aggiunge un dettaglio ordine al carrello
-	 * e se gi� presente aggiorna la quantit�
+	 * e se gi\340 presente aggiorna la quantit\340
 	 * ed eventuali altri parametri cambiati
 	 *
 	 * @param e
@@ -416,7 +416,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 	}
 
 	/**
-	 * Interroga se il carrello � vuoto oppure no
+	 * Interroga se il carrello \340 vuoto oppure no
 	 *
 	 * @return
 	 */
@@ -556,8 +556,8 @@ public class JPanelRiepilogoVendita extends JPanel {
 
 	/**
 	 * Ritorna id dell'oggetto selezionato nella tabella
-	 * @return ritorna id se � selezionato un oggetto nella tabella
-	 * 			oppure ritorna -1 se non c'� nessuna selezione
+	 * @return ritorna id se \340 selezionato un oggetto nella tabella
+	 * 			oppure ritorna -1 se non c'\340 nessuna selezione
 	 */
 	public int getIdSelectedItem(){
 		return idSelectedItem;

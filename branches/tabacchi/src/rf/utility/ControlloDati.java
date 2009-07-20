@@ -161,7 +161,7 @@ public class ControlloDati {
 	}
 
 	/**
-	 * Il metodo statico controlla la validità della data immessa passata
+	 * Il metodo statico controlla la validitï¿½ della data immessa passata
 	 * sottoforma di stringa nel seguente formato GG/MM/AAAA
 	 */
 	public static boolean dataCorretta(String dataDaControllare) {
@@ -282,7 +282,7 @@ public class ControlloDati {
 	}
 
 	/**
-	 * metodo privato di supporto per il controllo della data se è un numero o
+	 * metodo privato di supporto per il controllo della data se ï¿½ un numero o
 	 * una stringa alfanumerica
 	 * 
 	 * @param numero
@@ -420,6 +420,19 @@ public class ControlloDati {
 			}
 		}
 		return true;
+	}
+	
+	public static String costruisciPrezzoLikePOS(String importo){
+		if ( importo.length() == 0 )
+			return "0,00";
+		if ( importo.length() == 1 )
+			return "0,0"+importo;
+		if ( importo.length() == 2 )
+			return "0,"+importo;
+		String s = importo.substring(0, importo.length()-2);
+		s = s.concat(","); 
+		s = s.concat(importo.substring(importo.length()-2));
+		return s;
 	}
 
 	public ControlloDati() {

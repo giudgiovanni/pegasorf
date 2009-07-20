@@ -929,7 +929,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			try {
 				lblIngrosso = new JLabel();
 				lblIngrosso.setBounds(new Rectangle(8, 20, 73, 21)); // Generated
-				lblIngrosso.setText("Pubblico €."); // Generated
+				lblIngrosso.setText("Pubblico \u20AC"); // Generated
 				jPanel1 = new JPanel();
 				jPanel1.setLayout(null); // Generated
 				jPanel1.setBounds(new Rectangle(416, 260, 201, 49)); // Generated

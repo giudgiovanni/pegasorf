@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 21-lug-2009 1.40.00 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="it.infolabs.hibernate.Ordini" table="ordini" schema="public">
+        <id name="idordine" type="long">
+            <column name="idordine" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="tipoDocumento" class="it.infolabs.hibernate.TipoDocumento" fetch="select">
+            <column name="tipo_documento" />
+        </many-to-one>
+        <many-to-one name="aspetto" class="it.infolabs.hibernate.Aspetto" fetch="select">
+            <column name="idaspetto" />
+        </many-to-one>
+        <many-to-one name="pagamentoByPagamento" class="it.infolabs.hibernate.Pagamento" fetch="select">
+            <column name="pagamento" />
+        </many-to-one>
+        <many-to-one name="causale" class="it.infolabs.hibernate.Causale" fetch="select">
+            <column name="idcausale" />
+        </many-to-one>
+        <many-to-one name="pagamentoByIdpagamento" class="it.infolabs.hibernate.Pagamento" fetch="select">
+            <column name="idpagamento" />
+        </many-to-one>
+        <many-to-one name="clienti" class="it.infolabs.hibernate.Clienti" fetch="select">
+            <column name="idcliente" />
+        </many-to-one>
+        <property name="dataOrdine" type="date">
+            <column name="data_ordine" length="13" />
+        </property>
+        <property name="oraOrdine" type="time">
+            <column name="ora_ordine" length="15" />
+        </property>
+        <property name="note" type="string">
+            <column name="note" length="200" />
+        </property>
+        <property name="numDocumento" type="string">
+            <column name="num_documento" />
+        </property>
+        <property name="dataDocumento" type="date">
+            <column name="data_documento" length="13" />
+        </property>
+        <property name="totaleDocumento" type="java.lang.Double">
+            <column name="totale_documento" precision="17" scale="17" />
+        </property>
+        <property name="ivaDocumento" type="java.lang.Integer">
+            <column name="iva_documento" />
+        </property>
+        <property name="docEmesso" type="java.lang.Integer">
+            <column name="doc_emesso" />
+        </property>
+        <property name="docFiscale" type="java.lang.Integer">
+            <column name="doc_fiscale" />
+        </property>
+        <property name="insPn" type="java.lang.Integer">
+            <column name="ins_pn" />
+        </property>
+        <property name="speseIncasso" type="java.lang.Double">
+            <column name="spese_incasso" precision="17" scale="17" />
+        </property>
+        <property name="speseTrasporto" type="java.lang.Double">
+            <column name="spese_trasporto" precision="17" scale="17" />
+        </property>
+        <property name="dataTrasp" type="date">
+            <column name="data_trasp" length="13" />
+        </property>
+        <property name="oraTrasp" type="time">
+            <column name="ora_trasp" length="21" />
+        </property>
+        <property name="colli" type="java.lang.Integer">
+            <column name="colli" />
+        </property>
+        <property name="peso" type="java.lang.Double">
+            <column name="peso" precision="17" scale="17" />
+        </property>
+        <property name="consegna" type="string">
+            <column name="consegna" />
+        </property>
+        <property name="porto" type="string">
+            <column name="porto" />
+        </property>
+        <property name="diversaDest" type="string">
+            <column name="diversa_dest" />
+        </property>
+        <property name="sconto" type="java.lang.Integer">
+            <column name="sconto" />
+        </property>
+        <property name="scontoEuro" type="java.lang.Double">
+            <column name="sconto_euro" precision="17" scale="17" />
+        </property>
+        <property name="numeroFattura" type="string">
+            <column name="numero_fattura" length="200" />
+        </property>
+        <property name="numeroRicevuta" type="string">
+            <column name="numero_ricevuta" length="20" />
+        </property>
+        <property name="numeroNonFiscale" type="string">
+            <column name="numero_non_fiscale" length="20" />
+        </property>
+        <property name="riferimentoOrdine" type="java.lang.Long">
+            <column name="riferimento_ordine" />
+        </property>
+        <set name="dettaglioOrdinis" inverse="true" lazy="true" table="dettaglio_ordini" fetch="select">
+            <key>
+                <column name="idordine" not-null="true" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.DettaglioOrdini" />
+        </set>
+        <set name="dettaglioOrdinis_1" inverse="true" lazy="true" table="dettaglio_ordini" fetch="select">
+            <key>
+                <column name="idordine" not-null="true" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.DettaglioOrdini" />
+        </set>
+        <set name="dettaglioOrdinis_2" inverse="true" lazy="true" table="dettaglio_ordini" fetch="select">
+            <key>
+                <column name="idordine" not-null="true" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.DettaglioOrdini" />
+        </set>
+        <set name="dettaglioOrdineManuales" inverse="true" lazy="true" table="dettaglio_ordine_manuale" fetch="select">
+            <key>
+                <column name="ordine" not-null="true" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.DettaglioOrdineManuale" />
+        </set>
+        <set name="dettaglioOrdineManuales_1" inverse="true" lazy="true" table="dettaglio_ordine_manuale" fetch="select">
+            <key>
+                <column name="ordine" not-null="true" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.DettaglioOrdineManuale" />
+        </set>
+        <set name="dettaglioOrdineManuales_2" inverse="true" lazy="true" table="dettaglio_ordine_manuale" fetch="select">
+            <key>
+                <column name="ordine" not-null="true" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.DettaglioOrdineManuale" />
+        </set>
+    </class>
+</hibernate-mapping>

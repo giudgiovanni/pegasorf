@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 21-lug-2009 1.40.00 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="it.infolabs.hibernate.DettaglioCarichi" table="dettaglio_carichi" schema="public">
+        <composite-id name="id" class="it.infolabs.hibernate.DettaglioCarichiId">
+            <key-property name="idarticolo" type="long">
+                <column name="idarticolo" />
+            </key-property>
+            <key-property name="idcarico" type="long">
+                <column name="idcarico" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="carichi" class="it.infolabs.hibernate.Carichi" update="false" insert="false" fetch="select">
+            <column name="idcarico" not-null="true" />
+        </many-to-one>
+        <many-to-one name="articoli" class="it.infolabs.hibernate.Articoli" update="false" insert="false" fetch="select">
+            <column name="idarticolo" not-null="true" />
+        </many-to-one>
+        <property name="qta" type="double">
+            <column name="qta" precision="17" scale="17" not-null="true" />
+        </property>
+        <property name="prezzoAcquisto" type="java.lang.Double">
+            <column name="prezzo_acquisto" precision="17" scale="17" />
+        </property>
+        <property name="sconto" type="java.lang.Integer">
+            <column name="sconto" />
+        </property>
+    </class>
+</hibernate-mapping>

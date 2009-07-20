@@ -81,7 +81,9 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			}else if(e.getSource()==btnSuggerimento){
 				suggerimentoCodice();
 			} 
-
+			else if ( e.getSource() == btnAddQtaIniziale ){
+				inserisciQuantitaIniziale();
+			}
 		}
 
 	}
@@ -193,6 +195,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	private boolean close=false;
 	private JFormattedTextField txtFldQtaIniziale;
 	private JLabel jLabel = null;
+	private JButton btnAddQtaIniziale = null;
 	/**
 	 * @param owner
 	 */
@@ -582,7 +585,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			try {
 				lblQta = new JLabel();
 				lblQta.setBounds(new Rectangle(8, 24, 57, 21)); // Generated
-				lblQta.setText("Quantit�"); // Generated
+				lblQta.setText("Quantit\340"); // Generated
 				jPanel2 = new JPanel();
 				jPanel2.setLayout(null); // Generated
 				jPanel2.setBounds(new Rectangle(408, 106, 201, 65)); // Generated
@@ -718,6 +721,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 				pnlDatiPersonali.add(getBtnSuggerimento(), null);  // Generated
 				pnlDatiPersonali.add(jLabel, null);
 				pnlDatiPersonali.add(getTxtFldQtaIniziale(), null);
+				pnlDatiPersonali.add(getBtnAddQtaIniziale(), null);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -1048,7 +1052,6 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			try {
 				a.insertArticolo();
 				idArticolo=a.getIdArticolo();
-				inserisciQuantitaIniziale();
 			} catch (IDNonValido e) {
 				JOptionPane.showMessageDialog(this, "Valore idCliente errato",
 						"ERRORE", JOptionPane.ERROR_MESSAGE);
@@ -1108,8 +1111,15 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			c.caricaDati(Constant.CARICO_INIZIALE);
 			Articolo a = new Articolo();
 			a.caricaDati(idArticolo);
-			c.insertArticolo(idArticolo, tmp, a.getPrezzoDettaglio()-MathUtility.percentualeDaAggiungere(a.getPrezzoDettaglio(), 10));
-
+			if ( c.codiceBarrePresenteInScarico(a.getCodBarre(), Constant.CARICO_INIZIALE)){
+				Object [] obj = c.getQtaPrezzoArticoloCaricata(idArticolo);
+				c.updateArticolo(idArticolo, tmp + (Integer)obj[0], (Double)obj[1]);
+			}
+			else {
+				c.insertArticolo(idArticolo, tmp, a.getPrezzoDettaglio()-MathUtility.percentualeDaAggiungere(a.getPrezzoDettaglio(), 10));
+			}
+			caricaQtaMagazzino();
+			txtFldQtaIniziale.setText("0,00");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (NumberFormatException e) {
@@ -1146,9 +1156,6 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 		}
 		// ultimo articolo appunto lavorato
 		this.ultimoArticolo[0]=a.getCodBarre();
-		if(txtFldQtaIniziale.getText()!=""){
-			inserisciQuantitaIniziale();
-		}
 		this.dispose();
 
 	}
@@ -1162,7 +1169,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 		a.setCodFornitore(txtCodFornitore.getText());
 		// Controllo se � stato selezionato l'unit� di misura
 		if (((String) cmbMisura.getSelectedItem()).equalsIgnoreCase("")) {
-			messaggioCampoErrato("Selezionare l'unit� di misura");
+			messaggioCampoErrato("Selezionare l'unit\340 di misura");
 			return false;
 		}
 
@@ -1319,6 +1326,21 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			} catch (Throwable throwable) {
 			}
 		return txtFldQtaIniziale;
+	}
+
+	/**
+	 * This method initializes btnAddQtaIniziale	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnAddQtaIniziale() {
+		if (btnAddQtaIniziale == null) {
+			btnAddQtaIniziale = new JButton();
+			btnAddQtaIniziale.setBounds(new Rectangle(140, 187, 199, 29));
+			btnAddQtaIniziale.setText("Aggiungi Al Carico Iniziale");
+			btnAddQtaIniziale.addActionListener(new MyActionListener());
+		}
+		return btnAddQtaIniziale;
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,8"

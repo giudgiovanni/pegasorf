@@ -1597,7 +1597,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 					e.printStackTrace();
 				}
 			}
-			controlloAggPrezzo();
+//			controlloAggPrezzo();
 			Articolo a = new Articolo();
 			try {
 				a.caricaDatiByCodBarre(txtCodBarre.getText());

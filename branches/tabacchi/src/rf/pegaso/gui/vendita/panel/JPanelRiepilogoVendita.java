@@ -2,6 +2,7 @@ package rf.pegaso.gui.vendita.panel;
 
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Time;
@@ -22,6 +23,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+
+import org.jdesktop.swingx.JXTable;
+import org.jdesktop.swingx.decorator.AlternateRowHighlighter;
 
 import rf.pegaso.db.tabelle.DettaglioOrdine;
 import rf.pegaso.db.tabelle.Scarico;
@@ -141,6 +145,8 @@ public class JPanelRiepilogoVendita extends JPanel {
 		}
 
 		public int getRowCount() {
+			if ( carrello == null )
+				return 0;
 			return carrello.size();
 		}
 
@@ -179,7 +185,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JScrollPane jScrollPane = null;
-	private JTable tblVendite = null;
+	private JXTable tblVendite = null;
 	private MyArrayList carrello = null; // @jve:decl-index=0:
 	private VenditaTableModel modello;
 	private int idSelectedItem=-1;
@@ -227,56 +233,63 @@ public class JPanelRiepilogoVendita extends JPanel {
 	 * @return javax.swing.JTable
 	 */
 	private JTable getTblVendite() {
-		if (tblVendite == null) {
-			PrezzoCellRenderer prezzoRenderer = new PrezzoCellRenderer();
-			QtaCellRenderer qtaRenderer=new QtaCellRenderer();
-			IntegerCellRenderer ivaRenderer=new IntegerCellRenderer();
+		try{
+			if (tblVendite == null) {
+				PrezzoCellRenderer prezzoRenderer = new PrezzoCellRenderer();
+//				prezzoRenderer.setFont(new Font("Dialog", Font.BOLD, 16));
+				QtaCellRenderer qtaRenderer=new QtaCellRenderer();
+				IntegerCellRenderer ivaRenderer=new IntegerCellRenderer();
 
-			modello =new VenditaTableModel();
-			tblVendite = new JTable(modello);
+				modello =new VenditaTableModel();
+				tblVendite = new JXTable();
+				tblVendite.setHighlighters(new AlternateRowHighlighter());
+				tblVendite.setModel(modello);
 
-			//formattiamo le colonne prezzo
-			TableColumn col = tblVendite.getColumnModel().getColumn(1);
-			col.setCellRenderer(prezzoRenderer);
-			col.setMinWidth(0);
-			col.setMaxWidth(90);
-			col.setPreferredWidth(90);
+				//formattiamo le colonne prezzo
+				TableColumn col = tblVendite.getColumnModel().getColumn(1);
+				col.setCellRenderer(prezzoRenderer);
+				col.setMinWidth(0);
+				col.setMaxWidth(90);
+				col.setPreferredWidth(90);
 
-			//formattiamo la colonna totale
-			col = tblVendite.getColumnModel().getColumn(4);
-			col.setCellRenderer(prezzoRenderer);
-			col.setMinWidth(0);
-			col.setMaxWidth(100);
-			col.setPreferredWidth(100);
+				//formattiamo la colonna totale
+				col = tblVendite.getColumnModel().getColumn(4);
+				col.setCellRenderer(prezzoRenderer);
+				col.setMinWidth(0);
+				col.setMaxWidth(100);
+				col.setPreferredWidth(100);
 
-			//formattiamo la colonna quantita'
-			col = tblVendite.getColumnModel().getColumn(2);
-			col.setCellRenderer(qtaRenderer);
-			col.setMinWidth(0);
-			col.setMaxWidth(50);
-			col.setPreferredWidth(50);
+				//formattiamo la colonna quantita'
+				col = tblVendite.getColumnModel().getColumn(2);
+				col.setCellRenderer(qtaRenderer);
+				col.setMinWidth(0);
+				col.setMaxWidth(50);
+				col.setPreferredWidth(50);
 
-			//formattiamo la colonna iva
-			col = tblVendite.getColumnModel().getColumn(3);
-			col.setCellRenderer(ivaRenderer);
-			col.setMinWidth(0);
-			col.setMaxWidth(60);
-			col.setPreferredWidth(60);
+				//formattiamo la colonna iva
+				col = tblVendite.getColumnModel().getColumn(3);
+				col.setCellRenderer(ivaRenderer);
+				col.setMinWidth(0);
+				col.setMaxWidth(60);
+				col.setPreferredWidth(60);
 
-
-			tblVendite.addMouseListener(new java.awt.event.MouseAdapter() {
-				public void mouseClicked(java.awt.event.MouseEvent e) {
-					 if(e.getSource()==tblVendite){
-						 int row=tblVendite.getSelectedRow();
-						 if(row==-1)
-							 idSelectedItem=-1;
-						 else{
-							 DettaglioOrdine o=carrello.get(row);
-							 idSelectedItem=o.getIdArticolo();
-						 }
-					 }
-				}
-			});
+				tblVendite.addMouseListener(new java.awt.event.MouseAdapter() {
+					public void mouseClicked(java.awt.event.MouseEvent e) {
+						if(e.getSource()==tblVendite){
+							int row=tblVendite.getSelectedRow();
+							if(row==-1)
+								idSelectedItem=-1;
+							else{
+								DettaglioOrdine o=carrello.get(row);
+								idSelectedItem=o.getIdArticolo();
+							}
+						}
+					}
+				});
+			}
+		}
+		catch (Exception e){
+			e.printStackTrace();
 		}
 		return tblVendite;
 	}

@@ -2413,9 +2413,25 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			rs.beforeFirst();
 			U88faxHome.getInstance().begin();
 			U88faxHome.getInstance().deleteAll();
+			U88faxHome.getInstance().commitAndClose();
+			U88faxHome.getInstance().begin();
 			while (rs.next()) {
 				U88fax row = new U88fax();
-				row.setCodiceAams(rs.getString("codfornitore"));
+				String codAams=rs.getString("codfornitore");
+				StringBuffer tmp=new StringBuffer();
+				//aggiungiamo spazi per poter poi gestire il tutto
+				//nel report di stampa 
+				//CODICE AAMS
+				if(codAams.length()==1){
+					tmp.append("   ").append(codAams);
+				}else if(codAams.length()==2){
+					tmp.append("  ").append(codAams);
+				}else if(codAams.length()==3){
+					tmp.append(" ").append(codAams);
+				}else {
+					tmp.append(codAams);
+				}
+				row.setCodiceAams(tmp.toString());
 				row.setGrammi(123);
 				row.setKilogrammi(999);
 				U88faxHome.getInstance().attachDirty(row);

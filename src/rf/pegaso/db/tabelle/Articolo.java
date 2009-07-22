@@ -221,6 +221,7 @@ public class Articolo {
 		ResultSet rs = null;
 		Statement pst = null;
 		String query = "select a.idarticolo, (v.carico-v.scarico) from giacenza_articoli_all_view v, articoli a where v.idarticolo=a.idarticolo and (v.carico-v.scarico) < a.scorta_minima";
+//		String query = "select * from articoli_sotto_soglia_minima";
 		pst = dbm.getNewStatement();
 		rs = pst.executeQuery(query);
 		Object [] obj;

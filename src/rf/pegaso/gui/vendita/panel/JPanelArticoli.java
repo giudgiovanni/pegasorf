@@ -21,7 +21,19 @@ public class JPanelArticoli extends JPanel{
 	private Vector<JButtonEventListener> m_Listeners = new Vector<JButtonEventListener>();
 	private JScrollPane jScrollPane = null;
 	private JPanel pnlPulsanti = null;
+	private int width;
+	private int ncolonne;
 
+	/**
+	 * This is the default constructor
+	 */
+	public JPanelArticoli(int width) {
+		super();
+		this.width = width;
+		this.ncolonne = width/150;
+		initialize();
+	}
+	
 	/**
 	 * This is the default constructor
 	 */
@@ -46,9 +58,9 @@ public class JPanelArticoli extends JPanel{
 		try{
 			pnlPulsanti.removeAll();
 			GridLayout gridLayout = new GridLayout();
-			pnlPulsanti.setSize(new Dimension(600, (articoli.size()*100/4)));
-			gridLayout.setRows((articoli.size()/4)+1);
-			gridLayout.setColumns(3);
+			pnlPulsanti.setSize(new Dimension(width, (articoli.size()*100/4)));
+			gridLayout.setRows((articoli.size()/ncolonne)+1);
+			gridLayout.setColumns(ncolonne);
 			pnlPulsanti.setLayout(gridLayout);
 			for(Articolo art : articoli){
 				JButtonArticolo btnArticolo = new JButtonArticolo(art);
@@ -99,7 +111,7 @@ public class JPanelArticoli extends JPanel{
 	private JScrollPane getJScrollPane() {
 		if (jScrollPane == null) {
 			jScrollPane = new JScrollPane();
-			jScrollPane.setPreferredSize(new Dimension(470, 410));
+			jScrollPane.setPreferredSize(new Dimension(width, 410));
 			jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			jScrollPane.setViewportView(getPnlPulsanti());
 		}

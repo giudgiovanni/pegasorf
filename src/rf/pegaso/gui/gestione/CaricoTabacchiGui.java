@@ -1099,7 +1099,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				lblDataCarico.setText("Data Ordine");
 				lblNumeroCarico = new JLabel();
 				lblNumeroCarico.setBounds(new Rectangle(9, 20, 57, 25));
-				lblNumeroCarico.setText("N° Ordine");
+				lblNumeroCarico.setText("Nï¿½ Ordine");
 				pnlNord = new JPanel();
 				pnlNord.setLayout(null);
 				pnlNord.setPreferredSize(new Dimension(1, 260));
@@ -1235,20 +1235,20 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				ColTipoRenderer.setHorizontalAlignment(JLabel.LEFT);
 				col.setCellRenderer(ColTipoRenderer);
 
-				col = tblCarico.getColumn("iva");
-				DefaultTableCellRenderer ivaColumnRenderer = new DefaultTableCellRenderer();
-				ivaColumnRenderer.setHorizontalAlignment(JLabel.CENTER);
-				col.setCellRenderer(ivaColumnRenderer);
-				col.setPreferredWidth(40);
-
 				col = tblCarico.getColumn("um");
 				DefaultTableCellRenderer umColumnRenderer = new DefaultTableCellRenderer();
 				umColumnRenderer.setHorizontalAlignment(JLabel.CENTER);
 				col.setCellRenderer(umColumnRenderer);
 				col.setPreferredWidth(40);
 
-				col = tblCarico.getColumn("qta");
+				col = tblCarico.getColumn("qta riordino");
 				DefaultTableCellRenderer qtaColumnRenderer = new DefaultTableCellRenderer();
+				qtaColumnRenderer.setHorizontalAlignment(JLabel.CENTER);
+				col.setCellRenderer(qtaColumnRenderer);
+				col.setPreferredWidth(40);
+				
+				col = tblCarico.getColumn("disponibilit\340");
+//				DefaultTableCellRenderer qtaColumnRenderer = new DefaultTableCellRenderer();
 				qtaColumnRenderer.setHorizontalAlignment(JLabel.CENTER);
 				col.setCellRenderer(qtaColumnRenderer);
 				col.setPreferredWidth(40);

@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 
 import javax.swing.AbstractAction;
 import javax.swing.InputMap;
@@ -20,6 +21,7 @@ import javax.swing.WindowConstants;
 
 
 
+import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.DettaglioOrdine;
 import rf.pegaso.gui.vendita.panel.JButtonEvent;
 import rf.pegaso.gui.vendita.panel.JButtonEventListener;
@@ -30,6 +32,7 @@ import rf.utility.gui.text.UpperTextDocument;
 
 import java.awt.Font;
 import java.text.ParseException;
+import java.util.LinkedList;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -124,7 +127,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 	
 	private void initializeCarrello(){
 		pannelloCarrello = new JPanelRiepilogoVendita();
-		pnlArticoli = new JPanelArticoli();
+		pnlArticoli = new JPanelArticoli(new Integer((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()) - 620);
 //		Articolo a = new Articolo();
 //		LinkedList<Articolo> art = new LinkedList<Articolo>();
 //		try {
@@ -141,8 +144,8 @@ public class VenditaInternalFrame extends JInternalFrame{
 //			e.printStackTrace();
 //		}		
 //		pnlArticoli.caricaArticoli(art);
-		pannelloCarrello.setPreferredSize(new Dimension(500, 400));
-		pannelloCarrello.setBounds(new Rectangle(0, 0, 500, 400));
+		pannelloCarrello.setPreferredSize(new Dimension(600, 400));
+		pannelloCarrello.setBounds(new Rectangle(0, 0, 600, 400));
 		pannelloCarrello.setVisible(true);
 	}	
 	
@@ -722,7 +725,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 		if (btnRicercaAvanzata == null) {
 			btnRicercaAvanzata = new JButton();
 			btnRicercaAvanzata.setBounds(new Rectangle(240, 25, 130, 50));
-			btnRicercaAvanzata.setText("<html>Ricerca"+"<P>"+"Avanzata</html>");
+			btnRicercaAvanzata.setText("...");
 		}
 		return btnRicercaAvanzata;
 	}
@@ -995,7 +998,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 		if (btnMoltiplica == null) {
 			btnMoltiplica = new JButton();
 			btnMoltiplica.setBounds(new Rectangle(220, 65, 75, 55));
-			btnMoltiplica.setText("X");
+			btnMoltiplica.setText("X1");
 			btnMoltiplica.addActionListener(new MyButtonListener());
 		}
 		return btnMoltiplica;
@@ -1108,7 +1111,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 		if (btnAnnullaVendita == null) {
 			btnAnnullaVendita = new JButton();
 			btnAnnullaVendita.setText("Annulla (F8)");
-			btnAnnullaVendita.setBounds(new Rectangle(355, 410, 90, 35));
+			btnAnnullaVendita.setBounds(new Rectangle(355, 410, 110, 35));
 			btnAnnullaVendita.addActionListener(new MyButtonListener());
 		}
 		return btnAnnullaVendita;
@@ -1153,7 +1156,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 		if (pnlContenitore == null) {
 			pnlContenitore = new JPanel();
 			pnlContenitore.setLayout(new CardLayout());
-			pnlContenitore.setPreferredSize(new Dimension(480, 550));
+			pnlContenitore.setPreferredSize(new Dimension(new Integer((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()) - 620, 550));
 			pnlContenitore.add(getJTabbedPane(), getJTabbedPane().getName());
 			pnlContenitore.add(getPnlFunzioniCassa(), getPnlFunzioniCassa().getName());
 		}
@@ -1259,7 +1262,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 		if (jTabbedPane == null) {
 			jTabbedPane = new JTabbedPane();
 			jTabbedPane.setName("pnlArticoli");
-			jTabbedPane.setPreferredSize(new Dimension(400, 600));
+			jTabbedPane.setPreferredSize(new Dimension(new Integer((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()) - 620, 600));
 			pnlArticoli.addJButtonEventListener(new JButtonEventListener() {
 	            public void keyPerformed(JButtonEvent evt) {
 	                m_jButtonKeysKeyPerformed(evt);
@@ -1279,7 +1282,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 		if (pnlRiepilogo == null) {
 			pnlRiepilogo = new JPanel();
 			pnlRiepilogo.setLayout(null);
-			pnlRiepilogo.setPreferredSize(new Dimension(500, 550));
+			pnlRiepilogo.setPreferredSize(new Dimension(600, 550));
 			pnlRiepilogo.add(pannelloCarrello, null);
 			pnlRiepilogo.add(getBtnStorno(), null);
 			pnlRiepilogo.add(getBtnAnnullaVendita(), null);

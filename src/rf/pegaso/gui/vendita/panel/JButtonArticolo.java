@@ -1,6 +1,7 @@
 package rf.pegaso.gui.vendita.panel;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.util.List;
 
 import javax.swing.AbstractButton;
@@ -29,9 +30,10 @@ public class JButtonArticolo extends javax.swing.JButton {
 			imgArticolo = new ImmagineArticolo(articolo);
 			imgArticolo.caricaDati();						
 			this.setText(imgArticolo.getNome());
-			this.setIcon(new ImageIcon(imgArticolo.getFile()));
+//			this.setIcon(new ImageIcon(imgArticolo.getFile()));
 			this.setVerticalTextPosition(AbstractButton.BOTTOM);
 			this.setHorizontalTextPosition(AbstractButton.CENTER);
+			this.setFont(new Font("Dialog", Font.BOLD, 24));
             setFocusPainted(false);
             setFocusable(false);
             setRequestFocusEnabled(false);

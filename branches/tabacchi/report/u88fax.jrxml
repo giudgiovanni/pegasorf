@@ -39,7 +39,7 @@
 	<parameter name="SUBREPORT_DIR" isForPrompting="true" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["C:\\devel\\progetti\\Pegaso\\workspace\\Pegaso Tabacchi\\report\\"]]></defaultValueExpression>
 	</parameter>
-	<queryString><![CDATA[select * from u88fax]]></queryString>
+	<queryString><![CDATA[select * from u88fax order by id;]]></queryString>
 
 	<field name="id" class="java.lang.Long"/>
 	<field name="kilogrammi" class="java.lang.Integer"/>
@@ -898,42 +898,133 @@ GC]]></text>
 				</rectangle>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="51"
-						y="2"
-						width="58"
+						x="101"
+						y="3"
+						width="9"
 						height="17"
 						key="textField-15"/>
 					<box></box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
+					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{codice_aams}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[($F{codice_aams}.charAt(3)==' ')?"":String.valueOf($F{codice_aams}.charAt(3))]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="131"
-						y="2"
-						width="45"
+						x="166"
+						y="3"
+						width="12"
 						height="17"
 						key="textField-16"/>
 					<box></box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
+					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Integer"><![CDATA[$F{kilogrammi}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[String.valueOf($F{kilogrammi}.toString().charAt(2))]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="199"
-						y="2"
-						width="42"
+						x="232"
+						y="3"
+						width="11"
 						height="17"
 						key="textField-17"/>
 					<box></box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
+					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Integer"><![CDATA[$F{grammi}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[String.valueOf($F{grammi}.toString().charAt(2))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="84"
+						y="3"
+						width="9"
+						height="17"
+						key="textField-18"/>
+					<box></box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[($F{codice_aams}.charAt(2)==' ')?"":String.valueOf($F{codice_aams}.charAt(2))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="67"
+						y="3"
+						width="9"
+						height="17"
+						key="textField-19"/>
+					<box></box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[($F{codice_aams}.charAt(1)==' ')?"":String.valueOf($F{codice_aams}.charAt(1))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="51"
+						y="3"
+						width="9"
+						height="17"
+						key="textField-20"/>
+					<box></box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[($F{codice_aams}.charAt(0)==' ')?"":String.valueOf($F{codice_aams}.charAt(0))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="148"
+						y="3"
+						width="12"
+						height="17"
+						key="textField-21"/>
+					<box></box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[String.valueOf($F{kilogrammi}.toString().charAt(1))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="130"
+						y="3"
+						width="12"
+						height="17"
+						key="textField-22"/>
+					<box></box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[String.valueOf($F{kilogrammi}.toString().charAt(0))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="197"
+						y="3"
+						width="12"
+						height="17"
+						key="textField-23"/>
+					<box></box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[String.valueOf($F{grammi}.toString().charAt(0))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="214"
+						y="3"
+						width="11"
+						height="17"
+						key="textField-24"/>
+					<box></box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[String.valueOf($F{grammi}.toString().charAt(1))]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
@@ -1198,7 +1289,7 @@ GC]]></text>
 					<textElement>
 						<font/>
 					</textElement>
-				<text><![CDATA[www.logisticaitalia.it]]></text>
+				<text><![CDATA[www.logistaitalia.it]]></text>
 				</staticText>
 			</band>
 		</pageFooter>

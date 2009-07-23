@@ -42,8 +42,8 @@
 	<queryString><![CDATA[select * from u88fax order by id;]]></queryString>
 
 	<field name="id" class="java.lang.Long"/>
-	<field name="kilogrammi" class="java.lang.Integer"/>
-	<field name="grammi" class="java.lang.Integer"/>
+	<field name="kilogrammi" class="java.lang.String"/>
+	<field name="grammi" class="java.lang.String"/>
 	<field name="codice_aams" class="java.lang.String"/>
 
 		<background>

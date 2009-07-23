@@ -1,5 +1,6 @@
 package rf.pegaso.gui.gestione;
 
+import it.infolabs.hibernate.ArticoliHome;
 import it.infolabs.hibernate.U88fax;
 import it.infolabs.hibernate.U88faxHome;
 
@@ -1099,7 +1100,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				lblDataCarico.setText("Data Ordine");
 				lblNumeroCarico = new JLabel();
 				lblNumeroCarico.setBounds(new Rectangle(9, 20, 57, 25));
-				lblNumeroCarico.setText("Nï¿½ Ordine");
+				lblNumeroCarico.setText("N° Ordine");
 				pnlNord = new JPanel();
 				pnlNord.setLayout(null);
 				pnlNord.setPreferredSize(new Dimension(1, 260));
@@ -2432,8 +2433,9 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 					tmp.append(codAams);
 				}
 				row.setCodiceAams(tmp.toString());
-				row.setGrammi(123);
-				row.setKilogrammi(999);
+				double kg=ArticoliHome.getInstance().getQtaRiordino(rs.getInt("idarticolo"));
+				row.setGrammi((int)(kg-(int)kg));
+				row.setKilogrammi((int)kg);
 				U88faxHome.getInstance().attachDirty(row);
 			}
 

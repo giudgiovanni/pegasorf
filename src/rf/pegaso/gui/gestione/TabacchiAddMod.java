@@ -3,6 +3,9 @@
  */
 package rf.pegaso.gui.gestione;
 
+import it.infolabs.hibernate.Articoli;
+import it.infolabs.hibernate.ArticoliHome;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -938,11 +941,12 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 					"ERRORE", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
-
-		
+		ArticoliHome.getInstance().begin();
+		Articoli articolo=ArticoliHome.getInstance().findById(c.getIdArticolo());
 		this.txtCodBarre.setText(c.getCodBarre());
 		this.txtCodFornitore.setText(c.getCodFornitore());
-		
+		txtNumeroPacchetti.setValue(articolo.getNumeroPacchetti());
+		txtPesoStecca.setValue(articolo.getPeso());
 		this.txtDescrizione.setText(c.getDescrizione());
 		this.txtIva.setText(new Integer(c.getIva()).toString());
 		this.txtNote.setText(c.getNote());
@@ -1066,6 +1070,12 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			try {
 				a.insertArticolo();
 				idArticolo=a.getIdArticolo();
+				ArticoliHome.getInstance().begin();
+				Articoli articolo=ArticoliHome.getInstance().findById(idArticolo);
+				articolo.setPeso(((Number)txtPesoStecca.getValue()).doubleValue());
+				articolo.setNumeroPacchetti(((Number)txtNumeroPacchetti.getValue()).intValue());
+				ArticoliHome.getInstance().attachDirty(articolo);
+				ArticoliHome.getInstance().commitAndClose();
 			} catch (IDNonValido e) {
 				JOptionPane.showMessageDialog(this, "Valore idCliente errato",
 						"ERRORE", JOptionPane.ERROR_MESSAGE);
@@ -1077,6 +1087,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 					e1.printStackTrace();
 				}
 			}
+			
 			svuotaCampi();
 		}
 
@@ -1160,9 +1171,16 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			return;
 		Articolo a = new Articolo();
 		a.setIdArticolo(idArticolo);
+		
 		recuperaDatiCampi(a);
 		try {
 			a.updateArticolo();
+			ArticoliHome.getInstance().begin();
+			Articoli articolo=ArticoliHome.getInstance().findById(a.getIdArticolo());
+			articolo.setPeso(((Number)txtPesoStecca.getValue()).doubleValue());
+			articolo.setNumeroPacchetti(((Number)txtNumeroPacchetti.getValue()).intValue());
+			ArticoliHome.getInstance().attachDirty(articolo);
+			ArticoliHome.getInstance().commitAndClose();
 		} catch (IDNonValido e) {
 			JOptionPane.showMessageDialog(this, "Valore idFornitore errato",
 					"ERRORE", JOptionPane.ERROR_MESSAGE);
@@ -1179,6 +1197,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	 */
 	private boolean recuperaDatiCampi(Articolo a) {
 
+		
 		a.setCodBarre(txtCodBarre.getText());
 		a.setCodFornitore(txtCodFornitore.getText());
 		// Controllo se � stato selezionato l'unit� di misura
@@ -1368,6 +1387,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			formatPrice.setMaximumFractionDigits(0);
 			formatPrice.setMinimumFractionDigits(0);
 			txtNumeroPacchetti = new JFormattedTextField(formatPrice);
+			txtNumeroPacchetti.setValue(0);
 			txtNumeroPacchetti.setBounds(new Rectangle(137, 192, 111, 20));
 			
 		}
@@ -1384,8 +1404,8 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			DecimalFormat formatPrice = new DecimalFormat();
 			formatPrice.setMaximumFractionDigits(2);
 			formatPrice.setMinimumFractionDigits(2);
-			
 			txtPesoStecca = new JFormattedTextField(formatPrice);
+			txtPesoStecca.setValue(0.0);
 			txtPesoStecca.setBounds(new Rectangle(268, 192, 117, 20));
 		}
 		return txtPesoStecca;

@@ -191,12 +191,31 @@ public class JPanelRiepilogoVendita extends JPanel {
 	private int idSelectedItem=-1;
 	private double totaleCarrello = 0.0;
 	private Scarico scarico = null;
+	private String nome;
 
 	/**
 	 * This is the default constructor
 	 */
 	public JPanelRiepilogoVendita() {
 		super();
+		initialize();
+	}
+	
+	/**
+	 * This is the default constructor
+	 */
+	public JPanelRiepilogoVendita(int num) {
+		super();
+		nome = "Cassa ".concat(String.valueOf(num));
+		initialize();
+	}
+	
+	/**
+	 * This is the default constructor
+	 */
+	public JPanelRiepilogoVendita(String name) {
+		super();
+		this.nome = name;
 		initialize();
 	}
 
@@ -206,9 +225,12 @@ public class JPanelRiepilogoVendita extends JPanel {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(400, 400);
+		this.setSize(600, 450);
 		this.setLayout(new BorderLayout());
-		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+//		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+		this.setBorder(javax.swing.BorderFactory.createTitledBorder(null, nome,
+				javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
+				javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, null, null));
 		this.add(getJScrollPane(), BorderLayout.CENTER);
 		scarico = new Scarico();
 		this.carrello = new MyArrayList();
@@ -589,5 +611,11 @@ public class JPanelRiepilogoVendita extends JPanel {
 		this.totaleCarrello = totaleCarrello;
 	}
 
+	public String getNome() {
+		return nome;
+	}
 
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 }

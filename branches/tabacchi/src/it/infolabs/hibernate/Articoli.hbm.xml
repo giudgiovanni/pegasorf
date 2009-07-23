@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 21-lug-2009 1.40.00 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 23-lug-2009 0.39.40 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="it.infolabs.hibernate.Articoli" table="articoli" schema="public">
-        <id name="idarticolo" type="long">
+        <id name="idarticolo" type="long" unsaved-value="0">
             <column name="idarticolo" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <many-to-one name="fornitori" class="it.infolabs.hibernate.Fornitori" fetch="select">
             <column name="idfornitore" />
@@ -41,8 +41,8 @@
         <property name="imballo" type="string">
             <column name="imballo" length="50" />
         </property>
-        <property name="peso" type="java.lang.Long">
-            <column name="peso" />
+        <property name="peso" type="java.lang.Double">
+            <column name="peso" precision="17" scale="17" />
         </property>
         <property name="sconto" type="java.lang.Long">
             <column name="sconto" />
@@ -65,6 +65,15 @@
         <property name="scortaMassima" type="java.lang.Long">
             <column name="scorta_massima" />
         </property>
+        <property name="numeroPacchetti" type="java.lang.Integer">
+            <column name="numero_pacchetti" />
+        </property>
+        <set name="immagineArticolos" inverse="true" lazy="true" table="immagine_articolo" fetch="select">
+            <key>
+                <column name="articolo" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.ImmagineArticolo" />
+        </set>
         <set name="dettaglioCarichis" inverse="true" lazy="true" table="dettaglio_carichi" fetch="select">
             <key>
                 <column name="idarticolo" not-null="true" />
@@ -76,6 +85,12 @@
                 <column name="idarticolo" not-null="true" />
             </key>
             <one-to-many class="it.infolabs.hibernate.DettaglioCarichi" />
+        </set>
+        <set name="immagineArticolos_1" inverse="true" lazy="true" table="immagine_articolo" fetch="select">
+            <key>
+                <column name="articolo" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.ImmagineArticolo" />
         </set>
         <set name="dettaglioOrdinis" inverse="true" lazy="true" table="dettaglio_ordini" fetch="select">
             <key>
@@ -94,6 +109,12 @@
                 <column name="idarticolo" not-null="true" />
             </key>
             <one-to-many class="it.infolabs.hibernate.DettaglioCarichi" />
+        </set>
+        <set name="immagineArticolos_2" inverse="true" lazy="true" table="immagine_articolo" fetch="select">
+            <key>
+                <column name="articolo" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.ImmagineArticolo" />
         </set>
         <set name="dettaglioOrdinis_2" inverse="true" lazy="true" table="dettaglio_ordini" fetch="select">
             <key>

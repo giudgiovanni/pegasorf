@@ -1,13 +1,20 @@
 package it.infolabs.hibernate;
 
-// Generated 21-lug-2009 1.40.00 by Hibernate Tools 3.2.4.GA
+import org.apache.log4j.Logger;
 
+// Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import javax.naming.InitialContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.LockMode;
 import org.hibernate.SessionFactory;
+
+import rf.pegaso.db.tabelle.Articolo;
 import static org.hibernate.criterion.Example.create;
 
 /**
@@ -15,21 +22,22 @@ import static org.hibernate.criterion.Example.create;
  * @see it.infolabs.hibernate.Articoli
  * @author Hibernate Tools
  */
-public class ArticoliHome {
+public class ArticoliHome extends BusinessObjectHome{
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger.getLogger(ArticoliHome.class);
 
 	private static final Log log = LogFactory.getLog(ArticoliHome.class);
 
-	private final SessionFactory sessionFactory = getSessionFactory();
+	private static final ArticoliHome instance=new ArticoliHome();
 
-	protected SessionFactory getSessionFactory() {
-		try {
-			return (SessionFactory) new InitialContext()
-					.lookup("SessionFactory");
-		} catch (Exception e) {
-			log.error("Could not locate SessionFactory in JNDI", e);
-			throw new IllegalStateException(
-					"Could not locate SessionFactory in JNDI");
-		}
+	private ArticoliHome() {
+		super();
+	}
+
+	public static ArticoliHome getInstance() {
+		return instance;
 	}
 
 	public void persist(Articoli transientInstance) {
@@ -121,4 +129,53 @@ public class ArticoliHome {
 			throw re;
 		}
 	}
+	
+	
+	public Double getGiacenza(long articolo){
+		if (logger.isDebugEnabled()) {
+			logger.debug("getGiacenza(long) - start");
+		}
+
+		Articolo a=new Articolo();
+		double giacenza=0.0;
+		try {
+			a.caricaDati(new Long(articolo).intValue());
+			giacenza= a.getGiacenza2();
+		} catch (SQLException e) {
+			logger.error("getGiacenza(long)", e);
+		}
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("getGiacenza(long) - end");
+		}
+		return giacenza;
+	}
+	
+	
+	public Double getQtaRiordino(long articolo){
+		Articoli a=ArticoliHome.getInstance().findById(articolo);
+		int qtaOrdinare=(int)(getGiacenza(articolo)- a.getScortaMinima());
+		int diff=0;
+		if(a.getNumeroPacchetti()!=0){
+			diff=qtaOrdinare%a.getNumeroPacchetti();
+		}
+		
+		if(a.getNumeroPacchetti()<=10){
+			if(diff>=5){
+				qtaOrdinare+=(a.getNumeroPacchetti()-diff);
+			}
+		}else if(a.getNumeroPacchetti()>10){
+			if(diff>=10){
+				qtaOrdinare+=(a.getNumeroPacchetti()-diff);
+			}
+		}
+		
+		double riordino=0.0;
+		if(a.getNumeroPacchetti()!=0){
+			riordino=(qtaOrdinare/a.getNumeroPacchetti())*a.getPeso();
+		}
+		
+		return riordino;
+	}
+	
 }

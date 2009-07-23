@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="it.infolabs.hibernate.ArticoliCaricatiView" table="articoli_caricati_view" schema="public">
+        <composite-id name="id" class="it.infolabs.hibernate.ArticoliCaricatiViewId">
+            <key-property name="idarticolo" type="java.lang.Long">
+                <column name="idarticolo" />
+            </key-property>
+            <key-property name="idcarico" type="java.lang.Long">
+                <column name="idcarico" />
+            </key-property>
+            <key-property name="codbarre" type="string">
+                <column name="codbarre" length="40" />
+            </key-property>
+            <key-property name="descrizione" type="string">
+                <column name="descrizione" length="100" />
+            </key-property>
+            <key-property name="iva" type="java.lang.Long">
+                <column name="iva" />
+            </key-property>
+            <key-property name="um" type="string">
+                <column name="um" length="40" />
+            </key-property>
+            <key-property name="qta" type="java.lang.Double">
+                <column name="qta" precision="17" scale="17" />
+            </key-property>
+            <key-property name="prezzoAcquisto" type="java.lang.Double">
+                <column name="prezzo_acquisto" precision="17" scale="17" />
+            </key-property>
+            <key-property name="sconto" type="java.lang.Integer">
+                <column name="sconto" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

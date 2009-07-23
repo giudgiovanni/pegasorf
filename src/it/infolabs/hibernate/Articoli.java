@@ -1,6 +1,6 @@
 package it.infolabs.hibernate;
 
-// Generated 21-lug-2009 1.39.59 by Hibernate Tools 3.2.4.GA
+// Generated 23-lug-2009 0.39.40 by Hibernate Tools 3.2.4.GA
 
 import java.util.Date;
 import java.util.HashSet;
@@ -23,7 +23,7 @@ public class Articoli implements java.io.Serializable {
 	private Double prezzoDettaglio;
 	private Double prezzoIngrosso;
 	private String imballo;
-	private Long peso;
+	private Double peso;
 	private Long sconto;
 	private String colore;
 	private Long scortaMinima;
@@ -31,15 +31,22 @@ public class Articoli implements java.io.Serializable {
 	private Date dataInserimento;
 	private Long caricoIniziale;
 	private Long scortaMassima;
+	private Integer numeroPacchetti;
+	private Set<ImmagineArticolo> immagineArticolos = new HashSet<ImmagineArticolo>(
+			0);
 	private Set<DettaglioCarichi> dettaglioCarichis = new HashSet<DettaglioCarichi>(
 			0);
 	private Set<DettaglioCarichi> dettaglioCarichis_1 = new HashSet<DettaglioCarichi>(
+			0);
+	private Set<ImmagineArticolo> immagineArticolos_1 = new HashSet<ImmagineArticolo>(
 			0);
 	private Set<DettaglioOrdini> dettaglioOrdinis = new HashSet<DettaglioOrdini>(
 			0);
 	private Set<DettaglioOrdini> dettaglioOrdinis_1 = new HashSet<DettaglioOrdini>(
 			0);
 	private Set<DettaglioCarichi> dettaglioCarichis_2 = new HashSet<DettaglioCarichi>(
+			0);
+	private Set<ImmagineArticolo> immagineArticolos_2 = new HashSet<ImmagineArticolo>(
 			0);
 	private Set<DettaglioOrdini> dettaglioOrdinis_2 = new HashSet<DettaglioOrdini>(
 			0);
@@ -55,14 +62,17 @@ public class Articoli implements java.io.Serializable {
 	public Articoli(long idarticolo, Fornitori fornitori, Reparti reparti,
 			Um um, String codfornitore, String codbarre, String descrizione,
 			Double prezzoAcquisto, Long iva, Double prezzoDettaglio,
-			Double prezzoIngrosso, String imballo, Long peso, Long sconto,
+			Double prezzoIngrosso, String imballo, Double peso, Long sconto,
 			String colore, Long scortaMinima, String note,
 			Date dataInserimento, Long caricoIniziale, Long scortaMassima,
+			Integer numeroPacchetti, Set<ImmagineArticolo> immagineArticolos,
 			Set<DettaglioCarichi> dettaglioCarichis,
 			Set<DettaglioCarichi> dettaglioCarichis_1,
+			Set<ImmagineArticolo> immagineArticolos_1,
 			Set<DettaglioOrdini> dettaglioOrdinis,
 			Set<DettaglioOrdini> dettaglioOrdinis_1,
 			Set<DettaglioCarichi> dettaglioCarichis_2,
+			Set<ImmagineArticolo> immagineArticolos_2,
 			Set<DettaglioOrdini> dettaglioOrdinis_2) {
 		this.idarticolo = idarticolo;
 		this.fornitori = fornitori;
@@ -84,11 +94,15 @@ public class Articoli implements java.io.Serializable {
 		this.dataInserimento = dataInserimento;
 		this.caricoIniziale = caricoIniziale;
 		this.scortaMassima = scortaMassima;
+		this.numeroPacchetti = numeroPacchetti;
+		this.immagineArticolos = immagineArticolos;
 		this.dettaglioCarichis = dettaglioCarichis;
 		this.dettaglioCarichis_1 = dettaglioCarichis_1;
+		this.immagineArticolos_1 = immagineArticolos_1;
 		this.dettaglioOrdinis = dettaglioOrdinis;
 		this.dettaglioOrdinis_1 = dettaglioOrdinis_1;
 		this.dettaglioCarichis_2 = dettaglioCarichis_2;
+		this.immagineArticolos_2 = immagineArticolos_2;
 		this.dettaglioOrdinis_2 = dettaglioOrdinis_2;
 	}
 
@@ -188,11 +202,11 @@ public class Articoli implements java.io.Serializable {
 		this.imballo = imballo;
 	}
 
-	public Long getPeso() {
+	public Double getPeso() {
 		return this.peso;
 	}
 
-	public void setPeso(Long peso) {
+	public void setPeso(Double peso) {
 		this.peso = peso;
 	}
 
@@ -252,6 +266,22 @@ public class Articoli implements java.io.Serializable {
 		this.scortaMassima = scortaMassima;
 	}
 
+	public Integer getNumeroPacchetti() {
+		return this.numeroPacchetti;
+	}
+
+	public void setNumeroPacchetti(Integer numeroPacchetti) {
+		this.numeroPacchetti = numeroPacchetti;
+	}
+
+	public Set<ImmagineArticolo> getImmagineArticolos() {
+		return this.immagineArticolos;
+	}
+
+	public void setImmagineArticolos(Set<ImmagineArticolo> immagineArticolos) {
+		this.immagineArticolos = immagineArticolos;
+	}
+
 	public Set<DettaglioCarichi> getDettaglioCarichis() {
 		return this.dettaglioCarichis;
 	}
@@ -266,6 +296,14 @@ public class Articoli implements java.io.Serializable {
 
 	public void setDettaglioCarichis_1(Set<DettaglioCarichi> dettaglioCarichis_1) {
 		this.dettaglioCarichis_1 = dettaglioCarichis_1;
+	}
+
+	public Set<ImmagineArticolo> getImmagineArticolos_1() {
+		return this.immagineArticolos_1;
+	}
+
+	public void setImmagineArticolos_1(Set<ImmagineArticolo> immagineArticolos_1) {
+		this.immagineArticolos_1 = immagineArticolos_1;
 	}
 
 	public Set<DettaglioOrdini> getDettaglioOrdinis() {
@@ -290,6 +328,14 @@ public class Articoli implements java.io.Serializable {
 
 	public void setDettaglioCarichis_2(Set<DettaglioCarichi> dettaglioCarichis_2) {
 		this.dettaglioCarichis_2 = dettaglioCarichis_2;
+	}
+
+	public Set<ImmagineArticolo> getImmagineArticolos_2() {
+		return this.immagineArticolos_2;
+	}
+
+	public void setImmagineArticolos_2(Set<ImmagineArticolo> immagineArticolos_2) {
+		this.immagineArticolos_2 = immagineArticolos_2;
 	}
 
 	public Set<DettaglioOrdini> getDettaglioOrdinis_2() {

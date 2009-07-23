@@ -1,6 +1,6 @@
 package it.infolabs.hibernate;
 
-// Generated 21-lug-2009 1.39.59 by Hibernate Tools 3.2.4.GA
+// Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA
 
 import java.util.Date;
 import java.util.HashSet;
@@ -12,10 +12,10 @@ import java.util.Set;
 public class Reparti implements java.io.Serializable {
 
 	private long idreparto;
+	private Categoria categoria;
 	private Date dataCreazione;
 	private String nome;
 	private String descrizione;
-	private Long categoria;
 	private Set<Articoli> articolis = new HashSet<Articoli>(0);
 	private Set<Articoli> articolis_1 = new HashSet<Articoli>(0);
 	private Set<Articoli> articolis_2 = new HashSet<Articoli>(0);
@@ -27,14 +27,14 @@ public class Reparti implements java.io.Serializable {
 		this.idreparto = idreparto;
 	}
 
-	public Reparti(long idreparto, Date dataCreazione, String nome,
-			String descrizione, Long categoria, Set<Articoli> articolis,
+	public Reparti(long idreparto, Categoria categoria, Date dataCreazione,
+			String nome, String descrizione, Set<Articoli> articolis,
 			Set<Articoli> articolis_1, Set<Articoli> articolis_2) {
 		this.idreparto = idreparto;
+		this.categoria = categoria;
 		this.dataCreazione = dataCreazione;
 		this.nome = nome;
 		this.descrizione = descrizione;
-		this.categoria = categoria;
 		this.articolis = articolis;
 		this.articolis_1 = articolis_1;
 		this.articolis_2 = articolis_2;
@@ -46,6 +46,14 @@ public class Reparti implements java.io.Serializable {
 
 	public void setIdreparto(long idreparto) {
 		this.idreparto = idreparto;
+	}
+
+	public Categoria getCategoria() {
+		return this.categoria;
+	}
+
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
 	}
 
 	public Date getDataCreazione() {
@@ -70,14 +78,6 @@ public class Reparti implements java.io.Serializable {
 
 	public void setDescrizione(String descrizione) {
 		this.descrizione = descrizione;
-	}
-
-	public Long getCategoria() {
-		return this.categoria;
-	}
-
-	public void setCategoria(Long categoria) {
-		this.categoria = categoria;
 	}
 
 	public Set<Articoli> getArticolis() {

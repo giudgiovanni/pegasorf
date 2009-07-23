@@ -1,6 +1,6 @@
 package it.infolabs.hibernate;
 
-// Generated 21-lug-2009 1.40.00 by Hibernate Tools 3.2.4.GA
+// Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA
 
 import java.util.List;
 import javax.naming.InitialContext;

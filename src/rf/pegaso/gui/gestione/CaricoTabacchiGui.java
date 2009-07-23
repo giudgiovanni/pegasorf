@@ -2433,9 +2433,22 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 					tmp.append(codAams);
 				}
 				row.setCodiceAams(tmp.toString());
-				double kg=ArticoliHome.getInstance().getQtaRiordino(rs.getInt("idarticolo"));
-				row.setGrammi((int)(kg-(int)kg));
-				row.setKilogrammi((int)kg);
+				String kg=ArticoliHome.getInstance().getQtaRiordino(rs.getInt("idarticolo"));
+				String grammi=kg.substring(kg.indexOf('.')+1);
+				StringBuffer sb=new StringBuffer();
+				if(grammi.length()==1){
+					sb.append(grammi).append("00");
+				}else if(grammi.length()==2){
+					sb.append(grammi).append("0");
+				}
+				row.setGrammi(sb.toString());
+				String kgs=kg.substring(0,kg.indexOf('.'));
+				if(kgs.length()==1){
+					sb.append("00").append(kgs);
+				}else if(kgs.length()==2){
+					sb.append("0").append(kgs);
+				}
+				row.setKilogrammi(sb.toString());
 				U88faxHome.getInstance().attachDirty(row);
 			}
 

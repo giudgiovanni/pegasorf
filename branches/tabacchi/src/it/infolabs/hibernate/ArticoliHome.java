@@ -152,7 +152,7 @@ public class ArticoliHome extends BusinessObjectHome{
 	}
 	
 	
-	public Double getQtaRiordino(long articolo){
+	public String getQtaRiordino(long articolo){
 		Articoli a=ArticoliHome.getInstance().findById(articolo);
 		int qtaOrdinare=(int)(getGiacenza(articolo)- a.getScortaMinima());
 		int diff=0;
@@ -170,12 +170,12 @@ public class ArticoliHome extends BusinessObjectHome{
 			}
 		}
 		
-		double riordino=0.0;
+		Double riordino=0.0;
 		if(a.getNumeroPacchetti()!=0){
 			riordino=(qtaOrdinare/a.getNumeroPacchetti())*a.getPeso();
 		}
 		
-		return riordino;
+		return riordino.toString();
 	}
 	
 }

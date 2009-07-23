@@ -1402,8 +1402,8 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	private JFormattedTextField getTxtPesoStecca() {
 		if (txtPesoStecca == null) {
 			DecimalFormat formatPrice = new DecimalFormat();
-			formatPrice.setMaximumFractionDigits(2);
-			formatPrice.setMinimumFractionDigits(2);
+			formatPrice.setMaximumFractionDigits(3);
+			formatPrice.setMinimumFractionDigits(3);
 			txtPesoStecca = new JFormattedTextField(formatPrice);
 			txtPesoStecca.setValue(0.0);
 			txtPesoStecca.setBounds(new Rectangle(268, 192, 117, 20));

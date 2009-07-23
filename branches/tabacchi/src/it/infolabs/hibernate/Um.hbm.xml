@@ -1,31 +1,36 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 21-lug-2009 1.40.00 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 23-lug-2009 17.43.50 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
-    <class name="it.infolabs.hibernate.Utenti" table="utenti" schema="public">
-        <composite-id name="id" class="it.infolabs.hibernate.UtentiId">
-            <key-property name="idutente" type="long">
-                <column name="idutente" />
-            </key-property>
-            <key-property name="nome" type="string">
-                <column name="nome" length="20" />
-            </key-property>
-            <key-property name="pwd" type="string">
-                <column name="pwd" length="20" />
-            </key-property>
-            <key-property name="lettura" type="java.lang.Integer">
-                <column name="lettura" />
-            </key-property>
-            <key-property name="scrittura" type="java.lang.Integer">
-                <column name="scrittura" />
-            </key-property>
-            <key-property name="esecuzione" type="java.lang.Integer">
-                <column name="esecuzione" />
-            </key-property>
-            <key-property name="note" type="string">
-                <column name="note" />
-            </key-property>
-        </composite-id>
+    <class name="it.infolabs.hibernate.Um" table="um" schema="public">
+        <id name="idum" type="long" unsaved-value="0">
+            <column name="idum" />
+            <generator class="increment" />
+        </id>
+        <property name="nome" type="string">
+            <column name="nome" length="40" not-null="true" />
+        </property>
+        <property name="descrizione" type="string">
+            <column name="descrizione" length="100" />
+        </property>
+        <set name="articolis" inverse="true" lazy="true" table="articoli" fetch="select">
+            <key>
+                <column name="um" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.Articoli" />
+        </set>
+        <set name="articolis_1" inverse="true" lazy="true" table="articoli" fetch="select">
+            <key>
+                <column name="um" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.Articoli" />
+        </set>
+        <set name="articolis_2" inverse="true" lazy="true" table="articoli" fetch="select">
+            <key>
+                <column name="um" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.Articoli" />
+        </set>
     </class>
 </hibernate-mapping>

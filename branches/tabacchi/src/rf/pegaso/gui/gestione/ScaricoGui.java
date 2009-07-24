@@ -1910,7 +1910,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 	private JXTable getTblArticoliScaricati() {
 		if (tblArticoliScaricati == null) {
 			try {
-				articoliScaricatiView = new ArticoliScaricatiViewModel(dbm);
+				articoliScaricatiView = new ArticoliScaricatiViewModel();
 				tblArticoliScaricati = new JXTable();
 				tblArticoliScaricati
 						.setAutoResizeMode(JXTable.AUTO_RESIZE_ALL_COLUMNS); // Generated

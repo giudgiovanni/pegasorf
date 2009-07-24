@@ -437,11 +437,10 @@ public class Carico {
 			pst.setString(5, note);
 			pst.setInt(6, idDocumento);
 			pst.setString(7, numDocumento);
-			pst.setDate(8, this.dataDocumento);
+			pst.setDate(8,this.dataDocumento);
 			pst.setDouble(9, totDocumento);
 			pst.setInt(10, this.sospeso);
 			pst.setInt(11, this.rifDoc);
-
 			pst.setInt(12, this.sconto);
 			pst.setInt(13, this.iva_doc);
 			pst.setInt(14, this.primaNota);
@@ -557,8 +556,8 @@ public class Carico {
 		PreparedStatement pst = null;
 		String update = "UPDATE carichi SET idcarico=?,"
 				+ "idfornitore=?,data_carico=?,ora_carico=?,note=?,iddocumento=?,num_documento=?,data_documento=?,totale_documento=?,sospeso=?,rif_doc=?,sconto=?,iva_documento=?,ins_pn=? WHERE idcarico=?";
-		// dataCarico = new Date(new java.util.Date().getTime());
-		// oraCarico = new Time(new java.util.Date().getTime());
+		 dataCarico = new Date(new java.util.Date().getTime());
+		 oraCarico = new Time(new java.util.Date().getTime());
 		pst = dbm.getNewPreparedStatement(update);
 		try {
 			pst.setInt(1, this.idCarico);
@@ -572,7 +571,6 @@ public class Carico {
 			pst.setDouble(9, this.totDocumento);
 			pst.setInt(10, sospeso);
 			pst.setInt(11, rifDoc);
-
 			pst.setInt(12, this.sconto);
 			pst.setInt(13, this.iva_doc);
 			pst.setInt(14, primaNota);

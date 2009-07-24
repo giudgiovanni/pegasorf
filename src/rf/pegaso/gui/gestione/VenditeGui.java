@@ -3,6 +3,8 @@
  */
 package rf.pegaso.gui.gestione;
 
+import org.apache.log4j.Logger;
+
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -17,9 +19,13 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -70,7 +76,9 @@ import rf.myswing.IDJComboBox;
 import rf.myswing.util.QuantitaEditorSql;
 import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.pegaso.db.exception.ResultSetVuoto;
+import rf.pegaso.db.model.ArticoliScaricatiByDataViewModel;
 import rf.pegaso.db.model.ArticoliScaricatiViewModel;
+import rf.pegaso.db.model.GiacenzeModel;
 import rf.pegaso.db.model.ScarichiViewModel;
 import rf.pegaso.db.model.ScaricoModel;
 import rf.pegaso.db.tabelle.Articolo;
@@ -96,7 +104,36 @@ import com.toedter.calendar.JTextFieldDateEditor;
  *
  */
 public class VenditeGui extends JFrame implements TableModelListener {
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger.getLogger(VenditeGui.class);
 
+	class MyPropertyChangeListener implements PropertyChangeListener {
+		/**
+		 * Logger for this class
+		 */
+		private final Logger logger = Logger
+				.getLogger(MyPropertyChangeListener.class);
+
+		@Override
+		public void propertyChange(PropertyChangeEvent arg0) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("propertyChange(PropertyChangeEvent) - start");
+			}
+
+			 try {
+				ricaricaVendite();
+			} catch (SQLException e) {
+				logger.error("propertyChange(PropertyChangeEvent)", e);
+
+			}
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("propertyChange(PropertyChangeEvent) - end");
+			}
+		}
+	}
 	
 
 	
@@ -126,7 +163,7 @@ public class VenditeGui extends JFrame implements TableModelListener {
 
 	private JXTable tblArticoliScaricati = null;
 
-	private ArticoliScaricatiViewModel articoliScaricatiView; // @jve:decl-index=0:
+	private ArticoliScaricatiByDataViewModel articoliScaricatiView; // @jve:decl-index=0:
 
 	private JPanel jPanel1 = null;
 
@@ -144,6 +181,15 @@ public class VenditeGui extends JFrame implements TableModelListener {
 
 	private JTextField txtTot = null;
 
+	private JPanel pblBottoni = null;
+
+	private JDateChooser dateChooserDal = null;
+
+	private JLabel lblDal = null;
+
+	private JLabel lblAl = null;
+
+	private JDateChooser dateChooserAl = null;
 
 	/**
 	 * @param frame
@@ -180,6 +226,22 @@ public class VenditeGui extends JFrame implements TableModelListener {
 				JOptionPane.INFORMATION_MESSAGE);
 	}
 
+	
+	private void ricaricaVendite() throws SQLException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("ricaricaVendite() - start");
+		}
+
+		if(tblArticoliScaricati!=null){
+			ArticoliScaricatiByDataViewModel modello = (ArticoliScaricatiByDataViewModel)tblArticoliScaricati.getModel();
+			modello.setDate(dateChooserDal.getDate(), dateChooserAl.getDate());
+			modello.fireTableDataChanged();
+		}
+		if (logger.isDebugEnabled()) {
+			logger.debug("ricaricaVendite() - end");
+		}
+	}
+	
 	/**
 	 *
 	 */
@@ -434,6 +496,7 @@ public class VenditeGui extends JFrame implements TableModelListener {
 				pnlArticoliScaricati
 						.add(getJScrollPane3(), BorderLayout.CENTER); // Generated
 				pnlArticoliScaricati.add(getJPanel1(), BorderLayout.SOUTH); // Generated
+				pnlArticoliScaricati.add(getPblBottoni(), BorderLayout.NORTH);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -469,7 +532,7 @@ public class VenditeGui extends JFrame implements TableModelListener {
 	private JXTable getTblArticoliScaricati() {
 		if (tblArticoliScaricati == null) {
 			try {
-				articoliScaricatiView = new ArticoliScaricatiViewModel(dbm);
+				articoliScaricatiView = new ArticoliScaricatiByDataViewModel(new Date(),new Date());
 				tblArticoliScaricati = new JXTable();
 				tblArticoliScaricati
 						.setAutoResizeMode(JXTable.AUTO_RESIZE_ALL_COLUMNS); // Generated
@@ -485,7 +548,7 @@ public class VenditeGui extends JFrame implements TableModelListener {
 				tblArticoliScaricati.packAll();
 				dbm.addDBStateChange(articoliScaricatiView);
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return tblArticoliScaricati;
@@ -641,6 +704,96 @@ public class VenditeGui extends JFrame implements TableModelListener {
 	public void tableChanged(TableModelEvent arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+
+
+
+	/**
+	 * This method initializes pblBottoni	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPblBottoni() {
+		if (pblBottoni == null) {
+			lblAl = new JLabel();
+			lblAl.setText("Al");
+			lblDal = new JLabel();
+			lblDal.setText("Dal");
+			FlowLayout flowLayout = new FlowLayout();
+			flowLayout.setAlignment(FlowLayout.LEFT);
+			pblBottoni = new JPanel();
+			pblBottoni.setLayout(flowLayout);
+			pblBottoni.setPreferredSize(new Dimension(100, 40));
+			pblBottoni.add(lblDal, null);
+			pblBottoni.add(getDateChooser(), null);
+			pblBottoni.add(lblAl, null);
+			pblBottoni.add(getDateChooserAl(), null);
+		}
+		return pblBottoni;
+	}
+
+
+
+
+
+	/**
+	 * This method initializes dateChooser	
+	 * 	
+	 * @return com.toedter.calendar.JDateChooser	
+	 */
+	private JDateChooser getDateChooser() {
+		if (dateChooserDal == null) {
+			dateChooserDal = new JDateChooser("dd/MM/yyyy", "##/##/##", '_');
+			dateChooserDal.setPreferredSize(new Dimension(150, 25));
+			dateChooserDal.setDate(new java.util.Date());
+			dateChooserDal.addPropertyChangeListener(new MyPropertyChangeListener());
+			JTextFieldDateEditor f = (JTextFieldDateEditor) dateChooserDal
+					.getDateEditor();
+			f.addFocusListener(new FocusAdapter() {
+
+				public void focusGained(FocusEvent e) {
+					JTextFieldDateEditor s = (JTextFieldDateEditor) dateChooserDal
+							.getDateEditor();
+					s.setCaretPosition(0);
+				}
+
+			});
+			
+		}
+		return dateChooserDal;
+	}
+
+
+
+
+
+	/**
+	 * This method initializes dateChooserAl	
+	 * 	
+	 * @return com.toedter.calendar.JDateChooser	
+	 */
+	private JDateChooser getDateChooserAl() {
+		if (dateChooserAl == null) {
+			dateChooserAl = new JDateChooser("dd/MM/yyyy", "##/##/##", '_');
+			dateChooserAl.setPreferredSize(new Dimension(150, 25));
+			dateChooserAl.setDate(new Date());
+			dateChooserAl.addPropertyChangeListener(new MyPropertyChangeListener());
+			JTextFieldDateEditor f = (JTextFieldDateEditor) dateChooserAl
+					.getDateEditor();
+			f.addFocusListener(new FocusAdapter() {
+
+				public void focusGained(FocusEvent e) {
+					JTextFieldDateEditor s = (JTextFieldDateEditor) dateChooserAl
+							.getDateEditor();
+					s.setCaretPosition(0);
+				}
+
+			});
+			
+		}
+		return dateChooserAl;
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

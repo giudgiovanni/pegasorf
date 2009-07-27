@@ -170,6 +170,40 @@ public class DettaglioOrdine implements Comparator<DettaglioOrdine>{
 		}
 		return 1;
 	}
+	
+	/**
+	 * Questo metodo carica in memoria i dettagli di un articolo
+	 * identificato tramite il codice a barre
+	 *
+	 * @param codice
+	 * @return int per verifica
+	 */
+	public int loadRepartoByCB(String codice){
+		//verifichiamo che il codice inserito sia valido
+		if (codice.trim().equalsIgnoreCase(""))
+			return -1;
+		//carichiamo l'articolo in memoria
+		Articolo a = new Articolo();
+		try {
+			if ( a.findByCodBarre(codice) ) {
+				idArticolo = a.getIdArticolo();
+				descrizione = a.getDescrizione();
+				UnitaDiMisura udm = new UnitaDiMisura();
+				udm.caricaDati(a.getUm());
+				um = udm.getNome();
+				codiceBarre = a.getCodBarre();
+			}
+			else 
+				return 0;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return -2;
+		} catch (CodiceBarreInesistente e1) {
+			e1.printStackTrace();
+			return -2;
+		}
+		return 1;
+	}
 
 	/**
 	 * Questo metodo carica in memoria i dettagli di un articolo
@@ -271,7 +305,7 @@ public class DettaglioOrdine implements Comparator<DettaglioOrdine>{
 	}
 
 	/**
-	 * Questo metodo aggiorno un dettaglio ordine già presente nel db
+	 * Questo metodo aggiorno un dettaglio ordine gia' presente nel db
 	 *
 	 * @param codice
 	 * @return
@@ -298,6 +332,40 @@ public class DettaglioOrdine implements Comparator<DettaglioOrdine>{
 
 			pst.executeUpdate();
 			//updateArticolo(qtaIniziale);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		} finally {
+			try {
+				if (pst != null)
+					pst.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return -1;
+			}
+		}
+		return 1;
+	}
+	
+	/**
+	 * Questo metodo aggiorno un dettaglio ordine gia' presente nel db
+	 *
+	 * @param codice
+	 * @return
+	 */
+	public int updatePrezzoVenditaPerArticoliReparto(){
+		PreparedStatement pst = null;
+		try{
+			String update = "update dettaglio_ordini " +
+					"set prezzo_vendita=((select prezzo_vendita from dettaglio_ordini where idordine=? and idarticolo=?) + ?) " +
+					"where idordine=? and idarticolo=? ";
+			pst = dbm.getNewPreparedStatement(update);
+			pst.setInt(1, idOrdine);
+			pst.setInt(2, idArticolo);
+			pst.setDouble(3, prezzoVendita);
+			pst.setInt(4, idOrdine);
+			pst.setInt(5, idArticolo);
+			pst.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return -1;

@@ -2416,6 +2416,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			U88faxHome.getInstance().deleteAll();
 			U88faxHome.getInstance().commitAndClose();
 			U88faxHome.getInstance().begin();
+			Double totPesoD = 0.0;
 			while (rs.next()) {
 				U88fax row = new U88fax();
 				String codAams=rs.getString("codfornitore");
@@ -2433,20 +2434,29 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 					tmp.append(codAams);
 				}
 				row.setCodiceAams(tmp.toString());
-				String kg=ArticoliHome.getInstance().getQtaRiordino(rs.getInt("idarticolo"));
+				Double riord=ArticoliHome.getInstance().getQtaRiordino(rs.getInt("idarticolo"), rs.getInt("qta"));
+				totPesoD += riord;
+				String kg = riord.toString();
+				if ( kg.substring(kg.indexOf('.')).length() > 4 )
+					kg = kg.substring(0, kg.indexOf('.')+4);
 				String grammi=kg.substring(kg.indexOf('.')+1);
 				StringBuffer sb=new StringBuffer();
 				if(grammi.length()==1){
 					sb.append(grammi).append("00");
 				}else if(grammi.length()==2){
 					sb.append(grammi).append("0");
+				}else {
+					sb.append(grammi);
 				}
 				row.setGrammi(sb.toString());
 				String kgs=kg.substring(0,kg.indexOf('.'));
+				sb = new StringBuffer();
 				if(kgs.length()==1){
 					sb.append("00").append(kgs);
 				}else if(kgs.length()==2){
 					sb.append("0").append(kgs);
+				}else {
+					sb.append(kgs);
 				}
 				row.setKilogrammi(sb.toString());
 				U88faxHome.getInstance().attachDirty(row);
@@ -2464,6 +2474,40 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				pst.close();
 			if (rs != null)
 				rs.close();
+			
+			String s = totPesoD.toString().substring(0, totPesoD.toString().indexOf('.'));
+			StringBuffer sb = new StringBuffer();
+			if ( s.length() > 6 ){
+				throw new NumberFormatException();
+			}else if ( s.length() == 1 ){
+				sb.append("00000").append(s);
+			}else if ( s.length() == 2 ){
+				sb.append("0000").append(s);
+			}else if ( s.length() == 3 ){
+				sb.append("000").append(s);
+			}else if ( s.length() == 4 ){
+				sb.append("00").append(s);
+			}else if ( s.length() == 5 ){
+				sb.append("0").append(s);
+			}else{
+				sb.append(s);
+			}
+			
+			String s2 = totPesoD.toString().substring(totPesoD.toString().indexOf('.')+1);
+			if ( s2.length() > 3 ){
+				s2 = s2.substring(0, 3);
+			}
+			StringBuffer sb2=new StringBuffer();
+			if(s2.length()==1){
+				sb2.append(s2).append("00");
+			}else if(s2.length()==2){
+				sb2.append(s2).append("0");
+			}else {
+				sb2.append(s2);
+			}
+			par.put("kilogrammi", sb.substring(0, 3));
+			par.put("kilogrammi2", sb.substring(3, 6));
+			par.put("grammi", sb2.toString());
 		} catch (NumberFormatException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

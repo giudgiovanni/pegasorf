@@ -191,6 +191,14 @@ public class VenditeGui extends JFrame implements TableModelListener {
 
 	private JDateChooser dateChooserAl = null;
 
+	private JComboBox cmbBoxReparto = null;
+
+	private JLabel lblReparto = null;
+
+	private JLabel lblAgio = null;
+
+	private JTextField txtFldAgio = null;
+
 	/**
 	 * @param frame
 	 * @param dbm
@@ -234,8 +242,16 @@ public class VenditeGui extends JFrame implements TableModelListener {
 
 		if(tblArticoliScaricati!=null){
 			ArticoliScaricatiByDataViewModel modello = (ArticoliScaricatiByDataViewModel)tblArticoliScaricati.getModel();
-			modello.setDate(dateChooserDal.getDate(), dateChooserAl.getDate());
+			int idReparto = -1;
+			if ( cmbBoxReparto.getSelectedItem().equals("Tabacchi") ){
+				idReparto = 1;
+			}
+			else if  ( cmbBoxReparto.getSelectedItem().equals("Varie") ){
+				idReparto = 3;
+			}
+			modello.setDate(dateChooserDal.getDate(), dateChooserAl.getDate(), idReparto);
 			modello.fireTableDataChanged();
+			calcolaTotaliArticoliScaricati();
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug("ricaricaVendite() - end");
@@ -247,20 +263,29 @@ public class VenditeGui extends JFrame implements TableModelListener {
 	 */
 	
 	private void calcolaTotaliArticoliScaricati() {
-		double imponibile = 0, imposta = 0, tot = 0;
+		double imponibile = 0, imposta = 0, tot = 0, agio = 0;
 
 		// Calcoliamo ora la parte totale dello scarico di tutti gli articoli.
 		try {
+			int idReparto = -1;
+			if ( cmbBoxReparto.getSelectedItem().equals("Tabacchi") ){
+				idReparto = 1;
+			}
+			else if  ( cmbBoxReparto.getSelectedItem().equals("Varie") ){
+				idReparto = 3;
+			}
 
-			imponibile = Scarico.getTotAcquistoImponibileAllOrders();
-			imposta = Scarico.getTotAcquistoImpostaAllOrders();
+			imponibile = Scarico.getTotAcquistoImponibileAllOrders(dateChooserDal.getDate(), dateChooserAl.getDate(), idReparto);
+			imposta = Scarico.getTotAcquistoImpostaAllOrders(dateChooserDal.getDate(), dateChooserAl.getDate(), idReparto);
 			tot = imponibile + imposta;
+			agio = Scarico.getTotAgioAllOrders(dateChooserDal.getDate(), dateChooserAl.getDate(), idReparto);
 
 			// impostiamo i campi
 			txtImponibileTot.setText(ControlloDati
 					.convertDoubleToPrezzo(imponibile));
 			txtImpostaTot.setText(ControlloDati.convertDoubleToPrezzo(imposta));
 			txtTot.setText(ControlloDati.convertDoubleToPrezzo(tot));
+			txtFldAgio.setText(ControlloDati.convertDoubleToPrezzo(agio));
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(this,
 					"Probabile errore nei calcoli all'ingrosso", "ERRORE",
@@ -389,7 +414,7 @@ public class VenditeGui extends JFrame implements TableModelListener {
 		this.setResizable(true);
 		this.setContentPane(getJContentPane());
 
-		this.setSize(new Dimension(700, 591));
+		this.setSize(new Dimension(800, 591));
 		UtilGUI.centraFrame(this);
 
 
@@ -532,7 +557,7 @@ public class VenditeGui extends JFrame implements TableModelListener {
 	private JXTable getTblArticoliScaricati() {
 		if (tblArticoliScaricati == null) {
 			try {
-				articoliScaricatiView = new ArticoliScaricatiByDataViewModel(new Date(),new Date());
+				articoliScaricatiView = new ArticoliScaricatiByDataViewModel(new Date(),new Date(), -1);
 				tblArticoliScaricati = new JXTable();
 				tblArticoliScaricati
 						.setAutoResizeMode(JXTable.AUTO_RESIZE_ALL_COLUMNS); // Generated
@@ -562,6 +587,16 @@ public class VenditeGui extends JFrame implements TableModelListener {
 	private JPanel getJPanel1() {
 		if (jPanel1 == null) {
 			try {
+				GridBagConstraints gridBagConstraints21 = new GridBagConstraints();
+				gridBagConstraints21.fill = GridBagConstraints.VERTICAL;
+				gridBagConstraints21.gridy = 0;
+				gridBagConstraints21.weightx = 1.0;
+				gridBagConstraints21.gridx = 7;
+				GridBagConstraints gridBagConstraints11 = new GridBagConstraints();
+				gridBagConstraints11.gridx = 6;
+				gridBagConstraints11.gridy = 0;
+				lblAgio = new JLabel();
+				lblAgio.setText("Agio \u20AC");
 				GridBagConstraints gridBagConstraints5 = new GridBagConstraints();
 				gridBagConstraints5.anchor = GridBagConstraints.WEST; // Generated
 				gridBagConstraints5.gridx = 5; // Generated
@@ -605,16 +640,21 @@ public class VenditeGui extends JFrame implements TableModelListener {
 				lblImponibile = new JLabel();
 				lblImponibile.setText("Imponibile tot. \u20AC"); // Generated
 				jPanel1 = new JPanel();
-				jPanel1.setLayout(new GridBagLayout()); // Generated
+//				jPanel1.setLayout(new GridBagLayout()); // Generated
+				FlowLayout flowLayout = new FlowLayout();
+				flowLayout.setAlignment(FlowLayout.LEFT);
+				jPanel1.setLayout(flowLayout);
 				jPanel1.setPreferredSize(new Dimension(0, 50)); // Generated
 				jPanel1.setBorder(BorderFactory
 						.createBevelBorder(BevelBorder.RAISED)); // Generated
-				jPanel1.add(lblImponibile, gridBagConstraints); // Generated
-				jPanel1.add(getTxtImponibileTot(), gridBagConstraints1); // Generated
-				jPanel1.add(lblImpostaTot, gridBagConstraints2); // Generated
-				jPanel1.add(getTxtImpostaTot(), gridBagConstraints3); // Generated
-				jPanel1.add(lblTot, gridBagConstraints4); // Generated
-				jPanel1.add(getTxtTot(), gridBagConstraints5); // Generated
+				jPanel1.add(lblImponibile, null); // Generated
+				jPanel1.add(getTxtImponibileTot(), null); // Generated
+				jPanel1.add(lblImpostaTot, null); // Generated
+				jPanel1.add(getTxtImpostaTot(), null); // Generated
+				jPanel1.add(lblTot, null); // Generated
+				jPanel1.add(getTxtTot(), null); // Generated
+				jPanel1.add(lblAgio, null);
+				jPanel1.add(getTxtFldAgio(), null);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -717,6 +757,8 @@ public class VenditeGui extends JFrame implements TableModelListener {
 	 */
 	private JPanel getPblBottoni() {
 		if (pblBottoni == null) {
+			lblReparto = new JLabel();
+			lblReparto.setText("Tipologia");
 			lblAl = new JLabel();
 			lblAl.setText("Al");
 			lblDal = new JLabel();
@@ -730,6 +772,8 @@ public class VenditeGui extends JFrame implements TableModelListener {
 			pblBottoni.add(getDateChooser(), null);
 			pblBottoni.add(lblAl, null);
 			pblBottoni.add(getDateChooserAl(), null);
+			pblBottoni.add(lblReparto, null);
+			pblBottoni.add(getCmbBoxReparto(), null);
 		}
 		return pblBottoni;
 	}
@@ -794,6 +838,65 @@ public class VenditeGui extends JFrame implements TableModelListener {
 			
 		}
 		return dateChooserAl;
+	}
+
+
+
+
+
+	/**
+	 * This method initializes cmbBoxReparto	
+	 * 	
+	 * @return javax.swing.JComboBox	
+	 */
+	private JComboBox getCmbBoxReparto() {
+		if (cmbBoxReparto == null) {
+			cmbBoxReparto = new JComboBox();
+			cmbBoxReparto.setPreferredSize(new Dimension(150, 25));
+			cmbBoxReparto.addItem("Tutti");
+			cmbBoxReparto.addItem("Tabacchi");
+			cmbBoxReparto.addItem("Varie");
+			cmbBoxReparto.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("propertyChange(PropertyChangeEvent) - start");
+					}
+
+					 try {
+						ricaricaVendite();
+					} catch (SQLException e2) {
+						logger.error("propertyChange(PropertyChangeEvent)", e2);
+
+					}
+
+					if (logger.isDebugEnabled()) {
+						logger.debug("propertyChange(PropertyChangeEvent) - end");
+					}
+				}
+			});
+		}
+		return cmbBoxReparto;
+	}
+
+
+
+
+
+	/**
+	 * This method initializes txtFldAgio	
+	 * 	
+	 * @return javax.swing.JTextField	
+	 */
+	private JTextField getTxtFldAgio() {
+		if (txtFldAgio == null) {
+			txtFldAgio = new JTextField();
+			txtFldAgio.setPreferredSize(new Dimension(100, 20)); // Generated
+			txtFldAgio.setFont(new Font("Dialog", Font.BOLD, 12)); // Generated
+			txtFldAgio.setEnabled(false); // Generated
+			txtFldAgio.setDisabledTextColor(Color.black); // Generated
+			txtFldAgio.setEditable(false); // Generated
+		}
+		return txtFldAgio;
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

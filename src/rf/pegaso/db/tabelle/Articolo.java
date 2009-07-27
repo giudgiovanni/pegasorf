@@ -398,7 +398,7 @@ public class Articolo {
 		caricaDati(idArticolo);
 		if (st != null)
 			st.close();
-		if (idArticolo > 0)
+		if (idArticolo >= 0)
 			return true;
 		return false;
 	}

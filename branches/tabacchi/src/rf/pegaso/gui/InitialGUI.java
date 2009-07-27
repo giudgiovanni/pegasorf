@@ -3,6 +3,8 @@
  */
 package rf.pegaso.gui;
 
+import it.infolabs.hibernate.ArticoliHome;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -460,6 +462,7 @@ public class InitialGUI extends JFrame {
 	 */
 	private void initialize() {
 
+		ArticoliHome.getInstance().begin();
 		this.padre = this;
 		padre.setSize(new Dimension(513, 115));
 		System.out

@@ -1076,6 +1076,9 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 				articolo.setNumeroPacchetti(((Number)txtNumeroPacchetti.getValue()).intValue());
 				ArticoliHome.getInstance().attachDirty(articolo);
 				ArticoliHome.getInstance().commitAndClose();
+				if ( !txtFldQtaIniziale.getText().trim().equals("") && !txtFldQtaIniziale.getText().trim().equals("0,00") ){
+					inserisciQuantitaIniziale();
+				}
 			} catch (IDNonValido e) {
 				JOptionPane.showMessageDialog(this, "Valore idCliente errato",
 						"ERRORE", JOptionPane.ERROR_MESSAGE);
@@ -1181,6 +1184,9 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			articolo.setNumeroPacchetti(((Number)txtNumeroPacchetti.getValue()).intValue());
 			ArticoliHome.getInstance().attachDirty(articolo);
 			ArticoliHome.getInstance().commitAndClose();
+			if ( !txtFldQtaIniziale.getText().trim().equals("")  && !txtFldQtaIniziale.getText().trim().equals("0,00") ){
+				inserisciQuantitaIniziale();
+			}
 		} catch (IDNonValido e) {
 			JOptionPane.showMessageDialog(this, "Valore idFornitore errato",
 					"ERRORE", JOptionPane.ERROR_MESSAGE);
@@ -1371,6 +1377,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			btnAddQtaIniziale = new JButton();
 			btnAddQtaIniziale.setBounds(new Rectangle(323, 232, 199, 29));
 			btnAddQtaIniziale.setText("Aggiungi Al Carico Iniziale");
+			btnAddQtaIniziale.setVisible(modalita == MOD);
 			btnAddQtaIniziale.addActionListener(new MyActionListener());
 		}
 		return btnAddQtaIniziale;

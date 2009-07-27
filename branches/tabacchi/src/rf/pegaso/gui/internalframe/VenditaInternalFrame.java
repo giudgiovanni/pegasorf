@@ -152,8 +152,9 @@ public class VenditaInternalFrame extends JInternalFrame{
 	private void inserisciDaRepo(String repo){
 		try {
 			DettaglioOrdine dv = new DettaglioOrdine();
-			dv.setIdArticolo(0);
-			dv.setDescrizione(repo);
+			dv.loadRepartoByCB(repo);
+//			dv.setIdArticolo(0);
+//			dv.setDescrizione(repo);
 			dv.setPrezzoVendita(ControlloDati.convertPrezzoToDouble(ControlloDati.costruisciPrezzoLikePOS(importo)));
 			if ( txtQta.getText().trim().equals("")){
 				dv.setQta(1);
@@ -391,16 +392,16 @@ public class VenditaInternalFrame extends JInternalFrame{
 				stateTransition('9');
 			}
 			else if ( e.getSource() == btnRep1 ){
-				inserisciDaRepo("Reparto 1");
+				inserisciDaRepo("REPARTO 1");
 			}
 			else if ( e.getSource() == btnRep2 ){
-				inserisciDaRepo("Reparto 2");
+				inserisciDaRepo("REPARTO 2");
 			}
 			else if ( e.getSource() == btnRep3 ){
-				inserisciDaRepo("Reparto 3");
+				inserisciDaRepo("REPARTO 3");
 			}
 			else if ( e.getSource() == btnRep4 ){
-				inserisciDaRepo("Reparto 4");
+				inserisciDaRepo("REPARTO 4");
 			}
 			else if ( e.getSource() == btnInsManuale ){
 				apriChiudiInserimentoManuale();
@@ -487,6 +488,8 @@ public class VenditaInternalFrame extends JInternalFrame{
 //		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_COMMA, 0), ",");
 //		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_PERIOD, 0), ",");
 //		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DECIMAL, 0), ",");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, 0), "+");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ADD, 0), "+");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "CANC");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), "CANC");
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_0, 0), "0");
@@ -513,7 +516,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 		this.getRootPane().getActionMap().put("OK", new AbstractAction() {
 			public void actionPerformed(ActionEvent a) {
 				if ( a.getSource() != txtFieldRicerca && tastieraCassaAttiva && !inserimentoContanti && importo.length() > 0 ){
-					inserisciDaRepo("Reparto 1");
+					inserisciDaRepo("REPARTO 1");
 				}
 			}
 		});
@@ -567,6 +570,14 @@ public class VenditaInternalFrame extends JInternalFrame{
 		this.getRootPane().getActionMap().put("CANC", new AbstractAction() {
 			public void actionPerformed(ActionEvent a) {
 				stateTransition('\n');
+			}
+		});
+		this.getRootPane().getActionMap().put("+", new AbstractAction() {
+			public void actionPerformed(ActionEvent a) {
+				if ( !inserimentoContanti ){
+					int qta = Integer.valueOf(txtQta.getText().equals("") ? "1" : txtQta.getText());
+					txtQta.setText(String.valueOf(qta+1));
+				}
 			}
 		});
 //		this.getRootPane().getActionMap().put(",", new AbstractAction() {
@@ -1076,6 +1087,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 			txtFldImporto.setBackground(Color.white);
 			txtFldImporto.setOpaque(true);
 			txtFldImporto.setEditable(false);
+			txtFldImporto.setFont(new Font("Dialog", Font.BOLD, 16));
 //			txtFldImporto.addKeyListener(new java.awt.event.KeyAdapter() {
 //				public void keyPressed(java.awt.event.KeyEvent e) {
 //					if ( e.getKeyCode() == KeyEvent.VK_ENTER && tastieraCassaAttiva && !inserimentoContanti ) {
@@ -1098,6 +1110,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 			txtQta.setBounds(new Rectangle(310, 0, 75, 45));
 			txtQta.setEditable(false);
 			txtQta.setBackground(Color.white);
+			txtQta.setFont(new Font("Dialog", Font.BOLD, 16));
 		}
 		return txtQta;
 	}
@@ -1171,7 +1184,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 	private JTextField getTxtFldTotale() {
 		if (txtFldTotale == null) {
 			txtFldTotale = new JTextField();
-			txtFldTotale.setBounds(new Rectangle(540, 10, 230, 130));
+			txtFldTotale.setBounds(new Rectangle(540, 10, 250, 130));
 			txtFldTotale.setOpaque(true);
 			txtFldTotale.setEditable(false);
 			txtFldTotale.setBackground(Color.ORANGE);
@@ -1191,7 +1204,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 	private JTextField getTxtFldContanti() {
 		if (txtFldContanti == null) {
 			txtFldContanti = new JTextField();
-			txtFldContanti.setBounds(new Rectangle(770, 10, 200, 65));
+			txtFldContanti.setBounds(new Rectangle(790, 10, 220, 65));
 			txtFldContanti.setOpaque(true);
 			txtFldContanti.setEditable(false);
 			txtFldContanti.setBackground(Color.decode("435445"));
@@ -1212,7 +1225,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 		if (txtFldResto == null) {
 			txtFldResto = new JTextField();
 			txtFldResto.setEditable(false);
-			txtFldResto.setBounds(new Rectangle(770, 75, 200, 65));
+			txtFldResto.setBounds(new Rectangle(790, 75, 220, 65));
 			txtFldResto.setBackground(Color.decode("314467"));
 			txtFldResto.setFont(new Font("Dialog", Font.BOLD, 28));
 			txtFldResto.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Resto \u20AC",

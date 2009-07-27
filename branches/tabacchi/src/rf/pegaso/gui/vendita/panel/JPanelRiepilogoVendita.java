@@ -401,7 +401,12 @@ public class JPanelRiepilogoVendita extends JPanel {
 			//salviamo i dettagli della fattura
 			for (DettaglioOrdine dv : carrello) {
 				dv.setIdVendita(scarico.getIdScarico());
-				ok = dv.insert();
+				if ( dv.isInsert() ){
+					dv.updatePrezzoVenditaPerArticoliReparto();
+				}
+				else{
+					ok = dv.insert();
+				}
 				if ( ok == -1 ){
 					scarico.deleteAllArticoliScaricati();
 					scarico.deleteScarico(scarico.getIdScarico());

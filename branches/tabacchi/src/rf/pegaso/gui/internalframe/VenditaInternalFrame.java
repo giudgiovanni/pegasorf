@@ -298,15 +298,12 @@ public class VenditaInternalFrame extends JInternalFrame{
 //				double d = ControlloDati.convertPrezzoToDouble(ControlloDati.costruisciPrezzoLikePOS(importo));
 				if ( inserimentoContanti ){				
 					txtFldContanti.setText(ControlloDati.costruisciPrezzoLikePOS(importo));
-					txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(ControlloDati.convertPrezzoToDouble(ControlloDati.costruisciPrezzoLikePOS(importo)) - pannelloCarrello.getTotaleCarrello()));
 				}
 				else {
 					txtFldImporto.setText(ControlloDati.costruisciPrezzoLikePOS(importo));
 				}
 			}
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 	}
@@ -517,6 +514,14 @@ public class VenditaInternalFrame extends JInternalFrame{
 			public void actionPerformed(ActionEvent a) {
 				if ( a.getSource() != txtFieldRicerca && tastieraCassaAttiva && !inserimentoContanti && importo.length() > 0 ){
 					inserisciDaRepo("REPARTO 1");
+				}
+				else if ( a.getSource() != txtFieldRicerca && tastieraCassaAttiva && inserimentoContanti && importo.length() > 0 ){
+					try{
+						txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(ControlloDati.convertPrezzoToDouble(ControlloDati.costruisciPrezzoLikePOS(importo)) - pannelloCarrello.getTotaleCarrello()));
+						txtFieldRicerca.requestFocusInWindow();
+					}catch (ParseException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		});

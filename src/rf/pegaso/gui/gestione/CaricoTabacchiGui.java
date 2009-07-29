@@ -1284,12 +1284,8 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				tblViewCarichi.setAutoResizeMode(4);
 				tblViewCarichi.packAll();
 				tblViewCarichi.getTableHeader().setReorderingAllowed(false);
-				// tblViewCarichi.setHighlighters(new
-				// AlternateRowHighlighter(Color.RED,Color.GREEN,Color.BLACK));
-				// tblViewCarichi.getColumn(8).setCellRenderer(new
-				// SospesiColorRenderer());
-				// tblViewCarichi.getColumn(7).setCellRenderer(new
-				// SospesiColorRenderer());
+				Highlighter high = HighlighterFactory.createAlternateStriping();
+				tblViewCarichi.setHighlighters(high);
 				tblViewCarichi.setDefaultRenderer(Object.class,
 						new SospesiColorRenderer());
 				TableColumn c = tblViewCarichi.getColumnModel().getColumn(1);

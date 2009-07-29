@@ -20,4 +20,11 @@ ROCCO - errore nello scarico perchï¿½ anche se c'ï¿½ ne uno ancora in magazzino 
 	non visualizza niente.
 ROCCO - Aggiungere i filtri nel riepilogo vendite per data (data inizio filtro - data inizio filtro) mettendo di default quella giornaliera.
 ROCCO - Nel riepilogo vendite visualizzare l'agio.
-- Possibilita' di attivare piu' casse, per la gestione di conti multipli contemporanei.
+SERGIO - Possibilita' di attivare piu' casse, per la gestione di conti multipli contemporanei.
+- Inserimento articoli sotto soglia minima lento;
+SERGIO - Codice a Barre e codice AAMS non modificabili se già settati;
+ - Possibilità di inserire in un ordine un articolo che abbia codice a barre e codice aams vuoto (in questo caso il codice aams potrebbe essere uguale a NEW, quindi nella stampa del modello u88 va verificato se questo può causare problemi)
+ROCCO - La creazione di un nuovo ordine dev'essere in memoria e non salvato tramite il tasto salva (in questo caso se l'ordine non viene prima salvato si deve disabilitare la possibilità di stampare il modello u88, perchè si potrebbero avere problemi data la scarsa attenzione dell'utilizzatore)
+SERGIO - La funzione "Storno 1" nelle vendite non funziona per righe intermedie
+SERGIO - I campi prezzo e qta nelle vendite per gli articoli manuali devono essere modificabili.
+SERGIO - L'agio nelle vendite non è corretto (questo è dovuto al problema di cui abbiamo discusso, dopo pranzo ti mando lo script per l'aggiornamento).

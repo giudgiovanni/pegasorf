@@ -155,24 +155,25 @@ public class ArticoliHome extends BusinessObjectHome{
 	public Double getQtaRiordino(long articolo, double qtaOrdinare){
 		Articoli a=ArticoliHome.getInstance().findById(articolo);
 //		double qtaOrdinare=(int)(getGiacenza(articolo)- a.getScortaMinima());
+		int numeroPacchetti=a.getNumeroPacchetti()==null?0:a.getNumeroPacchetti();
 		double diff=0;
-		if(a.getNumeroPacchetti()!=0){
-			diff=qtaOrdinare%a.getNumeroPacchetti();
+		if(numeroPacchetti !=0){
+			diff=qtaOrdinare%numeroPacchetti;
 		}
 		
-		if(a.getNumeroPacchetti()<=10){
+		if(numeroPacchetti <=10){
 			if(diff>=5){
-				qtaOrdinare+=(a.getNumeroPacchetti()-diff);
+				qtaOrdinare+=(numeroPacchetti-diff);
 			}
-		}else if(a.getNumeroPacchetti()>10){
+		}else if(numeroPacchetti>10){
 			if(diff>=10){
-				qtaOrdinare+=(a.getNumeroPacchetti()-diff);
+				qtaOrdinare+=(numeroPacchetti-diff);
 			}
 		}
 		
 		Double riordino=0.0;
-		if(a.getNumeroPacchetti()!=0){
-			riordino=(qtaOrdinare/a.getNumeroPacchetti())*a.getPeso();
+		if(numeroPacchetti!=0){
+			riordino=(qtaOrdinare/numeroPacchetti)*a.getPeso();
 		}
 		
 		return riordino;

@@ -71,6 +71,8 @@ import net.sf.jasperreports.view.JasperViewer;
 
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.AlternateRowHighlighter;
+import org.jdesktop.swingx.decorator.Highlighter;
+import org.jdesktop.swingx.decorator.HighlighterFactory;
 
 import rf.myswing.IDJComboBox;
 import rf.myswing.util.QuantitaEditorSql;
@@ -563,7 +565,8 @@ public class VenditeGui extends JFrame implements TableModelListener {
 						.setAutoResizeMode(JXTable.AUTO_RESIZE_ALL_COLUMNS); // Generated
 				tblArticoliScaricati
 						.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				tblArticoliScaricati.setHighlighters(new AlternateRowHighlighter());// Generated
+				Highlighter high = HighlighterFactory.createAlternateStriping();
+				tblArticoliScaricati.setHighlighters(high);// Generated
 
 				// scrivere tutta la parte di codice per lo scarico e con il
 				// controllo se la merce è

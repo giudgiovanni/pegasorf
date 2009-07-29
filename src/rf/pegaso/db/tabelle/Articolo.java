@@ -32,9 +32,17 @@ public class Articolo {
 			throws SQLException {
 		DBManager dbm=DBManager.getIstanceSingleton();
 		ResultSet rs = null;
-		String query = "select deposito from giacenza_articoli_view where idarticolo=?";
+//		String query = "select deposito from giacenza_articoli_view where idarticolo=?";
+		String query="SELECT c.sum - o.sum AS deposito " +
+				"FROM articoli a JOIN ( (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum FROM articoli a, carichi c, dettaglio_carichi d " +
+				"WHERE d.idcarico = c.idcarico AND a.idarticolo = d.idarticolo and c.data_carico<=? and c.iddocumento<>0 GROUP BY a.idarticolo, a.codbarre) c LEFT JOIN (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum " +
+				"FROM articoli a, ordini c, dettaglio_ordini d WHERE d.idordine = c.idordine AND a.idarticolo = d.idarticolo and c.data_ordine<=? GROUP BY a.idarticolo, a.codbarre) o ON c.idarticolo = o.idarticolo) ON a.idarticolo = c.idarticolo and c.idarticolo=? JOIN um ON a.um = um.idum WHERE (c.sum - o.sum) > 0::numeric; ";
 		PreparedStatement st = dbm.getNewPreparedStatement(query);
-		st.setInt(1, idArticolo);
+		st.setInt(3, idArticolo);
+		Date data=new Date(new java.util.Date().getTime());
+		st.setDate(1, data);
+		st.setDate(2, data);
+		
 		rs = st.executeQuery();
 		rs.next();
 		int qta = 0;

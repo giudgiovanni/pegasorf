@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.sql.Time;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -30,6 +31,7 @@ import org.jdesktop.swingx.decorator.AlternateRowHighlighter;
 import rf.pegaso.db.tabelle.DettaglioOrdine;
 import rf.pegaso.db.tabelle.Scarico;
 import rf.utility.Constant;
+import rf.utility.ControlloDati;
 import rf.utility.MathUtility;
 import rf.utility.db.DBManager;
 import rf.utility.db.UtilityDBManager;
@@ -148,6 +150,35 @@ public class JPanelRiepilogoVendita extends JPanel {
 			if ( carrello == null )
 				return 0;
 			return carrello.size();
+		}
+		
+		@Override
+		public boolean isCellEditable(int rowIndex, int columnIndex) {
+			DettaglioOrdine ord = carrello.get(rowIndex);
+			if ( (ord.getDescrizione().equals("REPARTO 1") || ord.getDescrizione().equals("REPARTO 2") 
+					|| ord.getDescrizione().equals("REPARTO 3") || ord.getDescrizione().equals("REPARTO 4"))
+					&& (columnIndex == 1 || columnIndex == 2) ){
+				return true;
+			}
+			return false;
+		}
+		
+		@Override
+		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+			DettaglioOrdine ord = carrello.get(rowIndex);
+			if ( ord.getDescrizione().equals("REPARTO 1") || ord.getDescrizione().equals("REPARTO 2") 
+					|| ord.getDescrizione().equals("REPARTO 3") || ord.getDescrizione().equals("REPARTO 4") ){
+				try {
+				if ( columnIndex == 1 )
+						ord.setPrezzoVendita(ControlloDati.convertPrezzoToDouble((String)aValue));
+				else if ( columnIndex == 2 )
+					ord.setQta(ControlloDati.convertPrezzoToDouble((String)aValue));
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 
 		public Object getValueAt(int r, int c) {
@@ -534,20 +565,18 @@ public class JPanelRiepilogoVendita extends JPanel {
 	 */
 	public void stornoArticolo(){
 		if ( carrello.size() != 0 ){
-			if ( idSelectedItem == -1 ){
+			int selectedRow = tblVendite.getSelectedRow();
+			if ( selectedRow == -1 ){
 				DettaglioOrdine ord = carrello.get(carrello.size() -1);
 				carrello.remove(ord);
 				double tot = ord.getPrezzoVendita() * ord.getQta();
 				totaleCarrello = totaleCarrello - (tot + MathUtility.percentualeDaAggiungere(tot, ord.getIva()));
 			}
 			else{
-				for( DettaglioOrdine ord : carrello ){
-					if ( ord.getIdArticolo() == idSelectedItem ){
-						carrello.remove(ord);
-						double tot = ord.getPrezzoVendita() * ord.getQta();
-						totaleCarrello = totaleCarrello - (tot + MathUtility.percentualeDaAggiungere(tot, ord.getIva()));
-					}
-				}
+				DettaglioOrdine ord = carrello.get(selectedRow);
+				carrello.remove(ord);
+				double tot = ord.getPrezzoVendita() * ord.getQta();
+				totaleCarrello = totaleCarrello - (tot + MathUtility.percentualeDaAggiungere(tot, ord.getIva()));				
 			}
 			modello.fireTableDataChanged();
 		}
@@ -560,36 +589,37 @@ public class JPanelRiepilogoVendita extends JPanel {
 	 */
 	public void stornoQtaArticolo(){
 		if ( carrello.size() != 0 ){
-			if ( idSelectedItem == -1 ){
+			int selectedRow = tblVendite.getSelectedRow();
+			if ( selectedRow == -1 ){
 				DettaglioOrdine ord = carrello.get(carrello.size()-1);
 				if ( ord.getQta() == 1 ){
 					carrello.remove(ord);
-					double tot = ord.getPrezzoVendita() * ord.getQta();
-					totaleCarrello = totaleCarrello - (tot + MathUtility.percentualeDaAggiungere(tot, ord.getIva()));
+					totaleCarrello = totaleCarrello - (ord.getPrezzoVendita() + MathUtility.percentualeDaAggiungere(ord.getPrezzoVendita(), ord.getIva()));
+					modello.fireTableDataChanged();
+					return;
 				}
 				else{
 					ord.setQta(ord.getQta() - 1);
-					double tot = ord.getPrezzoVendita() * ord.getQta();
-					totaleCarrello = totaleCarrello - (tot + MathUtility.percentualeDaAggiungere(tot, ord.getIva()));
+					totaleCarrello = totaleCarrello - (ord.getPrezzoVendita() + MathUtility.percentualeDaAggiungere(ord.getPrezzoVendita(), ord.getIva()));
+					modello.fireTableDataChanged();
+					return;
 				}
 			}
 			else{
-				for( DettaglioOrdine ord : carrello ){
-					if ( ord.getIdArticolo() == idSelectedItem ){
-						if ( ord.getQta() == 1 ){
-							carrello.remove(ord);
-							double tot = ord.getPrezzoVendita() * ord.getQta();
-							totaleCarrello = totaleCarrello - (tot + MathUtility.percentualeDaAggiungere(tot, ord.getIva()));
-						}
-						else{
-							ord.setQta(ord.getQta() - 1);
-							double tot = ord.getPrezzoVendita() * ord.getQta();
-							totaleCarrello = totaleCarrello - (tot + MathUtility.percentualeDaAggiungere(tot, ord.getIva()));
-						}
-					}
+				DettaglioOrdine ord = carrello.get(selectedRow);
+				if ( ord.getQta() == 1 ){
+					carrello.remove(ord);
+					totaleCarrello = totaleCarrello - (ord.getPrezzoVendita() + MathUtility.percentualeDaAggiungere(ord.getPrezzoVendita(), ord.getIva()));
+					modello.fireTableDataChanged();
+					return;
 				}
-			}
-			modello.fireTableDataChanged();
+				else{
+					ord.setQta(ord.getQta() - 1);
+					totaleCarrello = totaleCarrello - (ord.getPrezzoVendita() + MathUtility.percentualeDaAggiungere(ord.getPrezzoVendita(), ord.getIva()));
+					modello.fireTableDataChanged();
+					return;
+				}
+			}			
 		}
 	}
 	

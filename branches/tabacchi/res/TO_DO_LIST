@@ -1,30 +1,32 @@
+CODIFICHE: a' = \u00E0, e' = \u00E8, o' = \u00f9, u' = \u00F9, euro = \u20AC
 ok ROCCO - invece di codice fornitore inserire codice aams
-- usare sempre pezzi come unitï¿½ di misura nei tabacchi
+- usare sempre pezzi come unita' di misura nei tabacchi
 - quando si deve fare un riordino se i pacchetti sono da 10 ordinare quindi multipli di 10 oppure 20 nell'altro caso
 	se nel caso abbiamo da riordinarne meno o + di 10 / 20 usare il se e quindi < 5 arrotonda per difetto >=5 per eccesso
 ->ok manca ancora il salvataggio vero e proprio ROCCO - aggiungere campi per grammatura stecca e per numero pacchetti
-ROCCO - possibilitï¿½ di duplicare un ordine da uno giï¿½ esistente
-SERGIO (FATTO) - textfield non visualizzato nel carivo tabacchi
-- se la scorta massima ï¿½ < di scorta minima fare la differenza per il riordino da scortaminima-scortamassima
+ROCCO - possibilita' di duplicare un ordine da uno gia' esistente
+SERGIO (FATTO) - textfield non visualizzato nel carico tabacchi
+- se la scorta massima e' < di scorta minima fare la differenza per il riordino da scortaminima-scortamassima
 ROCCO - Quando si carica un ordine richiedere i dati fattura come numero data e riferimento ordine
-Possibilitï¿½ di fare aggiornamenti direttamente dal sito FIT
+Possibilita' di fare aggiornamenti direttamente dal sito FIT
 ROCCO - filtro ricerca ordini per data
-- chiusura annuale programma con possibilitï¿½ di riaprire un anno chiuso
+- chiusura annuale programma con possibilita' di riaprire un anno chiuso
 ROCCO - abilitare nelle giacenze le due date per fare il filtro per data sull'effetica giancenza
-ROCCO - Possibilitï¿½ di modificare progressivo ordine
+ROCCO - Possibilita' di modificare progressivo ordine
 - statistiche giornaliere, settimanali, mensili, abbuali
 ROCCO - Quando si sparano le sigarette al 2pacchetto se qta>1 aprire finistrache richiede la qta totale
-- Spostare i totali grafici al centro nel pannello vendite in modo da averli piï¿½ grandi possibilit.
-ROCCO - possibilitï¿½ con un tasto di cancellare l'ultima riga inserita
-ROCCO - errore nello scarico perchï¿½ anche se c'ï¿½ ne uno ancora in magazzino e si tenta di risalvarlonon 
+- Spostare i totali grafici al centro nel pannello vendite in modo da averli piu' grandi possibilit.
+ROCCO - possibilita' con un tasto di cancellare l'ultima riga inserita
+ROCCO - errore nello scarico perche' anche se c'e' ne uno ancora in magazzino e si tenta di risalvarlonon 
 	non visualizza niente.
-ROCCO - Aggiungere i filtri nel riepilogo vendite per data (data inizio filtro - data inizio filtro) mettendo di default quella giornaliera.
-ROCCO - Nel riepilogo vendite visualizzare l'agio.
+ok ROCCO - Aggiungere i filtri nel riepilogo vendite per data (data inizio filtro - data inizio filtro) mettendo di default quella giornaliera.
+ok SERGIO - Nel riepilogo vendite visualizzare l'agio.
 SERGIO - Possibilita' di attivare piu' casse, per la gestione di conti multipli contemporanei.
 - Inserimento articoli sotto soglia minima lento;
-SERGIO - Codice a Barre e codice AAMS non modificabili se già settati;
+ok SERGIO - Codice a Barre e codice AAMS non modificabili se già settati;
  - Possibilità di inserire in un ordine un articolo che abbia codice a barre e codice aams vuoto (in questo caso il codice aams potrebbe essere uguale a NEW, quindi nella stampa del modello u88 va verificato se questo può causare problemi)
 ROCCO - La creazione di un nuovo ordine dev'essere in memoria e non salvato tramite il tasto salva (in questo caso se l'ordine non viene prima salvato si deve disabilitare la possibilità di stampare il modello u88, perchè si potrebbero avere problemi data la scarsa attenzione dell'utilizzatore)
-SERGIO - La funzione "Storno 1" nelle vendite non funziona per righe intermedie
-SERGIO - I campi prezzo e qta nelle vendite per gli articoli manuali devono essere modificabili.
-SERGIO - L'agio nelle vendite non è corretto (questo è dovuto al problema di cui abbiamo discusso, dopo pranzo ti mando lo script per l'aggiornamento).
+ok SERGIO - La funzione "Storno 1" nelle vendite non funziona per righe intermedie
+ok SERGIO - I campi prezzo e qta nelle vendite per gli articoli manuali devono essere modificabili.
+ok SERGIO - L'agio nelle vendite non è corretto (questo è dovuto al problema di cui abbiamo discusso, dopo pranzo ti mando lo script per l'aggiornamento).
+- L'aggiunta di una quantita' aggiuntiva per un articolo deve generare un nuovo carico e non aggiungere al carico iniziale.

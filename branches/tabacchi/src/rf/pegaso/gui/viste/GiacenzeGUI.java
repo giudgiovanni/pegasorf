@@ -389,7 +389,7 @@ public class GiacenzeGUI extends JFrame {
 				col.setMaxWidth(100);
 				col.setPreferredWidth(100);
                 DefaultTableCellRenderer price = new DefaultTableCellRenderer();
-                price.setHorizontalAlignment(4);
+                price.setHorizontalAlignment(JLabel.RIGHT);
                 col.setCellRenderer(price);
                 col.setPreferredWidth(100);
                 col.setMaxWidth(100);
@@ -400,6 +400,9 @@ public class GiacenzeGUI extends JFrame {
 				col.setMinWidth(100);
 				col.setMaxWidth(100);
 				col.setPreferredWidth(100);
+				price = new DefaultTableCellRenderer();
+                price.setHorizontalAlignment(JLabel.RIGHT);
+                col.setCellRenderer(price);
 
 				col = tblGiacenze.getColumn("codice");
 				col.setMinWidth(150);

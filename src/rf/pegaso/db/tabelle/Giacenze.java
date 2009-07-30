@@ -41,10 +41,12 @@ public class Giacenze
 		double totImp = 0.0D;
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		String query = "SELECT  sum(a.prezzo_acquisto * (c.sum - o.sum))  AS prezzo_tot " +
-				"FROM articoli a JOIN ( (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum FROM articoli a, carichi c, dettaglio_carichi d " +
-				"WHERE d.idcarico = c.idcarico AND a.idarticolo = d.idarticolo and c.data_carico<=? GROUP BY a.idarticolo, a.codbarre) c LEFT JOIN (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum FROM articoli a, ordini c, dettaglio_ordini d " +
-				"WHERE d.idordine = c.idordine AND a.idarticolo = d.idarticolo and c.data_ordine<=? GROUP BY a.idarticolo, a.codbarre) o ON c.idarticolo = o.idarticolo) ON a.idarticolo = c.idarticolo JOIN um ON a.um = um.idum WHERE (c.sum - o.sum) > 0;";
+		String query = "SELECT  sum(c.prezzo_acquisto * (c.sum - o.sum))  AS prezzo_tot " +
+				"FROM articoli a JOIN ( (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum,d.prezzo_acquisto FROM articoli a, carichi c, dettaglio_carichi d " +
+				"WHERE d.idcarico = c.idcarico AND a.idarticolo = d.idarticolo and c.data_carico<=? GROUP BY a.idarticolo, a.codbarre,d.prezzo_acquisto) c " +
+				"LEFT JOIN (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum FROM articoli a, ordini c, dettaglio_ordini d " +
+				"WHERE d.idordine = c.idordine AND a.idarticolo = d.idarticolo and c.data_ordine<=? GROUP BY a.idarticolo, a.codbarre) o ON c.idarticolo = o.idarticolo) ON a.idarticolo = c.idarticolo " +
+				"JOIN um ON a.um = um.idum WHERE (c.sum - o.sum) > 0;";
 		st = dbm.getNewPreparedStatement(query);
 		st.setString(1,data.toString());
 		st.setString(2,data.toString());
@@ -79,9 +81,9 @@ public class Giacenze
 		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		PreparedStatement st = null;
-		String query = "SELECT  sum((a.prezzo_acquisto/100*a.iva)*(c.sum - o.sum)) as imposta " +
-				"FROM articoli a JOIN ( (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum FROM articoli a, carichi c, dettaglio_carichi d " +
-				"WHERE d.idcarico = c.idcarico AND a.idarticolo = d.idarticolo and c.data_carico<=? GROUP BY a.idarticolo, a.codbarre) c " +
+		String query = "SELECT  sum((c.prezzo_acquisto/100*a.iva)*(c.sum - o.sum)) as imposta " +
+				"FROM articoli a JOIN ( (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum,d.prezzo_acquisto FROM articoli a, carichi c, dettaglio_carichi d " +
+				"WHERE d.idcarico = c.idcarico AND a.idarticolo = d.idarticolo and c.data_carico<=? GROUP BY a.idarticolo, a.codbarre,d.prezzo_acquisto) c " +
 				"LEFT JOIN (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum FROM articoli a, ordini c, dettaglio_ordini d WHERE d.idordine = c.idordine " +
 				"AND a.idarticolo = d.idarticolo and c.data_ordine<=? GROUP BY a.idarticolo, a.codbarre) o ON c.idarticolo = o.idarticolo) ON a.idarticolo = c.idarticolo " +
 				"JOIN um ON a.um = um.idum WHERE (c.sum - o.sum) > 0;";

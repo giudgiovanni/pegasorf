@@ -138,6 +138,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 					eliminaUltimoCarico();
 				}
 				save=false;
+				btnStampaU88Fax.setEnabled(false);
 				azzeraTuttiCampi();
 			}else if (e.getSource() == btnStampa)
 				stampaTuttiCarichi();
@@ -1877,6 +1878,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				c.switchCarico();
 			caricaDati(c);
 			this.save=true;
+			btnStampaU88Fax.setEnabled(true);
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(this, "Errore nel db", "ERRORE", 2);
 			e.printStackTrace();
@@ -2393,6 +2395,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			btnStampaU88Fax = new JButton();
 			btnStampaU88Fax.setBounds(new Rectangle(646, 120, 168, 53));
 			btnStampaU88Fax.setText("<html>Stampa Modello<P>U88 FAX</html>");
+			btnStampaU88Fax.setEnabled(false);
 			btnStampaU88Fax
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -2616,7 +2619,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 	protected void salva() {
 		this.save=true;
-		this.dispose();
+		btnStampaU88Fax.setEnabled(true);
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

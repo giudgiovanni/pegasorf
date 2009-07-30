@@ -13,18 +13,27 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import rf.pegaso.db.exception.ResultSetVuoto;
 import rf.pegaso.db.tabelle.Articolo;
+import rf.pegaso.db.tabelle.Carico;
 import rf.utility.Constant;
 import rf.utility.ControlloDati;
 import rf.utility.db.DBManager;
+import rf.utility.db.UtilityDBManager;
 import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 import java.awt.Rectangle;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Properties;
 
 import javax.swing.JTextField;
 
@@ -132,14 +141,6 @@ public class CaricaAggiornaTabacchiGui extends JDialog {
 
 						a.insertArticolo();
 					}
-//					obj = new MapTariffari();
-//					obj.setCategoria(sheet.getCell(0, riga).getContents());
-//					obj.setCodice(sheet.getCell(1, riga).getContents());
-//					obj.setDenominazione(sheet.getCell(2, riga).getContents());
-//					obj.setPrezzoAlKilo(ControlloDati.convertPrezzoToDouble(sheet.getCell(3, riga).getContents()));
-//					obj.setPrezzoAlPezzo(ControlloDati.convertPrezzoToDouble(sheet.getCell(4, riga).getContents()));
-//					obj.setTipoConfezione(sheet.getCell(5, riga).getContents());
-//					result.add(obj);
 					try{
 						sheet.getCell(0, riga+1);
 					}
@@ -148,10 +149,7 @@ public class CaricaAggiornaTabacchiGui extends JDialog {
 					}
 					riga ++;
 				}
-//				int i = 0;
-//				for( MapTariffari map : result ){
-//					System.out.println(map.getCodice()+"   "+i);i++;
-//				}
+				creaCaricoIniziale();
 				JOptionPane.showMessageDialog(this, "Elaborazione effettuata con successo.", "INFO",
 						JOptionPane.INFORMATION_MESSAGE);
 			} catch (BiffException e) {
@@ -178,8 +176,57 @@ public class CaricaAggiornaTabacchiGui extends JDialog {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(this, "Si e' verificato un errore durante la lettura del file xls.", "ERROR",
 						JOptionPane.INFORMATION_MESSAGE);
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(this, "Si e' verificato un errore durante la lettura del file xls.", "ERROR",
+						JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
+	}
+	
+	private void creaCaricoIniziale() throws Exception, IOException{
+
+		// PUNTO DI BACKUP DA ATTIVARE DA CONFIGURAZIONI
+		try {
+			UtilityDBManager.getSingleInstance().backupDataBase(
+					UtilityDBManager.INSERT);
+		} catch (FileNotFoundException e1) {
+			JOptionPane
+			.showMessageDialog(
+					this,
+					"File di configurazione per backup\nmancante o danneggiato",
+					"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			JOptionPane
+			.showMessageDialog(
+					this,
+					"File di configurazione per backup\nmancante o danneggiato",
+					"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+			e1.printStackTrace();
+		}
+		// FINE PUNTO BACKUP
+
+		Carico c = new Carico();
+
+		//			c.setIdCarico(c.getNewID());
+		c.setIdFornitore(Constant.FORNITORE_TABACCHI);
+		java.sql.Date data = new java.sql.Date(new Date().getTime()); 
+		c.setDataCarico(data);
+		c.setDataDocumento(data);
+		// c.setNumDocumento(txtNumDocumento.getText());
+		c.setIdDocumento(Constant.ORDINE);
+		c.setOraCarico(new Time((new java.util.Date()).getTime()));
+		c.setSconto(0);
+		c.setNote("Aggiornamento listino prezzi.");
+		c.setSospeso(0);
+		c.insertCarico();
+		Properties props = new Properties();
+		// Leggiamo le configurazioni
+		props.load(new FileReader("carico.properties"));
+		// Salviamo il nuovo id del carico iniziale
+		props.setProperty("idcarico", String.valueOf(c.getIdCarico()));
+		props.store(new PrintWriter(new File("carico.properties")), "id carico iniziale");
 	}
 
 	/**
@@ -232,7 +279,7 @@ public class CaricaAggiornaTabacchiGui extends JDialog {
 			btnSalva.setBounds(new Rectangle(100, 140, 120, 29));
 			btnSalva.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					salva(); // TODO Auto-generated Event stub actionPerformed()
+					salva();
 				}
 			});
 		}

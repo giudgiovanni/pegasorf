@@ -20,6 +20,7 @@ import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -27,8 +28,10 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
+import java.util.Properties;
 
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
@@ -62,6 +65,7 @@ import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompletion;
 import rf.utility.gui.text.UpperTextDocument;
 import rf.utility.number.Arrays;
+import javax.swing.JRadioButton;
 
 /**
  * @author Hunter
@@ -86,6 +90,14 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			} 
 			else if ( e.getSource() == btnAddQtaIniziale ){
 				inserisciQuantitaIniziale();
+			}
+			else if ( e.getSource() == rbtnSi ){
+				txtCodBarre.setEditable(true);
+				txtCodFornitore.setEditable(true);
+			}
+			else if ( e.getSource() == rbtnNo ){
+				txtCodBarre.setEditable(false);
+				txtCodFornitore.setEditable(false);
 			}
 		}
 
@@ -203,6 +215,11 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	private JLabel lblPesoStecca = null;
 	private JFormattedTextField txtNumeroPacchetti = null;
 	private JFormattedTextField txtPesoStecca = null;
+	private JRadioButton rbtnSi = null;
+	private JRadioButton rbtnNo = null;
+	private JLabel lblSi = null;
+	private JLabel lblNo = null;
+	private JLabel lblrButtonSiNo = null;
 	/**
 	 * @param owner
 	 */
@@ -672,6 +689,15 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	private JPanel getPnlDatiPersonali() {
 		if (pnlDatiPersonali == null) {
 			try {
+				lblrButtonSiNo = new JLabel();
+				lblrButtonSiNo.setBounds(new Rectangle(370, 9, 86, 16));
+				lblrButtonSiNo.setText("Modificabili");
+				lblNo = new JLabel();
+				lblNo.setBounds(new Rectangle(430, 27, 20, 16));
+				lblNo.setText("No");
+				lblSi = new JLabel();
+				lblSi.setBounds(new Rectangle(370, 27, 20, 16));
+				lblSi.setText("Si");
 				lblPesoStecca = new JLabel();
 				lblPesoStecca.setBounds(new Rectangle(269, 176, 115, 16));
 				lblPesoStecca.setText("Peso Stecca");
@@ -739,6 +765,11 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 				pnlDatiPersonali.add(lblPesoStecca, null);
 				pnlDatiPersonali.add(getTxtNumeroPacchetti(), null);
 				pnlDatiPersonali.add(getTxtPesoStecca(), null);
+				pnlDatiPersonali.add(getRbtnSi(), null);
+				pnlDatiPersonali.add(getRbtnNo(), null);
+				pnlDatiPersonali.add(lblSi, null);
+				pnlDatiPersonali.add(lblNo, null);
+				pnlDatiPersonali.add(lblrButtonSiNo, null);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -997,7 +1028,16 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 		} else {
 			this.setTitle("Inserisci Articoli");
 		}// fine impostazione tipo finestra
-
+		inizializzaRadioButton();
+	}
+	
+	private void inizializzaRadioButton() {
+		ButtonGroup g = new ButtonGroup();
+		g.add(rbtnSi);
+		g.add(rbtnNo);
+		rbtnNo.setSelected(true);
+		txtCodBarre.setEditable(false);
+		txtCodFornitore.setEditable(false);
 	}
 
 	/**
@@ -1135,11 +1175,15 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 		}
 		Carico c = new Carico();
 		try {
-
-			c.caricaDati(Constant.CARICO_INIZIALE);
+			Properties props = new Properties();
+			// Leggiamo le configurazioni
+			props.load(new FileReader("carico.properties"));
+			// Salviamo il nuovo id del carico iniziale
+			int idCaricoIniziale = Integer.parseInt(props.getProperty("idcarico"));
+			c.caricaDati(idCaricoIniziale);
 			Articolo a = new Articolo();
 			a.caricaDati(idArticolo);
-			if ( c.codiceBarrePresenteInScarico(a.getCodBarre(), Constant.CARICO_INIZIALE)){
+			if ( c.codiceBarrePresenteInScarico(a.getCodBarre(), idCaricoIniziale)){
 				Object [] obj = c.getQtaPrezzoArticoloCaricata(idArticolo);
 				c.updateArticolo(idArticolo, tmp + (Integer)obj[0], (Double)obj[1]);
 			}
@@ -1153,6 +1197,14 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(this,
 					"Errore nell'inserimento dinumeri", "NUMERO ERRATO", 0);
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			JOptionPane.showMessageDialog(this,
+					"Errore nel recupero del carico iniziale.", "FILE NON TROVATO", 0);
+			e.printStackTrace();
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(this,
+					"Errore nel recupero del carico iniziale.", "FILE NON TROVATO", 0);
 			e.printStackTrace();
 		}
 
@@ -1416,6 +1468,34 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			txtPesoStecca.setBounds(new Rectangle(268, 192, 117, 20));
 		}
 		return txtPesoStecca;
+	}
+
+	/**
+	 * This method initializes rbtnSi	
+	 * 	
+	 * @return javax.swing.JRadioButton	
+	 */
+	private JRadioButton getRbtnSi() {
+		if (rbtnSi == null) {
+			rbtnSi = new JRadioButton();
+			rbtnSi.setBounds(new Rectangle(390, 25, 20, 21));
+			rbtnSi.addActionListener(new MyActionListener());
+		}
+		return rbtnSi;
+	}
+
+	/**
+	 * This method initializes rbtnNo	
+	 * 	
+	 * @return javax.swing.JRadioButton	
+	 */
+	private JRadioButton getRbtnNo() {
+		if (rbtnNo == null) {
+			rbtnNo = new JRadioButton();
+			rbtnNo.setBounds(new Rectangle(450, 25, 21, 21));
+			rbtnNo.addActionListener(new MyActionListener());
+		}
+		return rbtnNo;
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,8"

@@ -1,6 +1,8 @@
 package rf.pegaso.gui.gestione;
 
 import it.infolabs.hibernate.ArticoliHome;
+import it.infolabs.hibernate.Carichi;
+import it.infolabs.hibernate.CarichiHome;
 import it.infolabs.hibernate.U88fax;
 import it.infolabs.hibernate.U88faxHome;
 
@@ -119,15 +121,25 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				inserisci();
 			else if (e.getSource() == btnElimina)
 				eliminaArticolo();
-			else if (e.getSource() == btnChiudi)
-				dispose();
+			else if (e.getSource() == btnChiudi){
+				if(!save){
+					eliminaUltimoCarico();
+					
+				}
+				dispose();	
+			}
+			
 			else if (e.getSource() == btnModifica)
 				modifica();
 			else if (e.getSource() == btnEliminaCarico)
 				eliminaCarico();
-			else if (e.getSource() == btnAzzera)
+			else if (e.getSource() == btnAzzera){
+				if(!save){
+					eliminaUltimoCarico();
+				}
+				save=false;
 				azzeraTuttiCampi();
-			else if (e.getSource() == btnStampa)
+			}else if (e.getSource() == btnStampa)
 				stampaTuttiCarichi();
 			else if (e.getSource() == btnCaricaOrdine)
 				caricaOrdine();
@@ -177,6 +189,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		chkInsRapido = null;
 		cmbProdotti = null;
 		idcarico = 0;
+		
 		jContentPane = null;
 		jScrollPane = null;
 		jScrollPane1 = null;
@@ -214,6 +227,16 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		padre = frame;
 		dbm = DBManager.getIstanceSingleton();
 		initialize();
+	}
+
+	public void eliminaUltimoCarico() {
+		int id=Integer.parseInt(txtNumeroCarico.getText());
+		CarichiHome.getInstance().begin();
+		Carichi carico=CarichiHome.getInstance().findById(id);
+		if(carico!=null){
+			CarichiHome.getInstance().delete(carico);
+		}
+		CarichiHome.getInstance().commitAndClose();
 	}
 
 	public void caricaOrdine() {
@@ -1111,6 +1134,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				pnlNord.add(getBtnChiudi(), null);
 				pnlNord.add(getBtnAzzera(), null);
 				pnlNord.add(getDataCarico(), null);
+				pnlNord.add(getBtnSave(), null);
 			} catch (Throwable throwable) {
 			}
 		return pnlNord;
@@ -1472,6 +1496,9 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		});
 		this.getRootPane().getActionMap().put("ESC", new AbstractAction() {
 			public void actionPerformed(ActionEvent a) {
+				if(!save){
+					eliminaUltimoCarico();
+				}
 				dispose();
 			}
 		});
@@ -1849,6 +1876,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			if (!c.haArticoli())
 				c.switchCarico();
 			caricaDati(c);
+			this.save=true;
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(this, "Errore nel db", "ERRORE", 2);
 			e.printStackTrace();
@@ -2153,12 +2181,16 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	private JButton btnCaricaOrdine = null;
 
 	private JButton btnSogliaMinima = null;
+	
+	private boolean save=false;
 
 	private JButton btnStampaU88Fax = null;
 
 	private JTextField txtFldCodiceAams;
 
 	private JLabel lblCodiceAams = null;
+
+	private JButton btnSave = null;
 
 	protected void nuovoFornitore() {
 		FornitoriAdd add = new FornitoriAdd(this, DBManager
@@ -2561,6 +2593,30 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				throwable.printStackTrace();
 			}
 		return txtFldCodiceAams;
+	}
+
+	/**
+	 * This method initializes btnSave	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnSave() {
+		if (btnSave == null) {
+			btnSave = new JButton();
+			btnSave.setBounds(new Rectangle(504, 10, 104, 29));
+			btnSave.setText("Salva");
+			btnSave.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					salva(); // TODO Auto-generated Event stub actionPerformed()
+				}
+			});
+		}
+		return btnSave;
+	}
+
+	protected void salva() {
+		this.save=true;
+		this.dispose();
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

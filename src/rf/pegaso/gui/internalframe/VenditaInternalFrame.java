@@ -41,10 +41,12 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JTabbedPane;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
 
 
-public class VenditaInternalFrame extends JInternalFrame{
+public class VenditaInternalFrame extends JInternalFrame implements TableModelListener{
 
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
@@ -123,6 +125,7 @@ public class VenditaInternalFrame extends JInternalFrame{
 		this.setIconifiable(true);
 		this.setContentPane(getJContentPane());
 		txtFieldRicerca.requestFocus();
+		pannelloCarrello.addTableModelListener(this);
 	}
 	
 	private void initializeCarrello(){
@@ -1322,5 +1325,15 @@ public class VenditaInternalFrame extends JInternalFrame{
 			btnStorno1.addActionListener(new MyButtonListener());
 		}
 		return btnStorno1;
+	}
+
+	@Override
+	public void tableChanged(TableModelEvent e) {
+		if(e.getSource()==pannelloCarrello.getModel()){
+			txtFldTotale.setText(ControlloDati.convertDoubleToPrezzo(pannelloCarrello.getTotaleCarrello()));
+//			txtFldContanti.setText(ControlloDati.costruisciPrezzoLikePOS(importo));
+			aggiornaResto();
+		}
+		
 	}
 }

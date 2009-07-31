@@ -26,8 +26,8 @@
 	<parameter name="data_inventario" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["2007-06-01"]]></defaultValueExpression>
 	</parameter>
-	<queryString><![CDATA[SELECT c.idarticolo, a.codbarre AS codice, a.descrizione, um.nome AS um, c.sum AS carico, o.sum AS scarico, c.sum - o.sum AS deposito, a.prezzo_acquisto, a.prezzo_acquisto * (c.sum - o.sum)  AS prezzo_tot, f.nome
-    	FROM articoli a JOIN ( (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum FROM articoli a, carichi c, dettaglio_carichi d WHERE d.idcarico = c.idcarico AND a.idarticolo = d.idarticolo and c.data_carico<='$P!{data_inventario}' GROUP BY a.idarticolo, a.codbarre) c 
+	<queryString><![CDATA[SELECT c.idarticolo, a.codbarre AS codice, a.descrizione, um.nome AS um, c.sum AS carico, o.sum AS scarico, c.sum - o.sum AS deposito, c.prezzo_acquisto, c.prezzo_acquisto * (c.sum - o.sum)  AS prezzo_tot, f.nome
+    	FROM articoli a JOIN ( (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum,d.prezzo_acquisto FROM articoli a, carichi c, dettaglio_carichi d WHERE d.idcarico = c.idcarico AND a.idarticolo = d.idarticolo and c.data_carico<='$P!{data_inventario}' GROUP BY a.idarticolo, a.codbarre,d.prezzo_acquisto) c 
     	LEFT JOIN (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum FROM articoli a, ordini c, dettaglio_ordini d WHERE d.idordine = c.idordine AND a.idarticolo = d.idarticolo and c.data_ordine<='$P!{data_inventario}' GROUP BY a.idarticolo, a.codbarre) o ON c.idarticolo = o.idarticolo) 
     	ON a.idarticolo = c.idarticolo JOIN um ON a.um = um.idum JOIN fornitori f ON a.idfornitore=f.idfornitore WHERE (c.sum - o.sum) > 0 order by codice;]]></queryString>
 
@@ -35,14 +35,14 @@
 	<field name="codice" class="java.lang.String"/>
 	<field name="descrizione" class="java.lang.String"/>
 	<field name="um" class="java.lang.String"/>
-	<field name="carico" class="java.math.BigDecimal"/>
-	<field name="scarico" class="java.math.BigDecimal"/>
-	<field name="deposito" class="java.math.BigDecimal"/>
+	<field name="carico" class="java.lang.Double"/>
+	<field name="scarico" class="java.lang.Double"/>
+	<field name="deposito" class="java.lang.Double"/>
 	<field name="prezzo_acquisto" class="java.lang.Double"/>
 	<field name="prezzo_tot" class="java.lang.Double"/>
 	<field name="nome" class="java.lang.String"/>
 
-	<variable name="SUM_deposito_1" class="java.math.BigDecimal" resetType="Page" calculation="Sum">
+	<variable name="SUM_deposito_1" class="java.lang.Double" resetType="Page" calculation="Sum">
 		<variableExpression><![CDATA[$F{deposito}]]></variableExpression>
 	</variable>
 	<variable name="SUM_prezzo_acquisto_1" class="java.lang.Double" resetType="Column" calculation="Sum">
@@ -51,7 +51,7 @@
 	<variable name="SUM_prezzo_tot_1" class="java.lang.Double" resetType="Column" calculation="Sum">
 		<variableExpression><![CDATA[$F{prezzo_tot}]]></variableExpression>
 	</variable>
-	<variable name="SUM_deposito_2" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
+	<variable name="SUM_deposito_2" class="java.lang.Double" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{deposito}]]></variableExpression>
 	</variable>
 	<variable name="SUM_prezzo_tot_2" class="java.lang.Double" resetType="Report" calculation="Sum">
@@ -401,7 +401,7 @@
 					<textElement textAlignment="Center">
 						<font size="7"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{deposito}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$F{deposito}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="¤ #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -557,7 +557,7 @@
 					<textElement textAlignment="Right">
 						<font pdfFontName="Helvetica" size="8" isBold="false"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{SUM_deposito_1}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{SUM_deposito_1}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -735,7 +735,7 @@
 					<textElement textAlignment="Right">
 						<font pdfFontName="Helvetica" size="8" isBold="false"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{SUM_deposito_1}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{SUM_deposito_1}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -867,7 +867,7 @@
 					<textElement textAlignment="Right">
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{SUM_deposito_2}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{SUM_deposito_2}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement

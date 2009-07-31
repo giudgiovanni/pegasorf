@@ -215,7 +215,7 @@ public class CaricaAggiornaTabacchiGui extends JDialog {
 		c.setDataCarico(data);
 		c.setDataDocumento(data);
 		// c.setNumDocumento(txtNumDocumento.getText());
-		c.setIdDocumento(Constant.ORDINE);
+		c.setIdDocumento(Constant.FATTURA);
 		c.setOraCarico(new Time((new java.util.Date()).getTime()));
 		c.setSconto(0);
 		c.setNote("Aggiornamento listino prezzi.");

@@ -152,6 +152,7 @@ public class GiacenzeGUI extends JFrame {
 		}
 		tot = totImponibile + totImposta;
 		txtTotale.setText(ControlloDati.convertDoubleToPrezzo(tot));
+		txtTotaleVendita.setText(ControlloDati.convertDoubleToPrezzo(tot*1.1));
 	}
 
 	private void caricaArticoli(JComboBox cmbProdotti) {
@@ -296,6 +297,9 @@ public class GiacenzeGUI extends JFrame {
 	private JPanel getPnlSud() {
 		if (pnlSud == null)
 			try {
+				lblTotaleVendita = new JLabel();
+				lblTotaleVendita.setBounds(new Rectangle(642, 10, 101, 25));
+				lblTotaleVendita.setText("Totale Vendita €.");
 				lblTotale = new JLabel();
 				lblTotale.setBounds(new Rectangle(484, 10, 57, 25));
 				lblTotale.setText("Totale \u20AC.");
@@ -320,6 +324,8 @@ public class GiacenzeGUI extends JFrame {
 				pnlSud.add(lblTotale, null);
 				pnlSud.add(getTxtImposta(), null);
 				pnlSud.add(getTxtTotale(), null);
+				pnlSud.add(lblTotaleVendita, null);
+				pnlSud.add(getTxtTotaleVendita(), null);
 				double totImponibile = Giacenze.getTotImponibile();
 				double totImposta = (totImponibile / 100D) * 20D;
 				double totale = totImponibile + totImposta;
@@ -694,6 +700,8 @@ public class GiacenzeGUI extends JFrame {
 	private JTextField txtTotale;
 	private JDateChooser dataInventario;
 	private JButton btnStampaInventarioFornitore = null;
+	private JLabel lblTotaleVendita = null;
+	private JTextField txtTotaleVendita = null;
 
 	/**
 	 * This method initializes btnStampaInventarioFornitore	
@@ -713,6 +721,23 @@ public class GiacenzeGUI extends JFrame {
 					});
 		}
 		return btnStampaInventarioFornitore;
+	}
+
+	/**
+	 * This method initializes txtTotaleVendita	
+	 * 	
+	 * @return javax.swing.JTextField	
+	 */
+	private JTextField getTxtTotaleVendita() {
+		if (txtTotaleVendita == null) {
+			txtTotaleVendita = new JTextField();
+			txtTotaleVendita.setBounds(new Rectangle(743, 10, 96, 25));
+			txtTotaleVendita.setFont(new Font("Dialog", 1, 12));
+			txtTotaleVendita.setDisabledTextColor(Color.red);
+			txtTotaleVendita.setEditable(false);
+			txtTotaleVendita.setEnabled(false);
+		}
+		return txtTotaleVendita;
 	}
 
 }

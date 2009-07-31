@@ -48,8 +48,8 @@ public class Giacenze
 				"WHERE d.idordine = c.idordine AND a.idarticolo = d.idarticolo and c.data_ordine<=? GROUP BY a.idarticolo, a.codbarre) o ON c.idarticolo = o.idarticolo) ON a.idarticolo = c.idarticolo " +
 				"JOIN um ON a.um = um.idum WHERE (c.sum - o.sum) > 0;";
 		st = dbm.getNewPreparedStatement(query);
-		st.setString(1,data.toString());
-		st.setString(2,data.toString());
+		st.setDate(1,data);
+		st.setDate(2,data);
 		rs = st.executeQuery();
 		rs.next();
 		totImp = rs.getDouble(1);
@@ -88,8 +88,8 @@ public class Giacenze
 				"AND a.idarticolo = d.idarticolo and c.data_ordine<=? GROUP BY a.idarticolo, a.codbarre) o ON c.idarticolo = o.idarticolo) ON a.idarticolo = c.idarticolo " +
 				"JOIN um ON a.um = um.idum WHERE (c.sum - o.sum) > 0;";
 		st=dbm.getNewPreparedStatement(query);
-		st.setString(1,data.toString());
-		st.setString(2, data.toString());
+		st.setDate(1,data);
+		st.setDate(2, data);
 		rs = st.executeQuery();
 		rs.next();
 		double tot = rs.getDouble(1);

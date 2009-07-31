@@ -26,10 +26,14 @@
 	<parameter name="data_inventario" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["2007-06-01"]]></defaultValueExpression>
 	</parameter>
-	<queryString><![CDATA[SELECT c.idarticolo, a.codbarre AS codice, a.descrizione, um.nome AS um, c.sum AS carico, o.sum AS scarico, c.sum - o.sum AS deposito, c.prezzo_acquisto, c.prezzo_acquisto * (c.sum - o.sum)  AS prezzo_tot 
-    	FROM articoli a JOIN ( (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum,d.prezzo_acquisto FROM articoli a, carichi c, dettaglio_carichi d WHERE d.idcarico = c.idcarico AND a.idarticolo = d.idarticolo and c.data_carico<='$P!{data_inventario}' GROUP BY a.idarticolo, a.codbarre, d.prezzo_acquisto) c 
+	<queryString><![CDATA[SELECT c.idarticolo, a.codbarre AS codice, a.descrizione, um.nome AS um, c.sum AS carico, o.sum AS scarico, c.sum - o.sum AS deposito, c.prezzo_acquisto, c.prezzo_acquisto * (c.sum - o.sum)::double precision AS prezzo_tot 
+    	FROM articoli a JOIN ( (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum, d.prezzo_acquisto FROM articoli a, carichi c, dettaglio_carichi d WHERE d.idcarico = c.idcarico AND a.idarticolo = d.idarticolo and c.data_carico<='$P!{data_inventario}' and c.iddocumento <> 0 GROUP BY a.idarticolo, a.codbarre,d.prezzo_acquisto) c 
     	LEFT JOIN (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum FROM articoli a, ordini c, dettaglio_ordini d WHERE d.idordine = c.idordine AND a.idarticolo = d.idarticolo and c.data_ordine<='$P!{data_inventario}' GROUP BY a.idarticolo, a.codbarre) o ON c.idarticolo = o.idarticolo) 
-    	ON a.idarticolo = c.idarticolo JOIN um ON a.um = um.idum WHERE (c.sum - o.sum) > 0 order by codice;]]></queryString>
+    	ON a.idarticolo = c.idarticolo JOIN um ON a.um = um.idum WHERE (c.sum - o.sum) > 0::numeric order by codice;
+
+
+
+    ]]></queryString>
 
 	<field name="idarticolo" class="java.lang.Long"/>
 	<field name="codice" class="java.lang.String"/>

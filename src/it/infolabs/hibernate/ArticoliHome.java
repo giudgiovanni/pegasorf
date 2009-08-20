@@ -165,9 +165,15 @@ public class ArticoliHome extends BusinessObjectHome{
 			if(diff>=5){
 				qtaOrdinare+=(numeroPacchetti-diff);
 			}
+			else{
+				qtaOrdinare-=diff;
+			}
 		}else if(numeroPacchetti>10){
 			if(diff>=10){
 				qtaOrdinare+=(numeroPacchetti-diff);
+			}
+			else{
+				qtaOrdinare-=diff;
 			}
 		}
 		

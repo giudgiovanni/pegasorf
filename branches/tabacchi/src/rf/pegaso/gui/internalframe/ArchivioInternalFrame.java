@@ -26,6 +26,7 @@ import rf.pegaso.gui.gestione.ClientiGestione;
 import rf.pegaso.gui.gestione.DocumentiGestione;
 import rf.pegaso.gui.gestione.FatturaByDdt;
 import rf.pegaso.gui.gestione.FornitoriGestione;
+import rf.pegaso.gui.gestione.GrattaVinciGestione;
 import rf.pegaso.gui.gestione.RepartiGestione;
 import rf.pegaso.gui.gestione.ScaricoGui;
 import rf.pegaso.gui.gestione.StampeEtichette;
@@ -67,6 +68,8 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				apriRicerche();
 			}else if (e.getSource() == btnAggiornaTabacchi) {
 				apriAggTabacchi();
+			}else if (e.getSource() == btnGrattaVinci) {
+				apriGrattaVinci();
 			}
 		}
 
@@ -98,6 +101,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	private JButton btnTabacchi = null;
 	private JButton btnCaricoTabacchi = null;
 	private JButton btnAggiornaTabacchi = null;
+	private JButton btnGrattaVinci = null;
 	/**
 	 * This is the xxx default constructor
 	 */
@@ -222,6 +226,11 @@ public class ArchivioInternalFrame extends JInternalFrame {
 		CaricaAggiornaTabacchiGui cat = new CaricaAggiornaTabacchiGui(this.padre);
 		cat.setVisible(true);
 	}
+	
+	private void apriGrattaVinci(){
+		GrattaVinciGestione gvg = new GrattaVinciGestione();
+		gvg.setVisible(true);
+	}
 
 	/**
 	 *
@@ -261,7 +270,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				btnArticoli = new JButton();
 				btnArticoli.setText("Articoli"); // Generated
 				btnArticoli.setPreferredSize(new Dimension(120, 70)); // Generated
-				btnArticoli.setVisible(false);
+				btnArticoli.setVisible(true);
 				btnArticoli.addActionListener(myActionListener);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -281,7 +290,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				btnCarico = new JButton();
 				btnCarico.setText("Carico"); // Generated
 				btnCarico.setPreferredSize(new Dimension(120, 70)); // Generated
-				btnCarico.setVisible(true);
+				btnCarico.setVisible(false);
 				btnCarico.addActionListener(myActionListener);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -429,6 +438,9 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	private JPanel getPnlCentrale() {
 		if (pnlCentrale == null) {
 			try {
+				GridBagConstraints gridBagConstraints22 = new GridBagConstraints();
+				gridBagConstraints22.gridx = 2;
+				gridBagConstraints22.gridy = 1;
 				GridBagConstraints gridBagConstraints13 = new GridBagConstraints();
 				gridBagConstraints13.gridx = 3;
 				gridBagConstraints13.insets = new Insets(10, 10, 10, 10);
@@ -449,15 +461,15 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				GridBagConstraints gridBagConstraints18 = new GridBagConstraints();
 				gridBagConstraints18.gridx = 2; // Generated
 				gridBagConstraints18.insets = new Insets(10, 10, 10, 10);
-				gridBagConstraints18.gridy = 1; // Generated
+				gridBagConstraints18.gridy = 2; // Generated
 				GridBagConstraints gridBagConstraints17 = new GridBagConstraints();
 				gridBagConstraints17.gridx = 3; // Generated
 				gridBagConstraints17.insets = new Insets(10, 10, 10, 10);
-				gridBagConstraints17.gridy = 1; // Generated
+				gridBagConstraints17.gridy = 2; // Generated
 				GridBagConstraints gridBagConstraints21 = new GridBagConstraints();
 				gridBagConstraints21.gridx = 0; // Generated
 				gridBagConstraints21.insets = new Insets(10, 10, 10, 10); // Generated
-				gridBagConstraints21.gridy = 1; // Generated
+				gridBagConstraints21.gridy = 2; // Generated
 				GridBagConstraints gridBagConstraints12 = new GridBagConstraints();
 				gridBagConstraints12.gridx = 4; // Generated
 				gridBagConstraints12.insets = new Insets(10, 10, 10, 10); // Generated
@@ -479,9 +491,9 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				gridBagConstraints3.insets = new Insets(10, 10, 10, 10); // Generated
 				gridBagConstraints3.gridy = 2; // Generated
 				GridBagConstraints gridBagConstraints2 = new GridBagConstraints();
-				gridBagConstraints2.gridx = 4; // Generated
+				gridBagConstraints2.gridx = 0; // Generated
 				gridBagConstraints2.insets = new Insets(10, 10, 10, 10); // Generated
-				gridBagConstraints2.gridy = 2; // Generated
+				gridBagConstraints2.gridy = 1; // Generated
 				pnlCentrale = new JPanel();
 				pnlCentrale.setLayout(new GridBagLayout()); // Generated
 				pnlCentrale.add(getBtnArticoli(), gridBagConstraints2);
@@ -496,6 +508,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				pnlCentrale.add(getBtnTabacchi(), gridBagConstraints1);
 				pnlCentrale.add(getBtnCaricoTabacchi(), gridBagConstraints);
 				pnlCentrale.add(getBtnAggiornaTabacchi(), gridBagConstraints13);
+				pnlCentrale.add(getBtnGrattaVinci(), gridBagConstraints22);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -594,6 +607,25 @@ public class ArchivioInternalFrame extends JInternalFrame {
 			btnAggiornaTabacchi.addActionListener(myActionListener);
 		}
 		return btnAggiornaTabacchi;
+	}
+
+	/**
+	 * This method initializes btnGrattaVinci	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnGrattaVinci() {
+		if (btnGrattaVinci == null) {
+			try {
+				btnGrattaVinci = new JButton();
+				btnGrattaVinci.setText("Gratta e Vinci"); // Generated
+				btnGrattaVinci.setPreferredSize(new Dimension(120, 70)); // Generated
+				btnGrattaVinci.addActionListener(myActionListener);
+			} catch (java.lang.Throwable e) {
+				// TODO: Something
+			}
+		}
+		return btnGrattaVinci;
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

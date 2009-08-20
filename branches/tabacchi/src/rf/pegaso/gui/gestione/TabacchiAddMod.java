@@ -47,6 +47,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.JTextComponent;
 
+import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.pegaso.db.exception.ResultSetVuoto;
 import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.Carico;
@@ -60,6 +61,7 @@ import rf.utility.ControlloDati;
 import rf.utility.MathUtility;
 import rf.utility.db.DBManager;
 import rf.utility.db.UtilityDBManager;
+import rf.utility.db.eccezzioni.CodiceBarreEsistente;
 import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompletion;
@@ -1129,6 +1131,15 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+			} catch (CodiceBarreEsistente e) {
+				JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
+						"ERRORE", JOptionPane.ERROR_MESSAGE);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (CodiceBarreInesistente e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			
 			svuotaCampi();
@@ -1242,6 +1253,15 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 		} catch (IDNonValido e) {
 			JOptionPane.showMessageDialog(this, "Valore idFornitore errato",
 					"ERRORE", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		} catch (CodiceBarreEsistente e) {
+			JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
+					"ERRORE", JOptionPane.ERROR_MESSAGE);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CodiceBarreInesistente e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		// ultimo articolo appunto lavorato

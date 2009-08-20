@@ -19,6 +19,7 @@ import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.utility.Constant;
 import rf.utility.ControlloDati;
 import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.CodiceBarreEsistente;
 import rf.utility.db.eccezzioni.IDNonValido;
 
 public class Articolo {
@@ -314,6 +315,42 @@ public class Articolo {
 		return false;
 	}
 	
+	public boolean codBarreEsistenteForInsert(String codBarre) throws SQLException,
+	CodiceBarreInesistente {
+
+		String query = "SELECT a.idarticolo " +
+				"FROM articoli a " +
+				"where a.codbarre like '"+codBarre.substring(0, 4)+"%' " +
+				"and a.idreparto = " +Constant.REPARTO_GRATTA_E_VINCI;
+		Statement st = dbm.getNewStatement();
+		ResultSet rs = st.executeQuery(query);
+		rs.next();
+		int nRow = rs.getRow();
+		if (st != null)
+			st.close();
+		if (nRow > 0)
+			return true;
+		return false;
+	}
+	
+	public boolean codBarreEsistenteForUpdate(String codBarre) throws SQLException,
+	CodiceBarreInesistente {
+
+		String query = "SELECT a.idarticolo " +
+				"FROM articoli a " +
+				"where a.codbarre = '"+codBarre+"' " +
+				"and a.idarticolo = "+idArticolo;
+		Statement st = dbm.getNewStatement();
+		ResultSet rs = st.executeQuery(query);
+		rs.next();
+		int nRow = rs.getRow();
+		if (st != null)
+			st.close();
+		if (nRow > 0)
+			return false;
+		return true;
+	}
+	
 	/**
 	 * Metodo che verifica se un articolo di tabacchi e' gia' presente nel db
 	 * durante la procedura di aggiornamento del listino dei tabacchi
@@ -437,13 +474,20 @@ public class Articolo {
 		StringBuilder query = new StringBuilder();
 		query.append("select d.qta, d.prezzo_acquisto, c.data_carico, c.ora_carico, (carico - scarico) as giacenza, a.idarticolo, a.descrizione, a.um, a.prezzo_dettaglio, a.iva ");
 		query.append("from carichi c, dettaglio_carichi d, articoli a, giacenza_articoli_all_view v ");
-		query.append("where a.codbarre = ? ");
+//		query.append("where a.codbarre = ? ");
+		
+		query.append("where ((a.codbarre = ? ");
+		query.append("and a.idreparto = ?) ");
+		query.append("or a.codbarre = ?) ");
+		
 		query.append("and a.idarticolo = d.idarticolo ");
 		query.append("and c.idcarico = d.idcarico ");
 		query.append("and v.idarticolo = d.idarticolo ");
 		query.append("order by c.data_carico desc, c.ora_carico desc ");
 		PreparedStatement st = dbm.getNewPreparedStatement(query.toString());
-		st.setString(1, codBarre);
+		st.setString(1, codBarre.substring(0, 4));
+		st.setInt(2, Constant.REPARTO_GRATTA_E_VINCI);
+		st.setString(3, codBarre);
 		ResultSet rs = st.executeQuery();
 		int qtaC = 0;
 		while ( rs.next() ){
@@ -586,12 +630,17 @@ public class Articolo {
 	 * @throws IDNonValido
 	 *             viene lanciata se l'attributo idArticolo � errato e quindi
 	 *             non si pu� effettuare l'aggiornamento della riga
+	 * @throws CodiceBarreInesistente 
+	 * @throws SQLException 
 	 */
-	public int insertArticolo() throws IDNonValido {
+	public int insertArticolo() throws IDNonValido, CodiceBarreEsistente, SQLException, CodiceBarreInesistente {
 
 		idArticolo = dbm.getNewID("articoli", "idArticolo");
 		if (idArticolo <= -1)
 			throw new IDNonValido();
+		if ( codBarreEsistenteForInsert(codBarre) ){
+			throw new CodiceBarreEsistente();
+		}
 		int ok = 0;
 		PreparedStatement pst = null;
 		String insert = "insert into articoli values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -759,11 +808,17 @@ public class Articolo {
 	 * @throws IDNonValido
 	 *             viene lanciata se l'attributo idArticolo � errato e quindi
 	 *             non si pu� effettuare l'aggiornamento della riga
+	 * @throws CodiceBarreEsistente 
+	 * @throws CodiceBarreInesistente 
+	 * @throws SQLException 
 	 */
-	public int updateArticolo() throws IDNonValido {
+	public int updateArticolo() throws IDNonValido, CodiceBarreEsistente, SQLException, CodiceBarreInesistente {
 
 		if (idArticolo <= -1)
 			throw new IDNonValido();
+		if ( codBarreEsistenteForUpdate(codBarre) ){
+			throw new CodiceBarreEsistente();
+		}
 		int ok = 0;
 		PreparedStatement pst = null;
 		String update = "UPDATE articoli SET idArticolo=?,"
@@ -833,7 +888,7 @@ public class Articolo {
 
 	}
 
-	public int duplicaArticolo(int idArticolo) throws SQLException, IDNonValido {
+	public int duplicaArticolo(int idArticolo) throws SQLException, IDNonValido, CodiceBarreEsistente, CodiceBarreInesistente {
 		this.caricaDati(idArticolo);
 		this.insertArticolo();
 		dbm.notifyDBStateChange();

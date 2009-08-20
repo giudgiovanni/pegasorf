@@ -23,9 +23,11 @@ import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
+import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.Fornitore;
 import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.CodiceBarreEsistente;
 import rf.utility.db.eccezzioni.IDNonValido;
 
 /**
@@ -123,6 +125,12 @@ public class ConversioneArt extends JDialog {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (IDNonValido e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (CodiceBarreEsistente e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (CodiceBarreInesistente e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

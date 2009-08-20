@@ -1,5 +1,6 @@
 package rf.pegaso.gui.gestione;
 
+import it.infolabs.hibernate.Articoli;
 import it.infolabs.hibernate.ArticoliHome;
 import it.infolabs.hibernate.Carichi;
 import it.infolabs.hibernate.CarichiHome;
@@ -99,6 +100,7 @@ import rf.utility.MathUtility;
 import rf.utility.db.DBManager;
 import rf.utility.db.MyResultSet;
 import rf.utility.db.UtilityDBManager;
+import rf.utility.db.eccezzioni.CodiceBarreEsistente;
 import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.SospesiColorRenderer;
 import rf.utility.gui.UtilGUI;
@@ -815,6 +817,15 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				try {
 					a.updateArticolo();
 				} catch (IDNonValido e) {
+					e.printStackTrace();
+				} catch (CodiceBarreEsistente e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (CodiceBarreInesistente e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -1575,10 +1586,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			salvaFattura();
 			return;
 		}
-		if (codBarre.equalsIgnoreCase("")) {
-			messaggioCampoMancante("Codice a barre non presente \nselezionare un prodotto");
-			return;
-		}
 		if (tmp == 0.0) {
 			messaggioCampoMancante("Inserire la quantit\340");
 			return;
@@ -1779,59 +1786,44 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 							Integer.parseInt(txtNumeroCarico.getText()))) {
 						c.caricaDati((new Integer(txtNumeroCarico.getText()))
 								.intValue());
-						double qta = 0;
-						try {
-							qta = c.getQuantitaCaricata(a.getIdArticolo());
-						} catch (IDNonValido e) {
-							JOptionPane
-									.showMessageDialog(
-											this,
-											"Probabile Errore nel codice dell'Articolo",
-											"ERRORE", 0);
-							e.printStackTrace();
-						} catch (ResultSetVuoto e) {
-							JOptionPane
-									.showMessageDialog(
-											this,
-											"Il ResultSet probabilmente non \ncontiene informazioni",
-											"ERRORE", 0);
-							e.printStackTrace();
-						}
-						double price = 0.0D;
-						if (txtPrezzo.getValue() instanceof Double)
-							price = ((Double) txtPrezzo.getValue())
-									.doubleValue();
-						else
-							price = ((Long) txtPrezzo.getValue()).intValue();
-						c.updateArticolo(a.getIdArticolo(), qta
-								+ ((Number) txtQta.getValue()).doubleValue(),
-								price);
+//						double qta = 0;
+//						try {
+//							qta = c.getQuantitaCaricata(a.getIdArticolo());
+//						} catch (IDNonValido e) {
+//							JOptionPane
+//									.showMessageDialog(
+//											this,
+//											"Probabile Errore nel codice dell'Articolo",
+//											"ERRORE", 0);
+//							e.printStackTrace();
+//						} catch (ResultSetVuoto e) {
+//							JOptionPane
+//									.showMessageDialog(
+//											this,
+//											"Il ResultSet probabilmente non \ncontiene informazioni",
+//											"ERRORE", 0);
+//							e.printStackTrace();
+//						}
+						double price = a.getPrezzoDettaglio()
+						- MathUtility.percentualeDaAggiungere(a
+								.getPrezzoDettaglio(), 10);
+						double qta = getQtaRiordino(a.getIdArticolo(), (a.getScortaMassima() - (Integer)obj[1]));
+						c.updateArticolo(a.getIdArticolo(), qta, price);
 					} else {
 						// articolo non presente nell'ordine
 						double price = a.getPrezzoDettaglio()
 								- MathUtility.percentualeDaAggiungere(a
 										.getPrezzoDettaglio(), 10);
-						// if (txtPrezzo.getValue() instanceof Double){
-						// price = ((Double)
-						// txtPrezzo.getValue()).doubleValue();
-						// }
-						// else{
-						// price = ((Long) txtPrezzo.getValue()).intValue();
-						// }
-
-						if (a.getScortaMassima() < (Integer) obj[1]) {
-							c.insertArticolo(a.getIdArticolo(),
-									(Integer) obj[1], price);
-						} else {
-							c.insertArticolo(a.getIdArticolo(), a
-									.getScortaMassima()
-									- (Integer) obj[1], price);
+						// Verifichiamo che la qta da ordinare ( scortaMax - giacenza ) sia maggiore di zero
+						if ( (a.getScortaMassima() - (Integer)obj[1]) > 0 ){
+							double qta = getQtaRiordino(a.getIdArticolo(), (a.getScortaMassima() - (Integer)obj[1]));
+							c.insertArticolo(a.getIdArticolo(), qta, price);
 						}
 					}
-					calcoli(c);
-					azzeraCampi();
-					tblCarico.packAll();
 				}
+				calcoli(c);
+				azzeraCampi();
+				tblCarico.packAll();
 
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -1841,6 +1833,39 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public Double getQtaRiordino(long articolo, double qtaOrdinare){
+		Articoli a=ArticoliHome.getInstance().findById(articolo);
+//		double qtaOrdinare=(int)(getGiacenza(articolo)- a.getScortaMinima());
+		int numeroPacchetti=a.getNumeroPacchetti()==null?0:a.getNumeroPacchetti();
+		double diff=0;
+		if(numeroPacchetti !=0){
+			diff=qtaOrdinare%numeroPacchetti;
+		}
+		
+		if(numeroPacchetti <=10){
+			if(diff>=5){
+				qtaOrdinare+=(numeroPacchetti-diff);
+			}
+			else{
+				qtaOrdinare-=diff;
+			}
+		}else if(numeroPacchetti>10){
+			if(diff>=10){
+				qtaOrdinare+=(numeroPacchetti-diff);
+			}
+			else{
+				qtaOrdinare-=diff;
+			}
+		}
+		
+//		Double riordino=0.0;
+//		if(numeroPacchetti!=0){
+//			riordino=(qtaOrdinare/numeroPacchetti)*a.getPeso();
+//		}
+		
+		return qtaOrdinare;
 	}
 
 	private void messaggioCampoMancante(String testo) {

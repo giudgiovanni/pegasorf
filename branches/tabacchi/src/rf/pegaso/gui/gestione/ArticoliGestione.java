@@ -33,9 +33,11 @@ import net.sf.jasperreports.view.JasperViewer;
 
 import org.jdesktop.swingx.JXTable;
 
+import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.pegaso.db.model.ArticoloModel;
 import rf.pegaso.db.tabelle.Articolo;
 import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.CodiceBarreEsistente;
 import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.UpperTextDocument;
@@ -178,6 +180,12 @@ public class ArticoliGestione extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IDNonValido e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CodiceBarreEsistente e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CodiceBarreInesistente e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

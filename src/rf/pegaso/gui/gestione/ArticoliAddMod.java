@@ -40,6 +40,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.JTextComponent;
 
+import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.Fornitore;
 import rf.pegaso.db.tabelle.Reparto;
@@ -48,6 +49,7 @@ import rf.pegaso.gui.utility.SuggerimentoCodice;
 import rf.pegaso.gui.viste.ViewDocCarico;
 import rf.utility.ControlloDati;
 import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.CodiceBarreEsistente;
 import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompletion;
@@ -1742,6 +1744,15 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+			} catch (CodiceBarreEsistente e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (CodiceBarreInesistente e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			svuotaCampi();
 		}
@@ -1771,6 +1782,15 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		} catch (IDNonValido e) {
 			JOptionPane.showMessageDialog(this, "Valore idFornitore errato",
 					"ERRORE", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		} catch (CodiceBarreEsistente e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CodiceBarreInesistente e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		// ultimo articolo appunto lavorato

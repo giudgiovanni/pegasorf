@@ -82,6 +82,7 @@ import rf.pegaso.gui.utility.ModificaQuantitaRiga;
 import rf.utility.ControlloDati;
 import rf.utility.db.DBManager;
 import rf.utility.db.UtilityDBManager;
+import rf.utility.db.eccezzioni.CodiceBarreEsistente;
 import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.SospesiColorRenderer;
 import rf.utility.gui.UtilGUI;
@@ -667,6 +668,15 @@ public class CaricoGui extends JFrame implements TableModelListener {
 				try {
 					a.updateArticolo();
 				} catch (IDNonValido e) {
+					e.printStackTrace();
+				} catch (CodiceBarreEsistente e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (CodiceBarreInesistente e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

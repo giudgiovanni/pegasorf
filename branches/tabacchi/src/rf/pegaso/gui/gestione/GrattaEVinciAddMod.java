@@ -20,6 +20,7 @@ import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -27,6 +28,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
+import java.util.Properties;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -44,6 +46,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.JTextComponent;
 
+import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.pegaso.db.exception.ResultSetVuoto;
 import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.Carico;
@@ -57,6 +60,7 @@ import rf.utility.ControlloDati;
 import rf.utility.MathUtility;
 import rf.utility.db.DBManager;
 import rf.utility.db.UtilityDBManager;
+import rf.utility.db.eccezzioni.CodiceBarreEsistente;
 import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompletion;
@@ -880,6 +884,15 @@ public class GrattaEVinciAddMod extends JFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+			} catch (CodiceBarreEsistente e) {
+				JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
+						"ERRORE", JOptionPane.ERROR_MESSAGE);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (CodiceBarreInesistente e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			
 			svuotaCampi();
@@ -927,10 +940,15 @@ public class GrattaEVinciAddMod extends JFrame {
 		Carico c = new Carico();
 		try {
 
-			c.caricaDati(Constant.CARICO_INIZIALE);
+			Properties props = new Properties();
+			// Leggiamo le configurazioni
+			props.load(new FileReader("carico.properties"));
+			// Salviamo il nuovo id del carico iniziale
+			int idCaricoIniziale = Integer.parseInt(props.getProperty("idcarico"));
+			c.caricaDati(idCaricoIniziale);
 			Articolo a = new Articolo();
 			a.caricaDati(idArticolo);
-			if ( c.codiceBarrePresenteInScarico(a.getCodBarre(), Constant.CARICO_INIZIALE)){
+			if ( c.codiceBarrePresenteInScarico(a.getCodBarre(), idCaricoIniziale)){
 				Object [] obj = c.getQtaPrezzoArticoloCaricata(idArticolo);
 				c.updateArticolo(idArticolo, tmp + (Integer)obj[0], (Double)obj[1]);
 			}
@@ -944,6 +962,10 @@ public class GrattaEVinciAddMod extends JFrame {
 		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(this,
 					"Errore nell'inserimento dinumeri", "NUMERO ERRATO", 0);
+			e.printStackTrace();
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(this,
+					"Errore nel recupero del carico iniziale.", "FILE NON TROVATO", 0);
 			e.printStackTrace();
 		}
 
@@ -980,6 +1002,15 @@ public class GrattaEVinciAddMod extends JFrame {
 			JOptionPane.showMessageDialog(this, "Valore idFornitore errato",
 					"ERRORE", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
+		} catch (CodiceBarreEsistente e) {
+			JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
+					"ERRORE", JOptionPane.ERROR_MESSAGE);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CodiceBarreInesistente e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		// ultimo articolo appunto lavorato
 		this.ultimoArticolo[0]=a.getCodBarre();
@@ -1001,8 +1032,8 @@ public class GrattaEVinciAddMod extends JFrame {
 		
 		// descrementiamo di uno perch� nel combobox � presente
 		// anche un oggetto vuoto
-		int cod = new Integer(codUnitaDiMisura[pos]);
-		a.setCodiceUnitaDiMisura(cod);
+//		int cod = new Integer(codUnitaDiMisura[pos]);
+		a.setCodiceUnitaDiMisura(pos);
 
 		a.setColore("");
 		a.setDescrizione(txtDescrizione.getText());

@@ -90,7 +90,7 @@ public class DBJPanelConfigBackup extends JPanel {
 	    txtDelete.setText(p.getProperty("delete"));
 	    txtInsert.setText(p.getProperty("insert"));
 	} catch (FileNotFoundException e) {
-	    JOptionPane.showMessageDialog(getParent(), "File di proprietà non trovato", "FILE MANCANTE", JOptionPane.ERROR_MESSAGE);
+	    JOptionPane.showMessageDialog(getParent(), "File di propriet\u00E0 non trovato", "FILE MANCANTE", JOptionPane.ERROR_MESSAGE);
 	    e.printStackTrace();
 	} catch (IOException e) {
 	    JOptionPane.showMessageDialog(getParent(), "Errore di IOException", "ERRORE I/O", JOptionPane.ERROR_MESSAGE);

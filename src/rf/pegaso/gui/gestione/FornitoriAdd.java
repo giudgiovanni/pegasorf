@@ -347,7 +347,7 @@ public class FornitoriAdd extends JDialog {
 				lblProvincia.setText("Provincia"); // Generated
 				lblProvincia.setBounds(new Rectangle(302, 111, 53, 16)); // Generated
 				lblCitta = new JLabel();
-				lblCitta.setText("Città"); // Generated
+				lblCitta.setText("Citt\u00E0"); // Generated
 				lblCitta.setBounds(new Rectangle(108, 113, 26, 16)); // Generated
 				lblCap = new JLabel();
 				lblCap.setText("Cap"); // Generated

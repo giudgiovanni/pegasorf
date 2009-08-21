@@ -93,7 +93,7 @@ public class UnitaDiMisuraGestione extends JDialog {
 		int scelta = JOptionPane
 				.showConfirmDialog(
 						this,
-						"Sei sicuro di voler eliminare\nl'unità di misura selezionata?",
+						"Sei sicuro di voler eliminare\nl'unit\u00E0 di misura selezionata?",
 						"AVVISO", JOptionPane.YES_NO_OPTION,
 						JOptionPane.INFORMATION_MESSAGE);
 		if (scelta == JOptionPane.NO_OPTION)
@@ -296,7 +296,7 @@ public class UnitaDiMisuraGestione extends JDialog {
 	 */
 	private void initialize() {
 		this.setSize(617, 316);
-		this.setTitle("Gestione Unità di Misura"); // Generated
+		this.setTitle("Gestione Unit\u00E0 di Misura"); // Generated
 		this.setContentPane(getJContentPane());
 		UtilGUI.centraDialog(this);
 	}

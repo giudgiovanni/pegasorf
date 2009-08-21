@@ -342,7 +342,7 @@ public class ClientiMod extends JDialog {
 				lblProvincia.setText("Provincia"); // Generated
 				lblProvincia.setBounds(new Rectangle(293, 114, 53, 16)); // Generated
 				lblCitta = new JLabel();
-				lblCitta.setText("Città"); // Generated
+				lblCitta.setText("Citt\u00E0"); // Generated
 				lblCitta.setBounds(new Rectangle(104, 115, 26, 16)); // Generated
 				lblCap = new JLabel();
 				lblCap.setText("Cap"); // Generated

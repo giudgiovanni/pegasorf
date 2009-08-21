@@ -193,8 +193,8 @@ public class QuantitaEditorSql extends DefaultCellEditor {
 		ftf.selectAll();
 		Object[] options = { "Modifica", "Ripristina" };
 		int answer = JOptionPane.showOptionDialog(SwingUtilities
-				.getWindowAncestor(ftf), "Inserire una quantità minore",
-				"Quantità selezionata non disponibile in magazzino", JOptionPane.YES_NO_OPTION,
+				.getWindowAncestor(ftf), "Inserire una quantit\u00E0 minore",
+				"Quantit\u00E0 selezionata non disponibile in magazzino", JOptionPane.YES_NO_OPTION,
 				JOptionPane.ERROR_MESSAGE, null, options, options[1]);
 
 		if (answer == 1) { // ritorna

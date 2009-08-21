@@ -831,7 +831,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 				lblQta.setBounds(new Rectangle(59, 65, 60, 16)); // Generated
 				lblQta.setHorizontalTextPosition(SwingConstants.CENTER); // Generated
 				lblQta.setHorizontalAlignment(SwingConstants.CENTER); // Generated
-				lblQta.setText("qtà"); // Generated
+				lblQta.setText("qt\u00E0"); // Generated
 				lblUm = new JLabel();
 				lblUm.setBounds(new Rectangle(8, 65, 44, 16)); // Generated
 				lblUm.setHorizontalAlignment(SwingConstants.CENTER); // Generated
@@ -1350,7 +1350,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 				double qta1 = ((Number)txtQta.getValue()).doubleValue();
 				if ((giacenza - qta1) < 0) {
 					JOptionPane.showMessageDialog(this,
-							"Quantità richiesta non disponibile\nDisponibilità magazzino = "
+							"Quantit\u00E0 richiesta non disponibile\nDisponibilit\u00E0 magazzino = "
 									+ giacenza, "AVVISO",
 							JOptionPane.INFORMATION_MESSAGE);
 					return;
@@ -1367,7 +1367,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 
 				if ((giacenza - qta) < 0) {
 					JOptionPane.showMessageDialog(this,
-							"Quantità non disponibile", "AVVISO",
+							"Quantit\u00E0 non disponibile", "AVVISO",
 							JOptionPane.INFORMATION_MESSAGE);
 					return;
 				} else {

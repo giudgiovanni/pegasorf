@@ -8,6 +8,8 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -36,6 +38,7 @@ import org.jdesktop.swingx.JXTable;
 import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.pegaso.db.model.ArticoloModel;
 import rf.pegaso.db.tabelle.Articolo;
+import rf.pegaso.gui.gestione.TabacchiGestione.MyMouseAdapter;
 import rf.utility.db.DBManager;
 import rf.utility.db.eccezzioni.CodiceBarreEsistente;
 import rf.utility.db.eccezzioni.IDNonValido;
@@ -78,6 +81,19 @@ public class ArticoliGestione extends JFrame {
 		}
 
 	}
+	
+	class MyMouseAdapter extends MouseAdapter{
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			if(e.getSource()==tblArticoli && e.getClickCount()==2){
+				modificaArticolo();
+			}
+		}
+		
+	}
+	
+	private MyMouseAdapter myMouseadapter;
 
 	private static final long serialVersionUID = 1L;
 
@@ -515,7 +531,8 @@ public class ArticoliGestione extends JFrame {
 		});
 		setExtendedState(MAXIMIZED_BOTH);
 		UtilGUI.centraFrame(this);
-
+		myMouseadapter=new MyMouseAdapter();
+		tblArticoli.addMouseListener(myMouseadapter);
 	}
 
 	/**

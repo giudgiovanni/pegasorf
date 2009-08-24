@@ -1871,16 +1871,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		// FINE PUNTO BACKUP
 
 		Articoli a = new Articoli();
-		List<Object[]> result;
-		try {
-			result = ArticoliHome.getInstance().allArticoliSottoSogliaMinima();
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-			JOptionPane.showMessageDialog(this,
-					"Si e' verificato un errore durante il recupero dei dati.",
-					"ERRORE", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
+		List<Object[]> result = ArticoliHome.getInstance().allArticoliSottoSogliaMinima();
 
 		if (result.size() == 0) {
 			JOptionPane.showMessageDialog(this,
@@ -1927,11 +1918,16 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 					// verifichiamo se l'articolo e' gia' presente, e modifichiamo
 					// la qta
 					DettaglioCarichi dc = new DettaglioCarichi();
-					dc.setArticoli(a);
-					dc.setCarichi(c);
-					if ( Carico.idArticoloPresenteInScarico((int)a.getIdarticolo(), (int)c.getIdcarico()) ){
+					DettaglioCarichiId idDC = new DettaglioCarichiId();
+					idDC.setIdarticolo(a.getIdarticolo());
+					idDC.setIdcarico(c.getIdcarico());
+					dc.setId(idDC);
+					
+					if ( DettaglioCarichiHome.getInstance().findById(idDC) != null ){
 						double price = a.getPrezzoDettaglio() - MathUtility.percentualeDaAggiungere(a.getPrezzoDettaglio(), 10);
 						Integer qta = getQtaRiordino(a, (a.getScortaMassima() - (Double)obj[1])).intValue();
+						dc.setArticoli(a);
+						dc.setCarichi(c);
 						dc.setPrezzoAcquisto(price);
 						dc.setQta(qta);
 						dc.setSconto(0);
@@ -1942,10 +1938,8 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 						double price = a.getPrezzoDettaglio() - MathUtility.percentualeDaAggiungere(a.getPrezzoDettaglio(), 10);
 						// Verifichiamo che la qta da ordinare ( scortaMax - giacenza ) sia maggiore di zero
 						if ( (a.getScortaMassima() - (Double)obj[1]) > 0 ){
-							DettaglioCarichiId idDC = new DettaglioCarichiId();
-							idDC.setIdarticolo(a.getIdarticolo());
-							idDC.setIdcarico(c.getIdcarico());
-							dc.setId(idDC);
+							dc.setArticoli(a);
+							dc.setCarichi(c);
 							Integer qta = getQtaRiordino(a, (a.getScortaMassima() - (Double)obj[1])).intValue();
 							dc.setPrezzoAcquisto(price);
 							dc.setQta(qta);
@@ -1965,10 +1959,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				JOptionPane.showMessageDialog(this,
 						"Errore nell'inserimento dinumeri", "NUMERO ERRATO", 0);
 				e.printStackTrace();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			} 
 		}
 	}
 	

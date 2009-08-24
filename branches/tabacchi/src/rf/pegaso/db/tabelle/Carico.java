@@ -51,6 +51,27 @@ public class Carico {
 			rs.close();
 		return trovato;
 	}
+	
+	public static boolean idArticoloPresenteInScarico(int idArticolo, int idcarico) throws SQLException {
+		DBManager dbm = DBManager.getIstanceSingleton();
+		ResultSet rs = null;
+		String query = "select codbarre from articoli_caricati_view where idarticolo=? and idcarico=?";
+		PreparedStatement st = dbm.getNewPreparedStatement(query);
+		st.setInt(1, idArticolo);
+		st.setInt(2, idcarico);
+		rs = st.executeQuery();
+		rs.next();
+		boolean trovato = false;
+		if (rs.getRow() < 1)
+			trovato = false;
+		else
+			trovato = true;
+		if (st != null)
+			st.close();
+		if (rs != null)
+			rs.close();
+		return trovato;
+	}
 
 	private Date dataCarico;
 
@@ -79,6 +100,8 @@ public class Carico {
 	private int primaNota;
 
 	private int sconto;
+	
+	private int riferimentoOrdine;
 
 	public Carico() {
 		this.dbm = DBManager.getIstanceSingleton();
@@ -104,7 +127,8 @@ public class Carico {
 			this.rifDoc = rs.getInt("rif_doc");
 			this.iva_doc=rs.getInt("iva_documento");
 			this.sconto=rs.getInt("sconto");
-			primaNota=rs.getInt("ins_pn");
+			this.primaNota=rs.getInt("ins_pn");
+			this.riferimentoOrdine=rs.getInt("riferimento_ordine");
 		}
 		
 		if (st != null)
@@ -421,7 +445,7 @@ public class Carico {
 		idCarico = dbm.getNewID("carichi", "idCarico");
 		int ok = 0;
 		PreparedStatement pst = null;
-		String update = "insert into carichi values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String update = "insert into carichi values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		// preleviamo la data di inserimento
 		// e la impostiamo nelle proprietà
 		java.util.Date data = new java.util.Date();
@@ -444,6 +468,7 @@ public class Carico {
 			pst.setInt(12, this.sconto);
 			pst.setInt(13, this.iva_doc);
 			pst.setInt(14, this.primaNota);
+			pst.setInt(15, this.riferimentoOrdine);
 
 			ok = pst.executeUpdate();
 		} catch (SQLException e) {
@@ -555,7 +580,7 @@ public class Carico {
 		int ok = 0;
 		PreparedStatement pst = null;
 		String update = "UPDATE carichi SET idcarico=?,"
-				+ "idfornitore=?,data_carico=?,ora_carico=?,note=?,iddocumento=?,num_documento=?,data_documento=?,totale_documento=?,sospeso=?,rif_doc=?,sconto=?,iva_documento=?,ins_pn=? WHERE idcarico=?";
+				+ "idfornitore=?,data_carico=?,ora_carico=?,note=?,iddocumento=?,num_documento=?,data_documento=?,totale_documento=?,sospeso=?,rif_doc=?,sconto=?,iva_documento=?,ins_pn=?,riferimento_ordine=? WHERE idcarico=?";
 		 dataCarico = new Date(new java.util.Date().getTime());
 		 oraCarico = new Time(new java.util.Date().getTime());
 		pst = dbm.getNewPreparedStatement(update);
@@ -574,7 +599,8 @@ public class Carico {
 			pst.setInt(12, this.sconto);
 			pst.setInt(13, this.iva_doc);
 			pst.setInt(14, primaNota);
-			pst.setInt(15, this.idCarico);
+			pst.setInt(15, this.riferimentoOrdine);
+			pst.setInt(16, this.idCarico);
 
 			ok = pst.executeUpdate();
 		} catch (SQLException e) {
@@ -759,6 +785,14 @@ public class Carico {
 
 	public void setIva_doc(int iva_doc) {
 		this.iva_doc = iva_doc;
+	}
+
+	public int getRiferimentoOrdine() {
+		return riferimentoOrdine;
+	}
+
+	public void setRiferimentoOrdine(int riferimentoOrdine) {
+		this.riferimentoOrdine = riferimentoOrdine;
 	}
 
 

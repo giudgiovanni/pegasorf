@@ -126,11 +126,17 @@ public class Articolo {
 	 * @return
 	 * @throws SQLException
 	 */
-	public Object[] allArticoli() throws SQLException {
+	public Object[] allArticoli(boolean withTabacchi) throws SQLException {
 		String[] o = null;
 		ResultSet rs = null;
 		Statement pst = null;
-		String query = "select idarticolo || ' - ' || descrizione from articoli order by descrizione";
+		String query;
+		if ( withTabacchi ){
+			query = "select idarticolo || ' - ' || descrizione from articoli order by descrizione";
+		}
+		else {
+			query = "select idarticolo || ' - ' || descrizione from articoli where idreparto <> "+Constant.REPARTO_TABACCHI+" order by descrizione";
+		}
 		pst = dbm.getNewStatement();
 		rs = pst.executeQuery(query);
 		rs.last();

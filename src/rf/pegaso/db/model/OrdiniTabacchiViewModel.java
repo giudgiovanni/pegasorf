@@ -99,7 +99,7 @@ public class OrdiniTabacchiViewModel extends AbstractTableModel implements
 				numberFormatter.setMinimumFractionDigits(2);
 				return numberFormatter.format(d);
 			}
-			if(c==7){
+			if(c==8){
 				Integer i=(Integer)o;
 				if(i==null)
 					return "PAGATO";
@@ -133,7 +133,7 @@ public class OrdiniTabacchiViewModel extends AbstractTableModel implements
 	 *
 	 */
 	private void recuperaDati() throws SQLException {
-		this.query = "select c.idcarico as id,c.data_documento,c.num_documento as numero, d.descrizione,f.nome as fornitore,c.note,c.totale_documento as totale,c.sospeso from carichi as c,tipo_documento as d,  fornitori as f  where c.idcarico=c.idcarico and c.idfornitore=f.idfornitore and c.iddocumento=d.iddocumento and d.iddocumento="+Constant.ORDINE+"order by c.data_documento desc";
+		this.query = "select c.idcarico as id,c.riferimento_ordine as numero_ordine,c.data_documento,c.num_documento as numero, d.descrizione,f.nome as fornitore,c.note,c.totale_documento as totale,c.sospeso from carichi as c,tipo_documento as d,  fornitori as f  where c.idcarico=c.idcarico and c.idfornitore=f.idfornitore and c.iddocumento=d.iddocumento and d.iddocumento="+Constant.ORDINE+"order by c.data_documento desc";
 		pst = dbm.getNewPreparedStatement(query);
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();

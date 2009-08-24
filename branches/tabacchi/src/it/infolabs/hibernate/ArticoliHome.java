@@ -4,15 +4,12 @@ import org.apache.log4j.Logger;
 
 // Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-import javax.naming.InitialContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.LockMode;
-import org.hibernate.SessionFactory;
 
 import rf.pegaso.db.tabelle.Articolo;
 import static org.hibernate.criterion.Example.create;
@@ -183,6 +180,25 @@ public class ArticoliHome extends BusinessObjectHome{
 		}
 		
 		return riordino;
+	}
+	
+	/**
+	 * Ritorna tutti gli articoli che sono scesi sotto la soglia minima
+	 * @return
+	 * @throws SQLException
+	 */
+	public ArrayList<Object[]> allArticoliSottoSogliaMinima() {		
+		log.debug("finding all Articoli sotto soglia minima.");
+		try {
+			ArrayList<Object[]> results = (ArrayList<Object[]>) sessionFactory.getCurrentSession().createSQLQuery("select a.idarticolo, (v.carico-v.scarico) from giacenza_articoli_all_view v, articoli a where v.idarticolo=a.idarticolo and (v.carico-v.scarico) < a.scorta_minima").list();
+			
+			log.debug("finding all Articoli sotto soglia minima successful, result size: "
+					+ results.size());
+			return results;
+		} catch (RuntimeException re) {
+			log.error("finding all Articoli sotto soglia minima failed", re);
+			throw re;
+		}
 	}
 	
 }

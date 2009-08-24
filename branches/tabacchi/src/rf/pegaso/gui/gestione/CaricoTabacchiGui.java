@@ -4,6 +4,11 @@ import it.infolabs.hibernate.Articoli;
 import it.infolabs.hibernate.ArticoliHome;
 import it.infolabs.hibernate.Carichi;
 import it.infolabs.hibernate.CarichiHome;
+import it.infolabs.hibernate.DettaglioCarichi;
+import it.infolabs.hibernate.DettaglioCarichiHome;
+import it.infolabs.hibernate.DettaglioCarichiId;
+import it.infolabs.hibernate.FornitoriHome;
+import it.infolabs.hibernate.TipoDocumentoHome;
 import it.infolabs.hibernate.U88fax;
 import it.infolabs.hibernate.U88faxHome;
 
@@ -29,6 +34,7 @@ import java.awt.print.PrinterException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -229,13 +235,14 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		pnlCentro = null;
 		padre = frame;
 		dbm = DBManager.getIstanceSingleton();
+		articolo = null;
 		initialize();
 	}
 
 	public void eliminaUltimoCarico() {
-		int id=Integer.parseInt(txtNumeroCarico.getText());
+//		int id=Integer.parseInt(idcarico);
 		CarichiHome.getInstance().begin();
-		Carichi carico=CarichiHome.getInstance().findById(id);
+		Carichi carico=CarichiHome.getInstance().findById(idcarico);
 		if(carico!=null){
 			CarichiHome.getInstance().delete(carico);
 		}
@@ -325,7 +332,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 		Carico c = new Carico();
 		try {
-			c.setIdCarico((new Integer(txtNumeroCarico.getText())).intValue());
+			c.setIdCarico(idcarico);//(new Integer(txtNumeroCarico.getText())).intValue());
 			c.setIdFornitore(1);
 			c.setDataCarico(new Date(dataCarico.getDate().getTime()));
 			c.setDataDocumento(new Date(dataCarico.getDate().getTime()));
@@ -343,9 +350,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			}
 			c.setTotaleDocumentoIvato(tot);
 			c.setSospeso(0);
-			if (!c
-					.isInsert((new Integer(txtNumeroCarico.getText()))
-							.intValue()))
+			if ( !c.isInsert(idcarico) )//(new Integer(txtNumeroCarico.getText())).intValue()))
 				c.insertCarico();
 			else
 				try {
@@ -414,7 +419,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			e.printStackTrace();
 		}
 		Carico c = new Carico();
-		idcarico = (new Integer(txtNumeroCarico.getText())).intValue();
+//		idcarico = (new Integer(txtNumeroCarico.getText())).intValue();
 		try {
 			c.caricaDati(idcarico);
 			c.updateArticolo(id, c.getQuantitaCaricata(id), prezzo);
@@ -484,7 +489,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		try {
 			a.caricaDatiByCodBarre(codBarre);
 			Carico c = new Carico();
-			c.caricaDati((new Integer(txtNumeroCarico.getText())).intValue());
+			c.caricaDati(idcarico);//(new Integer(txtNumeroCarico.getText())).intValue());
 			String o = (String) tblCarico.getValueAt(riga, 5);
 			Double d = new Double(0.0D);
 			try {
@@ -537,7 +542,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	private void azzeraTuttiCampi() {
 		Carico c = new Carico();
 		idcarico = c.getNewID();
-		txtNumeroCarico.setText((new Integer(idcarico)).toString());
+		txtNumeroCarico.setText((new Integer(dbm.getNewID("carichi", "riferimento_ordine"))).toString());
 		dataCarico.setDate(new java.util.Date());
 		ricaricaTableCarico(idcarico);
 		azzeraCampi();
@@ -547,7 +552,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		cmbProdotti.removeAllItems();
 		Articolo f = new Articolo();
 		try {
-			String as[] = (String[]) f.allArticoli();
+			String as[] = (String[]) f.allArticoli(true);
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
 			((IDJComboBox) cmbProdotti).caricaNewValueComboBox(as, true);
@@ -613,6 +618,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		Articolo a = new Articolo();
 		try {
 			if (a.findByCodBarre(codBarre)) {
+				articolo = a;
 				Fornitore f = new Fornitore();
 				f.caricaDati(a.getIdFornitore());
 				cmbProdotti.setSelectedItem(a.getDescrizione());
@@ -698,7 +704,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 		Carico c = new Carico();
 		try {
-			c.caricaDati(new Integer(txtNumeroCarico.getText()).intValue());
+			c.caricaDati(new Integer(idcarico));//txtNumeroCarico.getText()).intValue());
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -711,7 +717,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	}
 
 	private void caricaDati(Carico c) {
-		txtNumeroCarico.setText((new Integer(c.getIdCarico())).toString());
+		txtNumeroCarico.setText((new Integer(c.getRiferimentoOrdine())).toString());
 		dataCarico.setDate(c.getDataCarico());
 		txtNote.setText(c.getNote());
 		Documento d = new Documento();
@@ -879,7 +885,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			e1.printStackTrace();
 		}
 		Carico c = new Carico();
-		c.setIdCarico((new Integer(txtNumeroCarico.getText())).intValue());
+		c.setIdCarico(idcarico);//(new Integer(txtNumeroCarico.getText())).intValue());
 		try {
 			c.deleteArticolo(a.getIdArticolo());
 		} catch (SQLException e) {
@@ -952,6 +958,8 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 					c.updateCarico();
 
 			}
+			idcarico = c.getNewID();
+			txtNumeroCarico.setText((new Integer(dbm.getNewID("carichi", "riferimento_ordine"))).toString());
 		} catch (IDNonValido e) {
 			JOptionPane.showMessageDialog(this, "Valore idCliente errato",
 					"ERRORE", 2);
@@ -1057,6 +1065,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 		try {
 			a.caricaDati(id);
+			this.articolo = a;
 			Fornitore f = new Fornitore();
 			f.caricaDati(a.getIdFornitore());
 			// cmbFornitori.setSelectedItem(f.getNome());
@@ -1329,17 +1338,17 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				c.setMinWidth(100);
 				c.setPreferredWidth(100);
 
-				c = tblViewCarichi.getColumnModel().getColumn(2);
-				c.setMaxWidth(60);
-				c.setMinWidth(60);
-				c.setPreferredWidth(60);
-
-				c = tblViewCarichi.getColumnModel().getColumn(6);
+				c = tblViewCarichi.getColumnModel().getColumn(3);
 				c.setMaxWidth(60);
 				c.setMinWidth(60);
 				c.setPreferredWidth(60);
 
 				c = tblViewCarichi.getColumnModel().getColumn(7);
+				c.setMaxWidth(60);
+				c.setMinWidth(60);
+				c.setPreferredWidth(60);
+
+				c = tblViewCarichi.getColumnModel().getColumn(8);
 				c.setMaxWidth(60);
 				c.setMinWidth(60);
 				c.setPreferredWidth(60);
@@ -1412,7 +1421,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				txtNumeroCarico.setBounds(new Rectangle(69, 20, 65, 25));
 				txtNumeroCarico.setEditable(false);
 				AutoCompleteTextComponent complete = new AutoCompleteTextComponent(
-						txtNumeroCarico, dbm, "carichi", "idcarico");
+						txtNumeroCarico, dbm, "carichi", "riferimento_ordine");
 				dbm.addDBStateChange(complete);
 				txtNumeroCarico.setDocument(new UpperAutoCompleteDocument(
 						complete, false));
@@ -1533,7 +1542,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			}
 		});
 		UtilGUI.centraFrame(this);
-		txtNumeroCarico.setText((new Integer(idcarico)).toString());
+		txtNumeroCarico.setText((new Integer(dbm.getNewID("carichi", "riferimento_ordine"))).toString());
 		dataCarico.setDate(new java.util.Date());
 		// caricaFornitori(cmbFornitori);
 		caricaArticoli(cmbProdotti);
@@ -1593,12 +1602,9 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		Carico c = new Carico();
 		try {
 
-			if (!c
-					.isInsert((new Integer(txtNumeroCarico.getText()))
-							.intValue())) {
+			if (!c.isInsert(idcarico)){//(new Integer(txtNumeroCarico.getText())).intValue())) {
 
-				c.setIdCarico((new Integer(txtNumeroCarico.getText()))
-						.intValue());
+				c.setIdCarico(idcarico);//(new Integer(txtNumeroCarico.getText())).intValue());
 				// uno sta per monopoli
 				c.setIdFornitore(Constant.FORNITORE_TABACCHI);
 				c.setDataCarico(new Date(dataCarico.getDate().getTime()));
@@ -1610,10 +1616,10 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				c.setInsertByPN(0);
 				c.setSconto(0);
 				c.setSospeso(0);
+				c.setRiferimentoOrdine(Integer.parseInt(txtNumeroCarico.getText()));
 				c.insertCarico();
 			} else {
-				c.setIdCarico((new Integer(txtNumeroCarico.getText()))
-						.intValue());
+				c.setIdCarico(idcarico);//(new Integer(txtNumeroCarico.getText())).intValue());
 				c.setIdFornitore(Constant.FORNITORE_TABACCHI);
 				c.setDataCarico(new Date(dataCarico.getDate().getTime()));
 				c.setDataDocumento(new Date(dataCarico.getDate().getTime()));
@@ -1623,6 +1629,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				c.setSconto(0);
 				c.setNote(txtNote.getText());
 				c.setSospeso(0);
+				c.setRiferimentoOrdine(Integer.parseInt(txtNumeroCarico.getText()));
 				try {
 					c.updateCarico();
 				} catch (IDNonValido e) {
@@ -1630,17 +1637,17 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				}
 			}
 //			controlloAggPrezzo();
-			Articolo a = new Articolo();
-			try {
-				a.caricaDatiByCodBarre(txtCodBarre.getText());
-			} catch (IDNonValido e) {
-				e.printStackTrace();
-			}
-			c.setIdCarico((new Integer(txtNumeroCarico.getText())).intValue());
-			if (Carico.codiceBarrePresenteInScarico(txtCodBarre.getText(),
-					Integer.parseInt(txtNumeroCarico.getText()))) {
-				c.caricaDati((new Integer(txtNumeroCarico.getText()))
-						.intValue());
+			Articolo a = articolo;//new Articolo();
+//			try {
+//				a.caricaDatiByCodBarre(txtCodBarre.getText());
+//			} catch (IDNonValido e) {
+//				e.printStackTrace();
+//			}
+			c.setIdCarico(idcarico);//(new Integer(txtNumeroCarico.getText())).intValue());
+			if ( Carico.idArticoloPresenteInScarico(a.getIdArticolo(), idcarico) ){
+//			if (Carico.codiceBarrePresenteInScarico(txtCodBarre.getText(), idcarico) ){
+//					Integer.parseInt(txtNumeroCarico.getText()))) {
+				c.caricaDati(idcarico);//(new Integer(txtNumeroCarico.getText())).intValue());
 				double qta = 0;
 				try {
 					qta = c.getQuantitaCaricata(a.getIdArticolo());
@@ -1665,6 +1672,8 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				c.updateArticolo(a.getIdArticolo(), qta
 						+ ((Number) txtQta.getValue()).doubleValue(), price);
 			} else {
+				// Inseriamo l'articolo nel carico zero per essere visibile
+				inserisciInCaricoZero();
 				double price = 0.0D;
 				if (txtPrezzo.getValue() instanceof Double)
 					price = ((Double) txtPrezzo.getValue()).doubleValue();
@@ -1676,6 +1685,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			calcoli(c);
 			azzeraCampi();
 			tblCarico.packAll();
+			articolo = null;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (NumberFormatException e) {
@@ -1686,6 +1696,152 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 	}
 
+	/**
+	 * Metodo che recupera tutti gli articoli che si trovano sotto la soglia
+	 * minima e genera un ordine con tali prodotti
+	 * 
+	 */
+//	private void caricaArticoliSogliaMinima() {
+//
+//		// PUNTO DI BACKUP DA ATTIVARE DA CONFIGURAZIONI
+//		try {
+//			UtilityDBManager.getSingleInstance().backupDataBase(
+//					UtilityDBManager.INSERT);
+//		} catch (FileNotFoundException e1) {
+//			JOptionPane
+//					.showMessageDialog(
+//							this,
+//							"File di configurazione per backup\nmancante o danneggiato",
+//							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+//			e1.printStackTrace();
+//		} catch (IOException e1) {
+//			JOptionPane
+//					.showMessageDialog(
+//							this,
+//							"File di configurazione per backup\nmancante o danneggiato",
+//							"ERRORE FILE", JOptionPane.ERROR_MESSAGE);
+//			e1.printStackTrace();
+//		}
+//		// FINE PUNTO BACKUP
+//
+//		Articolo a = new Articolo();
+//		List<Object[]> result;
+//		try {
+//			result = a.allArticoliSottoSogliaMinima();
+////			result = ArticoliHome.getInstance().allArticoliSottoSogliaMinima();
+//		} catch (SQLException e1) {
+//			e1.printStackTrace();
+//			JOptionPane.showMessageDialog(this,
+//					"Si e' verificato un errore durante il recupero dei dati.",
+//					"ERRORE", JOptionPane.ERROR_MESSAGE);
+//			return;
+//		}
+//
+//		if (result.size() == 0) {
+//			JOptionPane.showMessageDialog(this,
+//					"Non sono presenti articoli sotto la soglia minima.",
+//					"INFO", JOptionPane.INFORMATION_MESSAGE);
+//		} else {
+//			Carico c = new Carico();
+//			try {
+//
+//				if (!c.isInsert(idcarico)){//(new Integer(txtNumeroCarico.getText())).intValue())) {
+//
+//					c.setIdCarico(idcarico);//(new Integer(txtNumeroCarico.getText())).intValue());
+//					// uno sta per monopoli
+//					c.setIdFornitore(Constant.FORNITORE_TABACCHI);
+//					c.setDataCarico(new Date(dataCarico.getDate().getTime()));
+//					c
+//							.setDataDocumento(new Date(dataCarico.getDate()
+//									.getTime()));
+//					// c.setNumDocumento(txtNumDocumento.getText());
+//					c.setIdDocumento(Constant.ORDINE);
+//					c.setOraCarico(new Time((new java.util.Date()).getTime()));
+//					c.setNote(txtNote.getText());
+//					c.setInsertByPN(0);
+//					c.setSconto(0);
+//					c.setSospeso(0);
+//					c.insertCarico();
+//				} else {
+//					c.setIdCarico(idcarico);//(new Integer(txtNumeroCarico.getText())).intValue());
+//					c.setIdFornitore(Constant.FORNITORE_TABACCHI);
+//					c.setDataCarico(new Date(dataCarico.getDate().getTime()));
+//					c
+//							.setDataDocumento(new Date(dataCarico.getDate()
+//									.getTime()));
+//					// c.setNumDocumento(txtNumDocumento.getText());
+//					c.setIdDocumento(Constant.ORDINE);
+//					c.setOraCarico(new Time((new java.util.Date()).getTime()));
+//					c.setSconto(0);
+//					c.setNote(txtNote.getText());
+//					c.setSospeso(0);
+//					try {
+//						c.updateCarico();
+//					} catch (IDNonValido e) {
+//						e.printStackTrace();
+//					}
+//				}
+//				// controlloAggPrezzo();
+//				for (Object[] obj : result) {
+//					a = new Articolo();
+//					// a.caricaDatiByCodBarre(txtCodBarre.getText());
+//					a.caricaDati((Integer) obj[0]);
+//					c.setIdCarico(idcarico);//(new Integer(txtNumeroCarico.getText())).intValue());
+//					// verifichiamo se l-articolo e gia presente, e modifichiamo
+//					// la qta
+//					if (Carico.codiceBarrePresenteInScarico(a.getCodBarre(), idcarico) ){
+////							Integer.parseInt(txtNumeroCarico.getText()))) {
+//						c.caricaDati((new Integer(txtNumeroCarico.getText()))
+//								.intValue());
+////						double qta = 0;
+////						try {
+////							qta = c.getQuantitaCaricata(a.getIdArticolo());
+////						} catch (IDNonValido e) {
+////							JOptionPane
+////									.showMessageDialog(
+////											this,
+////											"Probabile Errore nel codice dell'Articolo",
+////											"ERRORE", 0);
+////							e.printStackTrace();
+////						} catch (ResultSetVuoto e) {
+////							JOptionPane
+////									.showMessageDialog(
+////											this,
+////											"Il ResultSet probabilmente non \ncontiene informazioni",
+////											"ERRORE", 0);
+////							e.printStackTrace();
+////						}
+//						double price = a.getPrezzoDettaglio()
+//						- MathUtility.percentualeDaAggiungere(a
+//								.getPrezzoDettaglio(), 10);
+//						double qta = getQtaRiordino(a.getIdArticolo(), (a.getScortaMassima() - (Integer)obj[1]));
+//						c.updateArticolo(a.getIdArticolo(), qta, price);
+//					} else {
+//						// articolo non presente nell'ordine
+//						double price = a.getPrezzoDettaglio()
+//								- MathUtility.percentualeDaAggiungere(a
+//										.getPrezzoDettaglio(), 10);
+//						// Verifichiamo che la qta da ordinare ( scortaMax - giacenza ) sia maggiore di zero
+//						if ( (a.getScortaMassima() - (Integer)obj[1]) > 0 ){
+//							double qta = getQtaRiordino(a.getIdArticolo(), (a.getScortaMassima() - (Integer)obj[1]));
+//							c.insertArticolo(a.getIdArticolo(), qta, price);
+//						}
+//					}
+//				}
+//				calcoli(c);
+//				azzeraCampi();
+//				tblCarico.packAll();
+//
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			} catch (NumberFormatException e) {
+//				JOptionPane.showMessageDialog(this,
+//						"Errore nell'inserimento dinumeri", "NUMERO ERRATO", 0);
+//				e.printStackTrace();
+//			}
+//		}
+//	}
+	
 	/**
 	 * Metodo che recupera tutti gli articoli che si trovano sotto la soglia
 	 * minima e genera un ordine con tali prodotti
@@ -1714,10 +1870,10 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		}
 		// FINE PUNTO BACKUP
 
-		Articolo a = new Articolo();
+		Articoli a = new Articoli();
 		List<Object[]> result;
 		try {
-			result = a.allArticoliSottoSogliaMinima();
+			result = ArticoliHome.getInstance().allArticoliSottoSogliaMinima();
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 			JOptionPane.showMessageDialog(this,
@@ -1730,113 +1886,107 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			JOptionPane.showMessageDialog(this,
 					"Non sono presenti articoli sotto la soglia minima.",
 					"INFO", JOptionPane.INFORMATION_MESSAGE);
-		} else {
-			Carico c = new Carico();
+		} 
+		else {
+			Carichi c = new Carichi();
 			try {
 
-				if (!c.isInsert((new Integer(txtNumeroCarico.getText()))
-						.intValue())) {
+				if ( CarichiHome.getInstance().findById(idcarico) == null ){
 
-					c.setIdCarico((new Integer(txtNumeroCarico.getText()))
-							.intValue());
+					c.setIdcarico(idcarico);
 					// uno sta per monopoli
-					c.setIdFornitore(Constant.FORNITORE_TABACCHI);
+					c.setFornitori(FornitoriHome.getInstance().findById(Constant.FORNITORE_TABACCHI));
 					c.setDataCarico(new Date(dataCarico.getDate().getTime()));
-					c
-							.setDataDocumento(new Date(dataCarico.getDate()
-									.getTime()));
-					// c.setNumDocumento(txtNumDocumento.getText());
-					c.setIdDocumento(Constant.ORDINE);
+					c.setDataDocumento(new Date(dataCarico.getDate().getTime()));
+					c.setTipoDocumento(TipoDocumentoHome.getInstance().findById(Constant.ORDINE));
 					c.setOraCarico(new Time((new java.util.Date()).getTime()));
 					c.setNote(txtNote.getText());
-					c.setInsertByPN(0);
+					c.setInsPn(0);
 					c.setSconto(0);
 					c.setSospeso(0);
-					c.insertCarico();
+					c.setRiferimentoOrdine(Long.parseLong(txtNumeroCarico.getText()));
+					CarichiHome.getInstance().persist(c);
 				} else {
-					c.setIdCarico((new Integer(txtNumeroCarico.getText()))
-							.intValue());
-					c.setIdFornitore(Constant.FORNITORE_TABACCHI);
+					c.setIdcarico(idcarico);
+					c.setFornitori(FornitoriHome.getInstance().findById(Constant.FORNITORE_TABACCHI));
 					c.setDataCarico(new Date(dataCarico.getDate().getTime()));
-					c
-							.setDataDocumento(new Date(dataCarico.getDate()
-									.getTime()));
-					// c.setNumDocumento(txtNumDocumento.getText());
-					c.setIdDocumento(Constant.ORDINE);
+					c.setDataDocumento(new Date(dataCarico.getDate().getTime()));
+					c.setTipoDocumento(TipoDocumentoHome.getInstance().findById(Constant.ORDINE));
 					c.setOraCarico(new Time((new java.util.Date()).getTime()));
 					c.setSconto(0);
 					c.setNote(txtNote.getText());
 					c.setSospeso(0);
-					try {
-						c.updateCarico();
-					} catch (IDNonValido e) {
-						e.printStackTrace();
-					}
+					CarichiHome.getInstance().persist(c);
+					
 				}
-				// controlloAggPrezzo();
 				for (Object[] obj : result) {
-					a = new Articolo();
-					// a.caricaDatiByCodBarre(txtCodBarre.getText());
-					a.caricaDati((Integer) obj[0]);
-					c.setIdCarico((new Integer(txtNumeroCarico.getText()))
-							.intValue());
-					// verifichiamo se l-articolo e gia presente, e modifichiamo
+					
+					a = new Articoli();
+					BigInteger id = (BigInteger)obj[0];
+					a = ArticoliHome.getInstance().findById(id.intValue());
+					// verifichiamo se l'articolo e' gia' presente, e modifichiamo
 					// la qta
-					if (Carico.codiceBarrePresenteInScarico(a.getCodBarre(),
-							Integer.parseInt(txtNumeroCarico.getText()))) {
-						c.caricaDati((new Integer(txtNumeroCarico.getText()))
-								.intValue());
-//						double qta = 0;
-//						try {
-//							qta = c.getQuantitaCaricata(a.getIdArticolo());
-//						} catch (IDNonValido e) {
-//							JOptionPane
-//									.showMessageDialog(
-//											this,
-//											"Probabile Errore nel codice dell'Articolo",
-//											"ERRORE", 0);
-//							e.printStackTrace();
-//						} catch (ResultSetVuoto e) {
-//							JOptionPane
-//									.showMessageDialog(
-//											this,
-//											"Il ResultSet probabilmente non \ncontiene informazioni",
-//											"ERRORE", 0);
-//							e.printStackTrace();
-//						}
-						double price = a.getPrezzoDettaglio()
-						- MathUtility.percentualeDaAggiungere(a
-								.getPrezzoDettaglio(), 10);
-						double qta = getQtaRiordino(a.getIdArticolo(), (a.getScortaMassima() - (Integer)obj[1]));
-						c.updateArticolo(a.getIdArticolo(), qta, price);
+					DettaglioCarichi dc = new DettaglioCarichi();
+					dc.setArticoli(a);
+					dc.setCarichi(c);
+					if ( Carico.idArticoloPresenteInScarico((int)a.getIdarticolo(), (int)c.getIdcarico()) ){
+						double price = a.getPrezzoDettaglio() - MathUtility.percentualeDaAggiungere(a.getPrezzoDettaglio(), 10);
+						Integer qta = getQtaRiordino(a, (a.getScortaMassima() - (Double)obj[1])).intValue();
+						dc.setPrezzoAcquisto(price);
+						dc.setQta(qta);
+						dc.setSconto(0);
+						DettaglioCarichiHome.getInstance().persist(dc);
+						
 					} else {
 						// articolo non presente nell'ordine
-						double price = a.getPrezzoDettaglio()
-								- MathUtility.percentualeDaAggiungere(a
-										.getPrezzoDettaglio(), 10);
+						double price = a.getPrezzoDettaglio() - MathUtility.percentualeDaAggiungere(a.getPrezzoDettaglio(), 10);
 						// Verifichiamo che la qta da ordinare ( scortaMax - giacenza ) sia maggiore di zero
-						if ( (a.getScortaMassima() - (Integer)obj[1]) > 0 ){
-							double qta = getQtaRiordino(a.getIdArticolo(), (a.getScortaMassima() - (Integer)obj[1]));
-							c.insertArticolo(a.getIdArticolo(), qta, price);
+						if ( (a.getScortaMassima() - (Double)obj[1]) > 0 ){
+							DettaglioCarichiId idDC = new DettaglioCarichiId();
+							idDC.setIdarticolo(a.getIdarticolo());
+							idDC.setIdcarico(c.getIdcarico());
+							dc.setId(idDC);
+							Integer qta = getQtaRiordino(a, (a.getScortaMassima() - (Double)obj[1])).intValue();
+							dc.setPrezzoAcquisto(price);
+							dc.setQta(qta);
+							dc.setSconto(0);
+							DettaglioCarichiHome.getInstance().persist(dc);
 						}
 					}
 				}
+				CarichiHome.getInstance().commitAndClose();
+				idcarico = (int) c.getIdcarico();
 				calcoli(c);
 				azzeraCampi();
+				ricaricaTableCarico((int)c.getIdcarico());
 				tblCarico.packAll();
 
-			} catch (SQLException e) {
-				e.printStackTrace();
 			} catch (NumberFormatException e) {
 				JOptionPane.showMessageDialog(this,
 						"Errore nell'inserimento dinumeri", "NUMERO ERRATO", 0);
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
 	
-	public Double getQtaRiordino(long articolo, double qtaOrdinare){
-		Articoli a=ArticoliHome.getInstance().findById(articolo);
+	private void inserisciInCaricoZero(){
+		try {
+			if ( !Carico.idArticoloPresenteInScarico(articolo.getIdArticolo(), 0) ){
+				Carico c = new Carico();
+				c.caricaDati(0);
+				c.insertArticolo(articolo.getIdArticolo(), 0, articolo.getPrezzoDettaglio());
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public Double getQtaRiordino(Articoli a, double qtaOrdinare){
+//		Articoli a=ArticoliHome.getInstance().findById(articolo);
 //		double qtaOrdinare=(int)(getGiacenza(articolo)- a.getScortaMinima());
 		int numeroPacchetti=a.getNumeroPacchetti()==null?0:a.getNumeroPacchetti();
 		double diff=0;
@@ -1859,12 +2009,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				qtaOrdinare-=diff;
 			}
 		}
-		
-//		Double riordino=0.0;
-//		if(numeroPacchetti!=0){
-//			riordino=(qtaOrdinare/numeroPacchetti)*a.getPeso();
-//		}
-		
 		return qtaOrdinare;
 	}
 
@@ -2218,6 +2362,8 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	private JLabel lblCodiceAams = null;
 
 	private JButton btnSave = null;
+	
+	private Articolo articolo;
 
 	protected void nuovoFornitore() {
 		FornitoriAdd add = new FornitoriAdd(this, DBManager
@@ -2252,6 +2398,39 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		double imposta;
 		double tot = 0;
 		int id = c.getIdCarico();
+
+		// Calcoliamo ora la parte all'ingrosso
+		try {
+
+			imponibile = Carico.getTotAcquistoImponibileByOrder(id);
+			imposta = Carico.getTotAcquistoImpostaByOrder(id);
+			tot = imponibile + imposta;
+			int sconto = c.getSconto();
+			if (sconto > 0) {
+				tot = tot - ((tot / 100) * sconto);
+			}
+
+			// impostiamo i campi
+			txtImponibileIng.setText(ControlloDati
+					.convertDoubleToPrezzo(imponibile));
+			txtImpostaIng.setText(ControlloDati.convertDoubleToPrezzo(imposta));
+			txtTotaleIng.setText(ControlloDati.convertDoubleToPrezzo(tot));
+
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(this,
+					"Probabile errore nei calcoli all'ingrosso", "ERRORE",
+					JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
+	}
+	
+	private void calcoli(Carichi c) {
+		// Calcoliamo tutte le somme e impostiamo i campi
+		// cominciamo prima a calcolare il dettaglio
+		double imponibile;
+		double imposta;
+		double tot = 0;
+		int id = (int)c.getIdcarico();
 
 		// Calcoliamo ora la parte all'ingrosso
 		try {
@@ -2457,11 +2636,11 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 		Carico c = new Carico();
 		try {
-			Integer num = new Integer(txtNumeroCarico.getText()).intValue();
+//			Integer num = new Integer(txtNumeroCarico.getText()).intValue();
 			String query = "SELECT A.idarticolo, a.codFornitore, A.codBarre, A.descrizione, A.iva, A.um, D.qta, D.prezzo_Acquisto "
 					+ "FROM Articoli AS A, Carichi AS C, Dettaglio_Carichi AS D, Fornitori AS F "
 					+ "WHERE A.idArticolo=D.idArticolo AND C.idCarico=D.idCarico AND C.idFornitore=F.idFornitore and C.idcarico="
-					+ num;
+					+ idcarico;
 
 			Statement pst = dbm.getNewStatement();
 			ResultSet rs = pst.executeQuery(query);

@@ -106,12 +106,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		 * @see java.awt.event.FocusListener#focusLost(java.awt.event.FocusEvent)
 		 */
 		public void focusLost(FocusEvent e) {
-			if (e.getSource() == txtCaricoIniziale) {
-				if (!ControlloDati.isNumero(txtCaricoIniziale.getText())) {
-					messaggioCampoErrato("Carico Iniziale Errato");
-					((JTextField) e.getComponent()).setText("");
-				}
-			} else if (e.getSource() == txtRicaricoListino) {
+			if (e.getSource() == txtRicaricoListino) {
 				calcolaPrezzo();
 			}
 
@@ -160,8 +155,6 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	private JTabbedPane jTabbedPane = null;
 
-	private JLabel lblCaricoIniziale = null;
-
 	private JLabel lblCodBarre = null;
 
 	private JLabel lblCodFornitore = null;
@@ -193,8 +186,6 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	private JPanel pnlCentrale = null;
 
 	private JPanel pnlDatiPersonali = null;
-
-	private JTextField txtCaricoIniziale = null;
 
 	private JTextField txtCodBarre = null;
 
@@ -941,7 +932,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		if (jScrollPane1 == null) {
 			try {
 				jScrollPane1 = new JScrollPane();
-				jScrollPane1.setBounds(new Rectangle(4, 329, 297, 41)); // Generated
+				jScrollPane1.setBounds(new Rectangle(4, 286, 297, 41)); // Generated
 				jScrollPane1.setViewportView(getTxtNote()); // Generated
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -996,10 +987,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			try {
 				lblNota = new JLabel();
 				lblNota.setText("Note"); // Generated
-				lblNota.setBounds(new Rectangle(4, 313, 40, 16)); // Generated
-				lblCaricoIniziale = new JLabel();
-				lblCaricoIniziale.setText("Carico Iniziale"); // Generated
-				lblCaricoIniziale.setBounds(new Rectangle(5, 269, 90, 16)); // Generated
+				lblNota.setBounds(new Rectangle(4, 270, 40, 16)); // Generated
 				lblReaprto = new JLabel();
 				lblReaprto.setText("Categoria Merceologica"); // Generated
 				lblReaprto.setBounds(new Rectangle(5, 220, 149, 16)); // Generated
@@ -1055,8 +1043,6 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				pnlDatiPersonali.add(getTxtRicaricoIngrosso(), null); // Generated
 				pnlDatiPersonali.add(lblReaprto, null); // Generated
 				pnlDatiPersonali.add(getCmbReparto(), null); // Generated
-				pnlDatiPersonali.add(lblCaricoIniziale, null); // Generated
-				pnlDatiPersonali.add(getTxtCaricoIniziale(), null); // Generated
 				pnlDatiPersonali.add(lblNota, null); // Generated
 				pnlDatiPersonali.add(getJScrollPane1(), null); // Generated
 				pnlDatiPersonali.add(getJPanel1(), null); // Generated
@@ -1069,24 +1055,6 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			}
 		}
 		return pnlDatiPersonali;
-	}
-
-	/**
-	 * This method initializes txtCaricoIniziale
-	 *
-	 * @return javax.swing.JTextField
-	 */
-	private JTextField getTxtCaricoIniziale() {
-		if (txtCaricoIniziale == null) {
-			try {
-				txtCaricoIniziale = new JTextField();
-				txtCaricoIniziale.setPreferredSize(new Dimension(100, 20)); // Generated
-				txtCaricoIniziale.setBounds(new Rectangle(5, 285, 100, 20)); // Generated
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return txtCaricoIniziale;
 	}
 
 	/**
@@ -1336,8 +1304,6 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			e.printStackTrace();
 		}
 
-		this.txtCaricoIniziale.setText(new Integer(c.getCaricoIniziale())
-				.toString());
 		this.txtCodBarre.setText(c.getCodBarre());
 		this.txtCodFornitore.setText(c.getCodFornitore());
 		this.txtDescrizione.setText(c.getDescrizione());
@@ -1375,7 +1341,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(636, 513);
+		this.setSize(636, 480);
 		this.setResizable(false); // Generated
 
 		this.setContentPane(getJContentPane());
@@ -1404,11 +1370,6 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				e.printStackTrace();
 				return;
 			}
-			// Nascondiamo il campo Carico Iniziale
-			lblCaricoIniziale.setVisible(false);
-			txtCaricoIniziale.setVisible(false);
-			lblNota.setBounds(new Rectangle(5, 269, 90, 16));
-			jScrollPane1.setBounds(new Rectangle(5, 285, 297, 41));
 		} else {
 			this.setTitle("Inserisci Articoli");
 		}// fine impostazione tipo finestra
@@ -1708,19 +1669,13 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 					a.setPrezzoIngrosso(new Double(value).doubleValue());
 				}
 			}
+			a.setPrezzoDettaglio(a.getPrezzoIngrosso());
 		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(this, "Numero malformato",
 					"NUMERO ERRATO", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		} 
 
-		// impostiamo sconto
-		if (txtCaricoIniziale.getText().equalsIgnoreCase(""))
-			a.setCaricoIniziale(0);
-		else
-			a
-					.setCaricoIniziale(Integer.parseInt((txtCaricoIniziale
-							.getText())));
 		a.setNote(txtNote.getText());
 		return true;
 

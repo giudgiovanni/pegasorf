@@ -501,7 +501,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 		Articolo f = new Articolo();
 		try {
 
-			String as[] = (String[]) f.allArticoli();
+			String as[] = (String[]) f.allArticoli(true);
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
 			((IDJComboBox) cmbProdotti).caricaNewValueComboBox(as, true);

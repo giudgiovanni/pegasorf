@@ -35,6 +35,8 @@ public class AutoCompleteTextComponent extends AbstractAutoCompleteAdaptor
     private String tabella;
 
     private String colonna;
+    
+    private String where;
 
     /**
      * Il metodo costruttore è astratto e deve essere implementato in modo che
@@ -42,14 +44,26 @@ public class AutoCompleteTextComponent extends AbstractAutoCompleteAdaptor
      * testo
      */
     public AutoCompleteTextComponent(JTextComponent textComponent,
-	    DBManager dbm, String tabella, String colonna) {
+	    DBManager dbm, String tabella, String colonna, String where) {
 	this.component = textComponent;
 	this.dbm = dbm;
 	this.tabella = tabella;
 	this.colonna = colonna;
+	this.where = where;
 	inizialize(tabella);
 
     }
+    
+    public AutoCompleteTextComponent(JTextComponent textComponent,
+    	    DBManager dbm, String tabella, String colonna) {
+    	this.component = textComponent;
+    	this.dbm = dbm;
+    	this.tabella = tabella;
+    	this.colonna = colonna;
+    	this.where = "";
+    	inizialize(tabella);
+
+        }
 
     public AutoCompleteTextComponent() {
 
@@ -61,7 +75,7 @@ public class AutoCompleteTextComponent extends AbstractAutoCompleteAdaptor
 	valori = new LinkedList<String>();
 	set = new TreeSet<String>();
 	String query = "";
-	query = "SELECT * FROM " + tabella;
+	query = "SELECT * FROM " + tabella + where;
 	rs = dbm.executeQuery(query);
 	try {
 	    while (rs.next()) {

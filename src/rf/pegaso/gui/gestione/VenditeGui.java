@@ -84,7 +84,9 @@ import rf.pegaso.db.model.GiacenzeModel;
 import rf.pegaso.db.model.ScarichiViewModel;
 import rf.pegaso.db.model.ScaricoModel;
 import rf.pegaso.db.tabelle.Articolo;
+import rf.pegaso.db.tabelle.Documento;
 import rf.pegaso.db.tabelle.Fornitore;
+import rf.pegaso.db.tabelle.Reparto;
 import rf.pegaso.db.tabelle.Scarico;
 import rf.pegaso.db.tabelle.exception.NumeroOrdineEsistente;
 import rf.pegaso.gui.utility.ModificaQuantitaRiga;
@@ -193,7 +195,7 @@ public class VenditeGui extends JFrame implements TableModelListener {
 
 	private JDateChooser dateChooserAl = null;
 
-	private JComboBox cmbBoxReparto = null;
+	private IDJComboBox cmbBoxReparto = null;
 
 	private JLabel lblReparto = null;
 
@@ -245,12 +247,15 @@ public class VenditeGui extends JFrame implements TableModelListener {
 		if(tblArticoliScaricati!=null){
 			ArticoliScaricatiByDataViewModel modello = (ArticoliScaricatiByDataViewModel)tblArticoliScaricati.getModel();
 			int idReparto = -1;
-			if ( cmbBoxReparto.getSelectedItem().equals("Tabacchi") ){
-				idReparto = 1;
+			if ( cmbBoxReparto.getSelectedItem() != null && !cmbBoxReparto.getSelectedItem().equals("") ){
+				idReparto = Integer.parseInt(cmbBoxReparto.getIDSelectedItem());
 			}
-			else if  ( cmbBoxReparto.getSelectedItem().equals("Varie") ){
-				idReparto = 3;
-			}
+//			if ( cmbBoxReparto.getSelectedItem().toString().equals("Tabacchi") ){
+//				idReparto = 1;
+//			}
+//			else if  ( cmbBoxReparto.getSelectedItem().equals("Varie") ){
+//				idReparto = 3;
+//			}
 			modello.setDate(dateChooserDal.getDate(), dateChooserAl.getDate(), idReparto);
 			modello.fireTableDataChanged();
 			calcolaTotaliArticoliScaricati();
@@ -258,6 +263,23 @@ public class VenditeGui extends JFrame implements TableModelListener {
 		if (logger.isDebugEnabled()) {
 			logger.debug("ricaricaVendite() - end");
 		}
+	}
+	
+	private void caricaReparti(JComboBox cmbReparti) {
+
+		Reparto r = new Reparto();
+		try {
+
+			String as[] = (String[]) r.allReparti();
+			// carichiamo tutti i dati in due array
+			// da passre al combobox
+			((IDJComboBox) cmbReparti).caricaNewValueComboBox(as, true);
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(this,
+					"Errore caricamento reparti nel combobox", "ERRORE", 0);
+			e.printStackTrace();
+		}
+		AutoCompletion.enable(cmbReparti);
 	}
 	
 	/**
@@ -270,11 +292,8 @@ public class VenditeGui extends JFrame implements TableModelListener {
 		// Calcoliamo ora la parte totale dello scarico di tutti gli articoli.
 		try {
 			int idReparto = -1;
-			if ( cmbBoxReparto.getSelectedItem().equals("Tabacchi") ){
-				idReparto = 1;
-			}
-			else if  ( cmbBoxReparto.getSelectedItem().equals("Varie") ){
-				idReparto = 3;
+			if ( cmbBoxReparto.getSelectedItem() != null && !cmbBoxReparto.getSelectedItem().equals("") ){
+				idReparto = Integer.parseInt(cmbBoxReparto.getIDSelectedItem());
 			}
 
 			imponibile = Scarico.getTotAcquistoImponibileAllOrders(dateChooserDal.getDate(), dateChooserAl.getDate(), idReparto);
@@ -334,7 +353,7 @@ public class VenditeGui extends JFrame implements TableModelListener {
 		Articolo f = new Articolo();
 		try {
 
-			String as[] = (String[]) f.allArticoli();
+			String as[] = (String[]) f.allArticoli(true);
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
 			((IDJComboBox) cmbProdotti).caricaNewValueComboBox(as, true);
@@ -423,7 +442,7 @@ public class VenditeGui extends JFrame implements TableModelListener {
 		// calcoliamo i totali di tutti gli articoli scaricati e
 		// li inseriamo negli appositi textbox
 		calcolaTotaliArticoliScaricati();
-
+		caricaReparti(cmbBoxReparto);
 	}
 
 	
@@ -854,7 +873,7 @@ public class VenditeGui extends JFrame implements TableModelListener {
 	 */
 	private JComboBox getCmbBoxReparto() {
 		if (cmbBoxReparto == null) {
-			cmbBoxReparto = new JComboBox();
+			cmbBoxReparto = new IDJComboBox();
 			cmbBoxReparto.setPreferredSize(new Dimension(150, 25));
 			cmbBoxReparto.addItem("Tutti");
 			cmbBoxReparto.addItem("Tabacchi");

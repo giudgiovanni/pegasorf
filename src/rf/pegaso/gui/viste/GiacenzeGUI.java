@@ -160,7 +160,7 @@ public class GiacenzeGUI extends JFrame {
 		try {
 			cmbProdotti.removeAllItems();
 			cmbProdotti.addItem("");
-			String as[] = (String[]) f.allArticoli();
+			String as[] = (String[]) f.allArticoli(true);
 			int i = 0;
 			for (int j = as.length; i < j; i++) {
 				String fornitore = as[i];

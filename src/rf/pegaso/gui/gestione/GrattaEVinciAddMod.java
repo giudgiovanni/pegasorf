@@ -31,6 +31,7 @@ import java.util.Locale;
 import java.util.Properties;
 
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
@@ -53,6 +54,7 @@ import rf.pegaso.db.tabelle.Carico;
 import rf.pegaso.db.tabelle.Fornitore;
 import rf.pegaso.db.tabelle.Reparto;
 import rf.pegaso.db.tabelle.UnitaDiMisura;
+import rf.pegaso.gui.gestione.TabacchiAddMod.MyActionListener;
 import rf.pegaso.gui.utility.SuggerimentoCodice;
 import rf.pegaso.gui.viste.ViewDocCarico;
 import rf.utility.Constant;
@@ -66,6 +68,7 @@ import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompletion;
 import rf.utility.gui.text.UpperTextDocument;
 import rf.utility.number.Arrays;
+import javax.swing.JRadioButton;
 
 /**
  * @author Hunter
@@ -90,6 +93,16 @@ public class GrattaEVinciAddMod extends JFrame {
 			} 
 			else if ( e.getSource() == btnAddQtaIniziale ){
 				inserisciQuantitaIniziale();
+			}
+			else if ( e.getSource() == rbtnSi ){
+				txtCodBarre.setEditable(true);
+				txtCodFornitore.setEditable(true);
+				btnSuggerimento.setEnabled(true);
+			}
+			else if ( e.getSource() == rbtnNo ){
+				txtCodBarre.setEditable(false);
+				txtCodFornitore.setEditable(false);
+				btnSuggerimento.setEnabled(false);
 			}
 		}
 
@@ -196,6 +209,11 @@ public class GrattaEVinciAddMod extends JFrame {
 	private JFormattedTextField txtFldQtaIniziale;
 	private JLabel jLabel = null;
 	private JButton btnAddQtaIniziale = null;
+	private JLabel lblrButtonSiNo = null;
+	private JLabel lblSi = null;
+	private JRadioButton rbtnSi = null;
+	private JLabel lblNo = null;
+	private JRadioButton rbtnNo = null;
 	/**
 	 * @param owner
 	 */
@@ -527,7 +545,8 @@ public class GrattaEVinciAddMod extends JFrame {
 		if (jScrollPane1 == null) {
 			try {
 				jScrollPane1 = new JScrollPane();
-				jScrollPane1.setBounds(new Rectangle(8, 233, 297, 41)); // Generated
+//				jScrollPane1.setBounds(new Rectangle(8, 233, 297, 41)); // Generated
+				jScrollPane1.setBounds(new Rectangle(8, 192, 297, 41));
 				jScrollPane1.setViewportView(getTxtNote()); // Generated
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -580,12 +599,23 @@ public class GrattaEVinciAddMod extends JFrame {
 	private JPanel getPnlDatiPersonali() {
 		if (pnlDatiPersonali == null) {
 			try {
+				lblNo = new JLabel();
+				lblNo.setBounds(new Rectangle(430, 27, 20, 16));
+				lblNo.setText("No");
+				lblSi = new JLabel();
+				lblSi.setBounds(new Rectangle(370, 27, 20, 16));
+				lblSi.setText("Si");
+				lblrButtonSiNo = new JLabel();
+				lblrButtonSiNo.setBounds(new Rectangle(370, 9, 86, 16));
+				lblrButtonSiNo.setText("Modificabili");
 				jLabel = new JLabel();
 				jLabel.setBounds(new Rectangle(8, 176, 105, 16));
 				jLabel.setText("Carico Iniziale");
+				jLabel.setVisible(false);
 				lblNota = new JLabel();
 				lblNota.setText("Note"); // Generated
-				lblNota.setBounds(new Rectangle(8, 217, 26, 16)); // Generated
+//				lblNota.setBounds(new Rectangle(8, 217, 26, 16)); // Generated
+				lblNota.setBounds(new Rectangle(8, 176, 105, 16));
 				lblScortaMinima = new JLabel();
 				lblScortaMinima.setText("Scorta Minima"); // Generated
 				lblScortaMinima.setBounds(new Rectangle(8, 135, 100, 16)); // Generated
@@ -627,6 +657,11 @@ public class GrattaEVinciAddMod extends JFrame {
 				pnlDatiPersonali.add(jLabel, null);
 				pnlDatiPersonali.add(getTxtFldQtaIniziale(), null);
 				pnlDatiPersonali.add(getBtnAddQtaIniziale(), null);
+				pnlDatiPersonali.add(lblrButtonSiNo, null);
+				pnlDatiPersonali.add(lblSi, null);
+				pnlDatiPersonali.add(getRbtnSi(), null);
+				pnlDatiPersonali.add(lblNo, null);
+				pnlDatiPersonali.add(getRbtnNo(), null);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -836,6 +871,8 @@ public class GrattaEVinciAddMod extends JFrame {
 		UtilGUI.centraFrame(this);
 		// Modifichiamo l'editor e aggiorniamo
 		// Combo box con i relativi dati dal DB
+		
+		inizializzaRadioButton();
 
 		// se selezionata la modalit� modifica
 		// carichiamo i cari dati negli oggetti
@@ -847,6 +884,19 @@ public class GrattaEVinciAddMod extends JFrame {
 				ultimoArticolo[0]=c.getCodBarre();
 				impostaCampi(c);
 				caricaQtaMagazzino();
+				// Verifichiamo se il codice a barre e' diverso da nullo rendiamo il campo editabile
+				if ( c.getCodBarre() != null && !c.getCodBarre().trim().equals("") ){
+					rbtnNo.setSelected(true);
+					txtCodBarre.setEditable(false);
+					txtCodFornitore.setEditable(false);
+					btnSuggerimento.setEnabled(false);
+				}
+				else{
+					rbtnSi.setSelected(true);
+					txtCodBarre.setEditable(true);
+					txtCodFornitore.setEditable(true);
+					btnSuggerimento.setEnabled(true);
+				}
 			} catch (SQLException e) {
 				JOptionPane.showMessageDialog(this,
 						"Errore caricamento dati DB", "ERRORE",
@@ -856,8 +906,19 @@ public class GrattaEVinciAddMod extends JFrame {
 			}
 		} else {
 			this.setTitle("Inserisci Articoli");
+			// Si tratta di un nuovo articolo quindi il codice dev'essere editabile
+			rbtnSi.setSelected(true);
+			txtCodBarre.setEditable(true);
+			txtCodFornitore.setEditable(true);
+			btnSuggerimento.setEnabled(true);
 		}// fine impostazione tipo finestra
 
+	}
+	
+	private void inizializzaRadioButton() {
+		ButtonGroup g = new ButtonGroup();
+		g.add(rbtnSi);
+		g.add(rbtnNo);
 	}
 
 	private void inserisci() {
@@ -871,9 +932,9 @@ public class GrattaEVinciAddMod extends JFrame {
 				Articoli articolo=ArticoliHome.getInstance().findById(idArticolo);
 				ArticoliHome.getInstance().attachDirty(articolo);
 				ArticoliHome.getInstance().commitAndClose();
-				if ( !txtFldQtaIniziale.getText().trim().equals("") && !txtFldQtaIniziale.getText().trim().equals("0,00") ){
-					inserisciQuantitaIniziale();
-				}
+//				if ( !txtFldQtaIniziale.getText().trim().equals("") && !txtFldQtaIniziale.getText().trim().equals("0,00") ){
+//					inserisciQuantitaIniziale();
+//				}
 			} catch (IDNonValido e) {
 				JOptionPane.showMessageDialog(this, "Valore idCliente errato",
 						"ERRORE", JOptionPane.ERROR_MESSAGE);
@@ -995,9 +1056,9 @@ public class GrattaEVinciAddMod extends JFrame {
 			Articoli articolo=ArticoliHome.getInstance().findById(a.getIdArticolo());
 			ArticoliHome.getInstance().attachDirty(articolo);
 			ArticoliHome.getInstance().commitAndClose();
-			if ( !txtFldQtaIniziale.getText().trim().equals("")  && !txtFldQtaIniziale.getText().trim().equals("0,00") ){
-				inserisciQuantitaIniziale();
-			}
+//			if ( !txtFldQtaIniziale.getText().trim().equals("")  && !txtFldQtaIniziale.getText().trim().equals("0,00") ){
+//				inserisciQuantitaIniziale();
+//			}
 		} catch (IDNonValido e) {
 			JOptionPane.showMessageDialog(this, "Valore idFornitore errato",
 					"ERRORE", JOptionPane.ERROR_MESSAGE);
@@ -1156,6 +1217,7 @@ public class GrattaEVinciAddMod extends JFrame {
 				txtFldQtaIniziale = new JFormattedTextField(formatPrice);
 				txtFldQtaIniziale.setBounds(new Rectangle(8, 192, 100, 20));
 				txtFldQtaIniziale.setValue(0.0);
+				txtFldQtaIniziale.setVisible(false);
 				/*
 				 * txtQta.addFocusListener(new FocusAdapter() {
 				 *
@@ -1179,10 +1241,39 @@ public class GrattaEVinciAddMod extends JFrame {
 			btnAddQtaIniziale = new JButton();
 			btnAddQtaIniziale.setBounds(new Rectangle(140, 188, 199, 29));
 			btnAddQtaIniziale.setText("Aggiungi Al Carico Iniziale");
-			btnAddQtaIniziale.setVisible(modalita == MOD);
+//			btnAddQtaIniziale.setVisible(modalita == MOD);
+			btnAddQtaIniziale.setVisible(false);
 			btnAddQtaIniziale.addActionListener(new MyActionListener());
 		}
 		return btnAddQtaIniziale;
+	}
+
+	/**
+	 * This method initializes rbtnSi	
+	 * 	
+	 * @return javax.swing.JRadioButton	
+	 */
+	private JRadioButton getRbtnSi() {
+		if (rbtnSi == null) {
+			rbtnSi = new JRadioButton();
+			rbtnSi.setBounds(new Rectangle(390, 25, 20, 21));
+			rbtnSi.addActionListener(new MyActionListener());
+		}
+		return rbtnSi;
+	}
+
+	/**
+	 * This method initializes rbtnNo	
+	 * 	
+	 * @return javax.swing.JRadioButton	
+	 */
+	private JRadioButton getRbtnNo() {
+		if (rbtnNo == null) {
+			rbtnNo = new JRadioButton();
+			rbtnNo.setBounds(new Rectangle(450, 25, 21, 21));
+			rbtnNo.addActionListener(new MyActionListener());
+		}
+		return rbtnNo;
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,8"

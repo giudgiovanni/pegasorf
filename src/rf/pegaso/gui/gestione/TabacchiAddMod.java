@@ -1008,6 +1008,8 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 		// Modifichiamo l'editor e aggiorniamo
 		// Combo box con i relativi dati dal DB
 		caricaComboBox();
+		
+		inizializzaRadioButton();
 
 		// se selezionata la modalit� modifica
 		// carichiamo i cari dati negli oggetti
@@ -1020,6 +1022,17 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 				impostaCampi(c);
 				calcolaPrezzoPubblico();
 				caricaQtaMagazzino();
+				// Verifichiamo se il codice a barre e' diverso da nullo rendiamo il campo editabile
+				if ( c.getCodBarre() != null && !c.getCodBarre().trim().equals("") ){
+					rbtnNo.setSelected(true);
+					txtCodBarre.setEditable(false);
+					txtCodFornitore.setEditable(false);
+				}
+				else{
+					rbtnSi.setSelected(true);
+					txtCodBarre.setEditable(true);
+					txtCodFornitore.setEditable(true);
+				}
 			} catch (SQLException e) {
 				JOptionPane.showMessageDialog(this,
 						"Errore caricamento dati DB", "ERRORE",
@@ -1029,17 +1042,17 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			}
 		} else {
 			this.setTitle("Inserisci Articoli");
+			// Si tratta di un nuovo articolo quindi il codice dev'essere editabile
+			rbtnSi.setSelected(true);
+			txtCodBarre.setEditable(true);
+			txtCodFornitore.setEditable(true);
 		}// fine impostazione tipo finestra
-		inizializzaRadioButton();
 	}
 	
 	private void inizializzaRadioButton() {
 		ButtonGroup g = new ButtonGroup();
 		g.add(rbtnSi);
 		g.add(rbtnNo);
-		rbtnNo.setSelected(true);
-		txtCodBarre.setEditable(false);
-		txtCodFornitore.setEditable(false);
 	}
 
 	/**

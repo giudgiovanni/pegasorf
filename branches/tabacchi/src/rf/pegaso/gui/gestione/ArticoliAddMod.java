@@ -25,6 +25,7 @@ import java.text.ParseException;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
@@ -45,6 +46,7 @@ import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.Fornitore;
 import rf.pegaso.db.tabelle.Reparto;
 import rf.pegaso.db.tabelle.UnitaDiMisura;
+import rf.pegaso.gui.gestione.TabacchiAddMod.MyActionListener;
 import rf.pegaso.gui.utility.SuggerimentoCodice;
 import rf.pegaso.gui.viste.ViewDocCarico;
 import rf.utility.ControlloDati;
@@ -55,6 +57,7 @@ import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompletion;
 import rf.utility.gui.text.UpperTextDocument;
 import rf.utility.number.Arrays;
+import javax.swing.JRadioButton;
 
 /**
  * @author Hunter
@@ -83,7 +86,16 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			}else if(e.getSource()==btnSuggerimento){
 				suggerimentoCodice();
 			}
-
+			else if ( e.getSource() == rbtnSi ){
+				txtCodBarre.setEditable(true);
+				txtCodFornitore.setEditable(true);
+				btnSuggerimento.setEnabled(true);
+			}
+			else if ( e.getSource() == rbtnNo ){
+				txtCodBarre.setEditable(false);
+				txtCodFornitore.setEditable(false);
+				btnSuggerimento.setEnabled(false);
+			}
 		}
 
 	}
@@ -209,6 +221,11 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	private JButton btnSuggerimento = null;
 	private String[] ultimoArticolo;
 	private boolean close=false;
+	private JLabel lblrButtonSiNo = null;
+	private JLabel lblSi = null;
+	private JLabel lblNo = null;
+	private JRadioButton rbtnSi = null;
+	private JRadioButton rbtnNo = null;
 
 	/**
 	 * @param owner
@@ -985,6 +1002,15 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	private JPanel getPnlDatiPersonali() {
 		if (pnlDatiPersonali == null) {
 			try {
+				lblNo = new JLabel();
+				lblNo.setBounds(new Rectangle(430, 22, 15, 16));
+				lblNo.setText("No");
+				lblSi = new JLabel();
+				lblSi.setBounds(new Rectangle(370, 22, 11, 16));
+				lblSi.setText("Si");
+				lblrButtonSiNo = new JLabel();
+				lblrButtonSiNo.setBounds(new Rectangle(370, 4, 86, 16));
+				lblrButtonSiNo.setText("Modificabili");
 				lblNota = new JLabel();
 				lblNota.setText("Note"); // Generated
 				lblNota.setBounds(new Rectangle(4, 270, 40, 16)); // Generated
@@ -1050,6 +1076,11 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				pnlDatiPersonali.add(getBtnNewReparto(), null); // Generated
 				pnlDatiPersonali.add(getJPanel2(), null); // Generated
 				pnlDatiPersonali.add(getBtnSuggerimento(), null);  // Generated
+				pnlDatiPersonali.add(lblrButtonSiNo, null);
+				pnlDatiPersonali.add(lblSi, null);
+				pnlDatiPersonali.add(lblNo, null);
+				pnlDatiPersonali.add(getRbtnSi(), null);
+				pnlDatiPersonali.add(getRbtnNo(), null);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -1349,6 +1380,8 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		// Modifichiamo l'editor e aggiorniamo
 		// Combo box con i relativi dati dal DB
 		caricaComboBox();
+		
+		inizializzaRadioButton();
 
 		// se selezionata la modalità modifica
 		// carichiamo i cari dati negli oggetti
@@ -1363,6 +1396,19 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				calcolaPrezzoListinoByPrezzoAcquisto();
 				calcolaPrezzoPubblico();
 				caricaQtaMagazzino();
+				// Verifichiamo se il codice a barre e' diverso da nullo rendiamo il campo editabile
+				if ( c.getCodBarre() != null && !c.getCodBarre().trim().equals("") ){
+					rbtnNo.setSelected(true);
+					txtCodBarre.setEditable(false);
+					txtCodFornitore.setEditable(false);
+					btnSuggerimento.setEnabled(false);
+				}
+				else{
+					rbtnSi.setSelected(true);
+					txtCodBarre.setEditable(true);
+					txtCodFornitore.setEditable(true);
+					btnSuggerimento.setEnabled(true);
+				}
 			} catch (SQLException e) {
 				JOptionPane.showMessageDialog(this,
 						"Errore caricamento dati DB", "ERRORE",
@@ -1372,8 +1418,19 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			}
 		} else {
 			this.setTitle("Inserisci Articoli");
+			// Si tratta di un nuovo articolo quindi il codice dev'essere editabile
+			rbtnSi.setSelected(true);
+			txtCodBarre.setEditable(true);
+			txtCodFornitore.setEditable(true);
+			btnSuggerimento.setEnabled(true);
 		}// fine impostazione tipo finestra
 
+	}
+	
+	private void inizializzaRadioButton() {
+		ButtonGroup g = new ButtonGroup();
+		g.add(rbtnSi);
+		g.add(rbtnNo);
 	}
 
 	/**
@@ -1747,6 +1804,34 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			}
 		}
 		return btnSuggerimento;
+	}
+
+	/**
+	 * This method initializes rbtnSi	
+	 * 	
+	 * @return javax.swing.JRadioButton	
+	 */
+	private JRadioButton getRbtnSi() {
+		if (rbtnSi == null) {
+			rbtnSi = new JRadioButton("Si");
+			rbtnSi.setBounds(new Rectangle(390, 20, 21, 21));
+			rbtnSi.addActionListener(new MyActionListener());
+		}
+		return rbtnSi;
+	}
+
+	/**
+	 * This method initializes rbtnNo	
+	 * 	
+	 * @return javax.swing.JRadioButton	
+	 */
+	private JRadioButton getRbtnNo() {
+		if (rbtnNo == null) {
+			rbtnNo = new JRadioButton();
+			rbtnNo.setBounds(new Rectangle(450, 20, 21, 21));
+			rbtnNo.addActionListener(new MyActionListener());
+		}
+		return rbtnNo;
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

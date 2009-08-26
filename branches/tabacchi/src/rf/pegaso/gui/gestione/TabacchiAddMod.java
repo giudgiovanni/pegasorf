@@ -96,10 +96,12 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			else if ( e.getSource() == rbtnSi ){
 				txtCodBarre.setEditable(true);
 				txtCodFornitore.setEditable(true);
+				btnSuggerimento.setEnabled(true);
 			}
 			else if ( e.getSource() == rbtnNo ){
 				txtCodBarre.setEditable(false);
 				txtCodFornitore.setEditable(false);
+				btnSuggerimento.setEnabled(false);
 			}
 		}
 
@@ -1027,11 +1029,13 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 					rbtnNo.setSelected(true);
 					txtCodBarre.setEditable(false);
 					txtCodFornitore.setEditable(false);
+					btnSuggerimento.setEnabled(false);
 				}
 				else{
 					rbtnSi.setSelected(true);
 					txtCodBarre.setEditable(true);
 					txtCodFornitore.setEditable(true);
+					btnSuggerimento.setEnabled(true);
 				}
 			} catch (SQLException e) {
 				JOptionPane.showMessageDialog(this,
@@ -1046,6 +1050,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			rbtnSi.setSelected(true);
 			txtCodBarre.setEditable(true);
 			txtCodFornitore.setEditable(true);
+			btnSuggerimento.setEnabled(true);
 		}// fine impostazione tipo finestra
 	}
 	

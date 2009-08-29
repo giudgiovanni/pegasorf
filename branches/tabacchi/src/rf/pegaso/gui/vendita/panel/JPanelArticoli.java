@@ -1,7 +1,11 @@
 package rf.pegaso.gui.vendita.panel;
 
+import it.infolabs.hibernate.Articoli;
+
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.Vector;
@@ -30,7 +34,7 @@ public class JPanelArticoli extends JPanel{
 	public JPanelArticoli(int width) {
 		super();
 		this.width = width;
-		this.ncolonne = width/150;
+		this.ncolonne = width/140;
 		initialize();
 	}
 	
@@ -48,33 +52,36 @@ public class JPanelArticoli extends JPanel{
 	 * @return void
 	 */
 	private void initialize() {
-//		this.setSize(600, 600);
-		//this.setLayout(new GridLayout());
 		this.setVisible(true);
 		this.add(getJScrollPane(), null);
 	}
 	
-	public void caricaArticoli(LinkedList<Articolo> articoli){
+	public void caricaArticoli(LinkedList<Articoli> articoli){
 		try{
 			pnlPulsanti.removeAll();
-			GridLayout gridLayout = new GridLayout();
-			pnlPulsanti.setSize(new Dimension(width, (articoli.size()*100/4)));
-			gridLayout.setRows((articoli.size()/ncolonne)+1);
-			gridLayout.setColumns(ncolonne);
-			pnlPulsanti.setLayout(gridLayout);
-			for(Articolo art : articoli){
+			pnlPulsanti.setLayout(new GridBagLayout());
+			int nRiga = 0, nCol = 0;
+			for (Articoli art : articoli){
+				GridBagConstraints gridBagConstraints = new GridBagConstraints();
+				gridBagConstraints.gridx = nRiga;
+				gridBagConstraints.insets = new Insets(10, 10, 10, 10);
+				gridBagConstraints.gridy = nCol;
 				JButtonArticolo btnArticolo = new JButtonArticolo(art);
 				btnArticolo.addActionListener(new MyButtonListener(art));
-				btnArticolo.setPreferredSize(new Dimension(100, 80));
-				pnlPulsanti.add(btnArticolo, null);
+				btnArticolo.setPreferredSize(new Dimension(100, 100));
+				pnlPulsanti.add(btnArticolo, gridBagConstraints);
+				if ( nRiga == ncolonne ){
+					nRiga = 0;
+					nCol++;
+				}
+				else{
+					nRiga++;
+				}
 			}
-			pnlPulsanti.repaint();
-			pnlPulsanti.validate();
 		}
-		catch(Exception exp){
-			exp.printStackTrace();
+		catch (Exception e) {
+			e.printStackTrace();
 		}
-		
 	}
 	
 	public void addJButtonEventListener(JButtonEventListener listener) {
@@ -86,9 +93,9 @@ public class JPanelArticoli extends JPanel{
 	
 	private class MyButtonListener implements java.awt.event.ActionListener {
 
-		private Articolo m_articolo;
+		private Articoli m_articolo;
 
-		public MyButtonListener(Articolo articolo){
+		public MyButtonListener(Articoli articolo){
 			m_articolo = articolo;
 		}
 		public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -112,7 +119,7 @@ public class JPanelArticoli extends JPanel{
 		if (jScrollPane == null) {
 			jScrollPane = new JScrollPane();
 			jScrollPane.setPreferredSize(new Dimension(width, 410));
-			jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+//			jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			jScrollPane.setViewportView(getPnlPulsanti());
 		}
 		return jScrollPane;

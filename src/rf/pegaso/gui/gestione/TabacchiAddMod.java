@@ -1134,6 +1134,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 				Articoli articolo=ArticoliHome.getInstance().findById(idArticolo);
 				articolo.setPeso(((Number)txtPesoStecca.getValue()).doubleValue());
 				articolo.setNumeroPacchetti(((Number)txtNumeroPacchetti.getValue()).intValue());
+				ArticoliHome.getInstance().begin();
 				ArticoliHome.getInstance().attachDirty(articolo);
 				ArticoliHome.getInstance().commitAndClose();
 				if ( !txtFldQtaIniziale.getText().trim().equals("") && !txtFldQtaIniziale.getText().trim().equals("0,00") ){
@@ -1263,6 +1264,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			Articoli articolo=ArticoliHome.getInstance().findById(a.getIdArticolo());
 			articolo.setPeso(((Number)txtPesoStecca.getValue()).doubleValue());
 			articolo.setNumeroPacchetti(((Number)txtNumeroPacchetti.getValue()).intValue());
+			ArticoliHome.getInstance().begin();
 			ArticoliHome.getInstance().attachDirty(articolo);
 			ArticoliHome.getInstance().commitAndClose();
 			if ( !txtFldQtaIniziale.getText().trim().equals("")  && !txtFldQtaIniziale.getText().trim().equals("0,00") ){

@@ -673,7 +673,7 @@ public class VenditaInternalFrameOLD extends JInternalFrame{
 	
 	private void m_jButtonKeysKeyPerformed(JButtonEvent evt) {
 			 DettaglioOrdine dv = new DettaglioOrdine();
-             dv.loadByID(evt.getArticolo().getIdArticolo());
+             dv.loadByID((int)evt.getArticolo().getIdarticolo());
              if ( pannelloCarrello.addDettaglioOrdine(dv, false) == -1){
  				messaggioAVideo("Quantita' richiesta non disponibile.", "INFO");
  			} 			

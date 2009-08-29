@@ -82,6 +82,8 @@ public class Articolo {
 	private int idFornitore;
 
 	private int idReparto;
+	
+	private int idPannello;
 
 	private String imballo;
 
@@ -276,6 +278,7 @@ public class Articolo {
 			this.idArticolo = rs.getInt("idArticolo");
 			this.idFornitore = rs.getInt("idFornitore");
 			this.idReparto = rs.getInt("idReparto");
+			this.idPannello = rs.getInt("idPannello");
 			this.imballo = rs.getString("imballo");
 			this.iva = rs.getInt("iva");
 			this.note = rs.getString("note");
@@ -378,6 +381,7 @@ public class Articolo {
 			this.idArticolo = rs.getInt("idArticolo");
 			this.idFornitore = rs.getInt("idFornitore");
 			this.idReparto = rs.getInt("idReparto");
+			this.idPannello = rs.getInt("idPannello");
 			this.imballo = rs.getString("imballo");
 			this.iva = rs.getInt("iva");
 			this.note = rs.getString("note");
@@ -649,7 +653,7 @@ public class Articolo {
 		}
 		int ok = 0;
 		PreparedStatement pst = null;
-		String insert = "insert into articoli values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String insert = "insert into articoli values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		dataInserimento = new Date(new java.util.Date().getTime());
 		pst = dbm.getNewPreparedStatement(insert);
 		try {
@@ -673,6 +677,7 @@ public class Articolo {
 			pst.setInt(18, idFornitore);
 			pst.setInt(19, caricoIniziale);
 			pst.setInt(20, scortaMassima);
+			pst.setInt(21, idPannello);
 			ok = pst.executeUpdate();
 			dbm.notifyDBStateChange();
 		} catch (SQLException e) {
@@ -831,7 +836,7 @@ public class Articolo {
 				+ "codFornitore=?,codBarre=?,descrizione=?,prezzo_acquisto=?,"
 				+ "iva=?,um=?,prezzo_dettaglio=?,prezzo_ingrosso=?,imballo=?,"
 				+ "peso=?,sconto=?,idReparto=?,colore=?,scorta_minima=?,note=?,"
-				+ "data_inserimento=?,idFornitore=?,carico_iniziale=?,scorta_massima=? WHERE idArticolo=?";
+				+ "data_inserimento=?,idFornitore=?,carico_iniziale=?,scorta_massima=?,idPannello=? WHERE idArticolo=?";
 
 		pst = dbm.getNewPreparedStatement(update);
 		try {
@@ -855,7 +860,8 @@ public class Articolo {
 			pst.setInt(18, idFornitore);
 			pst.setInt(19, caricoIniziale);
 			pst.setInt(20, scortaMassima);
-			pst.setInt(21, idArticolo);
+			pst.setInt(21, this.idPannello);
+			pst.setInt(22, idArticolo);
 			ok = pst.executeUpdate();
 			dbm.notifyDBStateChange();
 		} catch (SQLException e) {
@@ -1002,6 +1008,18 @@ public class Articolo {
 
 	public void setDisponibilita(int disponibilita) {
 		this.disponibilita = disponibilita;
+	}
+
+
+
+	public int getIdPannello() {
+		return idPannello;
+	}
+
+
+
+	public void setIdPannello(int idPannello) {
+		this.idPannello = idPannello;
 	}
 
 }

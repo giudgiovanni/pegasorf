@@ -1,6 +1,6 @@
 package it.infolabs.hibernate;
 
-// Generated 23-lug-2009 17.43.49 by Hibernate Tools 3.2.4.GA
+// Generated 28-ago-2009 20.27.48 by Hibernate Tools 3.2.5.Beta
 
 import java.util.Date;
 import java.util.HashSet;
@@ -12,9 +12,10 @@ import java.util.Set;
 public class Articoli implements java.io.Serializable {
 
 	private long idarticolo;
+	private Um um;
 	private Fornitori fornitori;
 	private Reparti reparti;
-	private Um um;
+	private Pannelli pannelli;
 	private String codfornitore;
 	private String codbarre;
 	private String descrizione;
@@ -32,24 +33,15 @@ public class Articoli implements java.io.Serializable {
 	private Long caricoIniziale;
 	private Long scortaMassima;
 	private Integer numeroPacchetti;
-	private Set<ImmagineArticolo> immagineArticolos = new HashSet<ImmagineArticolo>(
-			0);
-	private Set<DettaglioCarichi> dettaglioCarichis = new HashSet<DettaglioCarichi>(
-			0);
-	private Set<DettaglioCarichi> dettaglioCarichis_1 = new HashSet<DettaglioCarichi>(
-			0);
-	private Set<ImmagineArticolo> immagineArticolos_1 = new HashSet<ImmagineArticolo>(
-			0);
-	private Set<DettaglioOrdini> dettaglioOrdinis = new HashSet<DettaglioOrdini>(
-			0);
-	private Set<DettaglioOrdini> dettaglioOrdinis_1 = new HashSet<DettaglioOrdini>(
-			0);
-	private Set<DettaglioCarichi> dettaglioCarichis_2 = new HashSet<DettaglioCarichi>(
-			0);
-	private Set<ImmagineArticolo> immagineArticolos_2 = new HashSet<ImmagineArticolo>(
-			0);
-	private Set<DettaglioOrdini> dettaglioOrdinis_2 = new HashSet<DettaglioOrdini>(
-			0);
+	private Set dettaglioOrdinis = new HashSet(0);
+	private Set immagineArticolos = new HashSet(0);
+	private Set immagineArticolos_1 = new HashSet(0);
+	private Set dettaglioOrdinis_1 = new HashSet(0);
+	private Set dettaglioCarichis = new HashSet(0);
+	private Set dettaglioCarichis_1 = new HashSet(0);
+	private Set dettaglioOrdinis_2 = new HashSet(0);
+	private Set immagineArticolos_2 = new HashSet(0);
+	private Set dettaglioCarichis_2 = new HashSet(0);
 
 	public Articoli() {
 	}
@@ -59,25 +51,23 @@ public class Articoli implements java.io.Serializable {
 		this.descrizione = descrizione;
 	}
 
-	public Articoli(long idarticolo, Fornitori fornitori, Reparti reparti,
-			Um um, String codfornitore, String codbarre, String descrizione,
-			Double prezzoAcquisto, Long iva, Double prezzoDettaglio,
-			Double prezzoIngrosso, String imballo, Double peso, Long sconto,
-			String colore, Long scortaMinima, String note,
-			Date dataInserimento, Long caricoIniziale, Long scortaMassima,
-			Integer numeroPacchetti, Set<ImmagineArticolo> immagineArticolos,
-			Set<DettaglioCarichi> dettaglioCarichis,
-			Set<DettaglioCarichi> dettaglioCarichis_1,
-			Set<ImmagineArticolo> immagineArticolos_1,
-			Set<DettaglioOrdini> dettaglioOrdinis,
-			Set<DettaglioOrdini> dettaglioOrdinis_1,
-			Set<DettaglioCarichi> dettaglioCarichis_2,
-			Set<ImmagineArticolo> immagineArticolos_2,
-			Set<DettaglioOrdini> dettaglioOrdinis_2) {
+	public Articoli(long idarticolo, Um um, Fornitori fornitori,
+			Reparti reparti, Pannelli pannelli, String codfornitore,
+			String codbarre, String descrizione, Double prezzoAcquisto,
+			Long iva, Double prezzoDettaglio, Double prezzoIngrosso,
+			String imballo, Double peso, Long sconto, String colore,
+			Long scortaMinima, String note, Date dataInserimento,
+			Long caricoIniziale, Long scortaMassima, Integer numeroPacchetti,
+			Set dettaglioOrdinis, Set immagineArticolos,
+			Set immagineArticolos_1, Set dettaglioOrdinis_1,
+			Set dettaglioCarichis, Set dettaglioCarichis_1,
+			Set dettaglioOrdinis_2, Set immagineArticolos_2,
+			Set dettaglioCarichis_2) {
 		this.idarticolo = idarticolo;
+		this.um = um;
 		this.fornitori = fornitori;
 		this.reparti = reparti;
-		this.um = um;
+		this.pannelli = pannelli;
 		this.codfornitore = codfornitore;
 		this.codbarre = codbarre;
 		this.descrizione = descrizione;
@@ -95,15 +85,15 @@ public class Articoli implements java.io.Serializable {
 		this.caricoIniziale = caricoIniziale;
 		this.scortaMassima = scortaMassima;
 		this.numeroPacchetti = numeroPacchetti;
+		this.dettaglioOrdinis = dettaglioOrdinis;
 		this.immagineArticolos = immagineArticolos;
+		this.immagineArticolos_1 = immagineArticolos_1;
+		this.dettaglioOrdinis_1 = dettaglioOrdinis_1;
 		this.dettaglioCarichis = dettaglioCarichis;
 		this.dettaglioCarichis_1 = dettaglioCarichis_1;
-		this.immagineArticolos_1 = immagineArticolos_1;
-		this.dettaglioOrdinis = dettaglioOrdinis;
-		this.dettaglioOrdinis_1 = dettaglioOrdinis_1;
-		this.dettaglioCarichis_2 = dettaglioCarichis_2;
-		this.immagineArticolos_2 = immagineArticolos_2;
 		this.dettaglioOrdinis_2 = dettaglioOrdinis_2;
+		this.immagineArticolos_2 = immagineArticolos_2;
+		this.dettaglioCarichis_2 = dettaglioCarichis_2;
 	}
 
 	public long getIdarticolo() {
@@ -112,6 +102,14 @@ public class Articoli implements java.io.Serializable {
 
 	public void setIdarticolo(long idarticolo) {
 		this.idarticolo = idarticolo;
+	}
+
+	public Um getUm() {
+		return this.um;
+	}
+
+	public void setUm(Um um) {
+		this.um = um;
 	}
 
 	public Fornitori getFornitori() {
@@ -130,12 +128,12 @@ public class Articoli implements java.io.Serializable {
 		this.reparti = reparti;
 	}
 
-	public Um getUm() {
-		return this.um;
+	public Pannelli getPannelli() {
+		return this.pannelli;
 	}
 
-	public void setUm(Um um) {
-		this.um = um;
+	public void setPannelli(Pannelli pannelli) {
+		this.pannelli = pannelli;
 	}
 
 	public String getCodfornitore() {
@@ -274,76 +272,76 @@ public class Articoli implements java.io.Serializable {
 		this.numeroPacchetti = numeroPacchetti;
 	}
 
-	public Set<ImmagineArticolo> getImmagineArticolos() {
-		return this.immagineArticolos;
-	}
-
-	public void setImmagineArticolos(Set<ImmagineArticolo> immagineArticolos) {
-		this.immagineArticolos = immagineArticolos;
-	}
-
-	public Set<DettaglioCarichi> getDettaglioCarichis() {
-		return this.dettaglioCarichis;
-	}
-
-	public void setDettaglioCarichis(Set<DettaglioCarichi> dettaglioCarichis) {
-		this.dettaglioCarichis = dettaglioCarichis;
-	}
-
-	public Set<DettaglioCarichi> getDettaglioCarichis_1() {
-		return this.dettaglioCarichis_1;
-	}
-
-	public void setDettaglioCarichis_1(Set<DettaglioCarichi> dettaglioCarichis_1) {
-		this.dettaglioCarichis_1 = dettaglioCarichis_1;
-	}
-
-	public Set<ImmagineArticolo> getImmagineArticolos_1() {
-		return this.immagineArticolos_1;
-	}
-
-	public void setImmagineArticolos_1(Set<ImmagineArticolo> immagineArticolos_1) {
-		this.immagineArticolos_1 = immagineArticolos_1;
-	}
-
-	public Set<DettaglioOrdini> getDettaglioOrdinis() {
+	public Set getDettaglioOrdinis() {
 		return this.dettaglioOrdinis;
 	}
 
-	public void setDettaglioOrdinis(Set<DettaglioOrdini> dettaglioOrdinis) {
+	public void setDettaglioOrdinis(Set dettaglioOrdinis) {
 		this.dettaglioOrdinis = dettaglioOrdinis;
 	}
 
-	public Set<DettaglioOrdini> getDettaglioOrdinis_1() {
+	public Set getImmagineArticolos() {
+		return this.immagineArticolos;
+	}
+
+	public void setImmagineArticolos(Set immagineArticolos) {
+		this.immagineArticolos = immagineArticolos;
+	}
+
+	public Set getImmagineArticolos_1() {
+		return this.immagineArticolos_1;
+	}
+
+	public void setImmagineArticolos_1(Set immagineArticolos_1) {
+		this.immagineArticolos_1 = immagineArticolos_1;
+	}
+
+	public Set getDettaglioOrdinis_1() {
 		return this.dettaglioOrdinis_1;
 	}
 
-	public void setDettaglioOrdinis_1(Set<DettaglioOrdini> dettaglioOrdinis_1) {
+	public void setDettaglioOrdinis_1(Set dettaglioOrdinis_1) {
 		this.dettaglioOrdinis_1 = dettaglioOrdinis_1;
 	}
 
-	public Set<DettaglioCarichi> getDettaglioCarichis_2() {
-		return this.dettaglioCarichis_2;
+	public Set getDettaglioCarichis() {
+		return this.dettaglioCarichis;
 	}
 
-	public void setDettaglioCarichis_2(Set<DettaglioCarichi> dettaglioCarichis_2) {
-		this.dettaglioCarichis_2 = dettaglioCarichis_2;
+	public void setDettaglioCarichis(Set dettaglioCarichis) {
+		this.dettaglioCarichis = dettaglioCarichis;
 	}
 
-	public Set<ImmagineArticolo> getImmagineArticolos_2() {
-		return this.immagineArticolos_2;
+	public Set getDettaglioCarichis_1() {
+		return this.dettaglioCarichis_1;
 	}
 
-	public void setImmagineArticolos_2(Set<ImmagineArticolo> immagineArticolos_2) {
-		this.immagineArticolos_2 = immagineArticolos_2;
+	public void setDettaglioCarichis_1(Set dettaglioCarichis_1) {
+		this.dettaglioCarichis_1 = dettaglioCarichis_1;
 	}
 
-	public Set<DettaglioOrdini> getDettaglioOrdinis_2() {
+	public Set getDettaglioOrdinis_2() {
 		return this.dettaglioOrdinis_2;
 	}
 
-	public void setDettaglioOrdinis_2(Set<DettaglioOrdini> dettaglioOrdinis_2) {
+	public void setDettaglioOrdinis_2(Set dettaglioOrdinis_2) {
 		this.dettaglioOrdinis_2 = dettaglioOrdinis_2;
+	}
+
+	public Set getImmagineArticolos_2() {
+		return this.immagineArticolos_2;
+	}
+
+	public void setImmagineArticolos_2(Set immagineArticolos_2) {
+		this.immagineArticolos_2 = immagineArticolos_2;
+	}
+
+	public Set getDettaglioCarichis_2() {
+		return this.dettaglioCarichis_2;
+	}
+
+	public void setDettaglioCarichis_2(Set dettaglioCarichis_2) {
+		this.dettaglioCarichis_2 = dettaglioCarichis_2;
 	}
 
 }

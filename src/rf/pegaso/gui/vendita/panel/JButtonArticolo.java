@@ -1,7 +1,10 @@
 package rf.pegaso.gui.vendita.panel;
 
+import it.infolabs.hibernate.Articoli;
+
 import java.awt.Dimension;
 import java.awt.Font;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.AbstractButton;
@@ -16,10 +19,10 @@ public class JButtonArticolo extends javax.swing.JButton {
 	private static final long serialVersionUID = 1L;
 	
 	private ImmagineArticolo imgArticolo;
-	private Articolo articolo;
+	private Articoli articolo;
 	
 	
-	public JButtonArticolo(Articolo articolo) {
+	public JButtonArticolo(Articoli articolo) {
 		super();
 		this.articolo = articolo;
 		initGUI();
@@ -27,42 +30,28 @@ public class JButtonArticolo extends javax.swing.JButton {
 	
 	private void initGUI() {
 		try {
-			imgArticolo = new ImmagineArticolo(articolo);
-			imgArticolo.caricaDati();						
-			this.setText(imgArticolo.getNome());
+//			imgArticolo = articolo.getImmagineArticolos().toArray()[0];
+//			imgArticolo.caricaDati();						
+//			this.setText(imgArticolo.getNome());
+			this.setText(articolo.getDescrizione());
 //			this.setIcon(new ImageIcon(imgArticolo.getFile()));
 			this.setVerticalTextPosition(AbstractButton.BOTTOM);
 			this.setHorizontalTextPosition(AbstractButton.CENTER);
-			this.setFont(new Font("Dialog", Font.BOLD, 24));
+			this.setFont(new Font("Dialog", Font.BOLD, 16));
             setFocusPainted(false);
             setFocusable(false);
             setRequestFocusEnabled(false);
-            setMinimumSize(new Dimension(90, 80));
+            setPreferredSize(new Dimension(100, 100));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public Articolo getArticolo() {
+	public Articoli getArticolo() {
 		return articolo;
 	}
 
-	public void setArticolo(Articolo articolo) {
+	public void setArticolo(Articoli articolo) {
 		this.articolo = articolo;
 	}
-	
-//	private class MyButtonListener implements java.awt.event.ActionListener {
-//		
-//		private int idArticolo;
-//		public MyButtonListener(int idArticolo){
-//			this.idArticolo = idArticolo;
-//		}
-//
-//		@Override
-//		public void actionPerformed(ActionEvent arg0) {
-//			
-//		}
-//		
-//	}
-
 }

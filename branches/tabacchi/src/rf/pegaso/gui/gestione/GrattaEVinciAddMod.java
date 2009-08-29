@@ -930,6 +930,7 @@ public class GrattaEVinciAddMod extends JFrame {
 				idArticolo=a.getIdArticolo();
 				ArticoliHome.getInstance().begin();
 				Articoli articolo=ArticoliHome.getInstance().findById(idArticolo);
+				ArticoliHome.getInstance().begin();
 				ArticoliHome.getInstance().attachDirty(articolo);
 				ArticoliHome.getInstance().commitAndClose();
 //				if ( !txtFldQtaIniziale.getText().trim().equals("") && !txtFldQtaIniziale.getText().trim().equals("0,00") ){

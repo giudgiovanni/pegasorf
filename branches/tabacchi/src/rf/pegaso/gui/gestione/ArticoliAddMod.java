@@ -3,6 +3,14 @@
  */
 package rf.pegaso.gui.gestione;
 
+import it.infolabs.hibernate.Articoli;
+import it.infolabs.hibernate.ArticoliHome;
+import it.infolabs.hibernate.FornitoriHome;
+import it.infolabs.hibernate.Pannelli;
+import it.infolabs.hibernate.PannelliHome;
+import it.infolabs.hibernate.RepartiHome;
+import it.infolabs.hibernate.UmHome;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -16,12 +24,11 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
@@ -41,18 +48,14 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.JTextComponent;
 
-import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.Fornitore;
 import rf.pegaso.db.tabelle.Reparto;
 import rf.pegaso.db.tabelle.UnitaDiMisura;
-import rf.pegaso.gui.gestione.TabacchiAddMod.MyActionListener;
 import rf.pegaso.gui.utility.SuggerimentoCodice;
 import rf.pegaso.gui.viste.ViewDocCarico;
 import rf.utility.ControlloDati;
 import rf.utility.db.DBManager;
-import rf.utility.db.eccezzioni.CodiceBarreEsistente;
-import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompletion;
 import rf.utility.gui.text.UpperTextDocument;
@@ -79,6 +82,8 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				apriNuovoFornitore();
 			} else if (e.getSource() == btnNewReparto) {
 				apriNuovaCategoria();
+			} else if (e.getSource() == btnNewPannello) {
+				apriNuovoPannello();
 			} else if (e.getSource() == btnNewUM) {
 				apriNuovoUM();
 			} else if (e.getSource() == btnDocCarico) {
@@ -218,6 +223,8 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	private String[] descReparti;
 	private String[] codUnitaDiMisura;
 	private String[] descUnitaDiMisura;
+	private String[] codPannelli;
+	private String[] descPannelli;
 	private JButton btnSuggerimento = null;
 	private String[] ultimoArticolo;
 	private boolean close=false;
@@ -226,6 +233,9 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	private JLabel lblNo = null;
 	private JRadioButton rbtnSi = null;
 	private JRadioButton rbtnNo = null;
+	private JLabel lblPannelli = null;
+	private JComboBox cmbPannelli = null;
+	private JButton btnNewPannello = null;
 
 	/**
 	 * @param owner
@@ -378,6 +388,13 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		RepartiAdd add = new RepartiAdd(this, dbm);
 		add.setVisible(true);
 		caricaCmbCategoria();
+		// caricaReparti(cmbReparto);
+	}
+	
+	public void apriNuovoPannello() {
+		PannelloAdd add = new PannelloAdd(this, dbm);
+		add.setVisible(true);
+		caricaCmbPannelli();
 		// caricaReparti(cmbReparto);
 
 	}
@@ -949,7 +966,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		if (jScrollPane1 == null) {
 			try {
 				jScrollPane1 = new JScrollPane();
-				jScrollPane1.setBounds(new Rectangle(4, 286, 297, 41)); // Generated
+				jScrollPane1.setBounds(new Rectangle(4, 329, 297, 41)); // Generated
 				jScrollPane1.setViewportView(getTxtNote()); // Generated
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -1002,6 +1019,9 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	private JPanel getPnlDatiPersonali() {
 		if (pnlDatiPersonali == null) {
 			try {
+				lblPannelli = new JLabel();
+				lblPannelli.setBounds(new Rectangle(5, 269, 120, 16));
+				lblPannelli.setText("Pannello Rapido");
 				lblNo = new JLabel();
 				lblNo.setBounds(new Rectangle(430, 22, 15, 16));
 				lblNo.setText("No");
@@ -1013,7 +1033,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				lblrButtonSiNo.setText("Modificabili");
 				lblNota = new JLabel();
 				lblNota.setText("Note"); // Generated
-				lblNota.setBounds(new Rectangle(4, 270, 40, 16)); // Generated
+				lblNota.setBounds(new Rectangle(4, 313, 40, 16)); // Generated
 				lblReaprto = new JLabel();
 				lblReaprto.setText("Categoria Merceologica"); // Generated
 				lblReaprto.setBounds(new Rectangle(5, 220, 149, 16)); // Generated
@@ -1081,6 +1101,9 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				pnlDatiPersonali.add(lblNo, null);
 				pnlDatiPersonali.add(getRbtnSi(), null);
 				pnlDatiPersonali.add(getRbtnNo(), null);
+				pnlDatiPersonali.add(lblPannelli, null);
+				pnlDatiPersonali.add(getCmbPannelli(), null);
+				pnlDatiPersonali.add(getBtnNewPannello(), null);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -1321,49 +1344,50 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		return txtRicaricoListino;
 	}
 
-	private void impostaCampi(Articolo c) {
-		Fornitore f = new Fornitore();
-		UnitaDiMisura um = new UnitaDiMisura();
-		Reparto r = new Reparto();
-		try {
-			f.caricaDati(c.getIdFornitore());
-			um.caricaDati(c.getUm());
-			r.caricaDati(c.getIdReparto());
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(this, "Errore caricamento dati",
-					"ERRORE", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}
+	private void impostaCampi(Articoli art) {
+//		Fornitore f = new Fornitore();
+//		UnitaDiMisura um = new UnitaDiMisura();
+//		Reparto r = new Reparto();
+//		try {
+//			f.caricaDati(c.getIdFornitore());
+//			um.caricaDati(c.getUm());
+//			r.caricaDati(c.getIdReparto());
+//		} catch (SQLException e) {
+//			JOptionPane.showMessageDialog(this, "Errore caricamento dati",
+//					"ERRORE", JOptionPane.ERROR_MESSAGE);
+//			e.printStackTrace();
+//		}
 
-		this.txtCodBarre.setText(c.getCodBarre());
-		this.txtCodFornitore.setText(c.getCodFornitore());
-		this.txtDescrizione.setText(c.getDescrizione());
-		this.txtIva.setText(new Integer(c.getIva()).toString());
-		this.txtNote.setText(c.getNote());
+		this.txtCodBarre.setText(art.getCodbarre());
+		this.txtCodFornitore.setText(art.getCodfornitore());
+		this.txtDescrizione.setText(art.getDescrizione());
+		this.txtIva.setText(art.getIva().toString());
+		this.txtNote.setText(art.getNote());
 		// this.txtPrezzoAcquisto.setText(new
 		// Double(c.getPrezzoAcquisto()).toString());
 
 		// this.txtPrezzoAcquisto.setText((ControlloDati.convertDoubleToPrezzo(c.getPrezzoAcquisto())));
-		this.txtPrezzoAcquisto.setValue(new Double(c.getPrezzoAcquisto()));
+		this.txtPrezzoAcquisto.setValue(art.getPrezzoAcquisto());
 
 		// this.txtPrezzoListino.setText(ControlloDati.convertDoubleToPrezzo(c.getPrezzoIngrosso()));
-		this.txtPrezzoListino.setValue(new Double(c.getPrezzoIngrosso()));
+		this.txtPrezzoListino.setValue(art.getPrezzoIngrosso());
 		// this.txtRicaricoDettaglio.setText(new
 		// Integer(c.getRicaricoDettaglio()).toString());
-		this.txtRicaricoListino.setText(new Integer(c.getRicaricoIngrosso())
-				.toString());
+//		this.txtRicaricoListino.setText(new Integer(100).toString());
 		// cerchiamo la pos del codice nell'array fornitori
-		int pos = Arrays.ricercaLineare(codFornitori, new Integer(f
-				.getIdFornitore()).toString());
+		int pos = Arrays.ricercaLineare(codFornitori, new Long(art.getFornitori().getIdfornitore()).toString());
 		this.cmbFornitori.setSelectedIndex(pos+1);
 		// cerchiamo la pos del codice nell'array unità di misura
-		pos = Arrays.ricercaLineare(codUnitaDiMisura, new Integer(um.getIdUm())
-				.toString());
+		pos = Arrays.ricercaLineare(codUnitaDiMisura, new Long(art.getUm().getIdum()).toString());
 		this.cmbMisura.setSelectedIndex(pos+1);
 		// cerchiamo la pos del codice nell'array reparti
-		pos = Arrays.ricercaLineare(codReparti, new Integer(r.getIdReparto())
-				.toString());
+		pos = Arrays.ricercaLineare(codReparti, new Long(art.getReparti().getIdreparto()).toString());
 		this.cmbReparto.setSelectedIndex(pos+1);
+		// cerchiamo la pos del codice nell'array pannelli
+		if ( art.getPannelli() != null ){
+			pos = Arrays.ricercaLineare(codPannelli, new Long(art.getPannelli().getIdpannelli()).toString());
+			this.cmbPannelli.setSelectedIndex(pos+1);
+		}
 	}
 
 	/**
@@ -1372,7 +1396,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(636, 480);
+		this.setSize(636, 500);
 		this.setResizable(false); // Generated
 
 		this.setContentPane(getJContentPane());
@@ -1387,34 +1411,25 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		// carichiamo i cari dati negli oggetti
 		if (modalita == MOD) {
 			this.setTitle("Modifica Articolo");
-			Articolo c = new Articolo();
-			try {
-				c.caricaDati(this.idArticolo);
-				ultimoArticolo[0]=c.getCodBarre();
-				impostaCampi(c);
-				calcoloPercentualeRicarico();
-				calcolaPrezzoListinoByPrezzoAcquisto();
-				calcolaPrezzoPubblico();
-				caricaQtaMagazzino();
-				// Verifichiamo se il codice a barre e' diverso da nullo rendiamo il campo editabile
-				if ( c.getCodBarre() != null && !c.getCodBarre().trim().equals("") ){
-					rbtnNo.setSelected(true);
-					txtCodBarre.setEditable(false);
-					txtCodFornitore.setEditable(false);
-					btnSuggerimento.setEnabled(false);
-				}
-				else{
-					rbtnSi.setSelected(true);
-					txtCodBarre.setEditable(true);
-					txtCodFornitore.setEditable(true);
-					btnSuggerimento.setEnabled(true);
-				}
-			} catch (SQLException e) {
-				JOptionPane.showMessageDialog(this,
-						"Errore caricamento dati DB", "ERRORE",
-						JOptionPane.ERROR_MESSAGE);
-				e.printStackTrace();
-				return;
+			Articoli art = ArticoliHome.getInstance().findById(idArticolo);
+			ultimoArticolo[0]=art.getCodbarre();
+			impostaCampi(art);
+			calcoloPercentualeRicarico();
+			calcolaPrezzoListinoByPrezzoAcquisto();
+			calcolaPrezzoPubblico();
+			caricaQtaMagazzino();
+			// Verifichiamo se il codice a barre e' diverso da nullo rendiamo il campo editabile
+			if ( art.getCodbarre() != null && !art.getCodbarre().trim().equals("") ){
+				rbtnNo.setSelected(true);
+				txtCodBarre.setEditable(false);
+				txtCodFornitore.setEditable(false);
+				btnSuggerimento.setEnabled(false);
+			}
+			else{
+				rbtnSi.setSelected(true);
+				txtCodBarre.setEditable(true);
+				txtCodFornitore.setEditable(true);
+				btnSuggerimento.setEnabled(true);
 			}
 		} else {
 			this.setTitle("Inserisci Articoli");
@@ -1440,7 +1455,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		caricaCmbFornitori();
 		caricaCmbCategoria();
 		caricaCmbUnitaDiMisura();
-
+		caricaCmbPannelli();
 	}
 
 	/**
@@ -1521,6 +1536,33 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		AutoCompletion.enable(cmbReparto);
 
 	}
+	
+	private void caricaCmbPannelli() {
+		cmbPannelli.removeAllItems();
+		PannelliHome.getInstance().begin();
+		ArrayList<Pannelli> pannelli = PannelliHome.getInstance().allPannelli();
+		String [] allPannelli = new String[pannelli.size()];
+		// questi due array li usiamo per tenere
+		// traccia dei codici del fornitore in
+		// base alla posizione che si trovano nel combo
+		codPannelli = new String[pannelli.size()];
+		descPannelli = new String[pannelli.size()];
+		// Impostiamo e carichiamo i dati nel combobox
+		cmbPannelli.setEditable(true);
+		cmbPannelli.addItem("");
+		int count = 0;
+		for (Pannelli p : pannelli){
+			allPannelli[count] = p.getIdpannelli()+"-"+p.getNome();
+			codPannelli[count] = String.valueOf(p.getIdpannelli());
+			descPannelli[count] = p.getNome();
+			cmbPannelli.addItem(p.getNome());
+			count++;
+		}
+		
+		//new ComboBoxAutoComplete(cmbReparto);
+		AutoCompletion.enable(cmbPannelli);
+
+	}
 
 	/**
 	 *
@@ -1566,31 +1608,38 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	}
 
 	private void inserisci() {
-		Articolo a = new Articolo();
+		Articoli a = new Articoli();
 		boolean ok = recuperaDatiCampi(a);
 		if (ok) {
-			try {
-				a.insertArticolo();
-			} catch (IDNonValido e) {
-				JOptionPane.showMessageDialog(this, "Valore idCliente errato",
-						"ERRORE", JOptionPane.ERROR_MESSAGE);
-				try {
-					e.printStackTrace(new PrintWriter(
-							"inserimento_idnonvalido.txt"));
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			} catch (CodiceBarreEsistente e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (CodiceBarreInesistente e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			ArticoliHome.getInstance().persist(a);
+			ArticoliHome.getInstance().begin();
+			ArticoliHome.getInstance().commit();
+//			try {
+//				a.insertArticolo();
+//				// Se e' selezionato un pannello rapido lo salviamo
+////				if (!((String) cmbPannelli.getSelectedItem()).equalsIgnoreCase("")) {
+////					salvaArticoloInPannelloRapido(cmbPannelli.getSelectedIndex(), idArticolo);
+////				}
+//			} catch (IDNonValido e) {
+//				JOptionPane.showMessageDialog(this, "Valore idCliente errato",
+//						"ERRORE", JOptionPane.ERROR_MESSAGE);
+//				try {
+//					e.printStackTrace(new PrintWriter(
+//							"inserimento_idnonvalido.txt"));
+//				} catch (FileNotFoundException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//			} catch (CodiceBarreEsistente e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (SQLException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (CodiceBarreInesistente e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 			svuotaCampi();
 		}
 
@@ -1611,27 +1660,34 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				JOptionPane.INFORMATION_MESSAGE);
 		if (scelta != JOptionPane.YES_OPTION)
 			return;
-		Articolo a = new Articolo();
-		a.setIdArticolo(idArticolo);
+		Articoli a = ArticoliHome.getInstance().findById(idArticolo);
+//		a.setIdArticolo(idArticolo);
 		recuperaDatiCampi(a);
-		try {
-			a.updateArticolo();
-		} catch (IDNonValido e) {
-			JOptionPane.showMessageDialog(this, "Valore idFornitore errato",
-					"ERRORE", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		} catch (CodiceBarreEsistente e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CodiceBarreInesistente e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		ArticoliHome.getInstance().persist(a);
+		ArticoliHome.getInstance().begin();
+		ArticoliHome.getInstance().commit();
+//		try {
+//			a.updateArticolo();
+//			// Se e' selezionato un pannello rapido lo salviamo
+////			if (!((String) cmbPannelli.getSelectedItem()).equalsIgnoreCase("")) {
+////				salvaArticoloInPannelloRapido(cmbPannelli.getSelectedIndex(), idArticolo);
+////			}
+//		} catch (IDNonValido e) {
+//			JOptionPane.showMessageDialog(this, "Valore idFornitore errato",
+//					"ERRORE", JOptionPane.ERROR_MESSAGE);
+//			e.printStackTrace();
+//		} catch (CodiceBarreEsistente e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (CodiceBarreInesistente e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		// ultimo articolo appunto lavorato
-		this.ultimoArticolo[0]=a.getCodBarre();
+		this.ultimoArticolo[0]=a.getCodbarre();
 		this.dispose();
 
 	}
@@ -1639,7 +1695,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	/**
 	 *
 	 */
-	private boolean recuperaDatiCampi(Articolo a) {
+	private boolean recuperaDatiCampi2(Articolo a) {
 
 		a.setCodBarre(txtCodBarre.getText());
 		a.setCodFornitore(txtCodFornitore.getText());
@@ -1692,12 +1748,132 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		pos--;
 		cod = new Integer(codReparti[pos]);
 		a.setIdReparto(cod);
+		
+		// Preleviamo il codice del pannello
+		pos = cmbPannelli.getSelectedIndex();
+		if ( cmbPannelli.getSelectedIndex() > 0 ){
+			cod = new Integer(codPannelli[(cmbPannelli.getSelectedIndex() - 1)]);
+			a.setIdPannello(cod);
+		}
+		
 
 		// impostiamoiva
 		if (txtIva.getText().equalsIgnoreCase(""))
 			a.setIva(0);
 		else
 			a.setIva(Integer.parseInt(txtIva.getText()));
+
+		try {
+			if (txtPrezzoAcquisto.getText().equalsIgnoreCase("")) {
+				a.setPrezzoAcquisto(0.00);
+			} else {
+				if (txtPrezzoAcquisto.getValue() instanceof Double) {
+					a.setPrezzoAcquisto(((Double) txtPrezzoAcquisto.getValue())
+							.doubleValue());
+				} else {
+					long value = ((Long) txtPrezzoAcquisto.getValue())
+							.longValue();
+					a.setPrezzoAcquisto(new Double(value).doubleValue());
+				}
+			}
+
+			// a.setPrezzoDettaglio((ControlloDati.convertPrezzoToDouble(txtPrezzoDettaglio.getText())));
+			if (txtPrezzoListino.getText().equalsIgnoreCase("")) {
+				a.setPrezzoIngrosso(0.0);
+			} else {
+				if (txtPrezzoListino.getValue() instanceof Double) {
+					a.setPrezzoIngrosso(((Double) txtPrezzoListino.getValue())
+							.doubleValue());
+				} else {
+					long value = ((Long) txtPrezzoListino.getValue())
+							.longValue();
+					a.setPrezzoIngrosso(new Double(value).doubleValue());
+				}
+			}
+			a.setPrezzoDettaglio(a.getPrezzoIngrosso());
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(this, "Numero malformato",
+					"NUMERO ERRATO", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		} 
+
+		a.setNote(txtNote.getText());
+		return true;
+
+	}
+	
+	/**
+	 *
+	 */
+	private boolean recuperaDatiCampi(Articoli a) {
+
+		a.setCodbarre(txtCodBarre.getText());
+		a.setCodfornitore(txtCodFornitore.getText());
+		// Controllo se è stato selezionato l'unità di misura
+		if (((String) cmbMisura.getSelectedItem()).equalsIgnoreCase("")) {
+			messaggioCampoErrato("Selezionare l'unit\u00E0 di misura");
+			return false;
+		}
+
+		// Preleviamo il codice unità di misura
+		int pos = cmbMisura.getSelectedIndex();
+		if (pos == 0)
+			return false;
+		// descrementiamo di uno perchè nel combobox è presente
+		// anche un oggetto vuoto
+		pos--;
+		int cod = new Integer(codUnitaDiMisura[pos]);
+		a.setUm(UmHome.getInstance().findById(cod));
+
+		a.setDescrizione(txtDescrizione.getText());
+		// controllo se è stato selezionato il
+		// fornitore
+		if (((String) cmbFornitori.getSelectedItem()).equalsIgnoreCase("")) {
+			messaggioCampoErrato("Selezionare il fornitore");
+			return false;
+		}
+
+		// Preleviamo il codice fornitore
+		pos = cmbFornitori.getSelectedIndex();
+		if (pos == 0)
+			return false;
+		// descrementiamo di uno perchè nel combobox è presente
+		// anche un oggetto vuoto
+		pos--;
+		cod = new Integer(codFornitori[pos]);
+		a.setFornitori(FornitoriHome.getInstance().findById(cod));
+
+		// controllo se è stato selezionato il reparto
+		if (((String) cmbReparto.getSelectedItem()).equalsIgnoreCase("")) {
+			messaggioCampoErrato("Selezionare la categoria");
+			return false;
+		}
+
+		// Preleviamo il codice unità di misura
+		pos = cmbReparto.getSelectedIndex();
+		if (pos == 0)
+			return false;
+		// descrementiamo di uno perchè nel combobox è presente
+		// anche un oggetto vuoto
+		pos--;
+		cod = new Integer(codReparti[pos]);
+		a.setReparti(RepartiHome.getInstance().findById(cod));
+		
+		// Preleviamo il codice del pannello
+		if ( cmbPannelli.getSelectedIndex() > 0 ){
+			cod = new Integer(codPannelli[(cmbPannelli.getSelectedIndex() - 1)]);
+			a.setPannelli(PannelliHome.getInstance().findById(cod));
+		}
+		else {
+			a.setPannelli(null);
+		}
+		
+
+		// impostiamoiva
+		if (txtIva.getText().equalsIgnoreCase(""))
+			a.setIva(0L);
+		else
+			a.setIva(Long.parseLong(txtIva.getText()));
 
 		try {
 			if (txtPrezzoAcquisto.getText().equalsIgnoreCase("")) {
@@ -1832,6 +2008,34 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			rbtnNo.addActionListener(new MyActionListener());
 		}
 		return rbtnNo;
+	}
+
+	/**
+	 * This method initializes cmbPannelli	
+	 * 	
+	 * @return javax.swing.JComboBox	
+	 */
+	private JComboBox getCmbPannelli() {
+		if (cmbPannelli == null) {
+			cmbPannelli = new JComboBox();
+			cmbPannelli.setBounds(new Rectangle(5, 285, 169, 25));
+		}
+		return cmbPannelli;
+	}
+
+	/**
+	 * This method initializes btnNewPannello	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnNewPannello() {
+		if (btnNewPannello == null) {
+			btnNewPannello = new JButton();
+			btnNewPannello.setBounds(new Rectangle(190, 284, 75, 29));
+			btnNewPannello.setText("Nuovo");
+			btnNewPannello.addActionListener(new MyActionListener());
+		}
+		return btnNewPannello;
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

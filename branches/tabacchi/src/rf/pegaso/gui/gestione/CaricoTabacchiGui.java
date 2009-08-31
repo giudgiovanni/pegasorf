@@ -131,12 +131,10 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				eliminaArticolo();
 			else if (e.getSource() == btnChiudi){
 				if(!save){
-					eliminaUltimoCarico();
-					
+					eliminaUltimoCarico();	
 				}
 				dispose();	
 			}
-			
 			else if (e.getSource() == btnModifica)
 				modifica();
 			else if (e.getSource() == btnEliminaCarico)
@@ -154,6 +152,8 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				caricaOrdine();
 			else if (e.getSource() == btnSogliaMinima)
 				caricaArticoliSogliaMinima();
+			else if ( e.getSource() == btnStampaU88Fax )
+				stampaModelloU88Fax();
 		}
 
 	}
@@ -929,7 +929,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		// FINE PUNTO BACKUP
 
 		int riga = tblViewCarichi.getSelectedRow();
-		int idcarico = ((Long) tblViewCarichi.getValueAt(riga, 0)).intValue();
+		this.idcarico = ((Long) tblViewCarichi.getValueAt(riga, 0)).intValue();
 		Carico c = new Carico();
 		try {
 			c.caricaDati(idcarico);
@@ -1871,6 +1871,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		// FINE PUNTO BACKUP
 
 		Articoli a = new Articoli();
+		ArticoliHome.getInstance().begin();
 		List<Object[]> result = ArticoliHome.getInstance().allArticoliSottoSogliaMinima();
 
 		if (result.size() == 0) {
@@ -2023,7 +2024,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		if (scelta != JOptionPane.YES_OPTION)
 			return;
 		int riga = tblViewCarichi.getSelectedRow();
-		int idcarico = ((Long) tblViewCarichi.getValueAt(riga, 0)).intValue();
+		this.idcarico = ((Long) tblViewCarichi.getValueAt(riga, 0)).intValue();
 		Carico c = new Carico();
 		try {
 			c.caricaDati(idcarico);
@@ -2591,13 +2592,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			btnStampaU88Fax.setBounds(new Rectangle(646, 120, 168, 53));
 			btnStampaU88Fax.setText("<html>Stampa Modello<P>U88 FAX</html>");
 			btnStampaU88Fax.setEnabled(false);
-			btnStampaU88Fax
-					.addActionListener(new java.awt.event.ActionListener() {
-						public void actionPerformed(java.awt.event.ActionEvent e) {
-							stampaModelloU88Fax(); // TODO Auto-generated Event
-							// stub actionPerformed()
-						}
-					});
+			btnStampaU88Fax.addActionListener(new MyButtonListener());
 		}
 		return btnStampaU88Fax;
 	}

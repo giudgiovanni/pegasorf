@@ -173,6 +173,9 @@ public class ArticoliHome extends BusinessObjectHome{
 				qtaOrdinare-=diff;
 			}
 		}
+		if ( qtaOrdinare < numeroPacchetti ){
+			qtaOrdinare = numeroPacchetti;
+		}
 		
 		Double riordino=0.0;
 		if(numeroPacchetti!=0){

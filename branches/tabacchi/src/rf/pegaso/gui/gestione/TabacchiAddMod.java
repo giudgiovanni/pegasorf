@@ -5,6 +5,9 @@ package rf.pegaso.gui.gestione;
 
 import it.infolabs.hibernate.Articoli;
 import it.infolabs.hibernate.ArticoliHome;
+import it.infolabs.hibernate.FornitoriHome;
+import it.infolabs.hibernate.RepartiHome;
+import it.infolabs.hibernate.UmHome;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -1124,42 +1127,42 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	
 
 	private void inserisci() {
-		Articolo a = new Articolo();
+		Articoli a = new Articoli();
 		boolean ok = recuperaDatiCampi(a);
 		if (ok) {
-			try {
-				a.insertArticolo();
-				idArticolo=a.getIdArticolo();
+//			try {
+//				a.insertArticolo();
+//				idArticolo=a.getIdArticolo();
+//				ArticoliHome.getInstance().begin();
+//				Articoli articolo=ArticoliHome.getInstance().findById(idArticolo);
+//				articolo.setPeso(((Number)txtPesoStecca.getValue()).doubleValue());
+//				articolo.setNumeroPacchetti(((Number)txtNumeroPacchetti.getValue()).intValue());
 				ArticoliHome.getInstance().begin();
-				Articoli articolo=ArticoliHome.getInstance().findById(idArticolo);
-				articolo.setPeso(((Number)txtPesoStecca.getValue()).doubleValue());
-				articolo.setNumeroPacchetti(((Number)txtNumeroPacchetti.getValue()).intValue());
-				ArticoliHome.getInstance().begin();
-				ArticoliHome.getInstance().attachDirty(articolo);
+				ArticoliHome.getInstance().attachDirty(a);
 				ArticoliHome.getInstance().commitAndClose();
 				if ( !txtFldQtaIniziale.getText().trim().equals("") && !txtFldQtaIniziale.getText().trim().equals("0,00") ){
 					inserisciQuantitaIniziale();
 				}
-			} catch (IDNonValido e) {
-				JOptionPane.showMessageDialog(this, "Valore idCliente errato",
-						"ERRORE", JOptionPane.ERROR_MESSAGE);
-				try {
-					e.printStackTrace(new PrintWriter(
-							"inserimento_idnonvalido.txt"));
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			} catch (CodiceBarreEsistente e) {
-				JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
-						"ERRORE", JOptionPane.ERROR_MESSAGE);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (CodiceBarreInesistente e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			} catch (IDNonValido e) {
+//				JOptionPane.showMessageDialog(this, "Valore idCliente errato",
+//						"ERRORE", JOptionPane.ERROR_MESSAGE);
+//				try {
+//					e.printStackTrace(new PrintWriter(
+//							"inserimento_idnonvalido.txt"));
+//				} catch (FileNotFoundException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//			} catch (CodiceBarreEsistente e) {
+//				JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
+//						"ERRORE", JOptionPane.ERROR_MESSAGE);
+//			} catch (SQLException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (CodiceBarreInesistente e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 			
 			svuotaCampi();
 		}
@@ -1254,38 +1257,38 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 				JOptionPane.INFORMATION_MESSAGE);
 		if (scelta != JOptionPane.YES_OPTION)
 			return;
-		Articolo a = new Articolo();
-		a.setIdArticolo(idArticolo);
+		ArticoliHome.getInstance().begin();
+		Articoli a = ArticoliHome.getInstance().findById(idArticolo);
 		
 		recuperaDatiCampi(a);
-		try {
-			a.updateArticolo();
+//		try {
+//			a.updateArticolo();
 			ArticoliHome.getInstance().begin();
-			Articoli articolo=ArticoliHome.getInstance().findById(a.getIdArticolo());
-			articolo.setPeso(((Number)txtPesoStecca.getValue()).doubleValue());
-			articolo.setNumeroPacchetti(((Number)txtNumeroPacchetti.getValue()).intValue());
-			ArticoliHome.getInstance().begin();
-			ArticoliHome.getInstance().attachDirty(articolo);
+//			Articoli articolo=ArticoliHome.getInstance().findById(a.getIdArticolo());
+//			articolo.setPeso(((Number)txtPesoStecca.getValue()).doubleValue());
+//			articolo.setNumeroPacchetti(((Number)txtNumeroPacchetti.getValue()).intValue());
+//			ArticoliHome.getInstance().begin();
+			ArticoliHome.getInstance().attachDirty(a);
 			ArticoliHome.getInstance().commitAndClose();
 			if ( !txtFldQtaIniziale.getText().trim().equals("")  && !txtFldQtaIniziale.getText().trim().equals("0,00") ){
 				inserisciQuantitaIniziale();
 			}
-		} catch (IDNonValido e) {
-			JOptionPane.showMessageDialog(this, "Valore idFornitore errato",
-					"ERRORE", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		} catch (CodiceBarreEsistente e) {
-			JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
-					"ERRORE", JOptionPane.ERROR_MESSAGE);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CodiceBarreInesistente e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		} catch (IDNonValido e) {
+//			JOptionPane.showMessageDialog(this, "Valore idFornitore errato",
+//					"ERRORE", JOptionPane.ERROR_MESSAGE);
+//			e.printStackTrace();
+//		} catch (CodiceBarreEsistente e) {
+//			JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
+//					"ERRORE", JOptionPane.ERROR_MESSAGE);
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (CodiceBarreInesistente e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		// ultimo articolo appunto lavorato
-		this.ultimoArticolo[0]=a.getCodBarre();
+		this.ultimoArticolo[0]=a.getCodbarre();
 		this.dispose();
 
 	}
@@ -1293,11 +1296,11 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	/**
 	 *
 	 */
-	private boolean recuperaDatiCampi(Articolo a) {
+	private boolean recuperaDatiCampi(Articoli a) {
 
 		
-		a.setCodBarre(txtCodBarre.getText());
-		a.setCodFornitore(txtCodFornitore.getText());
+		a.setCodbarre(txtCodBarre.getText());
+		a.setCodfornitore(txtCodFornitore.getText());
 		// Controllo se � stato selezionato l'unit� di misura
 		if (((String) cmbMisura.getSelectedItem()).equalsIgnoreCase("")) {
 			messaggioCampoErrato("Selezionare l'unit\340 di misura");
@@ -1312,7 +1315,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 		// anche un oggetto vuoto
 		pos--;
 		int cod = new Integer(codUnitaDiMisura[pos]);
-		a.setCodiceUnitaDiMisura(cod);
+		a.setUm(UmHome.getInstance().findById(cod));
 
 		a.setColore("");
 		a.setDescrizione(txtDescrizione.getText());
@@ -1321,17 +1324,17 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 		// Preleviamo il codice fornitore
 		
 		//Uno sta per monopoli di stato
-		a.setIdFornitore(Constant.FORNITORE_TABACCHI);
+		a.setFornitori(FornitoriHome.getInstance().findById(Constant.FORNITORE_TABACCHI));
 
 		//il 3 sta per reparto generale
-		a.setIdReparto(Constant.REPARTO_TABACCHI);
+		a.setReparti(RepartiHome.getInstance().findById(Constant.REPARTO_TABACCHI));
 
 		a.setImballo("");
 		// impostiamoiva
 		if (txtIva.getText().equalsIgnoreCase(""))
-			a.setIva(0);
+			a.setIva(0L);
 		else
-			a.setIva(Integer.parseInt(txtIva.getText()));
+			a.setIva(Long.parseLong(txtIva.getText()));
 
 		try {
 			a.setPeso(0.0);
@@ -1361,18 +1364,27 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 		}
 
 		// impostiamo sconto
-		a.setSconto(0);
+		a.setSconto(0L);
 		// impostiamo sconto
 		if (txtScortaMinima.getText().equalsIgnoreCase(""))
-			a.setScortaMinima(0);
+			a.setScortaMinima(0L);
 		else
-			a.setScortaMinima(Integer.parseInt((txtScortaMinima.getText())));
+			a.setScortaMinima(Long.parseLong((txtScortaMinima.getText())));
 		if (txtScortaMassima.getText().equalsIgnoreCase(""))
-			a.setScortaMassima(0);
+			a.setScortaMassima(0L);
 		else
-			a.setScortaMassima(Integer.parseInt((txtScortaMassima.getText())));
+			a.setScortaMassima(Long.parseLong((txtScortaMassima.getText())));
+		if ( txtPesoStecca.getText().trim().equalsIgnoreCase("") )
+			a.setPeso(0.0);
+		else
+			a.setPeso(((Number)txtPesoStecca.getValue()).doubleValue());
+		if ( txtNumeroPacchetti.getText().trim().equalsIgnoreCase("") )
+			a.setNumeroPacchetti(0);
+		else
+			a.setNumeroPacchetti(((Number)txtNumeroPacchetti.getValue()).intValue());
+		
 		// impostiamo sconto
-		a.setCaricoIniziale(0);
+		a.setCaricoIniziale(0L);
 		a.setNote(txtNote.getText());
 		return true;
 

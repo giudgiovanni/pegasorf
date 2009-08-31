@@ -112,7 +112,8 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 	private JTabbedPane tbdPnCarrelli = null;
 	private JPanel pnlRiepilogo = null;
 	private JButton btnStorno1 = null;
-	private LinkedList<JPanelRiepilogoVendita> listaPannelliRiepilogo = null;
+//	private LinkedList<JPanelRiepilogoVendita> listaPannelliRiepilogo = null;
+//	private int numCasse = 0;
 
 	public VenditaInternalFrame(JFrame padre) {
 		initialize();
@@ -134,13 +135,14 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 	}
 	
 	private void initializeCarrello(){
-		listaPannelliRiepilogo = new LinkedList<JPanelRiepilogoVendita>();
-		JPanelRiepilogoVendita defaultPanelRiepilogo = new JPanelRiepilogoVendita("Cassa Principale");
-		listaPannelliRiepilogo.add(defaultPanelRiepilogo);
-		pannelloCarrello = defaultPanelRiepilogo;
+//		listaPannelliRiepilogo = new LinkedList<JPanelRiepilogoVendita>();
+//		JPanelRiepilogoVendita defaultPanelRiepilogo = new JPanelRiepilogoVendita("Cassa Principale");
+//		listaPannelliRiepilogo.add(defaultPanelRiepilogo);
+		pannelloCarrello = new JPanelRiepilogoVendita();
 		
 		tbdPnCarrelli.addTab("Cassa Principale", null, pannelloCarrello, null);
-		tbdPnCarrelli.addTab("Cassa 2", null, pannelloCarrello, null);
+//		tbdPnCarrelli.addTab("Nuova Cassa", null, null, null);
+//		numCasse = 2;
 		
 		pannelloCarrello.setVisible(true);
 	}
@@ -1305,11 +1307,12 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 			tbdPnCarrelli.setName("tbdPnCarrelli");
 			tbdPnCarrelli.setPreferredSize(new Dimension(600, 400));
 			tbdPnCarrelli.setBounds(new Rectangle(0, 0, 600, 400));
-			tbdPnCarrelli.addChangeListener(new ChangeListener() {
-		         public void stateChanged(ChangeEvent e) {
-		             System.out.println("tabIndex="+tbdPnCarrelli.getSelectedIndex());
-		          }
-		       });
+//			tbdPnCarrelli.addChangeListener(new ChangeListener() {
+//		         public void stateChanged(ChangeEvent e) {
+//		        	 if ( numCasse == tbdPnCarrelli.getSelectedIndex() + 1 )
+//		        		 System.out.println("tabIndex= "+tbdPnCarrelli.getSelectedIndex());
+//		          }
+//		       });
 		}
 		return tbdPnCarrelli;
 	}

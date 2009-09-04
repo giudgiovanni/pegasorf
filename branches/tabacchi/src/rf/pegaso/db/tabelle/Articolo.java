@@ -356,8 +356,8 @@ public class Articolo {
 		if (st != null)
 			st.close();
 		if (nRow > 0)
-			return false;
-		return true;
+			return true;
+		return false;
 	}
 	
 	/**

@@ -5,6 +5,9 @@ package rf.pegaso.gui.gestione;
 
 import it.infolabs.hibernate.Articoli;
 import it.infolabs.hibernate.ArticoliHome;
+import it.infolabs.hibernate.FornitoriHome;
+import it.infolabs.hibernate.RepartiHome;
+import it.infolabs.hibernate.UmHome;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -17,17 +20,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.Locale;
 import java.util.Properties;
 
 import javax.swing.BorderFactory;
@@ -45,16 +42,12 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.text.JTextComponent;
 
-import rf.pegaso.db.exception.CodiceBarreInesistente;
-import rf.pegaso.db.exception.ResultSetVuoto;
 import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.Carico;
 import rf.pegaso.db.tabelle.Fornitore;
 import rf.pegaso.db.tabelle.Reparto;
 import rf.pegaso.db.tabelle.UnitaDiMisura;
-import rf.pegaso.gui.gestione.TabacchiAddMod.MyActionListener;
 import rf.pegaso.gui.utility.SuggerimentoCodice;
 import rf.pegaso.gui.viste.ViewDocCarico;
 import rf.utility.Constant;
@@ -62,12 +55,8 @@ import rf.utility.ControlloDati;
 import rf.utility.MathUtility;
 import rf.utility.db.DBManager;
 import rf.utility.db.UtilityDBManager;
-import rf.utility.db.eccezzioni.CodiceBarreEsistente;
-import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
-import rf.utility.gui.text.AutoCompletion;
 import rf.utility.gui.text.UpperTextDocument;
-import rf.utility.number.Arrays;
 import javax.swing.JRadioButton;
 
 /**
@@ -922,42 +911,22 @@ public class GrattaEVinciAddMod extends JFrame {
 	}
 
 	private void inserisci() {
-		Articolo a = new Articolo();
+		Articoli a = new Articoli();
 		boolean ok = recuperaDatiCampi(a);
 		if (ok) {
-			try {
-				a.insertArticolo();
-				idArticolo=a.getIdArticolo();
+			ArticoliHome.getInstance().begin();
+			if ( !ArticoliHome.getInstance().codBarreEsistenteForInsert(a.getCodbarre()) ){
 				ArticoliHome.getInstance().begin();
-				Articoli articolo=ArticoliHome.getInstance().findById(idArticolo);
-				ArticoliHome.getInstance().begin();
-				ArticoliHome.getInstance().attachDirty(articolo);
-				ArticoliHome.getInstance().commitAndClose();
-//				if ( !txtFldQtaIniziale.getText().trim().equals("") && !txtFldQtaIniziale.getText().trim().equals("0,00") ){
-//					inserisciQuantitaIniziale();
-//				}
-			} catch (IDNonValido e) {
-				JOptionPane.showMessageDialog(this, "Valore idCliente errato",
-						"ERRORE", JOptionPane.ERROR_MESSAGE);
-				try {
-					e.printStackTrace(new PrintWriter(
-							"inserimento_idnonvalido.txt"));
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			} catch (CodiceBarreEsistente e) {
-				JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
-						"ERRORE", JOptionPane.ERROR_MESSAGE);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (CodiceBarreInesistente e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				a.setIdarticolo(dbm.getNewID("articoli","idarticolo"));
+				ArticoliHome.getInstance().persist(a);
+				ArticoliHome.getInstance().commit();
+				svuotaCampi();
 			}
-			
-			svuotaCampi();
+			else {
+				JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
+												"ERRORE", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 		}
 
 		// chiusura della finestra se selezionata
@@ -1047,35 +1016,58 @@ public class GrattaEVinciAddMod extends JFrame {
 				JOptionPane.INFORMATION_MESSAGE);
 		if (scelta != JOptionPane.YES_OPTION)
 			return;
-		Articolo a = new Articolo();
-		a.setIdArticolo(idArticolo);
-		
-		recuperaDatiCampi(a);
-		try {
-			a.updateArticolo();
-			ArticoliHome.getInstance().begin();
-			Articoli articolo=ArticoliHome.getInstance().findById(a.getIdArticolo());
-			ArticoliHome.getInstance().attachDirty(articolo);
-			ArticoliHome.getInstance().commitAndClose();
-//			if ( !txtFldQtaIniziale.getText().trim().equals("")  && !txtFldQtaIniziale.getText().trim().equals("0,00") ){
-//				inserisciQuantitaIniziale();
-//			}
-		} catch (IDNonValido e) {
-			JOptionPane.showMessageDialog(this, "Valore idFornitore errato",
-					"ERRORE", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		} catch (CodiceBarreEsistente e) {
-			JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
-					"ERRORE", JOptionPane.ERROR_MESSAGE);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CodiceBarreInesistente e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		ArticoliHome.getInstance().begin();
+		Articoli a = ArticoliHome.getInstance().findById(idArticolo);
+		String oldCodBarre = a.getCodbarre();
+		boolean ok = recuperaDatiCampi(a);
+		if ( ok ){
+			// Se il codice a barre e' stato modificato
+			if ( !a.getCodbarre().equals(oldCodBarre) ){
+				// Dobbiamo verificare se quel codice a barre e' utilizzabile
+				if ( ArticoliHome.getInstance().codBarreEsistenteForUpdate(a.getCodbarre(), a.getIdarticolo()) ){
+					// codice a barre non inseribile
+					JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
+							"ERRORE", JOptionPane.ERROR_MESSAGE);
+				}
+				else {
+					// Possiamo persistere le modifiche
+					ArticoliHome.getInstance().persist(a);
+					ArticoliHome.getInstance().commit();
+				}
+			}
+			// Il codice a barre non e' stato modificato quindi si puo' salvare
+			else{
+				ArticoliHome.getInstance().persist(a);
+				ArticoliHome.getInstance().commit();
+			}
 		}
+		
+		
+//		try {
+//			a.updateArticolo();
+//			ArticoliHome.getInstance().begin();
+//			Articoli articolo=ArticoliHome.getInstance().findById(a.getIdArticolo());
+//			ArticoliHome.getInstance().attachDirty(articolo);
+//			ArticoliHome.getInstance().commitAndClose();
+////			if ( !txtFldQtaIniziale.getText().trim().equals("")  && !txtFldQtaIniziale.getText().trim().equals("0,00") ){
+////				inserisciQuantitaIniziale();
+////			}
+//		} catch (IDNonValido e) {
+//			JOptionPane.showMessageDialog(this, "Valore idFornitore errato",
+//					"ERRORE", JOptionPane.ERROR_MESSAGE);
+//			e.printStackTrace();
+//		} catch (CodiceBarreEsistente e) {
+//			JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
+//					"ERRORE", JOptionPane.ERROR_MESSAGE);
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (CodiceBarreInesistente e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		// ultimo articolo appunto lavorato
-		this.ultimoArticolo[0]=a.getCodBarre();
+		this.ultimoArticolo[0]=a.getCodbarre();
 		this.dispose();
 
 	}
@@ -1083,19 +1075,19 @@ public class GrattaEVinciAddMod extends JFrame {
 	/**
 	 *
 	 */
-	private boolean recuperaDatiCampi(Articolo a) {
+	private boolean recuperaDatiCampi(Articoli a) {
 
-		
-		a.setCodBarre(txtCodBarre.getText());
-		a.setCodFornitore(txtCodFornitore.getText());
-
-		// Preleviamo il codice unit� di misura
-		int pos = Constant.UNITA_MISURA_PEZZI;
+		if ( txtCodBarre.getText().trim().equals("") || txtCodBarre.getText().length() < 4 ){
+			JOptionPane.showMessageDialog(this, "Codice a Barre non valido.",
+					"ERRORE", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		a.setCodbarre(txtCodBarre.getText());
+		a.setCodfornitore(txtCodFornitore.getText());
 		
 		// descrementiamo di uno perch� nel combobox � presente
 		// anche un oggetto vuoto
-//		int cod = new Integer(codUnitaDiMisura[pos]);
-		a.setCodiceUnitaDiMisura(pos);
+		a.setUm(UmHome.getInstance().findById(Constant.UNITA_MISURA_PEZZI));
 
 		a.setColore("");
 		a.setDescrizione(txtDescrizione.getText());
@@ -1104,10 +1096,10 @@ public class GrattaEVinciAddMod extends JFrame {
 		// Preleviamo il codice fornitore
 		
 		//Uno sta per monopoli di stato
-		a.setIdFornitore(Constant.FORNITORE_TABACCHI);
+		a.setFornitori(FornitoriHome.getInstance().findById(Constant.FORNITORE_TABACCHI));
 
 		//il 3 sta per reparto generale
-		a.setIdReparto(Constant.REPARTO_GRATTA_E_VINCI);
+		a.setReparti(RepartiHome.getInstance().findById(Constant.REPARTO_GRATTA_E_VINCI));
 
 		a.setImballo("");
 		try {
@@ -1138,18 +1130,18 @@ public class GrattaEVinciAddMod extends JFrame {
 		}
 
 		// impostiamo sconto
-		a.setSconto(0);
+		a.setSconto(0L);
 		// impostiamo sconto
 		if (txtScortaMinima.getText().equalsIgnoreCase(""))
-			a.setScortaMinima(0);
+			a.setScortaMinima(0L);
 		else
-			a.setScortaMinima(Integer.parseInt((txtScortaMinima.getText())));
+			a.setScortaMinima(Long.parseLong((txtScortaMinima.getText())));
 		if (txtScortaMassima.getText().equalsIgnoreCase(""))
-			a.setScortaMassima(0);
+			a.setScortaMassima(0L);
 		else
-			a.setScortaMassima(Integer.parseInt((txtScortaMassima.getText())));
+			a.setScortaMassima(Long.parseLong((txtScortaMassima.getText())));
 		// impostiamo sconto
-		a.setCaricoIniziale(0);
+		a.setCaricoIniziale(0L);
 		a.setNote(txtNote.getText());
 		return true;
 

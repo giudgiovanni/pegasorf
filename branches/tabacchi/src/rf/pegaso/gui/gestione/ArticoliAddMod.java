@@ -1607,40 +1607,23 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	}
 
-	private void inserisci() {
+	private void inserisci() {		
 		Articoli a = new Articoli();
 		boolean ok = recuperaDatiCampi(a);
 		if (ok) {
-			ArticoliHome.getInstance().persist(a);
 			ArticoliHome.getInstance().begin();
-			ArticoliHome.getInstance().commit();
-//			try {
-//				a.insertArticolo();
-//				// Se e' selezionato un pannello rapido lo salviamo
-////				if (!((String) cmbPannelli.getSelectedItem()).equalsIgnoreCase("")) {
-////					salvaArticoloInPannelloRapido(cmbPannelli.getSelectedIndex(), idArticolo);
-////				}
-//			} catch (IDNonValido e) {
-//				JOptionPane.showMessageDialog(this, "Valore idCliente errato",
-//						"ERRORE", JOptionPane.ERROR_MESSAGE);
-//				try {
-//					e.printStackTrace(new PrintWriter(
-//							"inserimento_idnonvalido.txt"));
-//				} catch (FileNotFoundException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-//			} catch (CodiceBarreEsistente e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (SQLException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (CodiceBarreInesistente e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-			svuotaCampi();
+			if ( !ArticoliHome.getInstance().codBarreEsistenteForInsert(a.getCodbarre()) ){
+				a.setIdarticolo(dbm.getNewID("articoli","idarticolo"));
+				ArticoliHome.getInstance().persist(a);
+				ArticoliHome.getInstance().begin();
+				ArticoliHome.getInstance().commit();
+				svuotaCampi();
+			}
+			else {
+				JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
+												"ERRORE", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 		}
 
 		// chiusura della finestra se selezionata
@@ -1649,7 +1632,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			dispose();
 
 	}
-
+	
 	private void modifica() {
 		if (idArticolo <= 0)
 			JOptionPane.showMessageDialog(this, "Codice idArticolo errato",
@@ -1660,33 +1643,32 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				JOptionPane.INFORMATION_MESSAGE);
 		if (scelta != JOptionPane.YES_OPTION)
 			return;
-		Articoli a = ArticoliHome.getInstance().findById(idArticolo);
-//		a.setIdArticolo(idArticolo);
-		recuperaDatiCampi(a);
-		ArticoliHome.getInstance().persist(a);
 		ArticoliHome.getInstance().begin();
-		ArticoliHome.getInstance().commit();
-//		try {
-//			a.updateArticolo();
-//			// Se e' selezionato un pannello rapido lo salviamo
-////			if (!((String) cmbPannelli.getSelectedItem()).equalsIgnoreCase("")) {
-////				salvaArticoloInPannelloRapido(cmbPannelli.getSelectedIndex(), idArticolo);
-////			}
-//		} catch (IDNonValido e) {
-//			JOptionPane.showMessageDialog(this, "Valore idFornitore errato",
-//					"ERRORE", JOptionPane.ERROR_MESSAGE);
-//			e.printStackTrace();
-//		} catch (CodiceBarreEsistente e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (CodiceBarreInesistente e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		// ultimo articolo appunto lavorato
+		Articoli a = ArticoliHome.getInstance().findById(idArticolo);
+		String oldCodBarre = a.getCodbarre();
+		boolean ok = recuperaDatiCampi(a);
+		if ( ok ){
+			// Se il codice a barre e' stato modificato
+			if ( !a.getCodbarre().equals(oldCodBarre) ){
+				// Dobbiamo verificare se quel codice a barre e' utilizzabile
+				if ( ArticoliHome.getInstance().codBarreEsistenteForUpdate(a.getCodbarre(), a.getIdarticolo()) ){
+					// codice a barre non inseribile
+					JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
+							"ERRORE", JOptionPane.ERROR_MESSAGE);
+				}
+				else {
+					// Possiamo persistere le modifiche
+					ArticoliHome.getInstance().persist(a);
+					ArticoliHome.getInstance().commit();
+				}
+			}
+			// Il codice a barre non e' stato modificato quindi si puo' salvare
+			else{
+				ArticoliHome.getInstance().persist(a);
+				ArticoliHome.getInstance().commit();
+			}
+		}
+
 		this.ultimoArticolo[0]=a.getCodbarre();
 		this.dispose();
 
@@ -1807,6 +1789,12 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	 */
 	private boolean recuperaDatiCampi(Articoli a) {
 
+		if ( txtCodBarre.getText().trim().equals("") || txtCodBarre.getText().length() < 4 ){
+			JOptionPane.showMessageDialog(this, "Codice a Barre non valido.",
+					"ERRORE", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		
 		a.setCodbarre(txtCodBarre.getText());
 		a.setCodfornitore(txtCodFornitore.getText());
 		// Controllo se è stato selezionato l'unità di misura

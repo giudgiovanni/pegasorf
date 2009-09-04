@@ -13,6 +13,7 @@ import java.util.Date;
 import javax.swing.table.AbstractTableModel;
 
 import rf.myswing.GregorianCalendarFormat;
+import rf.utility.Constant;
 import rf.utility.db.DBEvent;
 import rf.utility.db.DBManager;
 import rf.utility.db.DBStateChange;
@@ -132,8 +133,30 @@ public class CarichiViewModel extends AbstractTableModel implements
 	 *
 	 */
 	private void recuperaDati() throws SQLException {
-		this.query = "select c.idcarico as id,c.data_documento,c.num_documento as numero, d.descrizione,f.nome as fornitore,c.note,c.totale_documento as totale,c.sospeso from carichi as c,tipo_documento as d,  fornitori as f  where c.idcarico=c.idcarico and c.idfornitore=f.idfornitore and c.iddocumento=d.iddocumento order by c.data_documento desc";
-		pst = dbm.getNewPreparedStatement(query);
+//		this.query = "select c.idcarico as id,c.data_documento,c.num_documento as numero, d.descrizione,f.nome as fornitore,c.note,c.totale_documento as totale,c.sospeso from carichi as c,tipo_documento as d,  fornitori as f  where c.idcarico=c.idcarico and c.idfornitore=f.idfornitore and c.iddocumento=d.iddocumento order by c.data_documento desc";
+		StringBuilder sb = new StringBuilder();
+		sb.append("select c.idcarico as id, ");
+		sb.append("c.data_documento, ");
+		sb.append("c.num_documento as numero, ");
+		sb.append("d.descrizione, ");
+		sb.append("f.nome as fornitore, ");
+		sb.append("c.note, ");
+		sb.append("c.totale_documento as totale, ");
+		sb.append("c.sospeso ");
+		sb.append("from carichi as c, ");
+		sb.append("tipo_documento as d, ");  
+		sb.append("fornitori as f ");
+//		sb.append("dettaglio_carichi as dc, "); 
+//		sb.append("articoli a ");
+		sb.append("where c.idcarico=c.idcarico ");
+		sb.append("and c.idfornitore=f.idfornitore "); 
+		sb.append("and c.iddocumento=d.iddocumento ");
+		sb.append("and c.iddocumento <> "+Constant.ORDINE);
+//		sb.append("and dc.idcarico=c.idcarico ");
+//		sb.append("and dc.idarticolo=a.idarticolo ");
+//		sb.append("and a.idreparto <> "+Constant.REPARTO_TABACCHI);
+		sb.append(" order by c.data_documento desc ");
+		pst = dbm.getNewPreparedStatement(sb.toString());
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();
 

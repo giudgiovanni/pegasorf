@@ -7,6 +7,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
+import rf.utility.db.DBManager;
+
 public abstract class BusinessObjectHome {
 	
 	protected static SessionFactory sessionFactory = getSessionFactory();
@@ -64,6 +66,7 @@ public abstract class BusinessObjectHome {
 		Transaction transaction = (Transaction)current().getTransaction();
 		if(transaction.isActive()){
 			transaction.commit();
+			DBManager.getIstanceSingleton().notifyDBStateChange();
 		}
 		
 		

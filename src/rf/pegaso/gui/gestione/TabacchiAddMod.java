@@ -1119,52 +1119,26 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 
 	}
 
-	/**
-	 *
-	 */
-	
-
-	
-
 	private void inserisci() {
 		Articoli a = new Articoli();
 		boolean ok = recuperaDatiCampi(a);
 		if (ok) {
-//			try {
-//				a.insertArticolo();
-//				idArticolo=a.getIdArticolo();
-//				ArticoliHome.getInstance().begin();
-//				Articoli articolo=ArticoliHome.getInstance().findById(idArticolo);
-//				articolo.setPeso(((Number)txtPesoStecca.getValue()).doubleValue());
-//				articolo.setNumeroPacchetti(((Number)txtNumeroPacchetti.getValue()).intValue());
+			ArticoliHome.getInstance().begin();
+			if ( !ArticoliHome.getInstance().codBarreEsistenteForInsert(a.getCodbarre()) ){
 				ArticoliHome.getInstance().begin();
-				ArticoliHome.getInstance().attachDirty(a);
-				ArticoliHome.getInstance().commitAndClose();
+				a.setIdarticolo(dbm.getNewID("articoli","idarticolo"));
+				ArticoliHome.getInstance().persist(a);
+				ArticoliHome.getInstance().commit();
 				if ( !txtFldQtaIniziale.getText().trim().equals("") && !txtFldQtaIniziale.getText().trim().equals("0,00") ){
 					inserisciQuantitaIniziale();
 				}
-//			} catch (IDNonValido e) {
-//				JOptionPane.showMessageDialog(this, "Valore idCliente errato",
-//						"ERRORE", JOptionPane.ERROR_MESSAGE);
-//				try {
-//					e.printStackTrace(new PrintWriter(
-//							"inserimento_idnonvalido.txt"));
-//				} catch (FileNotFoundException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-//			} catch (CodiceBarreEsistente e) {
-//				JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
-//						"ERRORE", JOptionPane.ERROR_MESSAGE);
-//			} catch (SQLException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (CodiceBarreInesistente e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-			
-			svuotaCampi();
+				svuotaCampi();
+			}
+			else {
+				JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
+												"ERRORE", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 		}
 
 		// chiusura della finestra se selezionata
@@ -1246,7 +1220,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	private void messaggioCampoMancante(String testo) {
 		JOptionPane.showMessageDialog(this, testo, "CAMPO VUOTO", 1);
 	}
-
+	
 	private void modifica() {
 		if (idArticolo <= 0)
 			JOptionPane.showMessageDialog(this, "Codice idArticolo errato",
@@ -1259,35 +1233,36 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			return;
 		ArticoliHome.getInstance().begin();
 		Articoli a = ArticoliHome.getInstance().findById(idArticolo);
-		
-		recuperaDatiCampi(a);
-//		try {
-//			a.updateArticolo();
-			ArticoliHome.getInstance().begin();
-//			Articoli articolo=ArticoliHome.getInstance().findById(a.getIdArticolo());
-//			articolo.setPeso(((Number)txtPesoStecca.getValue()).doubleValue());
-//			articolo.setNumeroPacchetti(((Number)txtNumeroPacchetti.getValue()).intValue());
-//			ArticoliHome.getInstance().begin();
-			ArticoliHome.getInstance().attachDirty(a);
-			ArticoliHome.getInstance().commitAndClose();
-			if ( !txtFldQtaIniziale.getText().trim().equals("")  && !txtFldQtaIniziale.getText().trim().equals("0,00") ){
-				inserisciQuantitaIniziale();
+		String oldCodBarre = a.getCodbarre();
+		boolean ok = recuperaDatiCampi(a);
+		if ( ok ){
+			// Se il codice a barre e' stato modificato
+			if ( !a.getCodbarre().equals(oldCodBarre) ){
+				// Dobbiamo verificare se quel codice a barre e' utilizzabile
+				if ( ArticoliHome.getInstance().codBarreEsistenteForUpdate(a.getCodbarre(), a.getIdarticolo()) ){
+					// codice a barre non inseribile
+					JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
+							"ERRORE", JOptionPane.ERROR_MESSAGE);
+				}
+				else {
+					// Possiamo persistere le modifiche
+					ArticoliHome.getInstance().persist(a);
+					ArticoliHome.getInstance().commit();
+					if ( !txtFldQtaIniziale.getText().trim().equals("")  && !txtFldQtaIniziale.getText().trim().equals("0,00") ){
+						inserisciQuantitaIniziale();
+					}
+				}
 			}
-//		} catch (IDNonValido e) {
-//			JOptionPane.showMessageDialog(this, "Valore idFornitore errato",
-//					"ERRORE", JOptionPane.ERROR_MESSAGE);
-//			e.printStackTrace();
-//		} catch (CodiceBarreEsistente e) {
-//			JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
-//					"ERRORE", JOptionPane.ERROR_MESSAGE);
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (CodiceBarreInesistente e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		// ultimo articolo appunto lavorato
+			// Il codice a barre non e' stato modificato quindi si puo' salvare
+			else{
+				ArticoliHome.getInstance().persist(a);
+				ArticoliHome.getInstance().commit();
+				if ( !txtFldQtaIniziale.getText().trim().equals("")  && !txtFldQtaIniziale.getText().trim().equals("0,00") ){
+					inserisciQuantitaIniziale();
+				}
+			}
+		}
+
 		this.ultimoArticolo[0]=a.getCodbarre();
 		this.dispose();
 
@@ -1298,6 +1273,11 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 	 */
 	private boolean recuperaDatiCampi(Articoli a) {
 
+		if ( txtCodBarre.getText().trim().equals("") || txtCodBarre.getText().length() < 4 ){
+			JOptionPane.showMessageDialog(this, "Codice a Barre non valido.",
+					"ERRORE", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
 		
 		a.setCodbarre(txtCodBarre.getText());
 		a.setCodfornitore(txtCodFornitore.getText());

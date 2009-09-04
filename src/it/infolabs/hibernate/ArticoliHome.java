@@ -4,14 +4,21 @@ import org.apache.log4j.Logger;
 
 // Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Criteria;
 import org.hibernate.LockMode;
+import org.hibernate.criterion.Restrictions;
 
+import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.pegaso.db.tabelle.Articolo;
+import rf.utility.Constant;
+import rf.utility.db.DBManager;
 import static org.hibernate.criterion.Example.create;
 
 /**
@@ -202,6 +209,31 @@ public class ArticoliHome extends BusinessObjectHome{
 			log.error("finding all Articoli sotto soglia minima failed", re);
 			throw re;
 		}
+	}
+	
+	public boolean codBarreEsistenteForInsert(String codBarre) {
+		
+		Criteria crit = sessionFactory.getCurrentSession().createCriteria("it.infolabs.hibernate.Articoli");
+		crit.add(Restrictions.or(
+				Restrictions.and(
+						Restrictions.ilike("codbarre", codBarre.substring(0, 4)+"%"), 
+						Restrictions.eq("reparti.idreparto", ((long)Constant.REPARTO_GRATTA_E_VINCI))), 
+						Restrictions.eq("codbarre", codBarre)));
+		if ( crit.list().size() > 0)
+			return true;
+		return false;
+	}
+	
+	public boolean codBarreEsistenteForUpdate(String codBarre, long idArticolo) {
+		
+		Criteria crit = sessionFactory.getCurrentSession().createCriteria("it.infolabs.hibernate.Articoli");
+		crit.add(Restrictions.and(Restrictions.or(
+				Restrictions.eq("codbarre", codBarre), 
+				Restrictions.like("codbarre", codBarre.substring(0, 4)+"%")), 
+				Restrictions.not(Restrictions.idEq(idArticolo))));
+		if ( crit.list().size() > 0 )
+			return true;
+		return false;
 	}
 	
 }

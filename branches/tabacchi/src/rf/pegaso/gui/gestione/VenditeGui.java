@@ -6,6 +6,8 @@ package rf.pegaso.gui.gestione;
 import org.apache.log4j.Logger;
 
 
+import it.infolabs.hibernate.OrdiniHome;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -34,6 +36,7 @@ import java.sql.Time;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Vector;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -203,6 +206,14 @@ public class VenditeGui extends JFrame implements TableModelListener {
 
 	private JTextField txtFldAgio = null;
 
+	private JLabel ldlOraStart = null;
+
+	private JComboBox cmbDalle = null;
+
+	private JLabel lblAlle = null;
+
+	private JComboBox cmbAlle = null;
+
 	/**
 	 * @param frame
 	 * @param dbm
@@ -242,21 +253,21 @@ public class VenditeGui extends JFrame implements TableModelListener {
 	private void ricaricaVendite() throws SQLException {
 		if (logger.isDebugEnabled()) {
 			logger.debug("ricaricaVendite() - start");
-		}
+		}		
 
 		if(tblArticoliScaricati!=null){
 			ArticoliScaricatiByDataViewModel modello = (ArticoliScaricatiByDataViewModel)tblArticoliScaricati.getModel();
 			int idReparto = -1;
+			String dalle = "00:00";
+			String alle = "24:00";
 			if ( cmbBoxReparto.getSelectedItem() != null && !cmbBoxReparto.getSelectedItem().equals("") ){
 				idReparto = Integer.parseInt(cmbBoxReparto.getIDSelectedItem());
 			}
-//			if ( cmbBoxReparto.getSelectedItem().toString().equals("Tabacchi") ){
-//				idReparto = 1;
-//			}
-//			else if  ( cmbBoxReparto.getSelectedItem().equals("Varie") ){
-//				idReparto = 3;
-//			}
-			modello.setDate(dateChooserDal.getDate(), dateChooserAl.getDate(), idReparto);
+			if ( !cmbDalle.getSelectedItem().equals("") && !cmbAlle.getSelectedItem().equals("") ){
+				dalle = (String)cmbDalle.getSelectedItem();
+				alle = (String)cmbAlle.getSelectedItem();
+			}
+			modello.setDate(dateChooserDal.getDate(), dateChooserAl.getDate(), idReparto, dalle, alle);
 			modello.fireTableDataChanged();
 			calcolaTotaliArticoliScaricati();
 		}
@@ -292,14 +303,20 @@ public class VenditeGui extends JFrame implements TableModelListener {
 		// Calcoliamo ora la parte totale dello scarico di tutti gli articoli.
 		try {
 			int idReparto = -1;
+			String dalle = "00:00";
+			String alle = "24:00";
+			if ( !cmbDalle.getSelectedItem().equals("") && !cmbAlle.getSelectedItem().equals("") ){
+				dalle = (String)cmbDalle.getSelectedItem();
+				alle = (String)cmbAlle.getSelectedItem();
+			}
 			if ( cmbBoxReparto.getSelectedItem() != null && !cmbBoxReparto.getSelectedItem().equals("") ){
 				idReparto = Integer.parseInt(cmbBoxReparto.getIDSelectedItem());
 			}
 
-			imponibile = Scarico.getTotAcquistoImponibileAllOrders(dateChooserDal.getDate(), dateChooserAl.getDate(), idReparto);
-			imposta = Scarico.getTotAcquistoImpostaAllOrders(dateChooserDal.getDate(), dateChooserAl.getDate(), idReparto);
+			imponibile = Scarico.getTotAcquistoImponibileAllOrders(dateChooserDal.getDate(), dateChooserAl.getDate(), idReparto, dalle, alle);
+			imposta = Scarico.getTotAcquistoImpostaAllOrders(dateChooserDal.getDate(), dateChooserAl.getDate(), idReparto, dalle, alle);
 			tot = imponibile + imposta;
-			agio = Scarico.getTotAgioAllOrders(dateChooserDal.getDate(), dateChooserAl.getDate(), idReparto);
+			agio = Scarico.getTotAgioAllOrders(dateChooserDal.getDate(), dateChooserAl.getDate(), idReparto, dalle, alle);
 
 			// impostiamo i campi
 			txtImponibileTot.setText(ControlloDati
@@ -435,7 +452,7 @@ public class VenditeGui extends JFrame implements TableModelListener {
 		this.setResizable(true);
 		this.setContentPane(getJContentPane());
 
-		this.setSize(new Dimension(800, 591));
+		this.setSize(new Dimension(850, 591));
 		UtilGUI.centraFrame(this);
 
 
@@ -779,6 +796,10 @@ public class VenditeGui extends JFrame implements TableModelListener {
 	 */
 	private JPanel getPblBottoni() {
 		if (pblBottoni == null) {
+			lblAlle = new JLabel();
+			lblAlle.setText("Alle");
+			ldlOraStart = new JLabel();
+			ldlOraStart.setText("Dalle");
 			lblReparto = new JLabel();
 			lblReparto.setText("Tipologia");
 			lblAl = new JLabel();
@@ -796,6 +817,10 @@ public class VenditeGui extends JFrame implements TableModelListener {
 			pblBottoni.add(getDateChooserAl(), null);
 			pblBottoni.add(lblReparto, null);
 			pblBottoni.add(getCmbBoxReparto(), null);
+			pblBottoni.add(ldlOraStart, null);
+			pblBottoni.add(getCmbDalle(), null);
+			pblBottoni.add(lblAlle, null);
+			pblBottoni.add(getCmbAlle(), null);
 		}
 		return pblBottoni;
 	}
@@ -919,6 +944,97 @@ public class VenditeGui extends JFrame implements TableModelListener {
 			txtFldAgio.setEditable(false); // Generated
 		}
 		return txtFldAgio;
+	}
+
+	private Vector<String> getVectorOre(){
+		Vector v = new Vector<String>();
+		v.add("");
+		v.add("00:00");
+		v.add("01:00");
+		v.add("02:00");
+		v.add("03:00");
+		v.add("04:00");
+		v.add("05:00");
+		v.add("06:00");
+		v.add("07:00");
+		v.add("08:00");
+		v.add("09:00");
+		v.add("10:00");
+		v.add("11:00");
+		v.add("12:00");
+		v.add("13:00");
+		v.add("14:00");
+		v.add("15:00");
+		v.add("16:00");
+		v.add("17:00");
+		v.add("18:00");
+		v.add("19:00");
+		v.add("20:00");
+		v.add("21:00");
+		v.add("22:00");
+		v.add("23:00");
+		v.add("24:00");
+		return v;
+	}
+
+	/**
+	 * This method initializes cmbDalle	
+	 * 	
+	 * @return javax.swing.JComboBox	
+	 */
+	private JComboBox getCmbDalle() {
+		if (cmbDalle == null) {			
+			cmbDalle = new JComboBox(getVectorOre());
+			cmbDalle.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("propertyChange(PropertyChangeEvent) - start");
+					}
+
+					 try {
+						ricaricaVendite();
+					} catch (SQLException e2) {
+						logger.error("propertyChange(PropertyChangeEvent)", e2);
+
+					}
+
+					if (logger.isDebugEnabled()) {
+						logger.debug("propertyChange(PropertyChangeEvent) - end");
+					}
+				}
+			});
+		}
+		return cmbDalle;
+	}
+
+	/**
+	 * This method initializes cmbAlle	
+	 * 	
+	 * @return javax.swing.JComboBox	
+	 */
+	private JComboBox getCmbAlle() {
+		if (cmbAlle == null) {
+			cmbAlle = new JComboBox(getVectorOre());
+			cmbAlle.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("propertyChange(PropertyChangeEvent) - start");
+					}
+
+					 try {
+						ricaricaVendite();
+					} catch (SQLException e2) {
+						logger.error("propertyChange(PropertyChangeEvent)", e2);
+
+					}
+
+					if (logger.isDebugEnabled()) {
+						logger.debug("propertyChange(PropertyChangeEvent) - end");
+					}
+				}
+			});
+		}
+		return cmbAlle;
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

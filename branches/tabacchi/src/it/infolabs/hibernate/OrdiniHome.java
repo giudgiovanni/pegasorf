@@ -6,6 +6,7 @@ import java.util.List;
 import javax.naming.InitialContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.hibernate.LockMode;
 import org.hibernate.SessionFactory;
 import static org.hibernate.criterion.Example.create;
@@ -15,21 +16,23 @@ import static org.hibernate.criterion.Example.create;
  * @see it.infolabs.hibernate.Ordini
  * @author Hibernate Tools
  */
-public class OrdiniHome {
+public class OrdiniHome extends BusinessObjectHome{
+
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger.getLogger(OrdiniHome.class);
 
 	private static final Log log = LogFactory.getLog(OrdiniHome.class);
 
-	private final SessionFactory sessionFactory = getSessionFactory();
+	private static final OrdiniHome instance=new OrdiniHome();
 
-	protected SessionFactory getSessionFactory() {
-		try {
-			return (SessionFactory) new InitialContext()
-					.lookup("SessionFactory");
-		} catch (Exception e) {
-			log.error("Could not locate SessionFactory in JNDI", e);
-			throw new IllegalStateException(
-					"Could not locate SessionFactory in JNDI");
-		}
+	private OrdiniHome() {
+		super();
+	}
+
+	public static OrdiniHome getInstance() {
+		return instance;
 	}
 
 	public void persist(Ordini transientInstance) {

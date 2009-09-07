@@ -203,6 +203,8 @@ public class GrattaEVinciAddMod extends JFrame {
 	private JRadioButton rbtnSi = null;
 	private JLabel lblNo = null;
 	private JRadioButton rbtnNo = null;
+	private JLabel lblPrezzoAcquisto = null;
+	private JFormattedTextField txtPrezzoAcquisto = null;
 	/**
 	 * @param owner
 	 */
@@ -588,6 +590,9 @@ public class GrattaEVinciAddMod extends JFrame {
 	private JPanel getPnlDatiPersonali() {
 		if (pnlDatiPersonali == null) {
 			try {
+				lblPrezzoAcquisto = new JLabel();
+				lblPrezzoAcquisto.setBounds(new Rectangle(7, 94, 113, 16));
+				lblPrezzoAcquisto.setText("Prezzo Acquisto");
 				lblNo = new JLabel();
 				lblNo.setBounds(new Rectangle(430, 27, 20, 16));
 				lblNo.setText("No");
@@ -613,7 +618,7 @@ public class GrattaEVinciAddMod extends JFrame {
 				lblScortaMassima.setBounds(new Rectangle(140, 135, 100, 16)); // Generated
 				lblPrezzoIngrosso = new JLabel();
 				lblPrezzoIngrosso.setText("Prezzo di Listino"); // Generated
-				lblPrezzoIngrosso.setBounds(new Rectangle(7, 94, 113, 16)); // Generated
+				lblPrezzoIngrosso.setBounds(new Rectangle(140, 94, 113, 16)); // Generated
 				lblDescrizione = new JLabel();
 				lblDescrizione.setText("Descrizione"); // Generated
 				lblDescrizione.setBounds(new Rectangle(6, 51, 67, 16)); // Generated
@@ -651,6 +656,8 @@ public class GrattaEVinciAddMod extends JFrame {
 				pnlDatiPersonali.add(getRbtnSi(), null);
 				pnlDatiPersonali.add(lblNo, null);
 				pnlDatiPersonali.add(getRbtnNo(), null);
+				pnlDatiPersonali.add(lblPrezzoAcquisto, null);
+				pnlDatiPersonali.add(getTxtPrezzoAcquisto(), null);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -747,7 +754,7 @@ public class GrattaEVinciAddMod extends JFrame {
 				formatPrice.setMinimumFractionDigits(2);
 				txtPrezzoListino = new JFormattedTextField(formatPrice);
 				txtPrezzoListino.setPreferredSize(new Dimension(100, 20)); // Generated
-				txtPrezzoListino.setBounds(new Rectangle(7, 110, 113, 20)); // Generated
+				txtPrezzoListino.setBounds(new Rectangle(140, 110, 113, 20)); // Generated
 				/*
 				 * txtPrezzoListino.addFocusListener(new
 				 * java.awt.event.FocusAdapter() { public void
@@ -841,6 +848,7 @@ public class GrattaEVinciAddMod extends JFrame {
 
 		// this.txtPrezzoListino.setText(ControlloDati.convertDoubleToPrezzo(c.getPrezzoIngrosso()));
 		this.txtPrezzoListino.setValue(new Double(c.getPrezzoIngrosso()));
+		this.txtPrezzoAcquisto.setValue(new Double(c.getPrezzoAcquisto()));
 		// this.txtRicaricoDettaglio.setText(new
 		// Integer(c.getRicaricoDettaglio()).toString());
 		this.txtScortaMinima.setText(new Integer(c.getScortaMinima()).toString());
@@ -1104,12 +1112,24 @@ public class GrattaEVinciAddMod extends JFrame {
 		a.setImballo("");
 		try {
 			a.setPeso(0.0);
-			a.setPrezzoAcquisto(0.00);
+			if (txtPrezzoAcquisto.getText().equalsIgnoreCase("")) {
+				a.setPrezzoAcquisto(0.0);
+			} else {
+				if (txtPrezzoAcquisto.getValue() instanceof Double) {
+					a.setPrezzoAcquisto(((Double) txtPrezzoAcquisto.getValue())
+							.doubleValue());
+				} else {
+					long value = ((Long) txtPrezzoAcquisto.getValue())
+							.longValue();
+					a.setPrezzoAcquisto(new Double(value).doubleValue());
+				}
+			}
 			
 
 			// a.setPrezzoDettaglio((ControlloDati.convertPrezzoToDouble(txtPrezzoDettaglio.getText())));
 			if (txtPrezzoListino.getText().equalsIgnoreCase("")) {
 				a.setPrezzoIngrosso(0.0);
+				a.setPrezzoDettaglio(0.0);
 			} else {
 				if (txtPrezzoListino.getValue() instanceof Double) {
 					a.setPrezzoIngrosso(((Double) txtPrezzoListino.getValue())
@@ -1267,6 +1287,34 @@ public class GrattaEVinciAddMod extends JFrame {
 			rbtnNo.addActionListener(new MyActionListener());
 		}
 		return rbtnNo;
+	}
+
+	/**
+	 * This method initializes txtPrezzoAcquisto	
+	 * 	
+	 * @return javax.swing.JTextField	
+	 */
+	private JTextField getTxtPrezzoAcquisto() {
+		if (txtPrezzoAcquisto == null) {
+			try {
+				DecimalFormat formatPrice = new DecimalFormat();
+				formatPrice.setMaximumFractionDigits(2);
+				formatPrice.setMinimumFractionDigits(2);
+				txtPrezzoAcquisto = new JFormattedTextField(formatPrice);
+				txtPrezzoAcquisto.setPreferredSize(new Dimension(100, 20)); // Generated
+				txtPrezzoAcquisto.setBounds(new Rectangle(7, 110, 113, 20)); // Generated
+				/*
+				 * txtPrezzoListino.addFocusListener(new
+				 * java.awt.event.FocusAdapter() { public void
+				 * focusLost(java.awt.event.FocusEvent e) {
+				 * calcoloPercentualeRicarico(); calcolaPrezzoPubblico(); } });
+				 */
+				txtPrezzoAcquisto.setValue(new Double(0));
+			} catch (java.lang.Throwable e) {
+				// TODO: Something
+			}
+		}
+		return txtPrezzoAcquisto;
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,8"

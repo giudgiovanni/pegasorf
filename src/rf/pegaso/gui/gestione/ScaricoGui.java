@@ -446,8 +446,8 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 		// Calcoliamo ora la parte totale dello scarico di tutti gli articoli.
 		try {
 
-			imponibile = Scarico.getTotAcquistoImponibileAllOrders(null, null, -2);
-			imposta = Scarico.getTotAcquistoImpostaAllOrders(null, null, -2);
+			imponibile = Scarico.getTotAcquistoImponibileAllOrders(null, null, -2, "00:00", "24:00");
+			imposta = Scarico.getTotAcquistoImpostaAllOrders(null, null, -2, "00:00", "24:00");
 			tot = imponibile + imposta;
 
 			// impostiamo i campi

@@ -116,7 +116,7 @@ public class Scarico {
 		return tot;
 	}
 
-	public static double getTotAcquistoImponibileAllOrders(java.util.Date start, java.util.Date end, int idReparto)
+	public static double getTotAcquistoImponibileAllOrders(java.util.Date start, java.util.Date end, int idReparto, String dalle, String alle)
 			throws SQLException {
 		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
@@ -129,6 +129,7 @@ public class Scarico {
 					"from ordini o, dettaglio_ordini d, articoli a " +
 					"where o.idordine = d.idordine " +
 					"and a.idarticolo = d.idarticolo " +
+					"and o.ora_ordine >= '"+dalle+"' and o.ora_ordine<='"+alle+"' " +
 					"and a.idreparto = ? and data_ordine >= ? and data_ordine <= ?";
 		}
 		else if ( start != null ){
@@ -136,6 +137,7 @@ public class Scarico {
 			"from ordini o, dettaglio_ordini d, articoli a " +
 			"where o.idordine = d.idordine " +
 			"and a.idarticolo = d.idarticolo " +
+			"and o.ora_ordine >= '"+dalle+"' and o.ora_ordine<='"+alle+"' " +
 			"and data_ordine >= ? and data_ordine <= ?";
 		}
 		else{
@@ -226,7 +228,7 @@ public class Scarico {
 //		return tot;
 //	}
 	
-	public static double getTotAcquistoImpostaAllOrders(java.util.Date start, java.util.Date end, int idReparto)
+	public static double getTotAcquistoImpostaAllOrders(java.util.Date start, java.util.Date end, int idReparto, String dalle, String alle)
 	throws SQLException {
 		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
@@ -239,6 +241,7 @@ public class Scarico {
 			"from ordini o, dettaglio_ordini d, articoli a " +
 			"where o.idordine = d.idordine " +
 			"and a.idarticolo = d.idarticolo " +
+			"and o.ora_ordine >= '"+dalle+"' and o.ora_ordine<='"+alle+"' " +
 			"and a.idreparto = ? and data_ordine >= ? and data_ordine <= ?";
 		}
 		else if ( start != null ){
@@ -246,6 +249,7 @@ public class Scarico {
 			"from ordini o, dettaglio_ordini d, articoli a " +
 			"where o.idordine = d.idordine " +
 			"and a.idarticolo = d.idarticolo " +
+			"and o.ora_ordine >= '"+dalle+"' and o.ora_ordine<='"+alle+"' " +
 			"and data_ordine >= ? and data_ordine <= ?";
 		}
 		else{
@@ -272,7 +276,7 @@ public class Scarico {
 		return tot;
 	}
 	
-	public static double getTotAgioAllOrders(java.util.Date start, java.util.Date end, int idReparto)
+	public static double getTotAgioAllOrders(java.util.Date start, java.util.Date end, int idReparto, String dalle, String alle)
 	throws SQLException {
 		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
@@ -285,6 +289,7 @@ public class Scarico {
 			"from ordini o, dettaglio_ordini d, articoli a " +
 			"where o.idordine = d.idordine " +
 			"and a.idarticolo = d.idarticolo " +
+			"and o.ora_ordine >= '"+dalle+"' and o.ora_ordine<='"+alle+"' " +
 			"and a.idreparto = ? and data_ordine >= ? and data_ordine <= ?";
 		}
 		else if ( start != null ){
@@ -292,6 +297,7 @@ public class Scarico {
 			"from ordini o, dettaglio_ordini d, articoli a " +
 			"where o.idordine = d.idordine " +
 			"and a.idarticolo = d.idarticolo " +
+			"and o.ora_ordine >= '"+dalle+"' and o.ora_ordine<='"+alle+"' " +
 			"and data_ordine >= ? and data_ordine <= ?";
 		}
 		else{

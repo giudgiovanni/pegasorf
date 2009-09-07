@@ -39,6 +39,8 @@ public class ArticoliScaricatiByDataViewModel extends AbstractTableModel impleme
 	private ResultSetMetaData rsmd = null;
 	private Date dal;
 	private Date al;
+	private String oraStart;
+	private String oraEnd;
 	private int idReparto;
 
 	public ArticoliScaricatiByDataViewModel(Date dal, Date al, int idReparto) throws SQLException {
@@ -46,6 +48,19 @@ public class ArticoliScaricatiByDataViewModel extends AbstractTableModel impleme
 		this.dal=dal;
 		this.al=al;
 		this.idReparto = idReparto;
+		this.oraStart = "00:00";
+		this.oraEnd = "23:59";
+		recuperaDati();
+
+	}
+	
+	public ArticoliScaricatiByDataViewModel(Date dal, Date al, int idReparto, String oraStart, String oraEnd) throws SQLException {
+		this.dbm = DBManager.getIstanceSingleton();
+		this.dal=dal;
+		this.al=al;
+		this.idReparto = idReparto;
+		this.oraStart = oraStart;
+		this.oraEnd = oraEnd;
 		recuperaDati();
 
 	}
@@ -132,10 +147,12 @@ public class ArticoliScaricatiByDataViewModel extends AbstractTableModel impleme
 
 	}
 	
-	public void setDate(Date dal, Date al, int idReparto) throws SQLException{
+	public void setDate(Date dal, Date al, int idReparto, String dalle, String alle) throws SQLException{
 		this.dal=dal;
 		this.al=al;
 		this.idReparto = idReparto;
+		this.oraStart = dalle;
+		this.oraEnd = alle;
 		recuperaDati();
 	}
 
@@ -146,10 +163,10 @@ public class ArticoliScaricatiByDataViewModel extends AbstractTableModel impleme
 	private void recuperaDati() throws SQLException {
 //		this.query = "select a.codbarre as codice,a.descrizione,a.qta as qta, a.prezzo_dettaglio as prezzo_pubblico,(articoli.prezzo_acquisto* a.qta) as totale, o.data_documento as data, a.idordine as n_vendita from articoli_scaricati_view as a, articoli,giacenza_articoli_all_view as g, ordini as o where articoli.idarticolo=a.idarticolo and o.idordine=a.idordine and g.codice=a.codbarre and a.qta>0  order by a.codbarre";
 		if ( idReparto == -1 ){
-			this.query = "select a.codbarre as codice,a.descrizione,a.qta as qta, a.prezzo_vendita as prezzo_pubblico, (a.prezzo_vendita * a.qta) as totale, o.data_documento as data, a.idordine as n_vendita from articoli_scaricati_view as a, articoli, ordini as o where articoli.idarticolo=a.idarticolo and o.idordine=a.idordine and a.qta>0 and o.data_documento>=? and o.data_documento<=? order by a.codbarre";
+			this.query = "select a.codbarre as codice,a.descrizione,a.qta as qta, a.prezzo_vendita as prezzo_pubblico, (a.prezzo_vendita * a.qta) as totale, o.data_documento as data, a.idordine as n_vendita from articoli_scaricati_view as a, articoli, ordini as o where articoli.idarticolo=a.idarticolo and o.idordine=a.idordine and a.qta>0 and o.data_documento>=? and o.data_documento<=? and o.ora_ordine >= '"+oraStart+"' and o.ora_ordine <= '"+oraEnd+"' order by a.codbarre";
 		}
 		else{
-			this.query = "select a.codbarre as codice,a.descrizione,a.qta as qta, a.prezzo_vendita as prezzo_pubblico, (a.prezzo_vendita * a.qta) as totale, o.data_documento as data, a.idordine as n_vendita from articoli_scaricati_view as a, articoli, ordini as o where articoli.idarticolo=a.idarticolo and o.idordine=a.idordine and a.qta>0 and o.data_documento>=? and o.data_documento<=? and idreparto=? order by a.codbarre";
+			this.query = "select a.codbarre as codice,a.descrizione,a.qta as qta, a.prezzo_vendita as prezzo_pubblico, (a.prezzo_vendita * a.qta) as totale, o.data_documento as data, a.idordine as n_vendita from articoli_scaricati_view as a, articoli, ordini as o where articoli.idarticolo=a.idarticolo and o.idordine=a.idordine and a.qta>0 and o.data_documento>=? and o.data_documento<=? and idreparto=? and o.ora_ordine >= '"+oraStart+"' and o.ora_ordine <= '"+oraEnd+"' order by a.codbarre";
 		}
 		pst = dbm.getNewPreparedStatement(query);
 		if ( idReparto == -1 ){

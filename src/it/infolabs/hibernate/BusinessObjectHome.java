@@ -17,7 +17,7 @@ public abstract class BusinessObjectHome {
 	
 	protected static Configuration configuration;
 
-	protected static SessionFactory getSessionFactory() {
+	public static SessionFactory getSessionFactory() {
 		try {
 
 			if(configuration==null){
@@ -132,5 +132,7 @@ public abstract class BusinessObjectHome {
 			log.debug("close() - end");
 		}
 	}
+	
+	
 
 }

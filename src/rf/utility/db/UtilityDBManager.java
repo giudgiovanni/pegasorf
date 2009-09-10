@@ -98,6 +98,34 @@ public class UtilityDBManager {
 			f.mkdir();
 	}
 
+	public String getPathCommand() {
+		return pathCommand;
+	}
+
+	public String getCmdBackup() {
+		return cmdBackup;
+	}
+
+	public String getCmdRestore() {
+		return cmdRestore;
+	}
+
+	public String getNameDb() {
+		return nameDb;
+	}
+
+	public String getFolderBackup() {
+		return folderBackup;
+	}
+
+	public String getUserDir() {
+		return userDir;
+	}
+
+	public String getNFileBackup() {
+		return nFileBackup;
+	}
+
 	public static UtilityDBManager getSingleInstance()
 			throws FileNotFoundException, IOException {
 
@@ -145,6 +173,12 @@ public class UtilityDBManager {
 		Runtime r = Runtime.getRuntime();
 		r.exec(cmd);
 		checkFileInFolder();
+	}
+	
+	public void restoreDataBase(String pathRestore) throws IOException {
+		String cmd = pathCommand + cmdRestore + " "+nameDb+" "+"\""+pathRestore+"\"";
+		Runtime r = Runtime.getRuntime();
+		r.exec(cmd);
 	}
 
 	private void checkFileInFolder() {
@@ -322,4 +356,11 @@ public class UtilityDBManager {
 		}
 
 	}
+
+	public void removeDataBase() {
+		dropAllTable();
+		
+	}
+
+	
 }

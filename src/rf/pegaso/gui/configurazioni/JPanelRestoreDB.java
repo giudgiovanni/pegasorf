@@ -34,13 +34,24 @@ public class JPanelRestoreDB extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JButton btnBackup = null;
 	private JButton btnRestore = null;
+	private boolean restoreEnable=true;
+	private boolean backupEnable=true;
 
 	/**
 	 * This is the default constructor
 	 */
 	public JPanelRestoreDB() {
 		super();
+		new JPanelRestoreDB(true,true);
+		
+	}
+	
+	public JPanelRestoreDB(boolean restoreEnable, boolean backupEnable) {
+		super();
 		initialize();
+		setRestoreEnable(restoreEnable);
+		setBackupEnable(backupEnable);
+		
 	}
 
 	/**
@@ -68,25 +79,51 @@ public class JPanelRestoreDB extends JPanel {
 			btnBackup.setText("Backup");
 			btnBackup.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					backup(); // TODO Auto-generated Event stub actionPerformed()
+					if (logger.isDebugEnabled()) {
+						logger
+								.debug("actionPerformed(java.awt.event.ActionEvent) - start");
+					}
+
+					try {
+						backup();
+					} catch (FileNotFoundException e1) {
+						logger.error(
+								"actionPerformed(java.awt.event.ActionEvent)",
+								e1);
+					} catch (IOException e1) {
+						logger.error(
+								"actionPerformed(java.awt.event.ActionEvent)",
+								e1);
+					} // TODO Auto-generated Event stub actionPerformed()
+
+					if (logger.isDebugEnabled()) {
+						logger
+								.debug("actionPerformed(java.awt.event.ActionEvent) - end");
+					}
 				}
 			});
 		}
 		return btnBackup;
 	}
 
-	protected void backup() {
+	protected void backup() throws FileNotFoundException, IOException {
 		if (logger.isDebugEnabled()) {
 			logger.debug("backup() - start");
 		}
 
-		try {
-			UtilityDBManager.getSingleInstance().backupDataBase();
-		} catch (FileNotFoundException e) {
-			logger.error("backup()", e);
-		} catch (IOException e) {
-			logger.error("backup()", e);
+		JFileChooser fileChooser=new JFileChooser(new File(UtilityDBManager.getSingleInstance().getUserDir()));
+//		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		int i=fileChooser.showSaveDialog(this);
+		if(i==JFileChooser.APPROVE_OPTION){
+			try {
+				UtilityDBManager.getSingleInstance().backupDataBase(fileChooser.getSelectedFile().getAbsolutePath());
+			} catch (FileNotFoundException e) {
+				logger.error("backup()", e);
+			} catch (IOException e) {
+				logger.error("backup()", e);
+			}
 		}
+		
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug("backup() - end");
@@ -158,6 +195,24 @@ public class JPanelRestoreDB extends JPanel {
 			UtilityDBManager.getSingleInstance().restoreDataBase(fileChooser.getSelectedFile().getAbsolutePath());
 		}
 		
+	}
+
+	public boolean isRestoreEnable() {
+		return restoreEnable;
+	}
+
+	public void setRestoreEnable(boolean restoreEnable) {
+		this.restoreEnable = restoreEnable;
+		this.btnRestore.setEnabled(restoreEnable);
+	}
+
+	public boolean isBackupEnable() {
+		return backupEnable;
+	}
+
+	public void setBackupEnable(boolean backupEnable) {
+		this.backupEnable = backupEnable;
+		this.btnBackup.setEnabled(backupEnable);
 	}
 
 }  

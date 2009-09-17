@@ -39,7 +39,7 @@ public class JDialogGestioneDatabase extends JDialog {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(361, 165);
+		this.setSize(361, 145);
 		this.setTitle("Gestione Database");
 		this.setContentPane(getJContentPane());
 		UtilGUI.centraDialog(this);

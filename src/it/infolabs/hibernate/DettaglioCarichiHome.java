@@ -7,8 +7,11 @@ import javax.naming.InitialContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
 import org.hibernate.LockMode;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
+
 import static org.hibernate.criterion.Example.create;
 
 /**
@@ -95,6 +98,24 @@ public class DettaglioCarichiHome extends BusinessObjectHome{
 			DettaglioCarichi instance = (DettaglioCarichi) sessionFactory
 					.getCurrentSession().get(
 							"it.infolabs.hibernate.DettaglioCarichi", id);
+			if (instance == null) {
+				log.debug("get successful, no instance found");
+			} else {
+				log.debug("get successful, instance found");
+			}
+			return instance;
+		} catch (RuntimeException re) {
+			log.error("get failed", re);
+			throw re;
+		}
+	}
+	
+	public DettaglioCarichi findByIdArticolo(long idArticolo){
+		log.debug("getting DettaglioCarichi instance with idArticolo: " + idArticolo);
+		try {
+			Criteria crit = sessionFactory.getCurrentSession().createCriteria("it.infolabs.hibernate.DettaglioCarichi");
+			crit.add(Restrictions.eq("articoli.idarticolo", idArticolo));
+			DettaglioCarichi instance = (DettaglioCarichi) crit.uniqueResult();
 			if (instance == null) {
 				log.debug("get successful, no instance found");
 			} else {

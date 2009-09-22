@@ -123,8 +123,21 @@ public class ArticoloModel extends AbstractTableModel implements DBStateChange {
 		//this.query = "select a.idArticolo,a.codbarre as codice,a.descrizione,a.prezzo_acquisto,a.prezzo_ingrosso as prezzo_listino, ((prezzo_ingrosso - prezzo_acquisto) / CASE prezzo_acquisto WHEN 0 THEN NULL ELSE prezzo_acquisto END) * 100 as ricario_listino,f.nome as fornitore from articoli a, fornitori f where a.idfornitore=f.idfornitore order by codice";
 		//
 		// la sostituiamo con questa che elimina quella colonna.
-		this.query = "select a.idArticolo,a.codbarre as codice,a.descrizione,a.prezzo_acquisto,a.prezzo_ingrosso as prezzo_listino, f.nome as fornitore from articoli a, fornitori f where a.idfornitore=f.idfornitore and idreparto<>"+ Constant.REPARTO_TABACCHI+" and idreparto<>"+ Constant.REPARTO_GRATTA_E_VINCI+" order by codice";
-		pst = dbm.getNewPreparedStatement(query);
+		//this.query = "select a.idArticolo,a.codbarre as codice,a.descrizione,a.prezzo_acquisto,a.prezzo_ingrosso as prezzo_listino, f.nome as fornitore from articoli a, fornitori f where a.idfornitore=f.idfornitore and idreparto<>"+ Constant.REPARTO_TABACCHI+" and idreparto<>"+ Constant.REPARTO_GRATTA_E_VINCI+" order by codice";
+		StringBuilder query = new StringBuilder();
+		
+		query.append("select a.idArticolo, ");
+		query.append("a.codbarre as codice, ");
+		query.append("a.descrizione, ");
+		query.append("a.prezzo_acquisto, ");
+		query.append("a.prezzo_ingrosso as prezzo_listino, "); 
+		query.append("f.nome as fornitore ");
+		query.append("from articoli a ");
+		query.append("left join fornitori f on a.idfornitore = f.idfornitore ");
+		query.append("where idreparto<> "+Constant.REPARTO_TABACCHI);
+		query.append(" and idreparto<>"+Constant.REPARTO_GRATTA_E_VINCI+" order by codice; ");
+		
+		pst = dbm.getNewPreparedStatement(query.toString());
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();
 

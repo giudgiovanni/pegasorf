@@ -1,18 +1,13 @@
 package rf.pegaso.gui.vendita.panel;
 
 import it.infolabs.hibernate.Articoli;
+import it.infolabs.hibernate.ImmagineArticolo;
 
 import java.awt.Dimension;
 import java.awt.Font;
-import java.sql.SQLException;
-import java.util.List;
 
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
-
-
-import rf.pegaso.db.tabelle.Articolo;
-import rf.pegaso.db.tabelle.ImmagineArticolo;
 
 public class JButtonArticolo extends javax.swing.JButton {
 
@@ -30,11 +25,13 @@ public class JButtonArticolo extends javax.swing.JButton {
 	
 	private void initGUI() {
 		try {
-//			imgArticolo = articolo.getImmagineArticolos().toArray()[0];
+			if ( articolo.getImmagineArticolos().size() != 0 ){
+				imgArticolo = (ImmagineArticolo) articolo.getImmagineArticolos().toArray()[0];
+				this.setIcon(new ImageIcon(imgArticolo.getFile()));
+			}
 //			imgArticolo.caricaDati();						
 //			this.setText(imgArticolo.getNome());
 			this.setText(articolo.getDescrizione());
-//			this.setIcon(new ImageIcon(imgArticolo.getFile()));
 			this.setVerticalTextPosition(AbstractButton.BOTTOM);
 			this.setHorizontalTextPosition(AbstractButton.CENTER);
 			this.setFont(new Font("Dialog", Font.BOLD, 16));

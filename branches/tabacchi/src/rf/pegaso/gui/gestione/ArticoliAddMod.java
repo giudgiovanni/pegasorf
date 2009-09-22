@@ -5,7 +5,11 @@ package rf.pegaso.gui.gestione;
 
 import it.infolabs.hibernate.Articoli;
 import it.infolabs.hibernate.ArticoliHome;
+import it.infolabs.hibernate.DettaglioCarichiHome;
+import it.infolabs.hibernate.DettaglioCarichiId;
 import it.infolabs.hibernate.FornitoriHome;
+import it.infolabs.hibernate.ImmagineArticolo;
+import it.infolabs.hibernate.ImmagineArticoloHome;
 import it.infolabs.hibernate.Pannelli;
 import it.infolabs.hibernate.PannelliHome;
 import it.infolabs.hibernate.RepartiHome;
@@ -17,13 +21,19 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.MediaTracker;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -31,10 +41,13 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -49,8 +62,10 @@ import javax.swing.border.TitledBorder;
 import javax.swing.text.JTextComponent;
 
 import rf.pegaso.db.tabelle.Articolo;
+import rf.pegaso.db.tabelle.Carico;
 import rf.pegaso.db.tabelle.Fornitore;
 import rf.pegaso.db.tabelle.Reparto;
+import rf.pegaso.db.tabelle.Scarico;
 import rf.pegaso.db.tabelle.UnitaDiMisura;
 import rf.pegaso.gui.utility.SuggerimentoCodice;
 import rf.pegaso.gui.viste.ViewDocCarico;
@@ -61,6 +76,8 @@ import rf.utility.gui.text.AutoCompletion;
 import rf.utility.gui.text.UpperTextDocument;
 import rf.utility.number.Arrays;
 import javax.swing.JRadioButton;
+import javax.swing.JCheckBox;
+import java.awt.GridBagLayout;
 
 /**
  * @author Hunter
@@ -100,6 +117,12 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				txtCodBarre.setEditable(false);
 				txtCodFornitore.setEditable(false);
 				btnSuggerimento.setEnabled(false);
+			}
+			else if ( e.getSource() == btnAddImage ){
+				caricaImmagine();
+			}
+			else if ( e.getSource() == btnRemoveImage ){
+				rimuoviImmagine();
 			}
 		}
 
@@ -236,6 +259,13 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	private JLabel lblPannelli = null;
 	private JComboBox cmbPannelli = null;
 	private JButton btnNewPannello = null;
+	private JCheckBox chkBoxQtaInfinita = null;
+	private JLabel lblQtaInfinita = null;
+	private JPanel pnlImage = null;
+	private JLabel lbl1 = null;
+	private JButton btnAddImage = null;
+	private JButton btnRemoveImage = null;
+	private ImmagineArticolo imgArticolo;
 
 	/**
 	 * @param owner
@@ -793,7 +823,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		if (btnNewUM == null) {
 			try {
 				btnNewUM = new JButton();
-				btnNewUM.setBounds(new Rectangle(360, 148, 69, 26)); // Generated
+				btnNewUM.setBounds(new Rectangle(310, 148, 69, 26)); // Generated
 				btnNewUM.setText("Nuovo");
 				btnNewUM.addActionListener(new MyActionListener());
 			} catch (java.lang.Throwable e) {
@@ -832,7 +862,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			try {
 				cmbMisura = new JComboBox();
 				cmbMisura.setPreferredSize(new Dimension(70, 25)); // Generated
-				cmbMisura.setBounds(new Rectangle(280, 148, 70, 25)); // Generated
+				cmbMisura.setBounds(new Rectangle(230, 148, 70, 25)); // Generated
 				// caricaUnitaMisura(cmbMisura);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -913,7 +943,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				lblIngrosso.setText("Pubblico \u20AC"); // Generated
 				jPanel1 = new JPanel();
 				jPanel1.setLayout(null); // Generated
-				jPanel1.setBounds(new Rectangle(400, 200, 201, 49)); // Generated
+				jPanel1.setBounds(new Rectangle(400, 140, 201, 49)); // Generated
 				jPanel1.setBorder(BorderFactory.createTitledBorder(
 						BorderFactory.createBevelBorder(BevelBorder.RAISED),
 						"Prezzo al Pubblico",
@@ -942,7 +972,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				lblQta.setText("Quantit\u00E0"); // Generated
 				jPanel2 = new JPanel();
 				jPanel2.setLayout(null); // Generated
-				jPanel2.setBounds(new Rectangle(400, 252, 201, 65)); // Generated
+				jPanel2.setBounds(new Rectangle(400, 200, 201, 65)); // Generated
 				jPanel2.setBorder(BorderFactory.createTitledBorder(
 						BorderFactory.createBevelBorder(BevelBorder.RAISED),
 						"Magazzino", TitledBorder.DEFAULT_JUSTIFICATION,
@@ -1019,6 +1049,9 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	private JPanel getPnlDatiPersonali() {
 		if (pnlDatiPersonali == null) {
 			try {
+				lblQtaInfinita = new JLabel();
+				lblQtaInfinita.setBounds(new Rectangle(285, 176, 99, 16));
+				lblQtaInfinita.setText("Qta Infinita");
 				lblPannelli = new JLabel();
 				lblPannelli.setBounds(new Rectangle(5, 269, 120, 16));
 				lblPannelli.setText("Pannello Rapido");
@@ -1039,13 +1072,13 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				lblReaprto.setBounds(new Rectangle(5, 220, 149, 16)); // Generated
 				lblRicaricoIngrosso = new JLabel();
 				lblRicaricoIngrosso.setText("Ricarico Listino %"); // Generated
-				lblRicaricoIngrosso.setBounds(new Rectangle(164, 176, 112, 16)); // Generated
+				lblRicaricoIngrosso.setBounds(new Rectangle(145, 176, 112, 16)); // Generated
 				lblUnitaMisura = new JLabel();
 				lblUnitaMisura.setText("UM"); // Generated
-				lblUnitaMisura.setBounds(new Rectangle(280, 132, 28, 16)); // Generated
+				lblUnitaMisura.setBounds(new Rectangle(230, 132, 28, 16)); // Generated
 				lblIva = new JLabel();
 				lblIva.setText("% Iva"); // Generated
-				lblIva.setBounds(new Rectangle(164, 134, 38, 16)); // Generated
+				lblIva.setBounds(new Rectangle(145, 134, 38, 16)); // Generated
 				lblFornitore = new JLabel();
 				lblFornitore.setText("Fornitore"); // Generated
 				lblFornitore.setBounds(new Rectangle(5, 87, 60, 16)); // Generated
@@ -1104,6 +1137,9 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				pnlDatiPersonali.add(lblPannelli, null);
 				pnlDatiPersonali.add(getCmbPannelli(), null);
 				pnlDatiPersonali.add(getBtnNewPannello(), null);
+				pnlDatiPersonali.add(getChkBoxQtaInfinita(), null);
+				pnlDatiPersonali.add(lblQtaInfinita, null);
+				pnlDatiPersonali.add(getPnlImage(), null);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -1213,7 +1249,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				f.setMaximumIntegerDigits(2);
 				txtIva = new JFormattedTextField(f);
 				txtIva.setPreferredSize(new Dimension(40, 20)); // Generated
-				txtIva.setBounds(new Rectangle(164, 150, 40, 20)); // Generated
+				txtIva.setBounds(new Rectangle(145, 150, 40, 20)); // Generated
 				txtIva.setText("0");
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -1326,7 +1362,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				formatPrice.setMinimumFractionDigits(2);
 				txtRicaricoListino = new JFormattedTextField(formatPrice);
 				txtRicaricoListino.setPreferredSize(new Dimension(100, 20)); // Generated
-				txtRicaricoListino.setBounds(new Rectangle(164, 192, 112, 20));
+				txtRicaricoListino.setBounds(new Rectangle(145, 192, 112, 20));
 				/*
 				 * txtRicaricoListino.addFocusListener(new
 				 * java.awt.event.FocusAdapter() { public void
@@ -1345,38 +1381,19 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	}
 
 	private void impostaCampi(Articoli art) {
-//		Fornitore f = new Fornitore();
-//		UnitaDiMisura um = new UnitaDiMisura();
-//		Reparto r = new Reparto();
-//		try {
-//			f.caricaDati(c.getIdFornitore());
-//			um.caricaDati(c.getUm());
-//			r.caricaDati(c.getIdReparto());
-//		} catch (SQLException e) {
-//			JOptionPane.showMessageDialog(this, "Errore caricamento dati",
-//					"ERRORE", JOptionPane.ERROR_MESSAGE);
-//			e.printStackTrace();
-//		}
-
 		this.txtCodBarre.setText(art.getCodbarre());
 		this.txtCodFornitore.setText(art.getCodfornitore());
 		this.txtDescrizione.setText(art.getDescrizione());
-		this.txtIva.setText(art.getIva().toString());
+		this.txtIva.setText(String.valueOf(art.getIva()));
 		this.txtNote.setText(art.getNote());
-		// this.txtPrezzoAcquisto.setText(new
-		// Double(c.getPrezzoAcquisto()).toString());
-
-		// this.txtPrezzoAcquisto.setText((ControlloDati.convertDoubleToPrezzo(c.getPrezzoAcquisto())));
 		this.txtPrezzoAcquisto.setValue(art.getPrezzoAcquisto());
-
-		// this.txtPrezzoListino.setText(ControlloDati.convertDoubleToPrezzo(c.getPrezzoIngrosso()));
 		this.txtPrezzoListino.setValue(art.getPrezzoIngrosso());
-		// this.txtRicaricoDettaglio.setText(new
-		// Integer(c.getRicaricoDettaglio()).toString());
-//		this.txtRicaricoListino.setText(new Integer(100).toString());
+		int pos;
 		// cerchiamo la pos del codice nell'array fornitori
-		int pos = Arrays.ricercaLineare(codFornitori, new Long(art.getFornitori().getIdfornitore()).toString());
-		this.cmbFornitori.setSelectedIndex(pos+1);
+		if ( art.getFornitori() != null ){
+			pos = Arrays.ricercaLineare(codFornitori, new Long(art.getFornitori().getIdfornitore()).toString());
+			this.cmbFornitori.setSelectedIndex(pos+1);
+		}
 		// cerchiamo la pos del codice nell'array unità di misura
 		pos = Arrays.ricercaLineare(codUnitaDiMisura, new Long(art.getUm().getIdum()).toString());
 		this.cmbMisura.setSelectedIndex(pos+1);
@@ -1388,6 +1405,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			pos = Arrays.ricercaLineare(codPannelli, new Long(art.getPannelli().getIdpannelli()).toString());
 			this.cmbPannelli.setSelectedIndex(pos+1);
 		}
+		this.chkBoxQtaInfinita.setSelected(art.isQtaInfinita());
 	}
 
 	/**
@@ -1414,9 +1432,9 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			Articoli art = ArticoliHome.getInstance().findById(idArticolo);
 			ultimoArticolo[0]=art.getCodbarre();
 			impostaCampi(art);
-			calcoloPercentualeRicarico();
-			calcolaPrezzoListinoByPrezzoAcquisto();
-			calcolaPrezzoPubblico();
+//			calcoloPercentualeRicarico();
+//			calcolaPrezzoListinoByPrezzoAcquisto();
+//			calcolaPrezzoPubblico();
 			caricaQtaMagazzino();
 			// Verifichiamo se il codice a barre e' diverso da nullo rendiamo il campo editabile
 			if ( art.getCodbarre() != null && !art.getCodbarre().trim().equals("") ){
@@ -1430,6 +1448,11 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				txtCodBarre.setEditable(true);
 				txtCodFornitore.setEditable(true);
 				btnSuggerimento.setEnabled(true);
+			}
+			if ( art.getImmagineArticolos().size() != 0 ){
+				ArrayList<ImmagineArticolo> imgList = new ArrayList(art.getImmagineArticolos());
+				imgArticolo = imgList.get(0);
+				lbl1.setIcon(new ImageIcon(imgArticolo.getFile()));
 			}
 		} else {
 			this.setTitle("Inserisci Articoli");
@@ -1601,10 +1624,64 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		// cambiamo l'edito del combo
 		JTextComponent editor = (JTextComponent) cmbFornitori.getEditor()
 				.getEditorComponent();
-		// editor.addKeyListener(new MyKeyListeners());
-		//new ComboBoxAutoComplete(cmbFornitori);
 		AutoCompletion.enable(cmbFornitori);
 
+	}
+	
+	private void caricaImmagine(){
+		JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
+		int scelta = chooser.showOpenDialog(this);
+		if (scelta == JFileChooser.APPROVE_OPTION) {
+			imgArticolo = new ImmagineArticolo();
+			imgArticolo.setNome(chooser.getSelectedFile().getName());
+			loadImageFromURL(chooser.getSelectedFile().getPath());
+			lbl1.setIcon(new ImageIcon(imgArticolo.getFile()));
+		}
+	}
+	
+	private void rimuoviImmagine(){
+		lbl1.setIcon(null);
+		imgArticolo = null;
+	}
+	
+	public void loadImageFromURL(String strUrl){
+	    int intPos;
+
+	    //guess file extension
+	    intPos = strUrl.lastIndexOf(".");
+	    if (intPos >= 0){
+	       imgArticolo.setEstensione(strUrl.substring(intPos + 1));
+	    }else{
+	        //assign default jpg extension
+	    	 imgArticolo.setEstensione("jpg");
+	    }
+	    try {
+
+	        //load the image from the Internet
+	        ImageIcon objImageIcon = new ImageIcon(strUrl);
+
+	        //wait the loading of the image
+	        MediaTracker objMediaTracker = new MediaTracker(this);
+	        objMediaTracker.addImage(objImageIcon.getImage(), 0);
+	        objMediaTracker.waitForID(0, 5000);
+
+	        //convert the image
+	        BufferedImage objBI = new BufferedImage(objImageIcon.getIconWidth(), objImageIcon.getIconHeight(),
+	                BufferedImage.TYPE_INT_ARGB);
+	        Graphics2D g2 = objBI.createGraphics();
+	        g2.drawImage(objImageIcon.getImage(), 0, 0, null);
+	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	        ImageIO.write(objBI,  imgArticolo.getEstensione(), baos);
+
+	        imgArticolo.setFile(baos.toByteArray());
+
+	    } catch (MalformedURLException ex) {
+//	        Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+	    } catch (IOException ex) {
+//	        Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+	    } catch (InterruptedException ex) {
+//	        Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+	    }
 	}
 
 	private void inserisci() {		
@@ -1617,6 +1694,18 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				ArticoliHome.getInstance().persist(a);
 				ArticoliHome.getInstance().begin();
 				ArticoliHome.getInstance().commit();
+				Scarico sc = new Scarico();
+				Carico c = new Carico();
+				try {
+					a.setQtaInfinita(true);
+					if ( a.isQtaInfinita() ){
+						c.setIdCarico(0);
+						c.insertArticolo((int)a.getIdarticolo(), 0, a.getPrezzoAcquisto());
+					}
+					sc.insertScaricoInizialeZero((int)a.getIdarticolo());					
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 				svuotaCampi();
 			}
 			else {
@@ -1648,6 +1737,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		String oldCodBarre = a.getCodbarre();
 		boolean ok = recuperaDatiCampi(a);
 		if ( ok ){
+			ArticoliHome.getInstance().begin();
 			// Se il codice a barre e' stato modificato
 			if ( !a.getCodbarre().equals(oldCodBarre) ){
 				// Dobbiamo verificare se quel codice a barre e' utilizzabile
@@ -1671,116 +1761,6 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 		this.ultimoArticolo[0]=a.getCodbarre();
 		this.dispose();
-
-	}
-
-	/**
-	 *
-	 */
-	private boolean recuperaDatiCampi2(Articolo a) {
-
-		a.setCodBarre(txtCodBarre.getText());
-		a.setCodFornitore(txtCodFornitore.getText());
-		// Controllo se è stato selezionato l'unità di misura
-		if (((String) cmbMisura.getSelectedItem()).equalsIgnoreCase("")) {
-			messaggioCampoErrato("Selezionare l'unit\u00E0 di misura");
-			return false;
-		}
-
-		// Preleviamo il codice unità di misura
-		int pos = cmbMisura.getSelectedIndex();
-		if (pos == 0)
-			return false;
-		// descrementiamo di uno perchè nel combobox è presente
-		// anche un oggetto vuoto
-		pos--;
-		int cod = new Integer(codUnitaDiMisura[pos]);
-		a.setCodiceUnitaDiMisura(cod);
-
-		a.setDescrizione(txtDescrizione.getText());
-		// controllo se è stato selezionato il
-		// fornitore
-		if (((String) cmbFornitori.getSelectedItem()).equalsIgnoreCase("")) {
-			messaggioCampoErrato("Selezionare il fornitore");
-			return false;
-		}
-
-		// Preleviamo il codice fornitore
-		pos = cmbFornitori.getSelectedIndex();
-		if (pos == 0)
-			return false;
-		// descrementiamo di uno perchè nel combobox è presente
-		// anche un oggetto vuoto
-		pos--;
-		cod = new Integer(codFornitori[pos]);
-		a.setIdFornitore(cod);
-
-		// controllo se è stato selezionato il reparto
-		if (((String) cmbReparto.getSelectedItem()).equalsIgnoreCase("")) {
-			messaggioCampoErrato("Selezionare la categoria");
-			return false;
-		}
-
-		// Preleviamo il codice unità di misura
-		pos = cmbReparto.getSelectedIndex();
-		if (pos == 0)
-			return false;
-		// descrementiamo di uno perchè nel combobox è presente
-		// anche un oggetto vuoto
-		pos--;
-		cod = new Integer(codReparti[pos]);
-		a.setIdReparto(cod);
-		
-		// Preleviamo il codice del pannello
-		pos = cmbPannelli.getSelectedIndex();
-		if ( cmbPannelli.getSelectedIndex() > 0 ){
-			cod = new Integer(codPannelli[(cmbPannelli.getSelectedIndex() - 1)]);
-			a.setIdPannello(cod);
-		}
-		
-
-		// impostiamoiva
-		if (txtIva.getText().equalsIgnoreCase(""))
-			a.setIva(0);
-		else
-			a.setIva(Integer.parseInt(txtIva.getText()));
-
-		try {
-			if (txtPrezzoAcquisto.getText().equalsIgnoreCase("")) {
-				a.setPrezzoAcquisto(0.00);
-			} else {
-				if (txtPrezzoAcquisto.getValue() instanceof Double) {
-					a.setPrezzoAcquisto(((Double) txtPrezzoAcquisto.getValue())
-							.doubleValue());
-				} else {
-					long value = ((Long) txtPrezzoAcquisto.getValue())
-							.longValue();
-					a.setPrezzoAcquisto(new Double(value).doubleValue());
-				}
-			}
-
-			// a.setPrezzoDettaglio((ControlloDati.convertPrezzoToDouble(txtPrezzoDettaglio.getText())));
-			if (txtPrezzoListino.getText().equalsIgnoreCase("")) {
-				a.setPrezzoIngrosso(0.0);
-			} else {
-				if (txtPrezzoListino.getValue() instanceof Double) {
-					a.setPrezzoIngrosso(((Double) txtPrezzoListino.getValue())
-							.doubleValue());
-				} else {
-					long value = ((Long) txtPrezzoListino.getValue())
-							.longValue();
-					a.setPrezzoIngrosso(new Double(value).doubleValue());
-				}
-			}
-			a.setPrezzoDettaglio(a.getPrezzoIngrosso());
-		} catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(this, "Numero malformato",
-					"NUMERO ERRATO", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		} 
-
-		a.setNote(txtNote.getText());
-		return true;
 
 	}
 	
@@ -1816,20 +1796,20 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		a.setDescrizione(txtDescrizione.getText());
 		// controllo se è stato selezionato il
 		// fornitore
-		if (((String) cmbFornitori.getSelectedItem()).equalsIgnoreCase("")) {
-			messaggioCampoErrato("Selezionare il fornitore");
-			return false;
-		}
+//		if (((String) cmbFornitori.getSelectedItem()).equalsIgnoreCase("")) {
+//			messaggioCampoErrato("Selezionare il fornitore");
+//			return false;
+//		}
 
 		// Preleviamo il codice fornitore
 		pos = cmbFornitori.getSelectedIndex();
-		if (pos == 0)
-			return false;
-		// descrementiamo di uno perchè nel combobox è presente
-		// anche un oggetto vuoto
-		pos--;
-		cod = new Integer(codFornitori[pos]);
-		a.setFornitori(FornitoriHome.getInstance().findById(cod));
+		if (pos != 0){
+			// descrementiamo di uno perchè nel combobox è presente
+			// anche un oggetto vuoto
+			pos--;
+			cod = new Integer(codFornitori[pos]);
+			a.setFornitori(FornitoriHome.getInstance().findById(cod));
+		}
 
 		// controllo se è stato selezionato il reparto
 		if (((String) cmbReparto.getSelectedItem()).equalsIgnoreCase("")) {
@@ -1898,6 +1878,21 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		} 
 
 		a.setNote(txtNote.getText());
+		a.setQtaInfinita(chkBoxQtaInfinita.isSelected());
+		if ( imgArticolo != null ){
+			if ( imgArticolo.getId() == 0 ){
+				for ( ImmagineArticolo img : new ArrayList<ImmagineArticolo>(a.getImmagineArticolos()) ){
+					ImmagineArticoloHome.getInstance().begin();
+					ImmagineArticoloHome.getInstance().delete(img);
+					ImmagineArticoloHome.getInstance().commit();
+				}
+				imgArticolo.setArticoli(a);
+				imgArticolo.setId(dbm.getNewID("immagine_articolo", "id"));
+				ImmagineArticoloHome.getInstance().begin();
+				ImmagineArticoloHome.getInstance().persist(imgArticolo);
+				a.getImmagineArticolos().add(imgArticolo);
+			}
+		}
 		return true;
 
 	}
@@ -2024,6 +2019,79 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			btnNewPannello.addActionListener(new MyActionListener());
 		}
 		return btnNewPannello;
+	}
+
+	/**
+	 * This method initializes chkBoxQtaInfinita	
+	 * 	
+	 * @return javax.swing.JCheckBox	
+	 */
+	private JCheckBox getChkBoxQtaInfinita() {
+		if (chkBoxQtaInfinita == null) {
+			chkBoxQtaInfinita = new JCheckBox();
+			chkBoxQtaInfinita.setBounds(new Rectangle(285, 190, 28, 23));
+		}
+		return chkBoxQtaInfinita;
+	}
+
+	/**
+	 * This method initializes pnlImage	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPnlImage() {
+		if (pnlImage == null) {
+			lbl1 = new JLabel();
+			lbl1.setBounds(new Rectangle(0, 0, 80, 80));
+			pnlImage = new JPanel();
+			pnlImage.setLayout(null);
+			pnlImage.setBounds(new Rectangle(400, 290, 200, 80));
+			pnlImage.setBorder(BorderFactory.createTitledBorder(
+					BorderFactory.createBevelBorder(BevelBorder.RAISED),
+					"Immagine",
+					TitledBorder.DEFAULT_JUSTIFICATION,
+					TitledBorder.DEFAULT_POSITION, new Font("Dialog",
+							Font.BOLD, 12), new Color(51, 51, 51))); // Generated
+			if ( imgArticolo != null ){
+				lbl1.setIcon(new ImageIcon(imgArticolo.getFile()));
+			}
+			lbl1.setVerticalAlignment(0);
+			lbl1.setHorizontalAlignment(0);
+			pnlImage.add(lbl1, null);
+			pnlImage.add(getBtnAddImage(), null);
+			pnlImage.add(getBtnRemoveImage(), null);
+		}
+		return pnlImage;
+	}
+
+	/**
+	 * This method initializes btnAddImage	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnAddImage() {
+		if (btnAddImage == null) {
+			btnAddImage = new JButton();
+			btnAddImage.setBounds(new Rectangle(90, 12, 90, 29));
+			btnAddImage.setText("Aggiungi");
+			btnAddImage.addActionListener(new MyActionListener());
+		}
+		return btnAddImage;
+	}
+
+	/**
+	 * This method initializes btnRemoveImage	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnRemoveImage() {
+		if (btnRemoveImage == null) {
+			btnRemoveImage = new JButton();
+			btnRemoveImage.setBounds(new Rectangle(90, 45, 90, 29));
+			btnRemoveImage.setText("Rimuovi");
+			btnRemoveImage.addActionListener(new MyActionListener());
+		}
+		return btnRemoveImage;
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

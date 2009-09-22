@@ -23,15 +23,21 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 
+import rf.pegaso.db.exception.CodiceBarreInesistente;
+import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.DettaglioOrdine;
+import rf.pegaso.db.tabelle.ImmagineArticolo;
 import rf.pegaso.gui.vendita.panel.JButtonEvent;
 import rf.pegaso.gui.vendita.panel.JButtonEventListener;
 import rf.pegaso.gui.vendita.panel.JPanelArticoli;
 import rf.pegaso.gui.vendita.panel.JPanelRiepilogoVendita;
 import rf.utility.ControlloDati;
+import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.text.UpperTextDocument;
 
 import java.awt.Font;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.LinkedList;
 import java.awt.Color;
@@ -154,7 +160,7 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 				pnlArticolo.caricaArticoli(new LinkedList<Articoli>(pan.getArticolis()));
 				pnlArticolo.addJButtonEventListener(new JButtonEventListener() {
 					public void keyPerformed(JButtonEvent evt) {
-						m_jButtonKeysKeyPerformed(evt);
+						inserisciNelCarrello(evt.getArticolo().getCodbarre());
 					}
 				});
 				jTabbedPane.addTab(pan.getNome(), null, pnlArticolo, null);
@@ -191,7 +197,7 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 	}
 	
 	private void inserisciNelCarrello(String codeBarre){
-		if ( txtFieldRicerca.getText() == null || txtFieldRicerca.getText().trim().equals("") ){
+		if ( codeBarre == null || codeBarre.trim().equals("") ){
 			messaggioAVideo("Codice inserito non valido!", "INFO");
 		}
 		else{

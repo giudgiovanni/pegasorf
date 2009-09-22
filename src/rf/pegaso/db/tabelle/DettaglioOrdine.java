@@ -1,10 +1,14 @@
 package rf.pegaso.db.tabelle;
 
+import it.infolabs.hibernate.Articoli;
+import it.infolabs.hibernate.ArticoliHome;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Vector;
 
 import rf.pegaso.db.exception.CodiceBarreInesistente;
@@ -23,6 +27,7 @@ public class DettaglioOrdine implements Comparator<DettaglioOrdine>{
 	private double prezzoVendita;
 	private int iva;
 	private int sconto;
+	private boolean qtaInfinita;
 
 	private DBManager dbm;
 
@@ -39,6 +44,7 @@ public class DettaglioOrdine implements Comparator<DettaglioOrdine>{
 		this.prezzoVendita = 0.0;
 		this.iva = 0;
 		this.sconto = 0;
+		this.qtaInfinita = false;
 		this.dbm = DBManager.getIstanceSingleton();
 	}
 
@@ -142,31 +148,47 @@ public class DettaglioOrdine implements Comparator<DettaglioOrdine>{
 		if (codice.trim().equalsIgnoreCase(""))
 			return -1;
 		//carichiamo l'articolo in memoria
-		Articolo a = new Articolo();
+//		Articolo a = new Articolo();
 		try {
-			if (a.findByCodBarreWithPrezzoAcquisto(codice)) {
-//				if ( a.getGiacenza2() < 1 )
-//					return 0;
-				idArticolo = a.getIdArticolo();
+			Object [] obj = ArticoliHome.getInstance().findByCodBarreWithPrezzoAcquisto(codice);
+			if (obj == null ){
+				return 0;
+			}
+			else{
+				Articoli a = (Articoli)obj[0];
+				idArticolo = (int)a.getIdarticolo();
 				descrizione = a.getDescrizione();
-				UnitaDiMisura udm = new UnitaDiMisura();
-				udm.caricaDati(a.getUm());
-				um = udm.getNome();
+				um = a.getUm().getNome();
 				prezzoAcquisto = a.getPrezzoAcquisto();
 				prezzoVendita = a.getPrezzoDettaglio();
-				codiceBarre = a.getCodBarre();
-				iva = a.getIva();
+				codiceBarre = a.getCodbarre();
+				iva = (int)a.getIva();
 				qta = 1.0;
-				disponibilita = a.getGiacenza2();
+				qtaInfinita = a.isQtaInfinita();
+				disponibilita = (Double)obj[1];
 			}
-			else 
-				return 0;
-		} catch (SQLException e1) {
+			
+//			if (a.findByCodBarreWithPrezzoAcquisto(codice)) {
+//				idArticolo = a.getIdArticolo();
+//				descrizione = a.getDescrizione();
+//				UnitaDiMisura udm = new UnitaDiMisura();
+//				udm.caricaDati(a.getUm());
+//				um = udm.getNome();
+//				prezzoAcquisto = a.getPrezzoAcquisto();
+//				prezzoVendita = a.getPrezzoDettaglio();
+//				codiceBarre = a.getCodBarre();
+//				iva = a.getIva();
+//				qta = 1.0;
+//				disponibilita = a.getGiacenza2();
+//			}
+//			else 
+//				return 0;
+		} catch (Exception e1) {
 			e1.printStackTrace();
 			return -2;
-		} catch (CodiceBarreInesistente e1) {
-			e1.printStackTrace();
-			return -2;
+//		} catch (CodiceBarreInesistente e1) {
+//			e1.printStackTrace();
+//			return -2;
 		}
 		return 1;
 	}
@@ -562,6 +584,14 @@ public class DettaglioOrdine implements Comparator<DettaglioOrdine>{
 			return -1;
 		else
 			return 1;
+	}
+
+	public boolean isQtaInfinita() {
+		return qtaInfinita;
+	}
+
+	public void setQtaInfinita(boolean qtaInfinita) {
+		this.qtaInfinita = qtaInfinita;
 	}
 	
 }

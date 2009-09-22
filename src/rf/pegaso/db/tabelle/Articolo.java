@@ -482,7 +482,7 @@ public class Articolo {
 	public boolean findByCodBarreWithPrezzoAcquisto(String codBarre) throws SQLException,
 	CodiceBarreInesistente {
 		StringBuilder query = new StringBuilder();
-		query.append("select d.qta, d.prezzo_acquisto, c.data_carico, c.ora_carico, (carico - scarico) as giacenza, a.idarticolo, a.descrizione, a.um, a.prezzo_dettaglio, a.iva ");
+		query.append("select d.qta, d.prezzo_acquisto, c.data_carico, c.ora_carico, (carico - scarico) as giacenza, a.idarticolo, a.descrizione, a.um, a.prezzo_dettaglio, a.iva, a.qta_infinita ");
 		query.append("from carichi c, dettaglio_carichi d, articoli a, giacenza_articoli_all_view v ");
 //		query.append("where a.codbarre = ? ");
 		
@@ -500,10 +500,8 @@ public class Articolo {
 		st.setString(3, codBarre);
 		ResultSet rs = st.executeQuery();
 		int qtaC = 0;
-		while ( rs.next() ){
-			if ( rs.getInt("giacenza") <= 0 )
-				return false;
-			else if ( rs.getInt("giacenza") <= (rs.getInt("qta") + qtaC) ){
+		while ( rs.next() ){			
+			if ( rs.getInt("giacenza") <= (rs.getInt("qta") + qtaC)){
 				this.idArticolo = rs.getInt("idarticolo");
 				this.descrizione = rs.getString("descrizione");
 				this.um = rs.getInt("um");
@@ -515,6 +513,11 @@ public class Articolo {
 				if (st != null)
 					st.close();
 				return true;
+			}
+			else if ( rs.getInt("giacenza") <= 0 ){				
+				if (st != null)
+					st.close();
+				return false;
 			}
 			else{
 				qtaC = qtaC + rs.getInt("qta");

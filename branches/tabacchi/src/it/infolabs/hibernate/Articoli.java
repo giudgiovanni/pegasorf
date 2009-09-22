@@ -1,6 +1,6 @@
 package it.infolabs.hibernate;
 
-// Generated 28-ago-2009 20.27.48 by Hibernate Tools 3.2.5.Beta
+// Generated 20-set-2009 12.54.15 by Hibernate Tools 3.2.5.Beta
 
 import java.util.Date;
 import java.util.HashSet;
@@ -20,7 +20,7 @@ public class Articoli implements java.io.Serializable {
 	private String codbarre;
 	private String descrizione;
 	private Double prezzoAcquisto;
-	private Long iva;
+	private long iva;
 	private Double prezzoDettaglio;
 	private Double prezzoIngrosso;
 	private String imballo;
@@ -33,6 +33,7 @@ public class Articoli implements java.io.Serializable {
 	private Long caricoIniziale;
 	private Long scortaMassima;
 	private Integer numeroPacchetti;
+	private boolean qtaInfinita;
 	private Set dettaglioOrdinis = new HashSet(0);
 	private Set immagineArticolos = new HashSet(0);
 	private Set immagineArticolos_1 = new HashSet(0);
@@ -46,9 +47,10 @@ public class Articoli implements java.io.Serializable {
 	public Articoli() {
 	}
 
-	public Articoli(long idarticolo, String descrizione) {
+	public Articoli(long idarticolo, String descrizione, boolean qtaInfinita) {
 		this.idarticolo = idarticolo;
 		this.descrizione = descrizione;
+		this.qtaInfinita = qtaInfinita;
 	}
 
 	public Articoli(long idarticolo, Um um, Fornitori fornitori,
@@ -58,7 +60,7 @@ public class Articoli implements java.io.Serializable {
 			String imballo, Double peso, Long sconto, String colore,
 			Long scortaMinima, String note, Date dataInserimento,
 			Long caricoIniziale, Long scortaMassima, Integer numeroPacchetti,
-			Set dettaglioOrdinis, Set immagineArticolos,
+			boolean qtaInfinita, Set dettaglioOrdinis, Set immagineArticolos,
 			Set immagineArticolos_1, Set dettaglioOrdinis_1,
 			Set dettaglioCarichis, Set dettaglioCarichis_1,
 			Set dettaglioOrdinis_2, Set immagineArticolos_2,
@@ -85,6 +87,7 @@ public class Articoli implements java.io.Serializable {
 		this.caricoIniziale = caricoIniziale;
 		this.scortaMassima = scortaMassima;
 		this.numeroPacchetti = numeroPacchetti;
+		this.qtaInfinita = qtaInfinita;
 		this.dettaglioOrdinis = dettaglioOrdinis;
 		this.immagineArticolos = immagineArticolos;
 		this.immagineArticolos_1 = immagineArticolos_1;
@@ -168,11 +171,11 @@ public class Articoli implements java.io.Serializable {
 		this.prezzoAcquisto = prezzoAcquisto;
 	}
 
-	public Long getIva() {
+	public long getIva() {
 		return this.iva;
 	}
 
-	public void setIva(Long iva) {
+	public void setIva(long iva) {
 		this.iva = iva;
 	}
 
@@ -270,6 +273,14 @@ public class Articoli implements java.io.Serializable {
 
 	public void setNumeroPacchetti(Integer numeroPacchetti) {
 		this.numeroPacchetti = numeroPacchetti;
+	}
+
+	public boolean isQtaInfinita() {
+		return this.qtaInfinita;
+	}
+
+	public void setQtaInfinita(boolean qtaInfinita) {
+		this.qtaInfinita = qtaInfinita;
 	}
 
 	public Set getDettaglioOrdinis() {

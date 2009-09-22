@@ -6,6 +6,7 @@ import java.util.List;
 import javax.naming.InitialContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.hibernate.LockMode;
 import org.hibernate.SessionFactory;
 import static org.hibernate.criterion.Example.create;
@@ -15,22 +16,23 @@ import static org.hibernate.criterion.Example.create;
  * @see it.infolabs.hibernate.ImmagineArticolo
  * @author Hibernate Tools
  */
-public class ImmagineArticoloHome {
+public class ImmagineArticoloHome extends BusinessObjectHome{
 
-	private static final Log log = LogFactory
-			.getLog(ImmagineArticoloHome.class);
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger.getLogger(ImmagineArticoloHome.class);
 
-	private final SessionFactory sessionFactory = getSessionFactory();
+	private static final Log log = LogFactory.getLog(ImmagineArticoloHome.class);
 
-	protected SessionFactory getSessionFactory() {
-		try {
-			return (SessionFactory) new InitialContext()
-					.lookup("SessionFactory");
-		} catch (Exception e) {
-			log.error("Could not locate SessionFactory in JNDI", e);
-			throw new IllegalStateException(
-					"Could not locate SessionFactory in JNDI");
-		}
+	private static final ImmagineArticoloHome instance=new ImmagineArticoloHome();
+
+	private ImmagineArticoloHome() {
+		super();
+	}
+
+	public static ImmagineArticoloHome getInstance() {
+		return instance;
 	}
 
 	public void persist(ImmagineArticolo transientInstance) {

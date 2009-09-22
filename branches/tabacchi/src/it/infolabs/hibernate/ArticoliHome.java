@@ -212,7 +212,6 @@ public class ArticoliHome extends BusinessObjectHome{
 	}
 	
 	public boolean codBarreEsistenteForInsert(String codBarre) {
-		
 		Criteria crit = sessionFactory.getCurrentSession().createCriteria("it.infolabs.hibernate.Articoli");
 		crit.add(Restrictions.or(
 				Restrictions.and(
@@ -225,7 +224,6 @@ public class ArticoliHome extends BusinessObjectHome{
 	}
 	
 	public boolean codBarreEsistenteForUpdate(String codBarre, long idArticolo) {
-		
 		Criteria crit = sessionFactory.getCurrentSession().createCriteria("it.infolabs.hibernate.Articoli");
 		crit.add(Restrictions.and(Restrictions.or(
 				Restrictions.eq("codbarre", codBarre), 
@@ -234,6 +232,62 @@ public class ArticoliHome extends BusinessObjectHome{
 		if ( crit.list().size() > 0 )
 			return true;
 		return false;
+	}
+	
+	public Object[] findByCodBarreWithPrezzoAcquisto(String codBarre){
+		log.debug("finding Articoli instance by codiceBarreWithPrezzoAcquisto");
+		try {
+			Articoli art = null;
+			Object[] obj = new Object[2];
+			List<Object[]> results = null;
+			StringBuilder query = new StringBuilder();
+			query.append("select a, d.qta, d.prezzoAcquisto, c.dataCarico, c.oraCarico, (carico - scarico) as giacenza ");
+			query.append("from it.infolabs.hibernate.Carichi c ");
+			query.append("inner join c.dettaglioCarichis d ");
+			query.append("inner join d.articoli a, ");
+			query.append("it.infolabs.hibernate.GiacenzaArticoliAllView v ");
+			query.append("where v.id.idarticolo = a.idarticolo ");
+			query.append("and ((a.codbarre = '"+codBarre.substring(0, 4)+"' ");
+			query.append("and a.reparti.idreparto = "+Constant.REPARTO_GRATTA_E_VINCI+") ");
+			query.append("or a.codbarre = '"+codBarre+"') ");
+			query.append("order by c.dataCarico desc, c.oraCarico desc");
+			
+			results = (List<Object[]>) sessionFactory.getCurrentSession().createQuery(query.toString()).list();
+			log.debug("find by codiceBarreWithPrezzoAcquisto successful");
+			// Se la lista e' vuota ritorniamo null
+			if ( results.size() == 0 ){
+				return null;
+			}
+			else{
+				art = (Articoli)results.get(0)[0];
+				obj[0] = art;
+				obj[1] = results.get(0)[5];
+				if ( art.isQtaInfinita() ){					
+					return obj;
+				}
+				else if ( (Double)results.get(0)[5] <= 0 ) {
+					return null;
+				}
+				else{
+					int qtaC = 0;
+					for (int i = 0; i < results.size(); i++ ){
+						if ( (Double)results.get(i)[5] <= ((Double)results.get(i)[1] + qtaC) ){
+							obj[0] = (Articoli)results.get(i)[0];
+							obj[1] = results.get(i)[5];
+							return obj;
+						}
+						else{
+							qtaC = (int) (qtaC + (Double)results.get(i)[1]);
+						}
+					}
+				}
+				return null;
+			}
+			
+		} catch (RuntimeException re) {
+			log.error("find by codiceBarreWithPrezzoAcquisto failed", re);
+			throw re;
+		}
 	}
 	
 }

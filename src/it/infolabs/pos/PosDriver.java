@@ -22,13 +22,10 @@ public interface PosDriver {
 	public void closeDeviceConnection();
 	
 	/**
-	 * Avvia la stampa di un nuovo Ticket che può essere fiscale o no in base al 
-	 * valore booleano passato
-	 * @param fiscale è un valore booleano che sta ad indicare se la stampa deve essere di
-	 * tipo fiscale oppure no  
+	 * Avvia la stampa di un nuovo Ticket
 	 * @throws PosException lanciata in caso di problemi di avvio ed inizializzazione del ticket
 	 */
-	public void startTicket(boolean fiscale) throws PosException;
+	public void startTicket() throws PosException;
 	
 	/**
 	 * Ferma la stampa del ticket e chiude eventuali totali
@@ -41,9 +38,9 @@ public interface PosDriver {
 	public void cutTicket();
 	
 	/**
-	 * Aggiunge un oggetto TicketRow che rappresenta una riga dello scontrino
-	 * e quindi di un articolo da aggiungere
+	 * Manda in stampa un ticket
+	 * @param ticket lo scontrino da stampare
 	 */
-	public void addTicketRow(TicketRow row);
+	public void printTicket(Ticket ticket);
 
 }

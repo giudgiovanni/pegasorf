@@ -55,6 +55,11 @@ public class TicketRow {
 		this.qta = qta;
 	}
 
+	/**
+	 * Ritorna il prezzo del singola articolo senza iva e senza moltiplicare
+	 * per la sua quantità di riga
+	 * @return il prezzo in formato float
+	 */
 	public float getPrezzo() {
 		return prezzo;
 	}

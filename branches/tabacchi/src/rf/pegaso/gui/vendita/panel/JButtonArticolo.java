@@ -9,6 +9,8 @@ import java.awt.Font;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 
+import rf.pegaso.gui.utility.UtilityImage;
+
 public class JButtonArticolo extends javax.swing.JButton {
 
 	private static final long serialVersionUID = 1L;
@@ -27,7 +29,7 @@ public class JButtonArticolo extends javax.swing.JButton {
 		try {
 			if ( articolo.getImmagineArticolos().size() != 0 ){
 				imgArticolo = (ImmagineArticolo) articolo.getImmagineArticolos().toArray()[0];
-				this.setIcon(new ImageIcon(imgArticolo.getFile()));
+				this.setIcon(UtilityImage.resizeImage(new ImageIcon(imgArticolo.getFile()), 50, 50));
 			}
 //			imgArticolo.caricaDati();						
 //			this.setText(imgArticolo.getNome());

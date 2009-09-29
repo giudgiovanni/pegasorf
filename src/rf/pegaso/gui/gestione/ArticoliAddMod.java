@@ -22,6 +22,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -68,6 +69,7 @@ import rf.pegaso.db.tabelle.Reparto;
 import rf.pegaso.db.tabelle.Scarico;
 import rf.pegaso.db.tabelle.UnitaDiMisura;
 import rf.pegaso.gui.utility.SuggerimentoCodice;
+import rf.pegaso.gui.utility.UtilityImage;
 import rf.pegaso.gui.viste.ViewDocCarico;
 import rf.utility.ControlloDati;
 import rf.utility.db.DBManager;
@@ -1634,54 +1636,15 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		if (scelta == JFileChooser.APPROVE_OPTION) {
 			imgArticolo = new ImmagineArticolo();
 			imgArticolo.setNome(chooser.getSelectedFile().getName());
-			loadImageFromURL(chooser.getSelectedFile().getPath());
-			lbl1.setIcon(new ImageIcon(imgArticolo.getFile()));
+			UtilityImage.loadImageFromURL(chooser.getSelectedFile().getPath(), imgArticolo, this);
+			ImageIcon img = new ImageIcon(imgArticolo.getFile());
+			lbl1.setIcon(UtilityImage.resizeImage(img, 50, 50));
 		}
 	}
 	
 	private void rimuoviImmagine(){
 		lbl1.setIcon(null);
 		imgArticolo = null;
-	}
-	
-	public void loadImageFromURL(String strUrl){
-	    int intPos;
-
-	    //guess file extension
-	    intPos = strUrl.lastIndexOf(".");
-	    if (intPos >= 0){
-	       imgArticolo.setEstensione(strUrl.substring(intPos + 1));
-	    }else{
-	        //assign default jpg extension
-	    	 imgArticolo.setEstensione("jpg");
-	    }
-	    try {
-
-	        //load the image from the Internet
-	        ImageIcon objImageIcon = new ImageIcon(strUrl);
-
-	        //wait the loading of the image
-	        MediaTracker objMediaTracker = new MediaTracker(this);
-	        objMediaTracker.addImage(objImageIcon.getImage(), 0);
-	        objMediaTracker.waitForID(0, 5000);
-
-	        //convert the image
-	        BufferedImage objBI = new BufferedImage(objImageIcon.getIconWidth(), objImageIcon.getIconHeight(),
-	                BufferedImage.TYPE_INT_ARGB);
-	        Graphics2D g2 = objBI.createGraphics();
-	        g2.drawImage(objImageIcon.getImage(), 0, 0, null);
-	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	        ImageIO.write(objBI,  imgArticolo.getEstensione(), baos);
-
-	        imgArticolo.setFile(baos.toByteArray());
-
-	    } catch (MalformedURLException ex) {
-//	        Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
-	    } catch (IOException ex) {
-//	        Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
-	    } catch (InterruptedException ex) {
-//	        Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
-	    }
 	}
 
 	private void inserisci() {		

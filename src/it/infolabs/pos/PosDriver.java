@@ -3,6 +3,8 @@
  */
 package it.infolabs.pos;
 
+import gnu.io.PortInUseException;
+
 /**
  * @author Rocco Fusella
  *
@@ -12,6 +14,7 @@ public interface PosDriver {
 	/**
 	 * Apre la connessione verso il dispositivo POS
 	 * @throws PosException quando la connessione non va a buon fine
+	 * @throws PortInUseException 
 	 */
 	public void openDeviceConnection() throws PosException;
 	
@@ -42,5 +45,11 @@ public interface PosDriver {
 	 * @param ticket lo scontrino da stampare
 	 */
 	public void printTicket(Ticket ticket);
+	
+	/**
+	 * Indica se la connessione al device è aperta oppure no
+	 * @return
+	 */
+	public boolean isOpenDeviceConnection();
 
 }

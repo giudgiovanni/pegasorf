@@ -33,21 +33,15 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.view.JasperViewer;
 
-import org.jdesktop.swingx.JXTable;
-
 import rf.pegaso.db.exception.CodiceBarreInesistente;
-import rf.pegaso.db.model.ArticoloModel;
 import rf.pegaso.db.model.TabacchiModel;
 import rf.pegaso.db.tabelle.Articolo;
-import rf.pegaso.gui.gestione.CaricoGui.MyMouseAdapter;
 import rf.utility.db.DBManager;
 import rf.utility.db.eccezzioni.CodiceBarreEsistente;
 import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.UpperTextDocument;
 
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 import java.awt.FlowLayout;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;

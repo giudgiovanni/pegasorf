@@ -5,8 +5,6 @@ package rf.pegaso.gui.gestione;
 
 import it.infolabs.hibernate.Articoli;
 import it.infolabs.hibernate.ArticoliHome;
-import it.infolabs.hibernate.DettaglioCarichiHome;
-import it.infolabs.hibernate.DettaglioCarichiId;
 import it.infolabs.hibernate.FornitoriHome;
 import it.infolabs.hibernate.ImmagineArticolo;
 import it.infolabs.hibernate.ImmagineArticoloHome;
@@ -21,20 +19,13 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.MediaTracker;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -42,7 +33,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -79,7 +69,6 @@ import rf.utility.gui.text.UpperTextDocument;
 import rf.utility.number.Arrays;
 import javax.swing.JRadioButton;
 import javax.swing.JCheckBox;
-import java.awt.GridBagLayout;
 
 /**
  * @author Hunter
@@ -1454,7 +1443,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			if ( art.getImmagineArticolos().size() != 0 ){
 				ArrayList<ImmagineArticolo> imgList = new ArrayList(art.getImmagineArticolos());
 				imgArticolo = imgList.get(0);
-				lbl1.setIcon(new ImageIcon(imgArticolo.getFile()));
+				lbl1.setIcon(UtilityImage.resizeImage(new ImageIcon(imgArticolo.getFile()), 50, 50));
 			}
 		} else {
 			this.setTitle("Inserisci Articoli");

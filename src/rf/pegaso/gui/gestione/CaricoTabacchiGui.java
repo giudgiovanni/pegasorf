@@ -31,6 +31,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.print.PrinterException;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -75,6 +76,12 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
+
+import jxl.Cell;
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -145,6 +152,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				}
 				save=false;
 				btnStampaU88Fax.setEnabled(false);
+				btnModelloXls.setEnabled(false);
 				azzeraTuttiCampi();
 			}else if (e.getSource() == btnStampa)
 				stampaTuttiCarichi();
@@ -154,6 +162,8 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				caricaArticoliSogliaMinima();
 			else if ( e.getSource() == btnStampaU88Fax )
 				stampaModelloU88Fax();
+			else if ( e.getSource() == btnModelloXls )
+				stampaModelloXls();
 		}
 
 	}
@@ -873,15 +883,15 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		// FINE PUNTO BACKUP
 
 		int riga = tblCarico.getSelectedRow();
-		TableColumn col = tblCarico.getColumn("codice");
-		int colonna = col.getModelIndex();
-		String codBarre = (String) tblCarico.getValueAt(riga, colonna);
+		//TableColumn col = tblCarico.getColumn("codice");
+		//int colonna = col.getModelIndex();
+		//String codBarre = (String) tblCarico.getValueAt(riga, colonna);
+		long idArticolo = (Long) tblCarico.getValueAt(riga, 0);
 		Articolo a = new Articolo();
 		try {
-			a.caricaDatiByCodBarre(codBarre);
+			//a.caricaDatiByCodBarre(codBarre);
+			a.caricaDati((int)idArticolo);
 		} catch (SQLException e1) {
-			e1.printStackTrace();
-		} catch (IDNonValido e1) {
 			e1.printStackTrace();
 		}
 		Carico c = new Carico();
@@ -1140,11 +1150,11 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		if (pnlNord == null)
 			try {
 				lblDataCarico = new JLabel();
-				lblDataCarico.setBounds(new Rectangle(145, 20, 69, 25));
-				lblDataCarico.setText("Data Ordine");
+				lblDataCarico.setBounds(new Rectangle(115, 7, 100, 16));
+				lblDataCarico.setText("Data Consegna");
 				lblNumeroCarico = new JLabel();
-				lblNumeroCarico.setBounds(new Rectangle(9, 20, 57, 25));
-				lblNumeroCarico.setText("N° Ordine");
+				lblNumeroCarico.setBounds(new Rectangle(9, 7, 70, 16));
+				lblNumeroCarico.setText("N. Ordine");
 				pnlNord = new JPanel();
 				pnlNord.setLayout(null);
 				pnlNord.setPreferredSize(new Dimension(1, 260));
@@ -1222,6 +1232,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				pnlProdotto.add(getBtnStampaU88Fax(), null);
 				pnlProdotto.add(getTxtFldCodiceAams(), null);
 				pnlProdotto.add(lblCodiceAams, null);
+				pnlProdotto.add(getBtnModelloXls(), null);
 			} catch (Throwable throwable) {
 			}
 		return pnlProdotto;
@@ -1418,7 +1429,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		if (txtNumeroCarico == null)
 			try {
 				txtNumeroCarico = new JTextField();
-				txtNumeroCarico.setBounds(new Rectangle(69, 20, 65, 25));
+				txtNumeroCarico.setBounds(new Rectangle(9, 23, 75, 26));
 				txtNumeroCarico.setEditable(false);
 				AutoCompleteTextComponent complete = new AutoCompleteTextComponent(
 						txtNumeroCarico, dbm, "carichi", "riferimento_ordine");
@@ -2040,6 +2051,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			caricaDati(c);
 			this.save=true;
 			btnStampaU88Fax.setEnabled(true);
+			btnModelloXls.setEnabled(true);
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(this, "Errore nel db", "ERRORE", 2);
 			e.printStackTrace();
@@ -2113,7 +2125,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			try {
 				dataCarico = new JDateChooser("dd/MM/yyyy", "##/##/##", '_');
 				dataCarico.setDate(new java.util.Date());
-				dataCarico.setBounds(new Rectangle(216, 20, 112, 25));
+				dataCarico.setBounds(new Rectangle(115, 23, 112, 25));
 				JTextFieldDateEditor f = (JTextFieldDateEditor) dataCarico
 						.getDateEditor();
 				f.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -2357,6 +2369,8 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	
 	private Articolo articolo;
 
+	private JButton btnModelloXls = null;
+
 	protected void nuovoFornitore() {
 		FornitoriAdd add = new FornitoriAdd(this, DBManager
 				.getIstanceSingleton());
@@ -2573,7 +2587,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	private JButton getBtnSogliaMinima() {
 		if (btnSogliaMinima == null) {
 			btnSogliaMinima = new JButton();
-			btnSogliaMinima.setBounds(new Rectangle(645, 65, 170, 48));
+			btnSogliaMinima.setBounds(new Rectangle(645, 70, 170, 45));
 			btnSogliaMinima
 					.setText("<html>Carica Articoli<P>sotto Soglia Minima</html>");
 			btnSogliaMinima.addActionListener(new MyButtonListener());
@@ -2589,8 +2603,8 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	private JButton getBtnStampaU88Fax() {
 		if (btnStampaU88Fax == null) {
 			btnStampaU88Fax = new JButton();
-			btnStampaU88Fax.setBounds(new Rectangle(646, 120, 168, 53));
-			btnStampaU88Fax.setText("<html>Stampa Modello<P>U88 FAX</html>");
+			btnStampaU88Fax.setBounds(new Rectangle(645, 125, 170, 25));
+			btnStampaU88Fax.setText("Modello U88 FAX");
 			btnStampaU88Fax.setEnabled(false);
 			btnStampaU88Fax.addActionListener(new MyButtonListener());
 		}
@@ -2617,8 +2631,9 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		par.put("cognome", prop.getProperty("cognome"));
 		par.put("di", prop.getProperty("di"));
 		par.put("codice_cliente", prop.getProperty("codice_cliente"));
-		par.put("rivendita", prop.getProperty("rivendita"));
+		par.put("rivendita_numero", prop.getProperty("rivendita"));
 		par.put("telefono", prop.getProperty("telefono"));
+		par.put("data_consegna", dataCarico.getDate());
 
 		Carico c = new Carico();
 		try {
@@ -2750,7 +2765,140 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		}
 
 	}
+	
+//	protected void test() {
+//		String path = "/Users/sergiofalcone/Desktop/test.xls";
+//		try {
+//			WritableWorkbook wb = Workbook.createWorkbook(new File(path));
+//			WritableSheet ws = wb.createSheet("Ordine Tabacchi", 1);
+//			ws.
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
+	protected void stampaModelloXls(){
+		if (tblCarico.getRowCount() < 1) {
+			return;
+		}
+		Carico c = new Carico();
+		try {
+			String query = "SELECT A.idarticolo, a.codFornitore, A.codBarre, A.descrizione, A.iva, A.um, D.qta, D.prezzo_Acquisto "
+					+ "FROM Articoli AS A, Carichi AS C, Dettaglio_Carichi AS D, Fornitori AS F "
+					+ "WHERE A.idArticolo=D.idArticolo AND C.idCarico=D.idCarico AND C.idFornitore=F.idFornitore and C.idcarico="
+					+ idcarico;
+
+			Statement pst = dbm.getNewStatement();
+			ResultSet rs = pst.executeQuery(query);
+			rs.last();
+			int numRow = rs.getRow();
+			rs.beforeFirst();
+			U88faxHome.getInstance().begin();
+			U88faxHome.getInstance().deleteAll();
+			U88faxHome.getInstance().commitAndClose();
+			U88faxHome.getInstance().begin();
+			Double totPesoD = 0.0;
+			while (rs.next()) {
+				U88fax row = new U88fax();
+				String codAams=rs.getString("codfornitore");
+				StringBuffer tmp=new StringBuffer();
+				//aggiungiamo spazi per poter poi gestire il tutto
+				//nel report di stampa 
+				//CODICE AAMS
+				if(codAams.length()==1){
+					tmp.append("   ").append(codAams);
+				}else if(codAams.length()==2){
+					tmp.append("  ").append(codAams);
+				}else if(codAams.length()==3){
+					tmp.append(" ").append(codAams);
+				}else {
+					tmp.append(codAams);
+				}
+				row.setCodiceAams(tmp.toString());
+				Double riord=ArticoliHome.getInstance().getQtaRiordino(rs.getInt("idarticolo"), rs.getInt("qta"));
+				totPesoD += riord;
+				String kg = riord.toString();
+				if ( kg.substring(kg.indexOf('.')).length() > 4 )
+					kg = kg.substring(0, kg.indexOf('.')+4);
+				String grammi=kg.substring(kg.indexOf('.')+1);
+				StringBuffer sb=new StringBuffer();
+				if(grammi.length()==1){
+					sb.append(grammi).append("00");
+				}else if(grammi.length()==2){
+					sb.append(grammi).append("0");
+				}else {
+					sb.append(grammi);
+				}
+				row.setGrammi(sb.toString());
+				String kgs=kg.substring(0,kg.indexOf('.'));
+				sb = new StringBuffer();
+				if(kgs.length()==1){
+					sb.append("00").append(kgs);
+				}else if(kgs.length()==2){
+					sb.append("0").append(kgs);
+				}else {
+					sb.append(kgs);
+				}
+				row.setKilogrammi(sb.toString());
+				U88faxHome.getInstance().attachDirty(row);
+			}
+			U88faxHome.getInstance().commitAndClose();
+			if (pst != null)
+				pst.close();
+			if (rs != null)
+				rs.close();
+			
+			String s = totPesoD.toString().substring(0, totPesoD.toString().indexOf('.'));
+			StringBuffer sb = new StringBuffer();
+			if ( s.length() > 6 ){
+				throw new NumberFormatException();
+			}else if ( s.length() == 1 ){
+				sb.append("00000").append(s);
+			}else if ( s.length() == 2 ){
+				sb.append("0000").append(s);
+			}else if ( s.length() == 3 ){
+				sb.append("000").append(s);
+			}else if ( s.length() == 4 ){
+				sb.append("00").append(s);
+			}else if ( s.length() == 5 ){
+				sb.append("0").append(s);
+			}else{
+				sb.append(s);
+			}
+			
+			String s2 = totPesoD.toString().substring(totPesoD.toString().indexOf('.')+1);
+			if ( s2.length() > 3 ){
+				s2 = s2.substring(0, 3);
+			}
+			StringBuffer sb2=new StringBuffer();
+			if(s2.length()==1){
+				sb2.append(s2).append("00");
+			}else if(s2.length()==2){
+				sb2.append(s2).append("0");
+			}else {
+				sb2.append(s2);
+			}
+		} catch (NumberFormatException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		try {
+//			JasperReport subreport = (JasperReport) JRLoader
+//					.loadObject("report/u88fax_subreport.jasper");
+			JasperViewer.viewReport(JasperFillManager.fillReport(
+					"report/modXlsWeb.jasper", null, this.dbm.getConnessione()),
+					false);
+
+		} catch (JRException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * This method initializes txtFldCodiceAams	
 	 * 	
@@ -2810,6 +2958,23 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	protected void salva() {
 		this.save=true;
 		btnStampaU88Fax.setEnabled(true);
+		btnModelloXls.setEnabled(true);
+	}
+
+	/**
+	 * This method initializes btnModelloXls	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnModelloXls() {
+		if (btnModelloXls == null) {
+			btnModelloXls = new JButton();
+			btnModelloXls.setBounds(new Rectangle(645, 155, 170, 25));
+			btnModelloXls.setText("Modello XLS Web");
+			btnModelloXls.setEnabled(false);
+			btnModelloXls.addActionListener(new MyButtonListener());
+		}
+		return btnModelloXls;
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

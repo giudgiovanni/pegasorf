@@ -33,20 +33,15 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.view.JasperViewer;
 
-import org.jdesktop.swingx.JXTable;
-
 import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.pegaso.db.model.ArticoloModel;
 import rf.pegaso.db.tabelle.Articolo;
-import rf.pegaso.gui.gestione.TabacchiGestione.MyMouseAdapter;
 import rf.utility.db.DBManager;
 import rf.utility.db.eccezzioni.CodiceBarreEsistente;
 import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.UpperTextDocument;
 
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 import java.awt.FlowLayout;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
@@ -447,7 +442,7 @@ public class ArticoliGestione extends JFrame {
 	private JTable getTblArticoli() {
 		if (tblArticoli == null) {
 			try {
-				ArticoloModel modello = new ArticoloModel(dbm);
+				ArticoloModel modello = new ArticoloModel();
 				dbm.addDBStateChange(modello);
 				sorter=new TableRowSorter<ArticoloModel>(modello);
 				tblArticoli = new JTable(modello);
@@ -465,7 +460,7 @@ public class ArticoliGestione extends JFrame {
 				col.setMaxWidth(0);
 				col.setPreferredWidth(0);
 
-				col = tblArticoli.getColumn("codice");
+				col = tblArticoli.getColumn("Codice");
 				DefaultTableCellRenderer colFormatoRenderer = new DefaultTableCellRenderer();
 				colFormatoRenderer.setHorizontalAlignment(JLabel.LEFT);
 				col.setCellRenderer(colFormatoRenderer);
@@ -473,12 +468,12 @@ public class ArticoliGestione extends JFrame {
 				col.setMaxWidth(150);
 				col.setPreferredWidth(150);
 
-				col = tblArticoli.getColumn("descrizione");
+				col = tblArticoli.getColumn("Descrizione");
 				DefaultTableCellRenderer ColTipoRenderer = new DefaultTableCellRenderer();
 				ColTipoRenderer.setHorizontalAlignment(JLabel.LEFT);
 				col.setCellRenderer(ColTipoRenderer);
 
-				col = tblArticoli.getColumn("prezzo_acquisto");
+				col = tblArticoli.getColumn("Prezzo Acquisto");
 				DefaultTableCellRenderer prezzoColumnRenderer = new DefaultTableCellRenderer();
 				prezzoColumnRenderer.setHorizontalAlignment(JLabel.RIGHT);
 				col.setCellRenderer(prezzoColumnRenderer);
@@ -486,7 +481,7 @@ public class ArticoliGestione extends JFrame {
 				col.setMaxWidth(100);
 				col.setPreferredWidth(100);
 
-				col = tblArticoli.getColumn("prezzo_listino");
+				col = tblArticoli.getColumn("Prezzo Listino");
 				DefaultTableCellRenderer prezzoListinoColumnRenderer = new DefaultTableCellRenderer();
 				prezzoListinoColumnRenderer.setHorizontalAlignment(JLabel.RIGHT);
 				col.setCellRenderer(prezzoListinoColumnRenderer);
@@ -494,7 +489,7 @@ public class ArticoliGestione extends JFrame {
 				col.setMaxWidth(100);
 				col.setPreferredWidth(100);
 
-				col = tblArticoli.getColumn("fornitore");
+				col = tblArticoli.getColumn("Fornitore");
 				DefaultTableCellRenderer fornitoreRenderer = new DefaultTableCellRenderer();
 				fornitoreRenderer.setHorizontalAlignment(JLabel.LEFT);
 				col.setCellRenderer(fornitoreRenderer);

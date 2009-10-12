@@ -8,6 +8,7 @@ import it.infolabs.hibernate.ArticoliHome;
 import it.infolabs.hibernate.FornitoriHome;
 import it.infolabs.hibernate.RepartiHome;
 import it.infolabs.hibernate.UmHome;
+import it.infolabs.hibernate.exception.FindByNotFoundException;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -919,29 +920,35 @@ public class GrattaEVinciAddMod extends JFrame {
 	}
 
 	private void inserisci() {
-		Articoli a = new Articoli();
-		boolean ok = recuperaDatiCampi(a);
-		if (ok) {
-			ArticoliHome.getInstance().begin();
-			if ( !ArticoliHome.getInstance().codBarreEsistenteForInsert(a.getCodbarre()) ){
+		try{
+			Articoli a = new Articoli();
+			boolean ok = recuperaDatiCampi(a);
+			if (ok) {
 				ArticoliHome.getInstance().begin();
-				a.setIdarticolo(dbm.getNewID("articoli","idarticolo"));
-				ArticoliHome.getInstance().persist(a);
-				ArticoliHome.getInstance().commit();
-				svuotaCampi();
+				if ( !ArticoliHome.getInstance().codBarreEsistenteForInsert(a.getCodbarre()) ){
+					ArticoliHome.getInstance().begin();
+					a.setIdarticolo(dbm.getNewID("articoli","idarticolo"));
+					ArticoliHome.getInstance().persist(a);
+					ArticoliHome.getInstance().commit();
+					svuotaCampi();
+				}
+				else {
+					JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
+							"ERRORE", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 			}
-			else {
-				JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
-												"ERRORE", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
+
+			// chiusura della finestra se selezionata
+			//opzione closeOnOK
+			if(this.close)
+				dispose();
 		}
-
-		// chiusura della finestra se selezionata
-		//opzione closeOnOK
-		if(this.close)
-			dispose();
-
+		catch(FindByNotFoundException fe){
+			JOptionPane.showMessageDialog(this, fe.toString(),
+					"ERRORE", JOptionPane.ERROR_MESSAGE);
+			fe.printStackTrace();
+		}
 	}
 	
 	/**
@@ -1024,66 +1031,48 @@ public class GrattaEVinciAddMod extends JFrame {
 				JOptionPane.INFORMATION_MESSAGE);
 		if (scelta != JOptionPane.YES_OPTION)
 			return;
-		ArticoliHome.getInstance().begin();
-		Articoli a = ArticoliHome.getInstance().findById(idArticolo);
-		String oldCodBarre = a.getCodbarre();
-		boolean ok = recuperaDatiCampi(a);
-		if ( ok ){
-			// Se il codice a barre e' stato modificato
-			if ( !a.getCodbarre().equals(oldCodBarre) ){
-				// Dobbiamo verificare se quel codice a barre e' utilizzabile
-				if ( ArticoliHome.getInstance().codBarreEsistenteForUpdate(a.getCodbarre(), a.getIdarticolo()) ){
-					// codice a barre non inseribile
-					JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
-							"ERRORE", JOptionPane.ERROR_MESSAGE);
+		try{
+			ArticoliHome.getInstance().begin();
+			Articoli a = ArticoliHome.getInstance().findById(idArticolo);
+			String oldCodBarre = a.getCodbarre();
+			boolean ok = recuperaDatiCampi(a);
+			if ( ok ){
+				// Se il codice a barre e' stato modificato
+				if ( !a.getCodbarre().equals(oldCodBarre) ){
+					// Dobbiamo verificare se quel codice a barre e' utilizzabile
+					if ( ArticoliHome.getInstance().codBarreEsistenteForUpdate(a.getCodbarre(), a.getIdarticolo()) ){
+						// codice a barre non inseribile
+						JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
+								"ERRORE", JOptionPane.ERROR_MESSAGE);
+					}
+					else {
+						// Possiamo persistere le modifiche
+						ArticoliHome.getInstance().persist(a);
+						ArticoliHome.getInstance().commit();
+					}
 				}
-				else {
-					// Possiamo persistere le modifiche
+				// Il codice a barre non e' stato modificato quindi si puo' salvare
+				else{
 					ArticoliHome.getInstance().persist(a);
 					ArticoliHome.getInstance().commit();
 				}
 			}
-			// Il codice a barre non e' stato modificato quindi si puo' salvare
-			else{
-				ArticoliHome.getInstance().persist(a);
-				ArticoliHome.getInstance().commit();
-			}
+			// ultimo articolo appunto lavorato
+			this.ultimoArticolo[0]=a.getCodbarre();
+			this.dispose();
 		}
-		
-		
-//		try {
-//			a.updateArticolo();
-//			ArticoliHome.getInstance().begin();
-//			Articoli articolo=ArticoliHome.getInstance().findById(a.getIdArticolo());
-//			ArticoliHome.getInstance().attachDirty(articolo);
-//			ArticoliHome.getInstance().commitAndClose();
-////			if ( !txtFldQtaIniziale.getText().trim().equals("")  && !txtFldQtaIniziale.getText().trim().equals("0,00") ){
-////				inserisciQuantitaIniziale();
-////			}
-//		} catch (IDNonValido e) {
-//			JOptionPane.showMessageDialog(this, "Valore idFornitore errato",
-//					"ERRORE", JOptionPane.ERROR_MESSAGE);
-//			e.printStackTrace();
-//		} catch (CodiceBarreEsistente e) {
-//			JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
-//					"ERRORE", JOptionPane.ERROR_MESSAGE);
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (CodiceBarreInesistente e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		// ultimo articolo appunto lavorato
-		this.ultimoArticolo[0]=a.getCodbarre();
-		this.dispose();
-
+		catch(FindByNotFoundException fe){
+			JOptionPane.showMessageDialog(this, fe.toString(),
+					"ERRORE", JOptionPane.ERROR_MESSAGE);
+			fe.printStackTrace();
+		}
 	}
 
 	/**
+	 * @throws FindByNotFoundException 
 	 *
 	 */
-	private boolean recuperaDatiCampi(Articoli a) {
+	private boolean recuperaDatiCampi(Articoli a) throws FindByNotFoundException {
 
 		if ( txtCodBarre.getText().trim().equals("") || txtCodBarre.getText().length() < 4 ){
 			JOptionPane.showMessageDialog(this, "Codice a Barre non valido.",

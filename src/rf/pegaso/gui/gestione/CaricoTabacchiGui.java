@@ -11,6 +11,7 @@ import it.infolabs.hibernate.FornitoriHome;
 import it.infolabs.hibernate.TipoDocumentoHome;
 import it.infolabs.hibernate.U88fax;
 import it.infolabs.hibernate.U88faxHome;
+import it.infolabs.hibernate.exception.FindByNotFoundException;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -42,6 +43,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -80,8 +82,11 @@ import javax.swing.table.TableColumn;
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
+import jxl.write.Label;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
+import jxl.write.biff.RowsExceededException;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -163,6 +168,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			else if ( e.getSource() == btnStampaU88Fax )
 				stampaModelloU88Fax();
 			else if ( e.getSource() == btnModelloXls )
+//				test();
 				stampaModelloXls();
 		}
 
@@ -1969,8 +1975,11 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 			} catch (NumberFormatException e) {
 				JOptionPane.showMessageDialog(this,
-						"Errore nell'inserimento dinumeri", "NUMERO ERRATO", 0);
+						"Errore nell'inserimento numeri", "NUMERO ERRATO", 0);
 				e.printStackTrace();
+			} catch (FindByNotFoundException fe) {
+				JOptionPane.showMessageDialog(this, fe.toString(), "ERRORE", 0);
+				fe.printStackTrace();
 			} 
 		}
 	}
@@ -1983,7 +1992,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				c.insertArticolo(articolo.getIdArticolo(), 0, articolo.getPrezzoDettaglio());
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -2372,8 +2380,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	private JButton btnModelloXls = null;
 
 	protected void nuovoFornitore() {
-		FornitoriAdd add = new FornitoriAdd(this, DBManager
-				.getIstanceSingleton());
+		FornitoriAdd add = new FornitoriAdd(this);
 		add.setVisible(true);
 		// caricaFornitori(cmbFornitori);
 
@@ -2766,16 +2773,104 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 	}
 	
-//	protected void test() {
-//		String path = "/Users/sergiofalcone/Desktop/test.xls";
-//		try {
-//			WritableWorkbook wb = Workbook.createWorkbook(new File(path));
-//			WritableSheet ws = wb.createSheet("Ordine Tabacchi", 1);
-//			ws.
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
+	protected void test() {
+		String path = "/Users/sergiofalcone/Desktop/test.xls";
+		try {	
+			List<U88fax> resultList = new ArrayList<U88fax>();
+			try {
+				String query = "SELECT A.idarticolo, a.codFornitore, A.codBarre, A.descrizione, A.iva, A.um, D.qta, D.prezzo_Acquisto "
+					+ "FROM Articoli AS A, Carichi AS C, Dettaglio_Carichi AS D, Fornitori AS F "
+					+ "WHERE A.idArticolo=D.idArticolo AND C.idCarico=D.idCarico AND C.idFornitore=F.idFornitore and C.idcarico="
+					+ idcarico;
+
+				Statement pst = dbm.getNewStatement();
+				ResultSet rs = pst.executeQuery(query);
+				rs.last();
+				int numRow = rs.getRow();
+				rs.beforeFirst();
+				Double totPesoD = 0.0;
+				while (rs.next()) {
+					U88fax row = new U88fax();
+					String codAams=rs.getString("codfornitore");
+					StringBuffer tmp=new StringBuffer();
+					//aggiungiamo spazi per poter poi gestire il tutto
+					//nel report di stampa 
+					//CODICE AAMS
+					if(codAams.length()==1){
+						tmp.append("   ").append(codAams);
+					}else if(codAams.length()==2){
+						tmp.append("  ").append(codAams);
+					}else if(codAams.length()==3){
+						tmp.append(" ").append(codAams);
+					}else {
+						tmp.append(codAams);
+					}
+					row.setCodiceAams(tmp.toString());
+					Double riord=ArticoliHome.getInstance().getQtaRiordino(rs.getInt("idarticolo"), rs.getInt("qta"));
+					totPesoD += riord;
+					String kg = riord.toString();
+					if ( kg.substring(kg.indexOf('.')).length() > 4 )
+						kg = kg.substring(0, kg.indexOf('.')+4);
+					String grammi=kg.substring(kg.indexOf('.')+1);
+					StringBuffer sb=new StringBuffer();
+					if(grammi.length()==1){
+						sb.append(grammi).append("00");
+					}else if(grammi.length()==2){
+						sb.append(grammi).append("0");
+					}else {
+						sb.append(grammi);
+					}
+					row.setGrammi(sb.toString());
+					String kgs=kg.substring(0,kg.indexOf('.'));
+					sb = new StringBuffer();
+					if(kgs.length()==1){
+						sb.append("00").append(kgs);
+					}else if(kgs.length()==2){
+						sb.append("0").append(kgs);
+					}else {
+						sb.append(kgs);
+					}
+					row.setKilogrammi(sb.toString());
+					resultList.add(row);
+				}
+				if (pst != null)
+					pst.close();
+				if (rs != null)
+					rs.close();				
+			} catch (NumberFormatException e1) {
+				e1.printStackTrace();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+
+			WritableWorkbook workbook = Workbook.createWorkbook(new File(path));
+			WritableSheet sheet = workbook.createSheet("Ordine Tabacchi", 0);
+			// Mi costruisco un solo oggetto di tipo label per i campi di testo dell'intestazione.
+			Label labelTitle = new Label(0, 0, "Codice AMMS");
+			sheet.addCell(labelTitle);
+			labelTitle = new Label(1, 0, "Peso");
+			sheet.addCell(labelTitle);
+			Label codice, peso;
+			U88fax u88;
+			for (int i = 0; i < resultList.size(); i++) {
+				u88 = resultList.get(i);
+				codice = new Label(0, i+1, u88.getCodiceAams());
+				sheet.addCell(codice);
+				peso = new Label(1, i+1, u88.getKilogrammi()+","+u88.getGrammi());
+				sheet.addCell(peso);
+			}
+			
+			workbook.write();
+			workbook.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (RowsExceededException e) {
+			e.printStackTrace();
+		} catch (WriteException e) {
+			e.printStackTrace();
+		}
+	}
 
 	protected void stampaModelloXls(){
 		if (tblCarico.getRowCount() < 1) {

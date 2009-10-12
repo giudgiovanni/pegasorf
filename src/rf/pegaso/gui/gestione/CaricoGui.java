@@ -2091,8 +2091,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 	}
 
 	protected void nuovoFornitore() {
-		FornitoriAdd add = new FornitoriAdd(this, DBManager
-				.getIstanceSingleton());
+		FornitoriAdd add = new FornitoriAdd(this);
 		add.setVisible(true);
 		caricaFornitori(cmbFornitori);
 

@@ -2,12 +2,18 @@ package it.infolabs.hibernate;
 
 // Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA
 
+import it.infolabs.hibernate.exception.DeleteEntityException;
+import it.infolabs.hibernate.exception.FindAllEntityException;
+import it.infolabs.hibernate.exception.FindByNotFoundException;
+import it.infolabs.hibernate.exception.MergeEntityException;
+import it.infolabs.hibernate.exception.PersistEntityException;
+
 import java.util.List;
-import javax.naming.InitialContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.hibernate.LockMode;
-import org.hibernate.SessionFactory;
+
 import static org.hibernate.criterion.Example.create;
 
 /**
@@ -15,31 +21,33 @@ import static org.hibernate.criterion.Example.create;
  * @see it.infolabs.hibernate.Provincia
  * @author Hibernate Tools
  */
-public class ProvinciaHome {
+public class ProvinciaHome extends BusinessObjectHome {
+
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger.getLogger(ProvinciaHome.class);
 
 	private static final Log log = LogFactory.getLog(ProvinciaHome.class);
 
-	private final SessionFactory sessionFactory = getSessionFactory();
+	private static final ProvinciaHome instance = new ProvinciaHome();
 
-	protected SessionFactory getSessionFactory() {
-		try {
-			return (SessionFactory) new InitialContext()
-					.lookup("SessionFactory");
-		} catch (Exception e) {
-			log.error("Could not locate SessionFactory in JNDI", e);
-			throw new IllegalStateException(
-					"Could not locate SessionFactory in JNDI");
-		}
+	private ProvinciaHome() {
+		super();
 	}
 
-	public void persist(Provincia transientInstance) {
+	public static ProvinciaHome getInstance() {
+		return instance;
+	}
+
+	public void persist(Provincia transientInstance) throws PersistEntityException{
 		log.debug("persisting Provincia instance");
 		try {
 			sessionFactory.getCurrentSession().persist(transientInstance);
 			log.debug("persist successful");
 		} catch (RuntimeException re) {
 			log.error("persist failed", re);
-			throw re;
+			throw new PersistEntityException();
 		}
 	}
 
@@ -65,18 +73,18 @@ public class ProvinciaHome {
 		}
 	}
 
-	public void delete(Provincia persistentInstance) {
+	public void delete(Provincia persistentInstance) throws DeleteEntityException{
 		log.debug("deleting Provincia instance");
 		try {
 			sessionFactory.getCurrentSession().delete(persistentInstance);
 			log.debug("delete successful");
 		} catch (RuntimeException re) {
 			log.error("delete failed", re);
-			throw re;
+			throw new DeleteEntityException();
 		}
 	}
 
-	public Provincia merge(Provincia detachedInstance) {
+	public Provincia merge(Provincia detachedInstance) throws MergeEntityException{
 		log.debug("merging Provincia instance");
 		try {
 			Provincia result = (Provincia) sessionFactory.getCurrentSession()
@@ -85,11 +93,11 @@ public class ProvinciaHome {
 			return result;
 		} catch (RuntimeException re) {
 			log.error("merge failed", re);
-			throw re;
+			throw new MergeEntityException();
 		}
 	}
 
-	public Provincia findById(long id) {
+	public Provincia findById(long id) throws FindByNotFoundException{
 		log.debug("getting Provincia instance with id: " + id);
 		try {
 			Provincia instance = (Provincia) sessionFactory.getCurrentSession()
@@ -102,11 +110,11 @@ public class ProvinciaHome {
 			return instance;
 		} catch (RuntimeException re) {
 			log.error("get failed", re);
-			throw re;
+			throw new FindByNotFoundException();
 		}
 	}
 
-	public List<Provincia> findByExample(Provincia instance) {
+	public List<Provincia> findByExample(Provincia instance) throws FindByNotFoundException{
 		log.debug("finding Provincia instance by example");
 		try {
 			List<Provincia> results = (List<Provincia>) sessionFactory
@@ -118,7 +126,21 @@ public class ProvinciaHome {
 			return results;
 		} catch (RuntimeException re) {
 			log.error("find by example failed", re);
-			throw re;
+			throw new FindByNotFoundException();
+		}
+	}
+	
+	public List findAllProvince() throws FindAllEntityException{
+		log.debug("finding All Province");
+		try {
+			List results = sessionFactory.getCurrentSession().createCriteria(
+					"it.infolabs.hibernate.Provincia").list();
+			log.debug("find All Province successful, result size: "
+					+ results.size());
+			return results;
+		} catch (RuntimeException re) {
+			log.error("find All Province failed", re);
+			throw new FindAllEntityException();
 		}
 	}
 }

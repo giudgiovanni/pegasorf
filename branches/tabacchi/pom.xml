@@ -193,5 +193,10 @@
     		<artifactId>rxtx</artifactId>
     		<version>2.1.7</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.0.1-FINAL</version>
+		</dependency>
 	</dependencies>
 </project>

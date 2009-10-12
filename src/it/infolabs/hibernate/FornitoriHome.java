@@ -2,6 +2,11 @@ package it.infolabs.hibernate;
 
 // Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA
 
+import it.infolabs.hibernate.exception.DeleteEntityException;
+import it.infolabs.hibernate.exception.FindByNotFoundException;
+import it.infolabs.hibernate.exception.MergeEntityException;
+import it.infolabs.hibernate.exception.PersistEntityException;
+
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,14 +38,14 @@ public class FornitoriHome extends BusinessObjectHome{
 		return instance;
 	}
 
-	public void persist(Fornitori transientInstance) {
+	public void persist(Fornitori transientInstance) throws PersistEntityException{
 		log.debug("persisting Fornitori instance");
 		try {
 			sessionFactory.getCurrentSession().persist(transientInstance);
 			log.debug("persist successful");
 		} catch (RuntimeException re) {
 			log.error("persist failed", re);
-			throw re;
+			throw new PersistEntityException();
 		}
 	}
 
@@ -66,18 +71,18 @@ public class FornitoriHome extends BusinessObjectHome{
 		}
 	}
 
-	public void delete(Fornitori persistentInstance) {
+	public void delete(Fornitori persistentInstance) throws DeleteEntityException{
 		log.debug("deleting Fornitori instance");
 		try {
 			sessionFactory.getCurrentSession().delete(persistentInstance);
 			log.debug("delete successful");
 		} catch (RuntimeException re) {
 			log.error("delete failed", re);
-			throw re;
+			throw new DeleteEntityException();
 		}
 	}
 
-	public Fornitori merge(Fornitori detachedInstance) {
+	public Fornitori merge(Fornitori detachedInstance) throws MergeEntityException {
 		log.debug("merging Fornitori instance");
 		try {
 			Fornitori result = (Fornitori) sessionFactory.getCurrentSession()
@@ -86,11 +91,11 @@ public class FornitoriHome extends BusinessObjectHome{
 			return result;
 		} catch (RuntimeException re) {
 			log.error("merge failed", re);
-			throw re;
+			throw new MergeEntityException();
 		}
 	}
 
-	public Fornitori findById(long id) {
+	public Fornitori findById(long id) throws FindByNotFoundException{
 		log.debug("getting Fornitori instance with id: " + id);
 		try {
 			Fornitori instance = (Fornitori) sessionFactory.getCurrentSession()
@@ -103,11 +108,11 @@ public class FornitoriHome extends BusinessObjectHome{
 			return instance;
 		} catch (RuntimeException re) {
 			log.error("get failed", re);
-			throw re;
+			throw new FindByNotFoundException();
 		}
 	}
 
-	public List<Fornitori> findByExample(Fornitori instance) {
+	public List<Fornitori> findByExample(Fornitori instance) throws FindByNotFoundException {
 		log.debug("finding Fornitori instance by example");
 		try {
 			List<Fornitori> results = (List<Fornitori>) sessionFactory
@@ -119,7 +124,7 @@ public class FornitoriHome extends BusinessObjectHome{
 			return results;
 		} catch (RuntimeException re) {
 			log.error("find by example failed", re);
-			throw re;
+			throw new FindByNotFoundException();
 		}
 	}
 }

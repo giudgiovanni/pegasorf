@@ -3,13 +3,21 @@
  */
 package rf.pegaso.gui.gestione;
 
+import it.infolabs.hibernate.Fornitori;
+import it.infolabs.hibernate.FornitoriHome;
+import it.infolabs.hibernate.Provincia;
+import it.infolabs.hibernate.ProvinciaHome;
+import it.infolabs.hibernate.exception.FindAllEntityException;
+import it.infolabs.hibernate.exception.FindByNotFoundException;
+import it.infolabs.hibernate.exception.PersistEntityException;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -26,10 +34,6 @@ import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
 import rf.myswing.IDJComboBox;
-import rf.pegaso.db.tabelle.Fornitore;
-import rf.pegaso.db.tabelle.Provincia;
-import rf.utility.db.DBManager;
-import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompletion;
 import rf.utility.gui.text.UpperTextDocument;
@@ -58,10 +62,6 @@ public class FornitoriAdd extends JDialog {
 	private JButton btnChiudi = null;
 
 	private JButton btnInserisci = null;
-
-	private DBManager dbm;
-
-	private int idCliente;
 
 	private JPanel jContentPane = null;
 
@@ -134,18 +134,14 @@ public class FornitoriAdd extends JDialog {
 	/**
 	 * @param owner
 	 */
-	public FornitoriAdd(JDialog owner, DBManager dbm) {
+	public FornitoriAdd(JDialog owner) {
 		super(owner, true);
-		this.dbm = dbm;
-		this.idCliente = idCliente;
 		initialize();
 	}
 
 
-	public FornitoriAdd(JFrame owner, DBManager dbm) {
+	public FornitoriAdd(JFrame owner) {
 		super(owner, true);
-		this.dbm = dbm;
-		this.idCliente = idCliente;
 		initialize();
 	}
 
@@ -177,10 +173,10 @@ public class FornitoriAdd extends JDialog {
 		if (btnInserisci == null) {
 			try {
 				btnInserisci = new JButton();
-				btnInserisci.setText("Inserisci"); // Generated
+				btnInserisci.setText("Inserisci");
 				btnInserisci.addActionListener(new MyActionListener());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return btnInserisci;
@@ -195,8 +191,8 @@ public class FornitoriAdd extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getPnlCentrale(), BorderLayout.CENTER); // Generated
-			jContentPane.add(getJPanel(), BorderLayout.NORTH); // Generated
+			jContentPane.add(getPnlCentrale(), BorderLayout.CENTER);
+			jContentPane.add(getJPanel(), BorderLayout.NORTH);
 		}
 		return jContentPane;
 	}
@@ -219,7 +215,7 @@ public class FornitoriAdd extends JDialog {
 				jPanel.add(getBtnInserisci(), null); // Generated
 				jPanel.add(getBtnChiudi(), null); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return jPanel;
@@ -237,7 +233,7 @@ public class FornitoriAdd extends JDialog {
 				jScrollPane.setBounds(new Rectangle(280, 103, 272, 112)); // Generated
 				jScrollPane.setViewportView(getTxtNote()); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return jScrollPane;
@@ -256,7 +252,7 @@ public class FornitoriAdd extends JDialog {
 						getPnlDatiPersonali(), null); // Generated
 				jTabbedPane.addTab("Altri dati", null, getPnlAltriDati(), null); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return jTabbedPane;
@@ -305,7 +301,7 @@ public class FornitoriAdd extends JDialog {
 				pnlAltriDati.add(getTxtWebSite(), null); // Generated
 				pnlAltriDati.add(getJScrollPane(), null); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return pnlAltriDati;
@@ -323,7 +319,7 @@ public class FornitoriAdd extends JDialog {
 				pnlCentrale.setLayout(new BorderLayout()); // Generated
 				pnlCentrale.add(getJTabbedPane(), BorderLayout.CENTER); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return pnlCentrale;
@@ -378,7 +374,7 @@ public class FornitoriAdd extends JDialog {
 				pnlDatiPersonali.add(getTxtPiva(), null); // Generated
 				pnlDatiPersonali.add(getBtnProvincia(), null);
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return pnlDatiPersonali;
@@ -397,7 +393,7 @@ public class FornitoriAdd extends JDialog {
 				txtCap.setBounds(new Rectangle(6, 131, 81, 20)); // Generated
 				txtCap.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtCap;
@@ -416,7 +412,7 @@ public class FornitoriAdd extends JDialog {
 				txtCell.setBounds(new Rectangle(280, 21, 140, 20)); // Generated
 				txtCell.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtCell;
@@ -435,7 +431,7 @@ public class FornitoriAdd extends JDialog {
 				txtCitta.setBounds(new Rectangle(108, 129, 180, 20)); // Generated
 				txtCitta.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtCitta;
@@ -454,7 +450,7 @@ public class FornitoriAdd extends JDialog {
 				txtCodFisc.setBounds(new Rectangle(6, 172, 140, 20)); // Generated
 				txtCodFisc.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtCodFisc;
@@ -473,7 +469,7 @@ public class FornitoriAdd extends JDialog {
 				txtEmail.setBounds(new Rectangle(280, 62, 272, 20)); // Generated
 				txtEmail.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtEmail;
@@ -492,7 +488,7 @@ public class FornitoriAdd extends JDialog {
 				txtFax.setBounds(new Rectangle(5, 62, 140, 20)); // Generated
 				txtFax.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtFax;
@@ -511,7 +507,7 @@ public class FornitoriAdd extends JDialog {
 				txtNome.setBounds(new Rectangle(6, 49, 366, 20)); // Generated
 				txtNome.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtNome;
@@ -529,7 +525,7 @@ public class FornitoriAdd extends JDialog {
 				txtNote.setDocument(new UpperTextDocument());
 				txtNote.setLineWrap(true);
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtNote;
@@ -548,7 +544,7 @@ public class FornitoriAdd extends JDialog {
 				txtPiva.setBounds(new Rectangle(152, 170, 140, 20)); // Generated
 				txtPiva.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtPiva;
@@ -567,7 +563,7 @@ public class FornitoriAdd extends JDialog {
 				cmbProvincia.setBounds(new Rectangle(302, 127, 180, 20)); // Generated
 
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return cmbProvincia;
@@ -586,7 +582,7 @@ public class FornitoriAdd extends JDialog {
 				txtTel.setBounds(new Rectangle(5, 21, 140, 20)); // Generated
 				txtTel.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtTel;
@@ -605,7 +601,7 @@ public class FornitoriAdd extends JDialog {
 				txtVia.setBounds(new Rectangle(6, 90, 366, 20)); // Generated
 				txtVia.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtVia;
@@ -624,7 +620,7 @@ public class FornitoriAdd extends JDialog {
 				txtWebSite.setBounds(new Rectangle(5, 103, 270, 20)); // Generated
 				txtWebSite.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtWebSite;
@@ -646,26 +642,33 @@ public class FornitoriAdd extends JDialog {
 	}
 
 	private void inserisci() {
-		Fornitore c = new Fornitore();
-		c.setNome(txtNome.getText());
-		c.setPiva(txtPiva.getText());
-		c.setCodfisc(txtCodFisc.getText());
-		c.setVia(txtVia.getText());
-		c.setCap(txtCap.getText());
-		c.setCitta(txtCitta.getText());
-		c.setProvincia(new Integer(cmbProvincia.getIDSelectedItem()));
-		c.setTelefono(txtTel.getText());
-		c.setCellulare(txtCell.getText());
-		c.setFax(txtFax.getText());
-		c.setEmail(txtEmail.getText());
-		c.setWebsite(txtWebSite.getText());
-		c.setNote(txtNote.getText());
 		try {
-			c.insertFornitore();
-		} catch (IDNonValido e) {
-			JOptionPane.showMessageDialog(this, "Valore idFornitore errato",
+			FornitoriHome.getInstance().begin();
+			Fornitori fornitore = new Fornitori();
+			fornitore.setNome(txtNome.getText());
+			fornitore.setPiva(txtPiva.getText());
+			fornitore.setCodfisc(txtCodFisc.getText());
+			fornitore.setVia(txtVia.getText());
+			fornitore.setCap(txtCap.getText());
+			fornitore.setCitta(txtCitta.getText());
+			fornitore.setProvincia(ProvinciaHome.getInstance().findById(new Integer(cmbProvincia.getIDSelectedItem())));
+			fornitore.setTel(txtTel.getText());
+			fornitore.setCell(txtCell.getText());
+			fornitore.setFax(txtFax.getText());
+			fornitore.setEmail(txtEmail.getText());
+			fornitore.setWebsite(txtWebSite.getText());
+			fornitore.setNote(txtNote.getText());		
+			FornitoriHome.getInstance().persist(fornitore);
+		} catch (PersistEntityException pe) {
+			JOptionPane.showMessageDialog(this, pe.toString(),
 					"ERRORE", JOptionPane.ERROR_MESSAGE);
+			pe.printStackTrace();
+		} catch (NumberFormatException e) {
 			e.printStackTrace();
+		} catch (FindByNotFoundException fe) {
+			JOptionPane.showMessageDialog(this, fe.toString(),
+					"ERRORE", JOptionPane.ERROR_MESSAGE);
+			fe.printStackTrace();
 		}
 		dispose();
 
@@ -684,7 +687,7 @@ public class FornitoriAdd extends JDialog {
 			btnProvincia.setText("...");
 			btnProvincia.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					gestioneProvincia(); // TODO Auto-generated Event stub actionPerformed()
+					gestioneProvincia();
 				}
 			});
 		}
@@ -701,19 +704,20 @@ public class FornitoriAdd extends JDialog {
 
 
 	private void caricaProvince(JComboBox cmbProvince) {
-		Provincia f = new Provincia();
+		List<Provincia> resultList;
 		try {
-			String as[] = (String[]) f.allProvincie();
-			// carichiamo tutti i dati in due array
-			// da passre al combobox
-			((IDJComboBox) cmbProvince).caricaNewValueComboBox(as, true);
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(this,
-					"Errore caricamento province nel combobox", "ERRORE", 0);
+			resultList = ProvinciaHome.getInstance().findAllProvince();
+		} catch (FindAllEntityException e) {
 			e.printStackTrace();
+			return;
 		}
+		String as[] = new String[resultList.size()];
+		for ( int i = 0; i < resultList.size(); i++ ){
+			as[i] = resultList.get(i).getIdprovincia()+"-"+resultList.get(i).getProvincia();
+		}
+		// carichiamo tutti i dati in due array
+		// da passre al combobox
+		((IDJComboBox) cmbProvince).caricaNewValueComboBox(as, true);
 		AutoCompletion.enable(cmbProvince);
 	}
-
-
-} // @jve:decl-index=0:visual-constraint="10,10"
+}

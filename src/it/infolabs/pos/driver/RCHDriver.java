@@ -52,8 +52,7 @@ public class RCHDriver implements PosDriver {
 	private OutputStream out=null;
 	
 	
-	public RCHDriver(String commPort){
-		this.commPort=commPort;
+	public RCHDriver(){
 		
 	}
 
@@ -95,6 +94,18 @@ public class RCHDriver implements PosDriver {
 	 */
 	@Override
 	public void openDeviceConnection() throws PosException {
+		// ora carichiamo il file di properties con i comandi
+		// e le varie configurazioni da fare
+		props=new Properties();
+		try {
+			props.load(new FileInputStream("rch.properties"));
+		} catch (FileNotFoundException e) {
+			throw new PosException("File di properties rch non trovato",e);
+		} catch (IOException e) {
+			throw new PosException("Errore I/O causato dal file di properties",e);
+		}
+		this.commPort=props.getProperty("name");
+		
 		// effettuiamo una enumerazione su tutte le porte disponibili
 		Enumeration en = CommPortIdentifier.getPortIdentifiers();
 		boolean trovato=false;
@@ -111,7 +122,11 @@ public class RCHDriver implements PosDriver {
 			// una volta trovata apriamo la connessione
 			try {
 				serialPort =(SerialPort) id.open("pegaso", 5000);
-				serialPort.setSerialPortParams(9600, SerialPort.DATABITS_8,SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+				int boundrate=new Integer(props.getProperty("bound", "9600"));
+				int databits=new Integer(props.getProperty("databits", "8"));
+				int stopbits=new Integer(props.getProperty("stopbits", "1"));
+				int parity=new Integer(props.getProperty("parity", "0"));
+				serialPort.setSerialPortParams(boundrate, databits,stopbits, parity);
 				out=serialPort.getOutputStream();
 				this.open=true;
 			} catch (PortInUseException e) {
@@ -123,16 +138,7 @@ public class RCHDriver implements PosDriver {
 			}
 		}
 		
-		// ora carichiamo il file di properties con i comandi
-		// e le varie configurazioni da fare
-		props=new Properties();
-		try {
-			props.load(new FileInputStream("rchcommand.properties"));
-		} catch (FileNotFoundException e) {
-			throw new PosException("File di properties rchcommand non trovato",e);
-		} catch (IOException e) {
-			throw new PosException("Errore I/O causato dal file di properties",e);
-		}
+		
 	}
 
 	/* (non-Javadoc)
@@ -149,7 +155,21 @@ public class RCHDriver implements PosDriver {
 			//cifre senza virgola
 			int price=(int)amount*100;
 			StringBuffer sb=new StringBuffer();
-			sb.append("=R/").append("$").append(price).append("/*").append(row.getQta());
+			String reparto="";
+			switch(row.getReparto()){
+			case 0: reparto="=R";
+			case 1: reparto="=R1";
+			case 2: reparto="=R2";
+			case 3: reparto="=R3";
+			case 4: reparto="=R4";
+			default: reparto="=R";
+			}
+			if(row.getQta()>1){
+				sb.append(reparto).append("$").append(price).append("/*").append(row.getQta());
+			}else{
+				sb.append(reparto).append("$").append(price);
+			}
+			
 			// invia il comando al registratore
 			try {
 				send(sb.toString());
@@ -219,7 +239,7 @@ public class RCHDriver implements PosDriver {
 	
 	
 	public static void main(String args[]){
-		RCHDriver driver=new RCHDriver("");
+		RCHDriver driver=new RCHDriver();
 		List<String> elenco=driver.getAllCommPort();
 		Iterator<String> it=elenco.iterator();
 		while(it.hasNext()){

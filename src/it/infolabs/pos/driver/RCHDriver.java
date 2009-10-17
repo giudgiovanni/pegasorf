@@ -9,7 +9,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Iterator;
 import java.util.Properties;
+
 
 import rf.utility.MathUtility;
 
@@ -199,6 +203,28 @@ public class RCHDriver implements PosDriver {
 	@Override
 	public boolean isOpenDeviceConnection() {
 		return open;
+	}
+	
+	public List getAllCommPort(){
+		// effettuiamo una enumerazione su tutte le porte disponibili
+		List<String> elenco=new LinkedList<String>();
+		Enumeration en = CommPortIdentifier.getPortIdentifiers();
+		boolean trovato=false;
+		while (en.hasMoreElements()) {
+		  CommPortIdentifier tmp = (CommPortIdentifier)en.nextElement();
+		  elenco.add(tmp.getName());
+		}
+		return elenco;
+	}
+	
+	
+	public static void main(String args[]){
+		RCHDriver driver=new RCHDriver("");
+		List<String> elenco=driver.getAllCommPort();
+		Iterator<String> it=elenco.iterator();
+		while(it.hasNext()){
+			System.out.println(it.next());
+		}
 	}
 
 }

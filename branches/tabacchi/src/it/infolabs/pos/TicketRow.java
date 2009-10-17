@@ -10,6 +10,8 @@ public class TicketRow {
 	
 	private float prezzo;
 	
+	private int reparto;
+	
 	/**
 	 * 
 	 */
@@ -66,6 +68,14 @@ public class TicketRow {
 
 	public void setPrezzo(float prezzo) {
 		this.prezzo = prezzo;
+	}
+
+	public int getReparto() {
+		return reparto;
+	}
+	
+	public void setReparto(int reparto){
+		this.reparto=reparto;
 	}
 	
 	

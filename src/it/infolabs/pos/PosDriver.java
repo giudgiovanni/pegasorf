@@ -21,8 +21,9 @@ public interface PosDriver {
 	/**
 	 * Chiude la connessione con il device e rilascia tutte le risorse
 	 * eventualmente occupate
+	 * @throws PosException 
 	 */
-	public void closeDeviceConnection();
+	public void closeDeviceConnection() throws PosException;
 	
 	/**
 	 * Avvia la stampa di un nuovo Ticket
@@ -32,19 +33,22 @@ public interface PosDriver {
 	
 	/**
 	 * Ferma la stampa del ticket e chiude eventuali totali
+	 * @throws PosException 
 	 */
-	public void stopTicket();
+	public void stopTicket() throws PosException;
 	
 	/**
 	 * Avvia il cutter della stampante fiscale
+	 * @throws PosException 
 	 */
-	public void cutTicket();
+	public void cutTicket() throws PosException;
 	
 	/**
 	 * Manda in stampa un ticket
 	 * @param ticket lo scontrino da stampare
+	 * @throws PosException 
 	 */
-	public void printTicket(Ticket ticket);
+	public void printTicket(Ticket ticket) throws PosException;
 	
 	/**
 	 * Indica se la connessione al device è aperta oppure no

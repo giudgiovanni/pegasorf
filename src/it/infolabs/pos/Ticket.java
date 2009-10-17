@@ -37,6 +37,19 @@ public class Ticket {
 		this.type=type;
 		rows=new LinkedList<TicketRow>();
 	}
+	
+	/**
+	 * Ritorna un iteratore dei ticket row
+	 * @return ListIterator
+	 */
+	public ListIterator<TicketRow> ticketRowIterator(){
+		ListIterator<TicketRow> list=null;
+		if(this.rows!=null){
+			list=this.rows.listIterator();
+			return list;
+		}
+		return list;
+	}
 
 
 	/**

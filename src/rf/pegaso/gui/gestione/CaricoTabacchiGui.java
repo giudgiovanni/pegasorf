@@ -3067,6 +3067,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			btnModelloXls.setBounds(new Rectangle(645, 155, 170, 25));
 			btnModelloXls.setText("Modello XLS Web");
 			btnModelloXls.setEnabled(false);
+			btnModelloXls.setVisible(false);
 			btnModelloXls.addActionListener(new MyButtonListener());
 		}
 		return btnModelloXls;

@@ -3,6 +3,11 @@ package rf.pegaso.gui.internalframe;
 import it.infolabs.hibernate.Articoli;
 import it.infolabs.hibernate.Pannelli;
 import it.infolabs.hibernate.PannelliHome;
+import it.infolabs.pos.PosDriver;
+import it.infolabs.pos.PosException;
+import it.infolabs.pos.Ticket;
+import it.infolabs.pos.TicketRow;
+import it.infolabs.pos.driver.RCHDriver;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -60,7 +65,7 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
 	private JPanel pnlPulsantiFunzioni = null;
-	private JButton btnRicercaAvanzata = null;
+	private JButton btnElaboraScontrinoFiscale = null;
 	private JTextField txtFieldRicerca = null;
 	private JPanel pnlFunzioniCassa = null;
 	private JPanelRiepilogoVendita pannelloCarrello = null;
@@ -232,8 +237,8 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 		}
 	}
 	
-	private void elaboraScontrino(){
-		if ( pannelloCarrello.registraScarico() ){
+	private void elaboraScontrino(boolean scontrino){
+		if ( pannelloCarrello.registraScarico(scontrino) ){
 			messaggioAVideo("Vendita effettuata con successo", "INFO");
 			resetGUI();
 		}
@@ -243,6 +248,8 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 		txtFieldRicerca.requestFocusInWindow();
 	}
 	
+	
+
 	//inizializza o resetta le variabili iniziali di sistema
 	 private void stateToZero(){
 		 importo = "";
@@ -422,7 +429,10 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 			}
 			else if ( e.getSource() == btnElaboraScontrino ){
 				// Registriamo la vendita
-				elaboraScontrino();
+				elaboraScontrino(false);
+			}
+			else if(e.getSource()==btnElaboraScontrinoFiscale){
+				elaboraScontrino(true);
 			}
 			else if ( e.getSource() == btnContanti ){
 				if ( !tastieraCassaAttiva ){
@@ -549,7 +559,12 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 		});
 		this.getRootPane().getActionMap().put("F2", new AbstractAction() {
 			public void actionPerformed(ActionEvent a) {
-				elaboraScontrino();
+				elaboraScontrino(false);
+			}
+		});
+		this.getRootPane().getActionMap().put("F1", new AbstractAction() {
+			public void actionPerformed(ActionEvent a) {
+				elaboraScontrino(true);
 			}
 		});
 		this.getRootPane().getActionMap().put("F3", new AbstractAction() {
@@ -754,12 +769,13 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnRicercaAvanzata() {
-		if (btnRicercaAvanzata == null) {
-			btnRicercaAvanzata = new JButton();
-			btnRicercaAvanzata.setBounds(new Rectangle(240, 25, 130, 50));
-			btnRicercaAvanzata.setText("...");
+		if (btnElaboraScontrinoFiscale == null) {
+			btnElaboraScontrinoFiscale = new JButton();
+			btnElaboraScontrinoFiscale.setBounds(new Rectangle(240, 25, 130, 50));
+			btnElaboraScontrinoFiscale.setText("<html>Stampa (F1)<P>Scontrino</html>");
+			btnElaboraScontrinoFiscale.addActionListener(new MyButtonListener());
 		}
-		return btnRicercaAvanzata;
+		return btnElaboraScontrinoFiscale;
 	}
 
 	/**
@@ -1265,7 +1281,7 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 		if (btnElaboraScontrino == null) {
 			btnElaboraScontrino = new JButton();
 			btnElaboraScontrino.setBounds(new Rectangle(390, 25, 130, 50));
-			btnElaboraScontrino.setText("<html>Stampa (F2)<P>Scontrino</html>");
+			btnElaboraScontrino.setText("<html>Stampa (F2)</html>");
 			btnElaboraScontrino.addActionListener(new MyButtonListener());
 			
 		}

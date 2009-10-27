@@ -246,7 +246,7 @@ public class VenditaInternalFrameOLD extends JInternalFrame{
 	}
 	
 	private void elaboraScontrino(){
-		if ( pannelloCarrello.registraScarico() ){
+		if ( pannelloCarrello.registraScarico(true) ){
 			messaggioAVideo("Vendita effettuata con successo", "INFO");
 			resetGUI();
 		}

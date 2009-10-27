@@ -1,5 +1,10 @@
 package rf.pegaso.gui.vendita.panel;
 
+import it.infolabs.pos.PosException;
+import it.infolabs.pos.Ticket;
+import it.infolabs.pos.TicketRow;
+import it.infolabs.pos.driver.RCHDriver;
+
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -32,6 +37,7 @@ import org.jdesktop.swingx.decorator.AlternateRowHighlighter;
 
 import rf.pegaso.db.tabelle.DettaglioOrdine;
 import rf.pegaso.db.tabelle.Scarico;
+import rf.pegaso.gui.InitialGUI;
 import rf.utility.Constant;
 import rf.utility.ControlloDati;
 import rf.utility.MathUtility;
@@ -389,7 +395,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 				}
 			else {
 				DettaglioOrdine tmp = carrello.get(contiene);
-				// Se  un articolo a qtaInfinita o la qta  disponibile, inseriamo direttamente
+				// Se   un articolo a qtaInfinita o la qta   disponibile, inseriamo direttamente
 				if ( ord.isQtaInfinita() || ord.getDisponibilita() >= (tmp.getQta() + ord.getQta()) ){
 					// aggiungiamo alla quantita' gia' presente la nuova
 					// quantita' da aggiungere
@@ -410,8 +416,36 @@ public class JPanelRiepilogoVendita extends JPanel {
 		modello.fireTableDataChanged();
 		return 1;
 	}
+	
+	private void stampaScontrino() {
+		Object[] dv=carrello.toArray();
+		Ticket t=new Ticket();
+		for(int i=0;i<dv.length;i++){
+			DettaglioOrdine d=(DettaglioOrdine)dv[i];
+			TicketRow row=new TicketRow();
+			row.setDescrizione(d.getDescrizione());
+			row.setIva(d.getIva());
+			row.setPrezzo(((Number)d.getPrezzoVendita()).floatValue());
+			row.setQta(((Number)d.getQta()).floatValue());
+			row.setReparto(1);
+			t.addTicketRow(row);
+		}
+		RCHDriver driver=new RCHDriver();
+		try {
+			driver.openDeviceConnection();
+			driver.startTicket();
+			driver.printTicket(t);
+			driver.stopTicket();
+			driver.cutTicket();
+			driver.closeDeviceConnection();
+		} catch (PosException e) {
+			messaggioAVideo(e.getMessage(), "ERROR");
+//			e.printStackTrace();
+		}
+		
+	}
 
-	public boolean registraScarico() {
+	public boolean registraScarico(boolean scontrino) {
 		// PUNTO DI BACKUP DA ATTIVARE DA CONFIGURAZIONI
 		try {
 			UtilityDBManager.getSingleInstance().backupDataBase(
@@ -466,10 +500,14 @@ public class JPanelRiepilogoVendita extends JPanel {
 					return false;
 				}
 			}
+			if(scontrino){
+				stampaScontrino();
+			}
+			
 			azzeraCarrello();
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			messaggioAVideo(e.getMessage(), "ERROR");
 			return false;
 		}
 	}
@@ -697,5 +735,10 @@ public class JPanelRiepilogoVendita extends JPanel {
 		if(tblVendite!=null){
 			tblVendite.getModel().addTableModelListener(modelListener);
 		}
+	}
+	
+	private void messaggioAVideo(String testo, String tipo) {
+		JOptionPane.showMessageDialog(InitialGUI.getMainInstance(), testo, tipo,
+				JOptionPane.INFORMATION_MESSAGE);
 	}
 }

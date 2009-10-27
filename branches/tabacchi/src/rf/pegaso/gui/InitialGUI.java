@@ -97,6 +97,8 @@ public class InitialGUI extends JFrame {
 
 	private JButton jButton = null;
 
+	private static InitialGUI mainInstance;
+
 	/**
 	 * This is the default constructor
 	 */
@@ -525,6 +527,9 @@ public class InitialGUI extends JFrame {
 		// Centriamo il frame sullo schermo
 		UtilGUI.centraFrame(this);
 
+		if (mainInstance==null) {
+            mainInstance = this;
+        }
 
 		//effettuiamo il backup del db all'apertura se impostato si
 		try {
@@ -536,8 +541,10 @@ public class InitialGUI extends JFrame {
 			JOptionPane.showMessageDialog(this, "File di configurazione per backup\nmancante o danneggiato", "ERRORE FILE", JOptionPane.ERROR_MESSAGE);
 			e1.printStackTrace();
 		}
-
-
+	}
+	
+	public static InitialGUI getMainInstance(){
+		return mainInstance;
 	}
 
 	/**

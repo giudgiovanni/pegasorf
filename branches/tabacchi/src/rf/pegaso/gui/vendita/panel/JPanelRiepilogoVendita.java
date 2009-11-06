@@ -1,5 +1,8 @@
 package rf.pegaso.gui.vendita.panel;
 
+import it.infolabs.hibernate.Articoli;
+import it.infolabs.hibernate.ArticoliHome;
+import it.infolabs.hibernate.Reparti;
 import it.infolabs.pos.PosException;
 import it.infolabs.pos.Ticket;
 import it.infolabs.pos.TicketRow;
@@ -427,7 +430,20 @@ public class JPanelRiepilogoVendita extends JPanel {
 			row.setIva(d.getIva());
 			row.setPrezzo(((Number)d.getPrezzoVendita()).floatValue());
 			row.setQta(((Number)d.getQta()).floatValue());
-			row.setReparto(1);
+			
+			// recuperiamo l'articolo e verifichiamo il suo
+			// reparto di appartenenza in modo da impostarlo nello scontrino.
+			Articoli art=ArticoliHome.getInstance().findById(d.getIdArticolo());
+			Reparti reparto=art.getReparti();
+			long idReparto=reparto.getIdreparto();
+			
+			// se id reparto è uguale ad 1 o uguale a 4 impostiamo come
+			// reparto scontrino quello del reparto 5 del registratore di cassa.
+			if(idReparto==1 || idReparto==4){
+				row.setReparto(5);
+			}else {
+				row.setReparto(1);
+			}
 			t.addTicketRow(row);
 		}
 		RCHDriver driver=new RCHDriver();

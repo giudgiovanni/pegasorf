@@ -162,6 +162,7 @@ public class RCHDriver implements PosDriver {
 			case 2: reparto="=R2";
 			case 3: reparto="=R3";
 			case 4: reparto="=R4";
+			case 5: reparto="=R5";
 			default: reparto="=R";
 			}
 			if(row.getQta()>1){

@@ -61,10 +61,10 @@ public class RCHDriver implements PosDriver {
 	 */
 	@Override
 	public void closeDeviceConnection() throws PosException {
-		this.serialPort.close();
 		try {
 			this.out.flush();
 			this.out.close();
+			this.serialPort.close();
 		} catch (IOException e) {
 			throw new PosException("Errore chiusura device",e);
 		}

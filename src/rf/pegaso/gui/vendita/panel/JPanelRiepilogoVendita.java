@@ -433,6 +433,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 			
 			// recuperiamo l'articolo e verifichiamo il suo
 			// reparto di appartenenza in modo da impostarlo nello scontrino.
+			ArticoliHome.getInstance().begin();
 			Articoli art=ArticoliHome.getInstance().findById(d.getIdArticolo());
 			Reparti reparto=art.getReparti();
 			long idReparto=reparto.getIdreparto();

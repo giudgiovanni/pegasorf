@@ -31,11 +31,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.print.PrinterException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -44,15 +44,10 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-import java.util.Vector;
 
-import javax.print.PrintService;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.InputMap;
@@ -60,6 +55,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -79,8 +75,6 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import jxl.Cell;
-import jxl.Sheet;
 import jxl.Workbook;
 import jxl.write.Label;
 import jxl.write.WritableSheet;
@@ -90,7 +84,6 @@ import jxl.write.biff.RowsExceededException;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
@@ -104,8 +97,6 @@ import rf.myswing.util.DoubleEditor;
 import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.pegaso.db.exception.ResultSetVuoto;
 import rf.pegaso.db.model.CaricoModel;
-import rf.pegaso.db.model.DdtCaricoModel;
-import rf.pegaso.db.model.DdtFatturaModel;
 import rf.pegaso.db.model.OrdiniTabacchiViewModel;
 import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.Carico;
@@ -116,9 +107,7 @@ import rf.utility.Constant;
 import rf.utility.ControlloDati;
 import rf.utility.MathUtility;
 import rf.utility.db.DBManager;
-import rf.utility.db.MyResultSet;
 import rf.utility.db.UtilityDBManager;
-import rf.utility.db.eccezzioni.CodiceBarreEsistente;
 import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.SospesiColorRenderer;
 import rf.utility.gui.UtilGUI;
@@ -129,9 +118,6 @@ import rf.utility.gui.text.UpperTextDocument;
 
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
-
-// Referenced classes of package rf.pegaso.gui.gestione:
-//            ArticoliAddMod, ArticoliGestione
 
 public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	class MyButtonListener implements ActionListener {
@@ -168,7 +154,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			else if ( e.getSource() == btnStampaU88Fax )
 				stampaModelloU88Fax();
 			else if ( e.getSource() == btnModelloXls )
-//				test();
 				stampaModelloXls();
 		}
 
@@ -194,7 +179,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 							.intValue();
 					caricaArticoloByID(id);
 				}
-
 			}
 		}
 
@@ -266,8 +250,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	}
 
 	public void caricaOrdine() {
-
-		// TODO: da implementare
 		if (tblViewCarichi.getSelectedRow() <= -1) {
 			JOptionPane.showMessageDialog(this, "Selezionare un righa",
 					"AVVISO", 1);
@@ -307,8 +289,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 			// Inseriamo il carico come fattura di acquisto
 			c.caricaDati(idcarico);
-			int rifdoc = c.getRiferimentoDoc();
-			int doc = c.getIdDocumento();
 			int newDocumento = DBManager.getIstanceSingleton().getNewID(
 					"carichi", "idcarico");
 			c.setIdCarico(newDocumento);
@@ -546,15 +526,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 	}
 
-	private void azzeraTesto() {
-		txtCodBarre.setText("");
-		txtFldCodiceAams.setText("");
-		txtUm.setText("");
-		txtQta.setValue(new Double(0.0));
-		txtPrezzo.setText("");
-		txtNote.setText("");
-	}
-
 	private void azzeraTuttiCampi() {
 		Carico c = new Carico();
 		idcarico = c.getNewID();
@@ -579,51 +550,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			e.printStackTrace();
 		}
 		// per abilitare autocompletamento
-		AutoCompletion.enable(cmbProdotti);
-	}
-
-	private void caricaArticoliByIdFornitore(int idfornitore) {
-		// Articolo f = new Articolo();
-		// cmbProdotti.removeAllItems();
-		// cmbProdotti.addItem("");
-		// String tmpArticoli[] = null;
-		// String tmpCodici[] = null;
-		// try {
-		// String as[] = f.allArticoliByFornitore(idfornitore);
-		// tmpArticoli = new String[as.length];
-		// tmpCodici = new String[as.length];
-		// // carichiamo tutti i dati in due array
-		// // da passre al combobox
-		// for (int i = 0; i < as.length; i++) {
-		// String tmp[] = as[i].split("-",2);
-		// tmpArticoli[i] = tmp[1].trim();
-		// tmpCodici[i] = tmp[0].trim();
-		// }
-		// ((IDJComboBox) cmbProdotti).caricaIDAndOggetti(tmpCodici,
-		// tmpArticoli);
-		//
-		// } catch (SQLException e) {
-		// JOptionPane.showMessageDialog(this,
-		// "Errore caricamento articoli nel combobox", "ERRORE", 0);
-		// e.printStackTrace();
-		// } catch (LunghezzeArrayDiverse e) {
-		// JOptionPane.showMessageDialog(this, "Errore lunghezza array",
-		// "ERRORE LUNGHEZZA", 0);
-		// e.printStackTrace();
-		// }
-
-		Articolo f = new Articolo();
-		try {
-			String as[] = f.allArticoliByFornitore(idfornitore);
-			// carichiamo tutti i dati in due array
-			// da passre al combobox
-			((IDJComboBox) cmbProdotti).caricaNewValueComboBox(as, true);
-
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(this,
-					"Errore caricamento articoli nel combobox", "ERRORE", 0);
-			e.printStackTrace();
-		}
 		AutoCompletion.enable(cmbProdotti);
 	}
 
@@ -716,16 +642,12 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	}
 
 	public void tableChanged(TableModelEvent arg0) {
-		// TODO Auto-generated method stub
-
 		Carico c = new Carico();
 		try {
-			c.caricaDati(new Integer(idcarico));//txtNumeroCarico.getText()).intValue());
+			c.caricaDati(new Integer(idcarico));
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		calcoli(c);
@@ -745,113 +667,9 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			messaggioErroreCampo("Errore caricamento dati db");
 			e.printStackTrace();
 		}
-
-		// cmbFornitori.setSelectedItem(f.getNome());
-		// cmbFornitori.setSelectedItemByID(f.getIdFornitore());
-
-		// txtSconto.setValue(c.getSconto());
 		ricaricaTableCarico(c.getIdCarico());
 		tbp.setSelectedIndex(0);
 		calcoli(c);
-	}
-
-	private void caricaDatiArticolo() {
-		int idarticolo = new Integer(cmbProdotti.getIDSelectedItem());
-		Articolo a = new Articolo();
-		try {
-			a.caricaDati(idarticolo);
-			txtCodBarre.setText(a.getCodBarre());
-			txtFldCodiceAams.setText(a.getCodFornitore());
-			txtUm.setText((new Integer(a.getUm())).toString());
-			txtQta.setValue((new Double(1.0)));
-			txtPrezzo.setValue(new Double(a.getPrezzoAcquisto()));
-		} catch (SQLException e1) {
-			erroreCaricamentoDatiDB();
-			e1.printStackTrace();
-		}
-	}
-
-	private void caricaDocumenti(JComboBox cmbDocumenti) {
-
-		Documento f = new Documento();
-		try {
-
-			String as[] = (String[]) f.allDocumentiConDescrizione();
-			// carichiamo tutti i dati in due array
-			// da passre al combobox
-			((IDJComboBox) cmbDocumenti).caricaNewValueComboBox(as, true);
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(this,
-					"Errore caricamento documenti nel combobox", "ERRORE", 0);
-			e.printStackTrace();
-		}
-		AutoCompletion.enable(cmbDocumenti);
-	}
-
-	private void caricaFornitori(JComboBox cmbFornitori) {
-		cmbFornitori.removeAllItems();
-		Fornitore f = new Fornitore();
-		try {
-
-			String as[] = (String[]) f.allFornitori();
-			// carichiamo tutti i dati in due array
-			// da passre al combobox
-			((IDJComboBox) cmbFornitori).caricaNewValueComboBox(as, true);
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(this,
-					"Errore caricamento fornitori nel combobox", "ERRORE", 0);
-			e.printStackTrace();
-		}
-		AutoCompletion.enable(cmbFornitori);
-	}
-
-	private void controlloAggPrezzo() {
-		Articolo a = new Articolo();
-		try {
-			try {
-				a.caricaDatiByCodBarre(txtCodBarre.getText());
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} catch (IDNonValido e) {
-			JOptionPane.showMessageDialog(this, "Id non valido", "AVVISO", 1);
-			e.printStackTrace();
-		}
-		double pNuovo = 0.0D;
-		if (txtPrezzo.getValue() instanceof Long)
-			pNuovo = ((Long) txtPrezzo.getValue()).longValue();
-		else
-			pNuovo = ((Double) txtPrezzo.getValue()).doubleValue();
-		if (!prezzoUguale(pNuovo, a.getIdArticolo())) {
-			int scelta = JOptionPane
-					.showConfirmDialog(
-							this,
-							"Vuoi aggiornare il prezzo del prodotto\ncon il prezzo corrente di acquisto?",
-							"AVVISO DI AGGIORNAMENTO", 0);
-			if (scelta == JOptionPane.YES_OPTION) {
-				try {
-					a.setPrezzoAcquisto(pNuovo);
-				} catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(this, "Numero malformato",
-							"NUMERO ERRATO", 0);
-					e.printStackTrace();
-				}
-				try {
-					a.updateArticolo();
-				} catch (IDNonValido e) {
-					e.printStackTrace();
-				} catch (CodiceBarreEsistente e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (CodiceBarreInesistente e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
 	}
 
 	private void eliminaArticolo() {
@@ -1076,7 +894,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	}
 
 	protected void caricaArticoloByID(int id) {
-		// TODO Auto-generated method stub
 		Articolo a = new Articolo();
 
 		try {
@@ -1561,9 +1378,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		UtilGUI.centraFrame(this);
 		txtNumeroCarico.setText((new Integer(dbm.getNewID("carichi", "riferimento_ordine"))).toString());
 		dataCarico.setDate(new java.util.Date());
-		// caricaFornitori(cmbFornitori);
 		caricaArticoli(cmbProdotti);
-		// caricaDocumenti(cmbTipoDocumento);
 		inizializzaListeners();
 
 	}
@@ -1572,7 +1387,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		myComboBoxListener = new MyComboBoxListener();
 		myButtonListener = new MyButtonListener();
 		myMouseadapter = new MyMouseAdapter();
-		// cmbFornitori.addActionListener(myComboBoxListener);
 		btnInserisci.addActionListener(myButtonListener);
 		btnElimina.addActionListener(myButtonListener);
 		btnChiudi.addActionListener(myButtonListener);
@@ -2064,24 +1878,10 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			JOptionPane.showMessageDialog(this, "Errore nel db", "ERRORE", 2);
 			e.printStackTrace();
 		} catch (IDNonValido e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ResultSetVuoto e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-
-	private boolean prezzoUguale(double pNuovo, int idArticolo) {
-		Articolo a = new Articolo();
-		try {
-			a.caricaDati(idArticolo);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		double pAttuale = a.getPrezzoAcquisto();
-		double prezzoNuovo = pNuovo;
-		return pAttuale == prezzoNuovo;
 	}
 
 	private void ricaricaTableCarico(int idCarico) {
@@ -2329,38 +2129,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 
 	private JTextField txtTotaleIng = null;
 
-	private DecimalFormat notaz = null;
-
-	private DecimalFormat notaz1 = null;
-
-	private Vector carrello = null;
-
-	private Vector colonne = null;
-
-	private JPanel jPanelOvest = null;
-
-	private JXTable jTableDdt = null;
-
-	private DdtFatturaModel ddtModel = null;
-
-	private DdtFatturaModel ddtModel1 = null;
-
-	private JPanel jPanelOvest1 = null;
-
-	private JScrollPane jScrollPane111 = null;
-
-	private DdtFatturaModel ddtModel11 = null;
-
-	private int id_ddt;
-
-	private DdtCaricoModel modelloDdtCarico;
-
-	private GregorianCalendar time1 = null;
-
-	private JTable tblDDT1 = null;
-
-	private DdtCaricoModel modelloDdtCarico1 = null;
-
 	private JButton btnCaricaOrdine = null;
 
 	private JButton btnSogliaMinima = null;
@@ -2553,26 +2321,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 	}
 
 	/**
-	 * @param string
-	 */
-	private void messaggioCampoMancante(String testo, String tipo) {
-		JOptionPane.showMessageDialog(this, testo, tipo,
-				JOptionPane.INFORMATION_MESSAGE);
-	}
-
-	/**
-	 * This method initializes time1
-	 * 
-	 * @return java.util.GregorianCalendar
-	 */
-	private GregorianCalendar getTime1() {
-		if (time1 == null) {
-			time1 = (GregorianCalendar) Calendar.getInstance();
-		}
-		return time1;
-	}
-
-	/**
 	 * This method initializes btnCaricaOrdine
 	 * 
 	 * @return javax.swing.JButton
@@ -2626,14 +2374,12 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		try {
 			prop.load(new FileInputStream("dati_u88fax.properties"));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		Map par = new HashMap();
+		HashMap<String, Object> par = new HashMap<String, Object>();
 		par.put("nome", prop.getProperty("nome"));
 		par.put("cognome", prop.getProperty("cognome"));
 		par.put("di", prop.getProperty("di"));
@@ -2642,27 +2388,23 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		par.put("telefono", prop.getProperty("telefono"));
 		par.put("data_consegna", dataCarico.getDate());
 
-		Carico c = new Carico();
 		try {
-//			Integer num = new Integer(txtNumeroCarico.getText()).intValue();
-			String query = "SELECT A.idarticolo, a.codFornitore, A.codBarre, A.descrizione, A.iva, A.um, D.qta, D.prezzo_Acquisto "
-					+ "FROM Articoli AS A, Carichi AS C, Dettaglio_Carichi AS D, Fornitori AS F "
-					+ "WHERE A.idArticolo=D.idArticolo AND C.idCarico=D.idCarico AND C.idFornitore=F.idFornitore and C.idcarico="
-					+ idcarico;
+			CarichiHome.getInstance().begin();
+			String query = "SELECT A, D.qta "
+				+ "FROM Articoli AS A, Carichi AS C, DettaglioCarichi AS D, Fornitori AS F "
+				+ "WHERE A.idarticolo=D.articoli.idarticolo AND C.idcarico=D.carichi.idcarico AND C.fornitori.idfornitore=F.idfornitore and C.idcarico="
+				+ idcarico;
+			ArrayList<Object[]> resultList = (ArrayList<Object[]>)CarichiHome.getInstance()
+				.getSessionFactory().getCurrentSession().createQuery(query.toString()).list();
 
-			Statement pst = dbm.getNewStatement();
-			ResultSet rs = pst.executeQuery(query);
-			rs.last();
-			int numRow = rs.getRow();
-			rs.beforeFirst();
 			U88faxHome.getInstance().begin();
 			U88faxHome.getInstance().deleteAll();
 			U88faxHome.getInstance().commitAndClose();
 			U88faxHome.getInstance().begin();
-			Double totPesoD = 0.0;
-			while (rs.next()) {
+			BigDecimal totPesoBD = BigDecimal.ZERO;
+			for (Object [] object : resultList) {
 				U88fax row = new U88fax();
-				String codAams=rs.getString("codfornitore");
+				String codAams = ((Articoli)object[0]).getCodfornitore();
 				StringBuffer tmp=new StringBuffer();
 				//aggiungiamo spazi per poter poi gestire il tutto
 				//nel report di stampa 
@@ -2677,8 +2419,8 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 					tmp.append(codAams);
 				}
 				row.setCodiceAams(tmp.toString());
-				Double riord=ArticoliHome.getInstance().getQtaRiordino(rs.getInt("idarticolo"), rs.getInt("qta"));
-				totPesoD += riord;
+				Double riord=ArticoliHome.getInstance().getQtaRiordino(((Articoli)object[0]).getIdarticolo(), ((Double)object[1]));//rs.getInt("idarticolo"), rs.getInt("qta"));
+				totPesoBD = totPesoBD.add(new BigDecimal(riord));
 				String kg = riord.toString();
 				if ( kg.substring(kg.indexOf('.')).length() > 4 )
 					kg = kg.substring(0, kg.indexOf('.')+4);
@@ -2705,20 +2447,13 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				U88faxHome.getInstance().attachDirty(row);
 			}
 
-			for (int i = numRow; i < 48; i++) {
+			for (int i = resultList.size(); i < 48; i++) {
 				U88fax row = new U88fax();
-				// row.setCodiceAams((String)o[i][1]);
-				// row.setGrammi((Integer)o[i][1]);
-				// row.setKilogrammi((Integer)o[i][1]);
 				U88faxHome.getInstance().attachDirty(row);
 			}
 			U88faxHome.getInstance().commitAndClose();
-			if (pst != null)
-				pst.close();
-			if (rs != null)
-				rs.close();
 			
-			String s = totPesoD.toString().substring(0, totPesoD.toString().indexOf('.'));
+			String s = totPesoBD.toString().substring(0, totPesoBD.toString().indexOf('.'));
 			StringBuffer sb = new StringBuffer();
 			if ( s.length() > 6 ){
 				throw new NumberFormatException();
@@ -2736,7 +2471,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				sb.append(s);
 			}
 			
-			String s2 = totPesoD.toString().substring(totPesoD.toString().indexOf('.')+1);
+			String s2 = totPesoBD.toString().substring(totPesoBD.toString().indexOf('.')+1);
 			if ( s2.length() > 3 ){
 				s2 = s2.substring(0, 3);
 			}
@@ -2752,10 +2487,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			par.put("kilogrammi2", sb.substring(3, 6));
 			par.put("grammi", sb2.toString());
 		} catch (NumberFormatException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
@@ -2767,31 +2498,40 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 					false);
 
 		} catch (JRException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 	}
 	
-	protected void test() {
-		String path = "/Users/sergiofalcone/Desktop/test.xls";
+	protected void stampaModelloXls() {
+		String path;
+		JFileChooser fileChooser = new JFileChooser(new File(System.getProperty("user.dir")));
+
+		int scelta = fileChooser.showSaveDialog(this);
+		if( scelta == JFileChooser.APPROVE_OPTION ){
+			path = fileChooser.getSelectedFile().getPath()+".xls";
+		}
+		else{
+			return;
+		}
+		
 		try {	
 			List<U88fax> resultList = new ArrayList<U88fax>();
 			try {
-				String query = "SELECT A.idarticolo, a.codFornitore, A.codBarre, A.descrizione, A.iva, A.um, D.qta, D.prezzo_Acquisto "
-					+ "FROM Articoli AS A, Carichi AS C, Dettaglio_Carichi AS D, Fornitori AS F "
-					+ "WHERE A.idArticolo=D.idArticolo AND C.idCarico=D.idCarico AND C.idFornitore=F.idFornitore and C.idcarico="
+				String query = "SELECT A, D.qta "
+					+ "FROM Articoli AS A, Carichi AS C, DettaglioCarichi AS D, Fornitori AS F "
+					+ "WHERE A.idarticolo=D.articoli.idarticolo AND C.idcarico=D.carichi.idcarico AND C.fornitori.idfornitore=F.idfornitore and C.idcarico="
 					+ idcarico;
+				ArrayList<Object[]> resultObject = (ArrayList<Object[]>)CarichiHome.getInstance()
+					.getSessionFactory().getCurrentSession().createQuery(query.toString()).list();
 
-				Statement pst = dbm.getNewStatement();
-				ResultSet rs = pst.executeQuery(query);
-				rs.last();
-				int numRow = rs.getRow();
-				rs.beforeFirst();
-				Double totPesoD = 0.0;
-				while (rs.next()) {
+				U88faxHome.getInstance().begin();
+				U88faxHome.getInstance().deleteAll();
+				U88faxHome.getInstance().commitAndClose();
+				U88faxHome.getInstance().begin();
+				for (Object [] object : resultObject) {
 					U88fax row = new U88fax();
-					String codAams=rs.getString("codfornitore");
+					String codAams = ((Articoli)object[0]).getCodfornitore();
 					StringBuffer tmp=new StringBuffer();
 					//aggiungiamo spazi per poter poi gestire il tutto
 					//nel report di stampa 
@@ -2806,8 +2546,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 						tmp.append(codAams);
 					}
 					row.setCodiceAams(tmp.toString());
-					Double riord=ArticoliHome.getInstance().getQtaRiordino(rs.getInt("idarticolo"), rs.getInt("qta"));
-					totPesoD += riord;
+					Double riord=ArticoliHome.getInstance().getQtaRiordino(((Articoli)object[0]).getIdarticolo(), ((Double)object[1]));
 					String kg = riord.toString();
 					if ( kg.substring(kg.indexOf('.')).length() > 4 )
 						kg = kg.substring(0, kg.indexOf('.')+4);
@@ -2832,14 +2571,8 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 					}
 					row.setKilogrammi(sb.toString());
 					resultList.add(row);
-				}
-				if (pst != null)
-					pst.close();
-				if (rs != null)
-					rs.close();				
+				}				
 			} catch (NumberFormatException e1) {
-				e1.printStackTrace();
-			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
 
@@ -2862,40 +2595,38 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			
 			workbook.write();
 			workbook.close();
+			JOptionPane.showMessageDialog(this, "Creazione effettuata con successo!!!", "Stampa File XLS", 1);
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (RowsExceededException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (WriteException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		} 
 	}
 
-	protected void stampaModelloXls(){
+	protected void stampaModelloXls2(){
 		if (tblCarico.getRowCount() < 1) {
 			return;
 		}
-		Carico c = new Carico();
 		try {
-			String query = "SELECT A.idarticolo, a.codFornitore, A.codBarre, A.descrizione, A.iva, A.um, D.qta, D.prezzo_Acquisto "
-					+ "FROM Articoli AS A, Carichi AS C, Dettaglio_Carichi AS D, Fornitori AS F "
-					+ "WHERE A.idArticolo=D.idArticolo AND C.idCarico=D.idCarico AND C.idFornitore=F.idFornitore and C.idcarico="
+			String query = "SELECT A, D.qta "
+					+ "FROM Articoli AS A, Carichi AS C, DettaglioCarichi AS D, Fornitori AS F "
+					+ "WHERE A.idarticolo=D.articoli.idarticolo AND C.idcarico=D.carichi.idcarico AND C.fornitori.idfornitore=F.idfornitore and C.idcarico="
 					+ idcarico;
+			ArrayList<Object[]> resultList = (ArrayList<Object[]>)CarichiHome.getInstance().getSessionFactory().getCurrentSession().createQuery(query.toString()).list();
 
-			Statement pst = dbm.getNewStatement();
-			ResultSet rs = pst.executeQuery(query);
-			rs.last();
-			int numRow = rs.getRow();
-			rs.beforeFirst();
 			U88faxHome.getInstance().begin();
 			U88faxHome.getInstance().deleteAll();
 			U88faxHome.getInstance().commitAndClose();
 			U88faxHome.getInstance().begin();
 			Double totPesoD = 0.0;
-			while (rs.next()) {
+			for (Object [] object : resultList) {
 				U88fax row = new U88fax();
-				String codAams=rs.getString("codfornitore");
+				String codAams = ((Articoli)object[0]).getCodfornitore();
 				StringBuffer tmp=new StringBuffer();
 				//aggiungiamo spazi per poter poi gestire il tutto
 				//nel report di stampa 
@@ -2910,7 +2641,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 					tmp.append(codAams);
 				}
 				row.setCodiceAams(tmp.toString());
-				Double riord=ArticoliHome.getInstance().getQtaRiordino(rs.getInt("idarticolo"), rs.getInt("qta"));
+				Double riord=ArticoliHome.getInstance().getQtaRiordino(((Articoli)object[0]).getIdarticolo(), ((Double)object[1]));
 				totPesoD += riord;
 				String kg = riord.toString();
 				if ( kg.substring(kg.indexOf('.')).length() > 4 )
@@ -2938,46 +2669,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 				U88faxHome.getInstance().attachDirty(row);
 			}
 			U88faxHome.getInstance().commitAndClose();
-			if (pst != null)
-				pst.close();
-			if (rs != null)
-				rs.close();
-			
-			String s = totPesoD.toString().substring(0, totPesoD.toString().indexOf('.'));
-			StringBuffer sb = new StringBuffer();
-			if ( s.length() > 6 ){
-				throw new NumberFormatException();
-			}else if ( s.length() == 1 ){
-				sb.append("00000").append(s);
-			}else if ( s.length() == 2 ){
-				sb.append("0000").append(s);
-			}else if ( s.length() == 3 ){
-				sb.append("000").append(s);
-			}else if ( s.length() == 4 ){
-				sb.append("00").append(s);
-			}else if ( s.length() == 5 ){
-				sb.append("0").append(s);
-			}else{
-				sb.append(s);
-			}
-			
-			String s2 = totPesoD.toString().substring(totPesoD.toString().indexOf('.')+1);
-			if ( s2.length() > 3 ){
-				s2 = s2.substring(0, 3);
-			}
-			StringBuffer sb2=new StringBuffer();
-			if(s2.length()==1){
-				sb2.append(s2).append("00");
-			}else if(s2.length()==2){
-				sb2.append(s2).append("0");
-			}else {
-				sb2.append(s2);
-			}
 		} catch (NumberFormatException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
@@ -2989,7 +2681,6 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 					false);
 
 		} catch (JRException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -3043,7 +2734,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			btnSave.setText("Salva");
 			btnSave.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					salva(); // TODO Auto-generated Event stub actionPerformed()
+					salva();
 				}
 			});
 		}
@@ -3067,7 +2758,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			btnModelloXls.setBounds(new Rectangle(645, 155, 170, 25));
 			btnModelloXls.setText("Modello XLS Web");
 			btnModelloXls.setEnabled(false);
-			btnModelloXls.setVisible(false);
+			//btnModelloXls.setVisible(false);
 			btnModelloXls.addActionListener(new MyButtonListener());
 		}
 		return btnModelloXls;

@@ -3,6 +3,8 @@
  */
 package rf.pegaso.db.model;
 
+import org.apache.log4j.Logger;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -24,15 +26,24 @@ import rf.utility.db.RowEvent;
  */
 public class ArticoliScaricatiViewModel extends AbstractTableModel implements
 		DBStateChange {
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger
+			.getLogger(ArticoliScaricatiViewModel.class);
 
 	private DBManager dbm;
 	private PreparedStatement pst = null;
 	private String query = "";
 	private ResultSet rs = null;
 	private ResultSetMetaData rsmd = null;
+	private Date dal;
+	private Date al;
 
-	public ArticoliScaricatiViewModel(DBManager dbm) throws SQLException {
-		this.dbm = dbm;
+	public ArticoliScaricatiViewModel() throws SQLException {
+		this.dbm = DBManager.getIstanceSingleton();
+		this.dal=dal;
+		this.al=al;
 		recuperaDati();
 
 	}
@@ -118,13 +129,20 @@ public class ArticoliScaricatiViewModel extends AbstractTableModel implements
 		stateChange();
 
 	}
+	
+	public void setDate(Date dal, Date al) throws SQLException{
+		this.dal=dal;
+		this.al=al;
+		recuperaDati();
+	}
 
 	/**
 	 * @throws SQLException
 	 *
 	 */
 	private void recuperaDati() throws SQLException {
-		this.query = "select a.codbarre as codice,a.descrizione,a.qta as sc, articoli.prezzo_acquisto as acquisto,(articoli.prezzo_acquisto* a.qta) as totale, o.data_documento as data, a.idordine as ordine from articoli_scaricati_view as a, articoli,giacenza_articoli_all_view as g, ordini as o where articoli.idarticolo=a.idarticolo and o.idordine=a.idordine and g.codice=a.codbarre and a.qta>0  order by a.codbarre";
+//		this.query = "select a.codbarre as codice,a.descrizione,a.qta as qta, a.prezzo_dettaglio as prezzo_pubblico,(articoli.prezzo_acquisto* a.qta) as totale, o.data_documento as data, a.idordine as n_vendita from articoli_scaricati_view as a, articoli,giacenza_articoli_all_view as g, ordini as o where articoli.idarticolo=a.idarticolo and o.idordine=a.idordine and g.codice=a.codbarre and a.qta>0  order by a.codbarre";
+		this.query = "select a.codbarre as codice,a.descrizione,a.qta as qta, a.prezzo_dettaglio as prezzo_pubblico, (a.prezzo_dettaglio* a.qta) as totale, o.data_documento as data, a.idordine as n_vendita from articoli_scaricati_view as a, articoli, ordini as o where articoli.idarticolo=a.idarticolo and o.idordine=a.idordine and a.qta>0 order by a.codbarre";
 		pst = dbm.getNewPreparedStatement(query);
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();
@@ -139,6 +157,24 @@ public class ArticoliScaricatiViewModel extends AbstractTableModel implements
 	public void rowStateChange(RowEvent re) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void fireTableDataChanged() {
+		if (logger.isDebugEnabled()) {
+			logger.debug("fireTableDataChanged() - start");
+		}
+
+		try {
+			recuperaDati();
+		} catch (SQLException e) {
+			logger.error("fireTableDataChanged()", e);
+		}
+		super.fireTableDataChanged();
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("fireTableDataChanged() - end");
+		}
 	}
 
 

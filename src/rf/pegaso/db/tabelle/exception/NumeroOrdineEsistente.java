@@ -10,7 +10,7 @@ public class NumeroOrdineEsistente extends Exception {
 
 	@Override
 	public String toString() {
-		return "Numero documento ordine già esistente";
+		return "Numero documento ordine gi\u00E0 esistente";
 	}
 
 

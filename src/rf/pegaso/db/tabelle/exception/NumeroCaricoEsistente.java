@@ -10,6 +10,6 @@ public class NumeroCaricoEsistente extends Exception {
 
 	@Override
 	public String toString() {
-		return "Numero documento carico già esistente";
+		return "Numero documento carico gi\u00E0 esistente";
 	}
 }

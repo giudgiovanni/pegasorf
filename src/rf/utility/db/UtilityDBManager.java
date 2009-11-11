@@ -71,6 +71,10 @@ public class UtilityDBManager {
 
 	private String nFileBackup;
 
+	private String restoreEanble;
+
+	private String backupEnable;
+
 	private UtilityDBManager() throws FileNotFoundException, IOException {
 		props = new Properties();
 		// carichiamo il file di properties
@@ -84,6 +88,10 @@ public class UtilityDBManager {
 		this.folderBackup = props.getProperty("folderBackup");
 		this.userDir = System.getProperty("user.dir");
 		this.nFileBackup = props.getProperty("nFileBackup", "50");
+		
+		//attivazione funzionalità di restore e backup
+		this.restoreEanble=props.getProperty("restoreEnable","TRUE");
+		this.backupEnable=props.getProperty("backupEnable", "TRUE");
 
 		// se il valore non è presente usiamo no come default
 		this.update = props.getProperty("update", "N");
@@ -96,6 +104,34 @@ public class UtilityDBManager {
 		File f = new File(this.userDir+File.separator+folderBackup);
 		if (!f.exists())
 			f.mkdir();
+	}
+
+	public String getPathCommand() {
+		return pathCommand;
+	}
+
+	public String getCmdBackup() {
+		return cmdBackup;
+	}
+
+	public String getCmdRestore() {
+		return cmdRestore;
+	}
+
+	public String getNameDb() {
+		return nameDb;
+	}
+
+	public String getFolderBackup() {
+		return folderBackup;
+	}
+
+	public String getUserDir() {
+		return userDir;
+	}
+
+	public String getNFileBackup() {
+		return nFileBackup;
 	}
 
 	public static UtilityDBManager getSingleInstance()
@@ -133,18 +169,30 @@ public class UtilityDBManager {
 		checkFileInFolder();
 	}
 
+	public void backupDataBase(String path) throws IOException {
+		
+		// creazione del comando con tutti i parametri
+		String cmd = pathCommand + cmdBackup + " \"" + path + "\" " + nameDb;
+		Runtime r = Runtime.getRuntime();
+		r.exec(cmd);
+		checkFileInFolder();
+	}
+	
+	
 	public void backupDataBase() throws IOException {
 		GregorianCalendar c = new GregorianCalendar();
 		// formattiamo la data
 		SimpleDateFormat format = new SimpleDateFormat("ddMMyyyy_hhmmss");
 		Date d = c.getTime();
 		String time = format.format(d);
-		// creazione del comando con tutti i parametri
-		String cmd = pathCommand + cmdBackup + "\"" + userDir + "\\"
-				+ folderBackup + time + "-" + nameDb + ".sql\" " + nameDb;
+		String path = userDir + "\\"+ folderBackup + time + "-" + nameDb + ".sql\"" ;
+		backupDataBase(path);
+	}
+	
+	public void restoreDataBase(String pathRestore) throws IOException {
+		String cmd = pathCommand + cmdRestore + " "+nameDb+" "+"\""+pathRestore+"\" "+nameDb;
 		Runtime r = Runtime.getRuntime();
 		r.exec(cmd);
-		checkFileInFolder();
 	}
 
 	private void checkFileInFolder() {
@@ -322,4 +370,19 @@ public class UtilityDBManager {
 		}
 
 	}
+
+	public void removeDataBase() {
+		dropAllTable();
+		
+	}
+
+	public boolean isRestoreEnable() {
+		return new Boolean(restoreEanble);
+	}
+
+	public boolean isBackupEnable() {
+		return new Boolean(backupEnable);
+	}
+
+	
 }

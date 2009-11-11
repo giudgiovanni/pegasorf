@@ -18,7 +18,6 @@ import java.util.LinkedList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -411,12 +410,12 @@ public class StampeEtichette extends JFrame {
 
 	private void ricaricaAllArticoli() {
 		ArticoloModel modello = null;
-		try {
-			modello = new ArticoloModel(dbm);
-		} catch (SQLException e1) {
-			messaggioErroreCampo("Errore ricerca di tutte le giacenze");
-			e1.printStackTrace();
-		}
+		//try {
+			modello = new ArticoloModel();
+		//} catch (SQLException e1) {
+			//messaggioErroreCampo("Errore ricerca di tutte le giacenze");
+			//e1.printStackTrace();
+		//}
 		tblArticoli.setModel(modello);
 		tblArticoli.packAll();
 	}

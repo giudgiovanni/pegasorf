@@ -3,16 +3,21 @@
  */
 package rf.pegaso.db.model;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
+import it.infolabs.hibernate.Articoli;
+import it.infolabs.hibernate.ArticoliHome;
+import it.infolabs.hibernate.exception.FindAllEntityException;
+
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
+
+import rf.utility.Constant;
 import rf.utility.db.DBEvent;
-import rf.utility.db.DBManager;
 import rf.utility.db.DBStateChange;
 import rf.utility.db.RowEvent;
 
@@ -22,53 +27,45 @@ import rf.utility.db.RowEvent;
  */
 public class ArticoloModel extends AbstractTableModel implements DBStateChange {
 
-	private DBManager dbm;
-	private PreparedStatement pst = null;
-	private String query = "";
-	private ResultSet rs = null;
-	private ResultSetMetaData rsmd = null;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private List<Articoli> resultList;
+	private List<String> colonne;
 
-	public ArticoloModel(DBManager dbm) throws SQLException {
-		this.dbm = dbm;
-		recuperaDati();
-
+	public ArticoloModel() {
+		colonne = creaColonne();
+		resultList = new ArrayList<Articoli>();
+		try {
+			recuperaDati();
+		} catch (FindAllEntityException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private ArrayList<String> creaColonne(){
+		ArrayList<String> col = new ArrayList<String>();
+		col.add("IdArticolo");
+		col.add("Codice");
+		col.add("Descrizione");
+		col.add("Prezzo Acquisto");
+		col.add("Prezzo Listino");
+		col.add("Fornitore");
+		return col;
 	}
 
 	public int getColumnCount() {
-		int nColonne = 0;
-		try {
-			nColonne = rsmd.getColumnCount();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return nColonne;
+		return colonne.size();
 	}
 
 	@Override
 	public String getColumnName(int col) {
-		String nome = "";
-		try {
-			nome = rsmd.getColumnLabel(col + 1);
-		} catch (SQLException e) {
-
-			e.printStackTrace();
-		}
-		return nome;
+		return colonne.get(col);
 	}
 
 	public int getRowCount() {
-		if (rs == null)
-			return -1;
-		int nRighe = 0;
-		try {
-			rs.last();
-			nRighe = rs.getRow();
-		} catch (SQLException e) {
-
-			e.printStackTrace();
-		}
-
-		return nRighe;
+		return resultList.size();
 	}
 
 	public String getTableName() {
@@ -76,36 +73,47 @@ public class ArticoloModel extends AbstractTableModel implements DBStateChange {
 	}
 
 	public Object getValueAt(int r, int c) {
-		if (rs == null)
-			return -1;
-
-		Object o = null;
-		try {
-			rs.beforeFirst();
-			rs.absolute(r + 1);
-			o = rs.getObject(c + 1);
-		} catch (SQLException e) {
-			e.printStackTrace();
+		Articoli tmp = resultList.get(r);
+		if ( c == 0 ){
+			return tmp.getIdarticolo();
 		}
-
-		if (o instanceof Double) {
-			Double d = (Double) o;
+		else if ( c == 1 ){
+			return tmp.getCodbarre();
+		}
+		else if ( c == 2 ){
+			return tmp.getDescrizione();
+		}
+		else if ( c == 3 ){
+			Double d = tmp.getPrezzoAcquisto();
 			DecimalFormat numberFormatter = new DecimalFormat("#,##0.00");
 			numberFormatter.setMaximumFractionDigits(2);
 			numberFormatter.setMinimumFractionDigits(2);
 			return numberFormatter.format(d);
 		}
-		return o;
+		else if ( c == 4 ){
+			Double d = tmp.getPrezzoDettaglio();
+			DecimalFormat numberFormatter = new DecimalFormat("#,##0.00");
+			numberFormatter.setMaximumFractionDigits(2);
+			numberFormatter.setMinimumFractionDigits(2);
+			return numberFormatter.format(d);
+		}
+		else{
+			if ( tmp.getFornitori() != null ){
+				return tmp.getFornitori().getNome();
+			}
+			else{
+				return "";
+			}
+		}
 	}
 
 	public void stateChange() {
 		try {
 			recuperaDati();
-		} catch (SQLException e) {
+		} catch (FindAllEntityException e) {
 			e.printStackTrace();
 		}
 		this.fireTableDataChanged();
-
 	}
 
 	public void stateChange(DBEvent arg0) {
@@ -114,29 +122,22 @@ public class ArticoloModel extends AbstractTableModel implements DBStateChange {
 	}
 
 	/**
-	 * @throws SQLException
+	 * @throws FindAllEntityException 
 	 *
 	 */
-	private void recuperaDati() throws SQLException {
-		// questa query è disabilitata per non visualizzare il ricarico listino.
-		//this.query = "select a.idArticolo,a.codbarre as codice,a.descrizione,a.prezzo_acquisto,a.prezzo_ingrosso as prezzo_listino, ((prezzo_ingrosso - prezzo_acquisto) / CASE prezzo_acquisto WHEN 0 THEN NULL ELSE prezzo_acquisto END) * 100 as ricario_listino,f.nome as fornitore from articoli a, fornitori f where a.idfornitore=f.idfornitore order by codice";
-		//
-		// la sostituiamo con questa che elimina quella colonna.
-		this.query = "select a.idArticolo,a.codbarre as codice,a.descrizione,a.prezzo_acquisto,a.prezzo_ingrosso as prezzo_listino, f.nome as fornitore from articoli a, fornitori f where a.idfornitore=f.idfornitore order by codice";
-		pst = dbm.getNewPreparedStatement(query);
-		rs = pst.executeQuery();
-		rsmd = rs.getMetaData();
-
+	private void recuperaDati() throws FindAllEntityException {
+		ArticoliHome.getInstance().begin();
+		Criteria crit = ArticoliHome.getInstance().getSessionFactory().getCurrentSession().createCriteria("it.infolabs.hibernate.Articoli");
+		crit.add(Restrictions.not(Restrictions.eq("reparti.idreparto", (long)Constant.REPARTO_GRATTA_E_VINCI)));
+		crit.add(Restrictions.not(Restrictions.eq("reparti.idreparto", (long)Constant.REPARTO_TABACCHI)));
+		resultList = crit.list();
 	}
 
 	public String getNomeTabella() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public void rowStateChange(RowEvent re) {
-		// TODO Auto-generated method stub
-
 	}
 
 

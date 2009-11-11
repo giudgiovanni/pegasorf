@@ -1,59 +1,56 @@
 package rf.pegaso.gui.vendita.panel;
 
+import it.infolabs.hibernate.Articoli;
+import it.infolabs.hibernate.ImmagineArticolo;
+
 import java.awt.Dimension;
-import rf.pegaso.db.tabelle.DettaglioArticolo;
+import java.awt.Font;
+
+import javax.swing.AbstractButton;
+import javax.swing.ImageIcon;
+
+import rf.pegaso.gui.utility.UtilityImage;
 
 public class JButtonArticolo extends javax.swing.JButton {
 
 	private static final long serialVersionUID = 1L;
 	
-	private DettaglioArticolo dettArticolo = null;
-	private int idArticolo = 0;
+	private ImmagineArticolo imgArticolo;
+	private Articoli articolo;
 	
 	
-	public JButtonArticolo(int idArticolo) {
+	public JButtonArticolo(Articoli articolo) {
 		super();
-		this.idArticolo = idArticolo;
+		this.articolo = articolo;
 		initGUI();
 	}
 	
 	private void initGUI() {
 		try {
-			dettArticolo = new DettaglioArticolo();
-			dettArticolo.caricaDati(idArticolo, true);
-			//setIcon(new ImageIcon(dettArticolo.getImgdefault()));
-			this.setText(dettArticolo.getDescrizione());
+			if ( articolo.getImmagineArticolos().size() != 0 ){
+				imgArticolo = (ImmagineArticolo) articolo.getImmagineArticolos().toArray()[0];
+				this.setIcon(UtilityImage.resizeImage(new ImageIcon(imgArticolo.getFile()), 50, 50));
+			}
+//			imgArticolo.caricaDati();						
+//			this.setText(imgArticolo.getNome());
+			this.setText(articolo.getDescrizione());
+			this.setVerticalTextPosition(AbstractButton.BOTTOM);
+			this.setHorizontalTextPosition(AbstractButton.CENTER);
+			this.setFont(new Font("Dialog", Font.BOLD, 16));
             setFocusPainted(false);
             setFocusable(false);
             setRequestFocusEnabled(false);
-            //setMargin(new Insets(8, 14, 8, 14));
-			//this.addActionListener(new MyButtonListener());
-            setMinimumSize(new Dimension(90, 80));
-			//setPreferredSize(new Dimension(100, 80));
+            setPreferredSize(new Dimension(100, 100));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-//	private class MyButtonListener implements java.awt.event.ActionListener {
-//		
-//		private int idArticolo;
-//		public MyButtonListener(int idArticolo){
-//			this.idArticolo = idArticolo;
-//		}
-//
-//		@Override
-//		public void actionPerformed(ActionEvent arg0) {
-//			
-//		}
-//		
-//	}
 
-	public int getIdArticolo() {
-		return idArticolo;
+	public Articoli getArticolo() {
+		return articolo;
 	}
 
-	public void setIdArticolo(int idArticolo) {
-		this.idArticolo = idArticolo;
+	public void setArticolo(Articoli articolo) {
+		this.articolo = articolo;
 	}
 }

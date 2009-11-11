@@ -52,7 +52,7 @@ public class ModificaQuantitaRiga extends JDialog {
 	private void initialize() {
 		try {
 			this.setSize(new Dimension(219, 142)); // Generated
-			this.setTitle("Modifica Quantità Riga"); // Generated
+			this.setTitle("Modifica Quantit\u00E0 Riga"); // Generated
 			this.setContentPane(getJPanel());
 			UtilGUI.centraDialog(this);
 
@@ -72,7 +72,7 @@ public class ModificaQuantitaRiga extends JDialog {
 				lblQta = new JLabel();
 				lblQta.setBounds(new Rectangle(18, 48, 91, 28)); // Generated
 				lblQta.setFont(new Font("Dialog", Font.PLAIN, 12)); // Generated
-				lblQta.setText("Nuova Quantità"); // Generated
+				lblQta.setText("Nuova Quantit\u00E0"); // Generated
 				jPanel = new JPanel();
 				jPanel.setLayout(null); // Generated
 				jPanel.setBorder(BorderFactory

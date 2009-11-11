@@ -373,7 +373,7 @@ public class FornitoriGestione extends JDialog {
 	private void nuovoFornitori() {
 		// Apre la finestra delegata all'inserimento
 		// del nuovo reparto
-		FornitoriAdd add = new FornitoriAdd(this, dbm);
+		FornitoriAdd add = new FornitoriAdd(this);
 		add.setVisible(true);
 
 	}

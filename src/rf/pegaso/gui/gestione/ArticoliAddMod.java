@@ -3,6 +3,17 @@
  */
 package rf.pegaso.gui.gestione;
 
+import it.infolabs.hibernate.Articoli;
+import it.infolabs.hibernate.ArticoliHome;
+import it.infolabs.hibernate.FornitoriHome;
+import it.infolabs.hibernate.ImmagineArticolo;
+import it.infolabs.hibernate.ImmagineArticoloHome;
+import it.infolabs.hibernate.Pannelli;
+import it.infolabs.hibernate.PannelliHome;
+import it.infolabs.hibernate.RepartiHome;
+import it.infolabs.hibernate.UmHome;
+import it.infolabs.hibernate.exception.FindByNotFoundException;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -16,17 +27,19 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -41,18 +54,22 @@ import javax.swing.border.TitledBorder;
 import javax.swing.text.JTextComponent;
 
 import rf.pegaso.db.tabelle.Articolo;
+import rf.pegaso.db.tabelle.Carico;
 import rf.pegaso.db.tabelle.Fornitore;
 import rf.pegaso.db.tabelle.Reparto;
+import rf.pegaso.db.tabelle.Scarico;
 import rf.pegaso.db.tabelle.UnitaDiMisura;
 import rf.pegaso.gui.utility.SuggerimentoCodice;
+import rf.pegaso.gui.utility.UtilityImage;
 import rf.pegaso.gui.viste.ViewDocCarico;
 import rf.utility.ControlloDati;
 import rf.utility.db.DBManager;
-import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompletion;
 import rf.utility.gui.text.UpperTextDocument;
 import rf.utility.number.Arrays;
+import javax.swing.JRadioButton;
+import javax.swing.JCheckBox;
 
 /**
  * @author Hunter
@@ -74,6 +91,8 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				apriNuovoFornitore();
 			} else if (e.getSource() == btnNewReparto) {
 				apriNuovaCategoria();
+			} else if (e.getSource() == btnNewPannello) {
+				apriNuovoPannello();
 			} else if (e.getSource() == btnNewUM) {
 				apriNuovoUM();
 			} else if (e.getSource() == btnDocCarico) {
@@ -81,7 +100,22 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			}else if(e.getSource()==btnSuggerimento){
 				suggerimentoCodice();
 			}
-
+			else if ( e.getSource() == rbtnSi ){
+				txtCodBarre.setEditable(true);
+				txtCodFornitore.setEditable(true);
+				btnSuggerimento.setEnabled(true);
+			}
+			else if ( e.getSource() == rbtnNo ){
+				txtCodBarre.setEditable(false);
+				txtCodFornitore.setEditable(false);
+				btnSuggerimento.setEnabled(false);
+			}
+			else if ( e.getSource() == btnAddImage ){
+				caricaImmagine();
+			}
+			else if ( e.getSource() == btnRemoveImage ){
+				rimuoviImmagine();
+			}
 		}
 
 	}
@@ -104,17 +138,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		 * @see java.awt.event.FocusListener#focusLost(java.awt.event.FocusEvent)
 		 */
 		public void focusLost(FocusEvent e) {
-			if (e.getSource() == txtCaricoIniziale) {
-				if (!ControlloDati.isNumero(txtCaricoIniziale.getText())) {
-					messaggioCampoErrato("Carico Iniziale Errato");
-					((JTextField) e.getComponent()).setText("");
-				}
-			} else if (e.getSource() == txtScortaMinima) {
-				if (!ControlloDati.isNumero(txtScortaMinima.getText())) {
-					messaggioCampoErrato("Scorta Minima Errato");
-					((JTextField) e.getComponent()).setText("");
-				}
-			} else if (e.getSource() == txtRicaricoListino) {
+			if (e.getSource() == txtRicaricoListino) {
 				calcolaPrezzo();
 			}
 
@@ -163,27 +187,19 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	private JTabbedPane jTabbedPane = null;
 
-	private JLabel lblCaricoIniziale = null;
-
 	private JLabel lblCodBarre = null;
 
 	private JLabel lblCodFornitore = null;
 
-	private JLabel lblColore = null;
-
 	private JLabel lblDescrizione = null;
 
 	private JLabel lblFornitore = null;
-
-	private JLabel lblImballo = null;
 
 	private JLabel lblIngrosso = null;
 
 	private JLabel lblIva = null;
 
 	private JLabel lblNota = null;
-
-	private JLabel lblPeso = null;
 
 	private JLabel lblPrezzoAcquisto = null;
 
@@ -195,10 +211,6 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	private JLabel lblRicaricoIngrosso = null;
 
-	private JLabel lblSconto = null;
-
-	private JLabel lblScortaMinima = null;
-
 	private JLabel lblUnitaMisura = null;
 
 	private int modalita;
@@ -207,37 +219,45 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	private JPanel pnlDatiPersonali = null;
 
-	private JTextField txtCaricoIniziale = null;
-
 	private JTextField txtCodBarre = null;
 
 	private JTextField txtCodFornitore = null;
 
-	private JTextField txtColore = null;
-
 	private JTextField txtDescrizione = null;
-
-	private JTextField txtImballo = null;
 
 	private JFormattedTextField txtPrezzoFinale = null;
 	private JTextField txtIva = null;
 	private JTextArea txtNote = null;
-	private JTextField txtPeso = null;
 	private JFormattedTextField txtPrezzoAcquisto = null;
 	private JFormattedTextField txtPrezzoListino = null;
 	private JTextField txtQta = null;
 	private JFormattedTextField txtRicaricoListino = null;
-	private JFormattedTextField txtSconto = null;
-	private JTextField txtScortaMinima = null;
 	private String[] codFornitori;
 	private String[] descFornitori;
 	private String[] codReparti;
 	private String[] descReparti;
 	private String[] codUnitaDiMisura;
 	private String[] descUnitaDiMisura;
+	private String[] codPannelli;
+	private String[] descPannelli;
 	private JButton btnSuggerimento = null;
 	private String[] ultimoArticolo;
 	private boolean close=false;
+	private JLabel lblrButtonSiNo = null;
+	private JLabel lblSi = null;
+	private JLabel lblNo = null;
+	private JRadioButton rbtnSi = null;
+	private JRadioButton rbtnNo = null;
+	private JLabel lblPannelli = null;
+	private JComboBox cmbPannelli = null;
+	private JButton btnNewPannello = null;
+	private JCheckBox chkBoxQtaInfinita = null;
+	private JLabel lblQtaInfinita = null;
+	private JPanel pnlImage = null;
+	private JLabel lbl1 = null;
+	private JButton btnAddImage = null;
+	private JButton btnRemoveImage = null;
+	private ImmagineArticolo imgArticolo;
 
 	/**
 	 * @param owner
@@ -342,17 +362,6 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			} else
 				iva = Integer.parseInt(txtIva.getText());
 
-			if (txtSconto.getText().equals("")
-					|| txtSconto.getText().equals("0")) {
-				sconto = ControlloDati.convertPrezzoToDouble("0.00");
-			} else {
-				if (txtSconto.getValue() instanceof Double) {
-					sconto = ((Double) txtSconto.getValue()).doubleValue();
-				} else {
-					long value = ((Long) txtSconto.getValue()).longValue();
-					sconto = new Double(value).doubleValue();
-				}
-			}
 			// sconto = ((Double)txtSconto.getValue()).doubleValue();
 
 		} catch (NumberFormatException e) {
@@ -387,7 +396,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	 *
 	 */
 	public void apriNuovoFornitore() {
-		FornitoriAdd add = new FornitoriAdd(this, dbm);
+		FornitoriAdd add = new FornitoriAdd(this);
 		add.setVisible(true);
 		caricaCmbFornitori();
 		// caricaFornitori(cmbFornitori);
@@ -401,6 +410,13 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		RepartiAdd add = new RepartiAdd(this, dbm);
 		add.setVisible(true);
 		caricaCmbCategoria();
+		// caricaReparti(cmbReparto);
+	}
+	
+	public void apriNuovoPannello() {
+		PannelloAdd add = new PannelloAdd(this, dbm);
+		add.setVisible(true);
+		caricaCmbPannelli();
 		// caricaReparti(cmbReparto);
 
 	}
@@ -468,19 +484,6 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	private void calcolaPrezzoDettaglio() {
 		double pDettaglio = 0.0;
 		double sconto = 0.0;
-		try {
-			if (txtSconto.getValue() instanceof Double) {
-				sconto = ((Double) txtSconto.getValue()).doubleValue();
-			} else {
-				long value = ((Long) txtSconto.getValue()).longValue();
-				sconto = new Double(value).doubleValue();
-			}
-
-		} catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(this, "Numero malformato",
-					"NUMERO ERRATO", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}
 
 		int iva = Integer.parseInt(txtIva.getText());
 		double ptot = pDettaglio + (pDettaglio / 100 * iva);
@@ -775,7 +778,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			try {
 				btnNewFornitore = new JButton();
 				btnNewFornitore.setText("Nuovo"); // Generated
-				btnNewFornitore.setBounds(new Rectangle(551, 103, 69, 26)); // Generated
+				btnNewFornitore.setBounds(new Rectangle(540, 103, 69, 26)); // Generated
 				btnNewFornitore.addActionListener(new MyActionListener());
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -793,7 +796,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		if (btnNewReparto == null) {
 			try {
 				btnNewReparto = new JButton();
-				btnNewReparto.setBounds(new Rectangle(336, 276, 69, 26)); // Generated
+				btnNewReparto.setBounds(new Rectangle(190, 235, 69, 26)); // Generated
 				btnNewReparto.setText("Nuovo");
 				btnNewReparto.addActionListener(new MyActionListener());
 			} catch (java.lang.Throwable e) {
@@ -812,7 +815,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		if (btnNewUM == null) {
 			try {
 				btnNewUM = new JButton();
-				btnNewUM.setBounds(new Rectangle(360, 148, 69, 26)); // Generated
+				btnNewUM.setBounds(new Rectangle(310, 148, 69, 26)); // Generated
 				btnNewUM.setText("Nuovo");
 				btnNewUM.addActionListener(new MyActionListener());
 			} catch (java.lang.Throwable e) {
@@ -832,7 +835,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 			try {
 				cmbFornitori = new JComboBox();
-				cmbFornitori.setBounds(new Rectangle(5, 103, 541, 26)); // Generated
+				cmbFornitori.setBounds(new Rectangle(5, 103, 530, 26)); // Generated
 				// caricaFornitori(cmbFornitori);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -851,7 +854,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			try {
 				cmbMisura = new JComboBox();
 				cmbMisura.setPreferredSize(new Dimension(70, 25)); // Generated
-				cmbMisura.setBounds(new Rectangle(280, 148, 70, 25)); // Generated
+				cmbMisura.setBounds(new Rectangle(230, 148, 70, 25)); // Generated
 				// caricaUnitaMisura(cmbMisura);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -870,7 +873,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			try {
 				cmbReparto = new JComboBox();
 				cmbReparto.setPreferredSize(new Dimension(150, 25)); // Generated
-				cmbReparto.setBounds(new Rectangle(164, 277, 169, 25)); // Generated
+				cmbReparto.setBounds(new Rectangle(5, 236, 169, 25)); // Generated
 				// caricaReparti(cmbReparto);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -929,10 +932,10 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			try {
 				lblIngrosso = new JLabel();
 				lblIngrosso.setBounds(new Rectangle(8, 20, 73, 21)); // Generated
-				lblIngrosso.setText("Pubblico €."); // Generated
+				lblIngrosso.setText("Pubblico \u20AC"); // Generated
 				jPanel1 = new JPanel();
 				jPanel1.setLayout(null); // Generated
-				jPanel1.setBounds(new Rectangle(416, 260, 201, 49)); // Generated
+				jPanel1.setBounds(new Rectangle(400, 140, 201, 49)); // Generated
 				jPanel1.setBorder(BorderFactory.createTitledBorder(
 						BorderFactory.createBevelBorder(BevelBorder.RAISED),
 						"Prezzo al Pubblico",
@@ -958,10 +961,10 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			try {
 				lblQta = new JLabel();
 				lblQta.setBounds(new Rectangle(8, 24, 57, 21)); // Generated
-				lblQta.setText("Quantità"); // Generated
+				lblQta.setText("Quantit\u00E0"); // Generated
 				jPanel2 = new JPanel();
 				jPanel2.setLayout(null); // Generated
-				jPanel2.setBounds(new Rectangle(416, 312, 201, 65)); // Generated
+				jPanel2.setBounds(new Rectangle(400, 200, 201, 65)); // Generated
 				jPanel2.setBorder(BorderFactory.createTitledBorder(
 						BorderFactory.createBevelBorder(BevelBorder.RAISED),
 						"Magazzino", TitledBorder.DEFAULT_JUSTIFICATION,
@@ -985,7 +988,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		if (jScrollPane1 == null) {
 			try {
 				jScrollPane1 = new JScrollPane();
-				jScrollPane1.setBounds(new Rectangle(4, 364, 297, 41)); // Generated
+				jScrollPane1.setBounds(new Rectangle(4, 329, 297, 41)); // Generated
 				jScrollPane1.setViewportView(getTxtNote()); // Generated
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -1038,57 +1041,54 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	private JPanel getPnlDatiPersonali() {
 		if (pnlDatiPersonali == null) {
 			try {
+				lblQtaInfinita = new JLabel();
+				lblQtaInfinita.setBounds(new Rectangle(285, 176, 99, 16));
+				lblQtaInfinita.setText("Qta Infinita");
+				lblPannelli = new JLabel();
+				lblPannelli.setBounds(new Rectangle(5, 269, 120, 16));
+				lblPannelli.setText("Pannello Rapido");
+				lblNo = new JLabel();
+				lblNo.setBounds(new Rectangle(430, 22, 15, 16));
+				lblNo.setText("No");
+				lblSi = new JLabel();
+				lblSi.setBounds(new Rectangle(370, 22, 11, 16));
+				lblSi.setText("Si");
+				lblrButtonSiNo = new JLabel();
+				lblrButtonSiNo.setBounds(new Rectangle(370, 4, 86, 16));
+				lblrButtonSiNo.setText("Modificabili");
 				lblNota = new JLabel();
 				lblNota.setText("Note"); // Generated
-				lblNota.setBounds(new Rectangle(4, 346, 26, 16)); // Generated
-				lblScortaMinima = new JLabel();
-				lblScortaMinima.setText("Scorta Minima"); // Generated
-				lblScortaMinima.setBounds(new Rectangle(164, 307, 82, 16)); // Generated
-				lblCaricoIniziale = new JLabel();
-				lblCaricoIniziale.setText("Carico Iniziale"); // Generated
-				lblCaricoIniziale.setBounds(new Rectangle(5, 307, 79, 16)); // Generated
+				lblNota.setBounds(new Rectangle(4, 313, 40, 16)); // Generated
 				lblReaprto = new JLabel();
 				lblReaprto.setText("Categoria Merceologica"); // Generated
-				lblReaprto.setBounds(new Rectangle(164, 261, 149, 16)); // Generated
-				lblSconto = new JLabel();
-				lblSconto.setText("Sconto %"); // Generated
-				lblSconto.setBounds(new Rectangle(5, 261, 52, 16)); // Generated
-				lblColore = new JLabel();
-				lblColore.setText("Colore"); // Generated
-				lblColore.setBounds(new Rectangle(272, 220, 37, 16)); // Generated
-				lblPeso = new JLabel();
-				lblPeso.setText("Peso (KG)"); // Generated
-				lblPeso.setBounds(new Rectangle(164, 220, 56, 16)); // Generated
-				lblImballo = new JLabel();
-				lblImballo.setText("Imballo"); // Generated
-				lblImballo.setBounds(new Rectangle(5, 220, 41, 16)); // Generated
+				lblReaprto.setBounds(new Rectangle(5, 220, 149, 16)); // Generated
 				lblRicaricoIngrosso = new JLabel();
 				lblRicaricoIngrosso.setText("Ricarico Listino %"); // Generated
-				lblRicaricoIngrosso.setBounds(new Rectangle(164, 176, 112, 16)); // Generated
+				lblRicaricoIngrosso.setBounds(new Rectangle(145, 176, 112, 16)); // Generated
 				lblUnitaMisura = new JLabel();
 				lblUnitaMisura.setText("UM"); // Generated
-				lblUnitaMisura.setBounds(new Rectangle(280, 132, 18, 16)); // Generated
+				lblUnitaMisura.setBounds(new Rectangle(230, 132, 28, 16)); // Generated
 				lblIva = new JLabel();
 				lblIva.setText("% Iva"); // Generated
-				lblIva.setBounds(new Rectangle(164, 134, 28, 16)); // Generated
+				lblIva.setBounds(new Rectangle(145, 134, 38, 16)); // Generated
 				lblFornitore = new JLabel();
 				lblFornitore.setText("Fornitore"); // Generated
-				lblFornitore.setBounds(new Rectangle(5, 87, 51, 16)); // Generated
+				lblFornitore.setBounds(new Rectangle(5, 87, 60, 16)); // Generated
 				lblPrezzoIngrosso = new JLabel();
 				lblPrezzoIngrosso.setText("Prezzo di Listino"); // Generated
 				lblPrezzoIngrosso.setBounds(new Rectangle(4, 176, 113, 16)); // Generated
 				lblPrezzoAcquisto = new JLabel();
 				lblPrezzoAcquisto.setText("Prezzo Acquisto"); // Generated
-				lblPrezzoAcquisto.setBounds(new Rectangle(5, 134, 92, 16)); // Generated
+				lblPrezzoAcquisto.setBounds(new Rectangle(5, 134, 110, 16)); // Generated
 				lblDescrizione = new JLabel();
 				lblDescrizione.setText("Descrizione"); // Generated
-				lblDescrizione.setBounds(new Rectangle(5, 46, 67, 16)); // Generated
+				lblDescrizione.setBounds(new Rectangle(5, 46, 80, 16)); // Generated
 				lblCodFornitore = new JLabel();
 				lblCodFornitore.setText("Codice Fornitore"); // Generated
-				lblCodFornitore.setBounds(new Rectangle(204, 4, 93, 16)); // Generated
+				lblCodFornitore.setBounds(new Rectangle(204, 4, 110, 16)); // Generated
 				lblCodBarre = new JLabel();
 				lblCodBarre.setText("Codice Articolo"); // Generated
-				lblCodBarre.setBounds(new Rectangle(5, 5, 96, 16)); // Generated
+				lblCodBarre.setBounds(new Rectangle(5, 5, 110, 16)); // Generated
 				pnlDatiPersonali = new JPanel();
 				pnlDatiPersonali.setLayout(null); // Generated
 				pnlDatiPersonali.setBorder(BorderFactory
@@ -1112,20 +1112,8 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				pnlDatiPersonali.add(getCmbMisura(), null); // Generated
 				pnlDatiPersonali.add(lblRicaricoIngrosso, null); // Generated
 				pnlDatiPersonali.add(getTxtRicaricoIngrosso(), null); // Generated
-				pnlDatiPersonali.add(lblImballo, null); // Generated
-				pnlDatiPersonali.add(getTxtImballo(), null); // Generated
-				pnlDatiPersonali.add(lblPeso, null); // Generated
-				pnlDatiPersonali.add(getTxtPeso(), null); // Generated
-				pnlDatiPersonali.add(lblColore, null); // Generated
-				pnlDatiPersonali.add(getTxtColore(), null); // Generated
-				pnlDatiPersonali.add(lblSconto, null); // Generated
-				pnlDatiPersonali.add(getTxtSconto(), null); // Generated
 				pnlDatiPersonali.add(lblReaprto, null); // Generated
 				pnlDatiPersonali.add(getCmbReparto(), null); // Generated
-				pnlDatiPersonali.add(lblCaricoIniziale, null); // Generated
-				pnlDatiPersonali.add(getTxtCaricoIniziale(), null); // Generated
-				pnlDatiPersonali.add(lblScortaMinima, null); // Generated
-				pnlDatiPersonali.add(getTxtScortaMinima(), null); // Generated
 				pnlDatiPersonali.add(lblNota, null); // Generated
 				pnlDatiPersonali.add(getJScrollPane1(), null); // Generated
 				pnlDatiPersonali.add(getJPanel1(), null); // Generated
@@ -1133,29 +1121,22 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				pnlDatiPersonali.add(getBtnNewReparto(), null); // Generated
 				pnlDatiPersonali.add(getJPanel2(), null); // Generated
 				pnlDatiPersonali.add(getBtnSuggerimento(), null);  // Generated
+				pnlDatiPersonali.add(lblrButtonSiNo, null);
+				pnlDatiPersonali.add(lblSi, null);
+				pnlDatiPersonali.add(lblNo, null);
+				pnlDatiPersonali.add(getRbtnSi(), null);
+				pnlDatiPersonali.add(getRbtnNo(), null);
+				pnlDatiPersonali.add(lblPannelli, null);
+				pnlDatiPersonali.add(getCmbPannelli(), null);
+				pnlDatiPersonali.add(getBtnNewPannello(), null);
+				pnlDatiPersonali.add(getChkBoxQtaInfinita(), null);
+				pnlDatiPersonali.add(lblQtaInfinita, null);
+				pnlDatiPersonali.add(getPnlImage(), null);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
 		}
 		return pnlDatiPersonali;
-	}
-
-	/**
-	 * This method initializes txtCaricoIniziale
-	 *
-	 * @return javax.swing.JTextField
-	 */
-	private JTextField getTxtCaricoIniziale() {
-		if (txtCaricoIniziale == null) {
-			try {
-				txtCaricoIniziale = new JTextField();
-				txtCaricoIniziale.setPreferredSize(new Dimension(100, 20)); // Generated
-				txtCaricoIniziale.setBounds(new Rectangle(5, 323, 100, 20)); // Generated
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return txtCaricoIniziale;
 	}
 
 	/**
@@ -1197,25 +1178,6 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	}
 
 	/**
-	 * This method initializes txtColore
-	 *
-	 * @return javax.swing.JTextField
-	 */
-	private JTextField getTxtColore() {
-		if (txtColore == null) {
-			try {
-				txtColore = new JTextField();
-				txtColore.setPreferredSize(new Dimension(150, 20)); // Generated
-				txtColore.setBounds(new Rectangle(272, 236, 121, 20)); // Generated
-				txtColore.setDocument(new UpperTextDocument());
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return txtColore;
-	}
-
-	/**
 	 * This method initializes txtDescrizione
 	 *
 	 * @return javax.swing.JTextField
@@ -1232,25 +1194,6 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			}
 		}
 		return txtDescrizione;
-	}
-
-	/**
-	 * This method initializes txtImballo
-	 *
-	 * @return javax.swing.JTextField
-	 */
-	private JTextField getTxtImballo() {
-		if (txtImballo == null) {
-			try {
-				txtImballo = new JTextField();
-				txtImballo.setPreferredSize(new Dimension(150, 20)); // Generated
-				txtImballo.setBounds(new Rectangle(5, 236, 150, 20)); // Generated
-				txtImballo.setDocument(new UpperTextDocument());
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return txtImballo;
 	}
 
 	/**
@@ -1298,7 +1241,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				f.setMaximumIntegerDigits(2);
 				txtIva = new JFormattedTextField(f);
 				txtIva.setPreferredSize(new Dimension(40, 20)); // Generated
-				txtIva.setBounds(new Rectangle(164, 150, 40, 20)); // Generated
+				txtIva.setBounds(new Rectangle(145, 150, 40, 20)); // Generated
 				txtIva.setText("0");
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -1324,37 +1267,6 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			}
 		}
 		return txtNote;
-	}
-
-	/**
-	 * This method initializes txtPeso
-	 *
-	 * @return javax.swing.JTextField
-	 */
-	private JTextField getTxtPeso() {
-		if (txtPeso == null) {
-			try {
-				txtPeso = new JTextField();
-				txtPeso.setPreferredSize(new Dimension(100, 20)); // Generated
-				txtPeso.setBounds(new Rectangle(164, 236, 100, 20)); // Generated
-				txtPeso.addFocusListener(new java.awt.event.FocusAdapter() {
-					public void focusLost(java.awt.event.FocusEvent e) {
-						String prezzo = ((JTextField) e.getComponent())
-								.getText();
-
-						if (ControlloDati.prezzoCorretto(prezzo)) {
-							System.out.println("OK");
-						} else {
-							System.out.println("ERRATO");
-							((JTextField) e.getComponent()).setText("");
-						}
-					}
-				});
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return txtPeso;
 	}
 
 	/**
@@ -1442,7 +1354,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				formatPrice.setMinimumFractionDigits(2);
 				txtRicaricoListino = new JFormattedTextField(formatPrice);
 				txtRicaricoListino.setPreferredSize(new Dimension(100, 20)); // Generated
-				txtRicaricoListino.setBounds(new Rectangle(164, 192, 112, 20));
+				txtRicaricoListino.setBounds(new Rectangle(145, 192, 112, 20));
 				/*
 				 * txtRicaricoListino.addFocusListener(new
 				 * java.awt.event.FocusAdapter() { public void
@@ -1460,97 +1372,32 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		return txtRicaricoListino;
 	}
 
-	/**
-	 * This method initializes txtSconto
-	 *
-	 * @return javax.swing.JTextField
-	 */
-	private JTextField getTxtSconto() {
-		if (txtSconto == null) {
-			try {
-				NumberFormat f = DecimalFormat
-						.getIntegerInstance(Locale.ITALIAN);
-				f.setMaximumIntegerDigits(2);
-				f.setMaximumFractionDigits(2);
-				txtSconto = new JFormattedTextField(f);
-				txtSconto.setPreferredSize(new Dimension(100, 20)); // Generated
-				txtSconto.setBounds(new Rectangle(5, 277, 100, 20)); // Generated
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return txtSconto;
-	}
-
-	/**
-	 * This method initializes txtScortaMinima
-	 *
-	 * @return javax.swing.JTextField
-	 */
-	private JTextField getTxtScortaMinima() {
-		if (txtScortaMinima == null) {
-			try {
-				txtScortaMinima = new JTextField();
-				txtScortaMinima.setPreferredSize(new Dimension(100, 20)); // Generated
-				txtScortaMinima.setBounds(new Rectangle(164, 323, 100, 20)); // Generated
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return txtScortaMinima;
-	}
-
-	private void impostaCampi(Articolo c) {
-		Fornitore f = new Fornitore();
-		UnitaDiMisura um = new UnitaDiMisura();
-		Reparto r = new Reparto();
-		try {
-			f.caricaDati(c.getIdFornitore());
-			um.caricaDati(c.getUm());
-			r.caricaDati(c.getIdReparto());
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(this, "Errore caricamento dati",
-					"ERRORE", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}
-
-		this.txtCaricoIniziale.setText(new Integer(c.getCaricoIniziale())
-				.toString());
-		this.txtCodBarre.setText(c.getCodBarre());
-		this.txtCodFornitore.setText(c.getCodFornitore());
-		this.txtColore.setText(c.getColore());
-		this.txtDescrizione.setText(c.getDescrizione());
-		this.txtImballo.setText(c.getImballo());
-		this.txtIva.setText(new Integer(c.getIva()).toString());
-		this.txtNote.setText(c.getNote());
-		this.txtPeso.setText(new Double(c.getPeso()).toString());
-		// this.txtPrezzoAcquisto.setText(new
-		// Double(c.getPrezzoAcquisto()).toString());
-
-		// this.txtPrezzoAcquisto.setText((ControlloDati.convertDoubleToPrezzo(c.getPrezzoAcquisto())));
-		this.txtPrezzoAcquisto.setValue(new Double(c.getPrezzoAcquisto()));
-
-		// this.txtPrezzoListino.setText(ControlloDati.convertDoubleToPrezzo(c.getPrezzoIngrosso()));
-		this.txtPrezzoListino.setValue(new Double(c.getPrezzoIngrosso()));
-		// this.txtRicaricoDettaglio.setText(new
-		// Integer(c.getRicaricoDettaglio()).toString());
-		this.txtRicaricoListino.setText(new Integer(c.getRicaricoIngrosso())
-				.toString());
-		this.txtSconto.setText(new Integer(c.getSconto()).toString());
-		this.txtScortaMinima.setText(new Integer(c.getScortaMinima())
-				.toString());
+	private void impostaCampi(Articoli art) {
+		this.txtCodBarre.setText(art.getCodbarre());
+		this.txtCodFornitore.setText(art.getCodfornitore());
+		this.txtDescrizione.setText(art.getDescrizione());
+		this.txtIva.setText(String.valueOf(art.getIva()));
+		this.txtNote.setText(art.getNote());
+		this.txtPrezzoAcquisto.setValue(art.getPrezzoAcquisto());
+		this.txtPrezzoListino.setValue(art.getPrezzoIngrosso());
+		int pos;
 		// cerchiamo la pos del codice nell'array fornitori
-		int pos = Arrays.ricercaLineare(codFornitori, new Integer(f
-				.getIdFornitore()).toString());
-		this.cmbFornitori.setSelectedIndex(pos+1);
+		if ( art.getFornitori() != null ){
+			pos = Arrays.ricercaLineare(codFornitori, new Long(art.getFornitori().getIdfornitore()).toString());
+			this.cmbFornitori.setSelectedIndex(pos+1);
+		}
 		// cerchiamo la pos del codice nell'array unità di misura
-		pos = Arrays.ricercaLineare(codUnitaDiMisura, new Integer(um.getIdUm())
-				.toString());
+		pos = Arrays.ricercaLineare(codUnitaDiMisura, new Long(art.getUm().getIdum()).toString());
 		this.cmbMisura.setSelectedIndex(pos+1);
 		// cerchiamo la pos del codice nell'array reparti
-		pos = Arrays.ricercaLineare(codReparti, new Integer(r.getIdReparto())
-				.toString());
+		pos = Arrays.ricercaLineare(codReparti, new Long(art.getReparti().getIdreparto()).toString());
 		this.cmbReparto.setSelectedIndex(pos+1);
+		// cerchiamo la pos del codice nell'array pannelli
+		if ( art.getPannelli() != null ){
+			pos = Arrays.ricercaLineare(codPannelli, new Long(art.getPannelli().getIdpannelli()).toString());
+			this.cmbPannelli.setSelectedIndex(pos+1);
+		}
+		this.chkBoxQtaInfinita.setSelected(art.isQtaInfinita());
 	}
 
 	/**
@@ -1559,7 +1406,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(636, 513);
+		this.setSize(636, 500);
 		this.setResizable(false); // Generated
 
 		this.setContentPane(getJContentPane());
@@ -1567,31 +1414,53 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		// Modifichiamo l'editor e aggiorniamo
 		// Combo box con i relativi dati dal DB
 		caricaComboBox();
+		
+		inizializzaRadioButton();
 
 		// se selezionata la modalità modifica
 		// carichiamo i cari dati negli oggetti
 		if (modalita == MOD) {
 			this.setTitle("Modifica Articolo");
-			Articolo c = new Articolo();
-			try {
-				c.caricaDati(this.idArticolo);
-				ultimoArticolo[0]=c.getCodBarre();
-				impostaCampi(c);
-				calcoloPercentualeRicarico();
-				calcolaPrezzoListinoByPrezzoAcquisto();
-				calcolaPrezzoPubblico();
-				caricaQtaMagazzino();
-			} catch (SQLException e) {
-				JOptionPane.showMessageDialog(this,
-						"Errore caricamento dati DB", "ERRORE",
-						JOptionPane.ERROR_MESSAGE);
-				e.printStackTrace();
-				return;
+			Articoli art = ArticoliHome.getInstance().findById(idArticolo);
+			ultimoArticolo[0]=art.getCodbarre();
+			impostaCampi(art);
+//			calcoloPercentualeRicarico();
+//			calcolaPrezzoListinoByPrezzoAcquisto();
+//			calcolaPrezzoPubblico();
+			caricaQtaMagazzino();
+			// Verifichiamo se il codice a barre e' diverso da nullo rendiamo il campo editabile
+			if ( art.getCodbarre() != null && !art.getCodbarre().trim().equals("") ){
+				rbtnNo.setSelected(true);
+				txtCodBarre.setEditable(false);
+				txtCodFornitore.setEditable(false);
+				btnSuggerimento.setEnabled(false);
+			}
+			else{
+				rbtnSi.setSelected(true);
+				txtCodBarre.setEditable(true);
+				txtCodFornitore.setEditable(true);
+				btnSuggerimento.setEnabled(true);
+			}
+			if ( art.getImmagineArticolos().size() != 0 ){
+				ArrayList<ImmagineArticolo> imgList = new ArrayList(art.getImmagineArticolos());
+				imgArticolo = imgList.get(0);
+				lbl1.setIcon(UtilityImage.resizeImage(new ImageIcon(imgArticolo.getFile()), 50, 50));
 			}
 		} else {
 			this.setTitle("Inserisci Articoli");
+			// Si tratta di un nuovo articolo quindi il codice dev'essere editabile
+			rbtnSi.setSelected(true);
+			txtCodBarre.setEditable(true);
+			txtCodFornitore.setEditable(true);
+			btnSuggerimento.setEnabled(true);
 		}// fine impostazione tipo finestra
 
+	}
+	
+	private void inizializzaRadioButton() {
+		ButtonGroup g = new ButtonGroup();
+		g.add(rbtnSi);
+		g.add(rbtnNo);
 	}
 
 	/**
@@ -1601,7 +1470,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		caricaCmbFornitori();
 		caricaCmbCategoria();
 		caricaCmbUnitaDiMisura();
-
+		caricaCmbPannelli();
 	}
 
 	/**
@@ -1682,6 +1551,33 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		AutoCompletion.enable(cmbReparto);
 
 	}
+	
+	private void caricaCmbPannelli() {
+		cmbPannelli.removeAllItems();
+		PannelliHome.getInstance().begin();
+		ArrayList<Pannelli> pannelli = PannelliHome.getInstance().allPannelli();
+		String [] allPannelli = new String[pannelli.size()];
+		// questi due array li usiamo per tenere
+		// traccia dei codici del fornitore in
+		// base alla posizione che si trovano nel combo
+		codPannelli = new String[pannelli.size()];
+		descPannelli = new String[pannelli.size()];
+		// Impostiamo e carichiamo i dati nel combobox
+		cmbPannelli.setEditable(true);
+		cmbPannelli.addItem("");
+		int count = 0;
+		for (Pannelli p : pannelli){
+			allPannelli[count] = p.getIdpannelli()+"-"+p.getNome();
+			codPannelli[count] = String.valueOf(p.getIdpannelli());
+			descPannelli[count] = p.getNome();
+			cmbPannelli.addItem(p.getNome());
+			count++;
+		}
+		
+		//new ComboBoxAutoComplete(cmbReparto);
+		AutoCompletion.enable(cmbPannelli);
+
+	}
 
 	/**
 	 *
@@ -1720,39 +1616,71 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		// cambiamo l'edito del combo
 		JTextComponent editor = (JTextComponent) cmbFornitori.getEditor()
 				.getEditorComponent();
-		// editor.addKeyListener(new MyKeyListeners());
-		//new ComboBoxAutoComplete(cmbFornitori);
 		AutoCompletion.enable(cmbFornitori);
 
 	}
-
-	private void inserisci() {
-		Articolo a = new Articolo();
-		boolean ok = recuperaDatiCampi(a);
-		if (ok) {
-			try {
-				a.insertArticolo();
-			} catch (IDNonValido e) {
-				JOptionPane.showMessageDialog(this, "Valore idCliente errato",
-						"ERRORE", JOptionPane.ERROR_MESSAGE);
-				try {
-					e.printStackTrace(new PrintWriter(
-							"inserimento_idnonvalido.txt"));
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-			svuotaCampi();
+	
+	private void caricaImmagine(){
+		JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
+		int scelta = chooser.showOpenDialog(this);
+		if (scelta == JFileChooser.APPROVE_OPTION) {
+			imgArticolo = new ImmagineArticolo();
+			imgArticolo.setNome(chooser.getSelectedFile().getName());
+			UtilityImage.loadImageFromURL(chooser.getSelectedFile().getPath(), imgArticolo, this);
+			ImageIcon img = new ImageIcon(imgArticolo.getFile());
+			lbl1.setIcon(UtilityImage.resizeImage(img, 50, 50));
 		}
-
-		// chiusura della finestra se selezionata
-		//opzione closeOnOK
-		if(this.close)
-			dispose();
-
+	}
+	
+	private void rimuoviImmagine(){
+		lbl1.setIcon(null);
+		imgArticolo = null;
 	}
 
+	private void inserisci() {
+		try{
+			Articoli a = new Articoli();
+			boolean ok = recuperaDatiCampi(a);
+			if (ok) {
+				ArticoliHome.getInstance().begin();
+				if ( !ArticoliHome.getInstance().codBarreEsistenteForInsert(a.getCodbarre()) ){
+					a.setIdarticolo(dbm.getNewID("articoli","idarticolo"));
+					ArticoliHome.getInstance().persist(a);
+					ArticoliHome.getInstance().begin();
+					ArticoliHome.getInstance().commit();
+					Scarico sc = new Scarico();
+					Carico c = new Carico();
+					try {
+						a.setQtaInfinita(true);
+						if ( a.isQtaInfinita() ){
+							c.setIdCarico(0);
+							c.insertArticolo((int)a.getIdarticolo(), 0, a.getPrezzoAcquisto());
+						}
+						sc.insertScaricoInizialeZero((int)a.getIdarticolo());					
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+					svuotaCampi();
+				}
+				else {
+					JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
+							"ERRORE", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+			}
+
+			// chiusura della finestra se selezionata
+			//opzione closeOnOK
+			if(this.close)
+				dispose();
+		}
+		catch(FindByNotFoundException fe){
+			JOptionPane.showMessageDialog(this, fe.toString(),
+					"ERRORE", JOptionPane.ERROR_MESSAGE);
+			fe.printStackTrace();
+		}
+	}
+	
 	private void modifica() {
 		if (idArticolo <= 0)
 			JOptionPane.showMessageDialog(this, "Codice idArticolo errato",
@@ -1763,32 +1691,62 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				JOptionPane.INFORMATION_MESSAGE);
 		if (scelta != JOptionPane.YES_OPTION)
 			return;
-		Articolo a = new Articolo();
-		a.setIdArticolo(idArticolo);
-		recuperaDatiCampi(a);
-		try {
-			a.updateArticolo();
-		} catch (IDNonValido e) {
-			JOptionPane.showMessageDialog(this, "Valore idFornitore errato",
-					"ERRORE", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
+		try{
+			ArticoliHome.getInstance().begin();
+			Articoli a = ArticoliHome.getInstance().findById(idArticolo);
+			String oldCodBarre = a.getCodbarre();
+			boolean ok = recuperaDatiCampi(a);
+			if ( ok ){
+				ArticoliHome.getInstance().begin();
+				// Se il codice a barre e' stato modificato
+				if ( !a.getCodbarre().equals(oldCodBarre) ){
+					// Dobbiamo verificare se quel codice a barre e' utilizzabile
+					if ( ArticoliHome.getInstance().codBarreEsistenteForUpdate(a.getCodbarre(), a.getIdarticolo()) ){
+						// codice a barre non inseribile
+						JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
+								"ERRORE", JOptionPane.ERROR_MESSAGE);
+					}
+					else {
+						// Possiamo persistere le modifiche
+						ArticoliHome.getInstance().persist(a);
+						ArticoliHome.getInstance().commit();
+					}
+				}
+				// Il codice a barre non e' stato modificato quindi si puo' salvare
+				else{
+					ArticoliHome.getInstance().persist(a);
+					ArticoliHome.getInstance().commit();
+				}
+			}
+
+			this.ultimoArticolo[0]=a.getCodbarre();
+			this.dispose();
 		}
-		// ultimo articolo appunto lavorato
-		this.ultimoArticolo[0]=a.getCodBarre();
-		this.dispose();
+		catch(FindByNotFoundException fe){
+			JOptionPane.showMessageDialog(this, fe.toString(),
+					"ERRORE", JOptionPane.ERROR_MESSAGE);
+			fe.printStackTrace();
+		}
 
 	}
-
+	
 	/**
+	 * @throws FindByNotFoundException 
 	 *
 	 */
-	private boolean recuperaDatiCampi(Articolo a) {
+	private boolean recuperaDatiCampi(Articoli a) throws FindByNotFoundException {
 
-		a.setCodBarre(txtCodBarre.getText());
-		a.setCodFornitore(txtCodFornitore.getText());
+		if ( txtCodBarre.getText().trim().equals("") || txtCodBarre.getText().length() < 4 ){
+			JOptionPane.showMessageDialog(this, "Codice a Barre non valido.",
+					"ERRORE", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		
+		a.setCodbarre(txtCodBarre.getText());
+		a.setCodfornitore(txtCodFornitore.getText());
 		// Controllo se è stato selezionato l'unità di misura
 		if (((String) cmbMisura.getSelectedItem()).equalsIgnoreCase("")) {
-			messaggioCampoErrato("Selezionare l'unità di misura");
+			messaggioCampoErrato("Selezionare l'unit\u00E0 di misura");
 			return false;
 		}
 
@@ -1800,26 +1758,25 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		// anche un oggetto vuoto
 		pos--;
 		int cod = new Integer(codUnitaDiMisura[pos]);
-		a.setCodiceUnitaDiMisura(cod);
+		a.setUm(UmHome.getInstance().findById(cod));
 
-		a.setColore(txtColore.getText());
 		a.setDescrizione(txtDescrizione.getText());
 		// controllo se è stato selezionato il
 		// fornitore
-		if (((String) cmbFornitori.getSelectedItem()).equalsIgnoreCase("")) {
-			messaggioCampoErrato("Selezionare il fornitore");
-			return false;
-		}
+//		if (((String) cmbFornitori.getSelectedItem()).equalsIgnoreCase("")) {
+//			messaggioCampoErrato("Selezionare il fornitore");
+//			return false;
+//		}
 
 		// Preleviamo il codice fornitore
 		pos = cmbFornitori.getSelectedIndex();
-		if (pos == 0)
-			return false;
-		// descrementiamo di uno perchè nel combobox è presente
-		// anche un oggetto vuoto
-		pos--;
-		cod = new Integer(codFornitori[pos]);
-		a.setIdFornitore(cod);
+		if (pos != 0){
+			// descrementiamo di uno perchè nel combobox è presente
+			// anche un oggetto vuoto
+			pos--;
+			cod = new Integer(codFornitori[pos]);
+			a.setFornitori(FornitoriHome.getInstance().findById(cod));
+		}
 
 		// controllo se è stato selezionato il reparto
 		if (((String) cmbReparto.getSelectedItem()).equalsIgnoreCase("")) {
@@ -1835,22 +1792,25 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		// anche un oggetto vuoto
 		pos--;
 		cod = new Integer(codReparti[pos]);
-		a.setIdReparto(cod);
+		a.setReparti(RepartiHome.getInstance().findById(cod));
+		
+		// Preleviamo il codice del pannello
+		if ( cmbPannelli.getSelectedIndex() > 0 ){
+			cod = new Integer(codPannelli[(cmbPannelli.getSelectedIndex() - 1)]);
+			a.setPannelli(PannelliHome.getInstance().findById(cod));
+		}
+		else {
+			a.setPannelli(null);
+		}
+		
 
-		a.setImballo(txtImballo.getText());
 		// impostiamoiva
 		if (txtIva.getText().equalsIgnoreCase(""))
-			a.setIva(0);
+			a.setIva(0L);
 		else
-			a.setIva(Integer.parseInt(txtIva.getText()));
+			a.setIva(Long.parseLong(txtIva.getText()));
 
 		try {
-			if (txtPeso.getText().equalsIgnoreCase("")) {
-				a.setPeso(0.0);
-			} else
-				a.setPeso((ControlloDati.convertPrezzoToDouble(txtPeso
-						.getText())));
-
 			if (txtPrezzoAcquisto.getText().equalsIgnoreCase("")) {
 				a.setPrezzoAcquisto(0.00);
 			} else {
@@ -1877,35 +1837,29 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 					a.setPrezzoIngrosso(new Double(value).doubleValue());
 				}
 			}
+			a.setPrezzoDettaglio(a.getPrezzoIngrosso());
 		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(this, "Numero malformato",
 					"NUMERO ERRATO", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
-		} catch (ParseException e) {
-			// JOptionPane.showMessageDialog(this, "Campo prezzo errato",
-			// "ERRORE", JOptionPane.ERROR_MESSAGE);
+		} 
 
-			e.printStackTrace();
-		}
-
-		// impostiamo sconto
-		if (txtSconto.getText().equalsIgnoreCase(""))
-			a.setSconto(0);
-		else
-			a.setSconto(Integer.parseInt((txtSconto.getText())));
-		// impostiamo sconto
-		if (txtScortaMinima.getText().equalsIgnoreCase(""))
-			a.setScortaMinima(0);
-		else
-			a.setScortaMinima(Integer.parseInt((txtScortaMinima.getText())));
-		// impostiamo sconto
-		if (txtCaricoIniziale.getText().equalsIgnoreCase(""))
-			a.setCaricoIniziale(0);
-		else
-			a
-					.setCaricoIniziale(Integer.parseInt((txtCaricoIniziale
-							.getText())));
 		a.setNote(txtNote.getText());
+		a.setQtaInfinita(chkBoxQtaInfinita.isSelected());
+		if ( imgArticolo != null ){
+			if ( imgArticolo.getId() == 0 ){
+				for ( ImmagineArticolo img : new ArrayList<ImmagineArticolo>(a.getImmagineArticolos()) ){
+					ImmagineArticoloHome.getInstance().begin();
+					ImmagineArticoloHome.getInstance().delete(img);
+					ImmagineArticoloHome.getInstance().commit();
+				}
+				imgArticolo.setArticoli(a);
+				imgArticolo.setId(dbm.getNewID("immagine_articolo", "id"));
+				ImmagineArticoloHome.getInstance().begin();
+				ImmagineArticoloHome.getInstance().persist(imgArticolo);
+				a.getImmagineArticolos().add(imgArticolo);
+			}
+		}
 		return true;
 
 	}
@@ -1976,6 +1930,135 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			}
 		}
 		return btnSuggerimento;
+	}
+
+	/**
+	 * This method initializes rbtnSi	
+	 * 	
+	 * @return javax.swing.JRadioButton	
+	 */
+	private JRadioButton getRbtnSi() {
+		if (rbtnSi == null) {
+			rbtnSi = new JRadioButton("Si");
+			rbtnSi.setBounds(new Rectangle(390, 20, 21, 21));
+			rbtnSi.addActionListener(new MyActionListener());
+		}
+		return rbtnSi;
+	}
+
+	/**
+	 * This method initializes rbtnNo	
+	 * 	
+	 * @return javax.swing.JRadioButton	
+	 */
+	private JRadioButton getRbtnNo() {
+		if (rbtnNo == null) {
+			rbtnNo = new JRadioButton();
+			rbtnNo.setBounds(new Rectangle(450, 20, 21, 21));
+			rbtnNo.addActionListener(new MyActionListener());
+		}
+		return rbtnNo;
+	}
+
+	/**
+	 * This method initializes cmbPannelli	
+	 * 	
+	 * @return javax.swing.JComboBox	
+	 */
+	private JComboBox getCmbPannelli() {
+		if (cmbPannelli == null) {
+			cmbPannelli = new JComboBox();
+			cmbPannelli.setBounds(new Rectangle(5, 285, 169, 25));
+		}
+		return cmbPannelli;
+	}
+
+	/**
+	 * This method initializes btnNewPannello	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnNewPannello() {
+		if (btnNewPannello == null) {
+			btnNewPannello = new JButton();
+			btnNewPannello.setBounds(new Rectangle(190, 284, 75, 29));
+			btnNewPannello.setText("Nuovo");
+			btnNewPannello.addActionListener(new MyActionListener());
+		}
+		return btnNewPannello;
+	}
+
+	/**
+	 * This method initializes chkBoxQtaInfinita	
+	 * 	
+	 * @return javax.swing.JCheckBox	
+	 */
+	private JCheckBox getChkBoxQtaInfinita() {
+		if (chkBoxQtaInfinita == null) {
+			chkBoxQtaInfinita = new JCheckBox();
+			chkBoxQtaInfinita.setBounds(new Rectangle(285, 190, 28, 23));
+		}
+		return chkBoxQtaInfinita;
+	}
+
+	/**
+	 * This method initializes pnlImage	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPnlImage() {
+		if (pnlImage == null) {
+			lbl1 = new JLabel();
+			lbl1.setBounds(new Rectangle(0, 0, 80, 80));
+			pnlImage = new JPanel();
+			pnlImage.setLayout(null);
+			pnlImage.setBounds(new Rectangle(400, 290, 200, 80));
+			pnlImage.setBorder(BorderFactory.createTitledBorder(
+					BorderFactory.createBevelBorder(BevelBorder.RAISED),
+					"Immagine",
+					TitledBorder.DEFAULT_JUSTIFICATION,
+					TitledBorder.DEFAULT_POSITION, new Font("Dialog",
+							Font.BOLD, 12), new Color(51, 51, 51))); // Generated
+			if ( imgArticolo != null ){
+				lbl1.setIcon(new ImageIcon(imgArticolo.getFile()));
+			}
+			lbl1.setVerticalAlignment(0);
+			lbl1.setHorizontalAlignment(0);
+			pnlImage.add(lbl1, null);
+			pnlImage.add(getBtnAddImage(), null);
+			pnlImage.add(getBtnRemoveImage(), null);
+		}
+		return pnlImage;
+	}
+
+	/**
+	 * This method initializes btnAddImage	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnAddImage() {
+		if (btnAddImage == null) {
+			btnAddImage = new JButton();
+			btnAddImage.setBounds(new Rectangle(90, 12, 90, 29));
+			btnAddImage.setText("Aggiungi");
+			btnAddImage.addActionListener(new MyActionListener());
+		}
+		return btnAddImage;
+	}
+
+	/**
+	 * This method initializes btnRemoveImage	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnRemoveImage() {
+		if (btnRemoveImage == null) {
+			btnRemoveImage = new JButton();
+			btnRemoveImage.setBounds(new Rectangle(90, 45, 90, 29));
+			btnRemoveImage.setText("Rimuovi");
+			btnRemoveImage.addActionListener(new MyActionListener());
+		}
+		return btnRemoveImage;
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

@@ -57,6 +57,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.text.JTextComponent;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -77,11 +78,14 @@ import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.Carico;
 import rf.pegaso.db.tabelle.Documento;
 import rf.pegaso.db.tabelle.Fornitore;
+import rf.pegaso.db.tabelle.UnitaDiMisura;
 import rf.pegaso.db.tabelle.exception.NumeroCaricoEsistente;
 import rf.pegaso.gui.utility.ModificaQuantitaRiga;
+import rf.utility.Constant;
 import rf.utility.ControlloDati;
 import rf.utility.db.DBManager;
 import rf.utility.db.UtilityDBManager;
+import rf.utility.db.eccezzioni.CodiceBarreEsistente;
 import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.SospesiColorRenderer;
 import rf.utility.gui.UtilGUI;
@@ -90,6 +94,7 @@ import rf.utility.gui.text.AutoCompletion;
 import rf.utility.gui.text.UpperAutoCompleteDocument;
 import rf.utility.gui.text.UpperTextDocument;
 
+import com.sun.org.apache.xerces.internal.impl.xs.models.CMBuilder;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
 
@@ -198,7 +203,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		txtNumeroCarico = null;
 		txtPrezzo = null;
 		txtQta = null;
-		txtUm = null;
+		cmbMisura = null;
 		lblDataDocumento = null;
 		btnNewArticolo = null;
 		dataCarico = null;
@@ -422,7 +427,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 	private void azzeraCampi() {
 		txtCodBarre.setText("");
-		txtUm.setText("");
+		cmbMisura.setSelectedIndex(0);
 		txtQta.setValue(0.0);
 		txtPrezzo.setValue(0.0);
 		cmbProdotti.setSelectedIndex(0);
@@ -433,7 +438,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 	private void azzeraTesto() {
 		txtCodBarre.setText("");
-		txtUm.setText("");
+		cmbMisura.setSelectedIndex(0);
 		txtQta.setValue(new Double(0.0));
 		txtPrezzo.setText("");
 		txtNote.setText("");
@@ -454,7 +459,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		cmbProdotti.removeAllItems();
 		Articolo f = new Articolo();
 		try {
-			String as[] = (String[]) f.allArticoli();
+			String as[] = (String[]) f.allArticoli(false);
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
 			((IDJComboBox) cmbProdotti).caricaNewValueComboBox(as, true);
@@ -524,7 +529,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 				f.caricaDati(a.getIdFornitore());
 				cmbFornitori.setSelectedItem(f.getNome());
 				cmbProdotti.setSelectedItem(a.getDescrizione());
-				txtUm.setText((new Integer(a.getUm())).toString());
+				cmbMisura.setSelectedIndex(a.getUm());
 				txtQta.setValue((new Double(1.0)));
 				txtPrezzo.setValue(new Double(a.getPrezzoAcquisto()));
 				txtCodBarre.setText(codBarre);
@@ -590,7 +595,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		try {
 			a.caricaDati(idarticolo);
 			txtCodBarre.setText(a.getCodBarre());
-			txtUm.setText((new Integer(a.getUm())).toString());
+			cmbMisura.setSelectedIndex(a.getUm());
 			txtQta.setValue((new Double(1.0)));
 			txtPrezzo.setValue(new Double(a.getPrezzoAcquisto()));
 		} catch (SQLException e1) {
@@ -632,6 +637,54 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		}
 		AutoCompletion.enable(cmbFornitori);
 	}
+	
+	/**
+	 *
+	 */
+	private void caricaCmbUnitaDiMisura() {
+		cmbMisura.removeAllItems();
+		UnitaDiMisura f = new UnitaDiMisura();
+		String allUnita[] = null;
+
+		try {
+			allUnita = (String[]) f.allUnitaDiMisura();
+		} catch (SQLException e2) {
+			messaggioErroreCampo("Errore caricamento dati fornitori");
+			e2.printStackTrace();
+		}
+
+		// questi due array li usiamo per tenere
+		// traccia dei codici del fornitore in
+		// base alla posizione che si trovano nel combo
+		int size = allUnita.length;
+		codUnitaDiMisura = new String[size];
+		descUnitaDiMisura = new String[size];
+
+		// Impostiamo e carichiamo i dati nel combobox
+		cmbMisura.setEditable(true);
+		cmbMisura.addItem("");
+		for (int i = 0; i < size; i++) {
+			String cod = allUnita[i].substring(0, allUnita[i].indexOf("-") - 1);
+			String des = allUnita[i].substring(allUnita[i].indexOf("-") + 2);
+			codUnitaDiMisura[i] = cod;
+			descUnitaDiMisura[i] = des;
+			cmbMisura.addItem(descUnitaDiMisura[i]);
+		}
+		// cambiamo l'edito del combo
+		JTextComponent editor = (JTextComponent) cmbMisura.getEditor()
+				.getEditorComponent();
+		//new ComboBoxAutoComplete(cmbMisura);
+		AutoCompletion.enable(cmbMisura);
+//		Articolo a = new Articolo();
+//		try {
+//			a.caricaDati(idArticolo);
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		cmbMisura.setSelectedIndex(a.getUm());
+
+	}
 
 	private void controlloAggPrezzo() {
 		Articolo a = new Articolo();
@@ -667,6 +720,15 @@ public class CaricoGui extends JFrame implements TableModelListener {
 				try {
 					a.updateArticolo();
 				} catch (IDNonValido e) {
+					e.printStackTrace();
+				} catch (CodiceBarreEsistente e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (CodiceBarreInesistente e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -911,7 +973,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 			Fornitore f = new Fornitore();
 			f.caricaDati(a.getIdFornitore());
 			cmbFornitori.setSelectedItem(f.getNome());
-			txtUm.setText((new Integer(a.getUm())).toString());
+			cmbMisura.setSelectedIndex(a.getUm());
 			txtQta.setValue((new Double(1.0)));
 			txtPrezzo.setValue(new Double(a.getPrezzoAcquisto()));
 			txtCodBarre.setText(a.getCodBarre());
@@ -1043,11 +1105,11 @@ public class CaricoGui extends JFrame implements TableModelListener {
 				lblNote.setBounds(new Rectangle(8, 108, 111, 20));
 				lblNote.setText("Note");
 				lblPrezzo = new JLabel();
-				lblPrezzo.setBounds(new Rectangle(124, 65, 74, 16));
+				lblPrezzo.setBounds(new Rectangle(153, 65, 74, 16));
 				lblPrezzo.setHorizontalAlignment(0);
 				lblPrezzo.setText("Prezzo");
 				lblQta = new JLabel();
-				lblQta.setBounds(new Rectangle(59, 65, 60, 16));
+				lblQta.setBounds(new Rectangle(88, 65, 60, 16));
 				lblQta.setHorizontalTextPosition(0);
 				lblQta.setHorizontalAlignment(0);
 				lblQta.setText("qt\340");
@@ -1074,7 +1136,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 				pnlProdotto.add(lblDescrizioneProdotto, null);
 				pnlProdotto.add(getCmbProdotti(), null);
 				pnlProdotto.add(getBtnInserisci(), null);
-				pnlProdotto.add(getTxtUm(), null);
+				pnlProdotto.add(getCmbMisura(), null);
 				pnlProdotto.add(lblUm, null);
 				pnlProdotto.add(lblQta, null);
 				pnlProdotto.add(getTxtQta(), null);
@@ -1243,7 +1305,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 			try {
 				txtCodBarre = new JTextField();
 				AutoCompleteTextComponent complete = new AutoCompleteTextComponent(
-						txtCodBarre, dbm, "articoli", "codbarre");
+						txtCodBarre, dbm, "articoli", "codbarre", " where idreparto <> "+Constant.REPARTO_TABACCHI);
 				dbm.addDBStateChange(complete);
 				txtCodBarre.setDocument(new UpperAutoCompleteDocument(complete,
 						true));
@@ -1307,7 +1369,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 				txtNumDocumento = new JTextField();
 				txtNumDocumento.setBounds(new Rectangle(96, 80, 101, 25));
 				AutoCompleteTextComponent complete = new AutoCompleteTextComponent(
-						txtNumDocumento, dbm, "carichi", "num_documento");
+						txtNumDocumento, dbm, "carichi", "num_documento", "");
 				dbm.addDBStateChange(complete);
 				txtNumDocumento.setDocument(new UpperAutoCompleteDocument(complete,
 						false));
@@ -1323,7 +1385,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 				txtNumeroCarico.setBounds(new Rectangle(69, 20, 65, 25));
 				txtNumeroCarico.setEditable(false);
 				AutoCompleteTextComponent complete = new AutoCompleteTextComponent(
-						txtNumeroCarico, dbm, "carichi", "idcarico");
+						txtNumeroCarico, dbm, "carichi", "idcarico", "");
 				dbm.addDBStateChange(complete);
 				txtNumeroCarico.setDocument(new UpperAutoCompleteDocument(
 						complete, false));
@@ -1339,7 +1401,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 				formatPrice.setMaximumFractionDigits(2);
 				formatPrice.setMinimumFractionDigits(2);
 				txtPrezzo = new JFormattedTextField(formatPrice);
-				txtPrezzo.setBounds(new Rectangle(124, 82, 76, 20));
+				txtPrezzo.setBounds(new Rectangle(153, 82, 76, 20));
 				txtPrezzo.setValue(0);
 			} catch (Throwable throwable) {
 			}
@@ -1353,7 +1415,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 				formatPrice.setMaximumFractionDigits(2);
 				formatPrice.setMinimumFractionDigits(2);
 				txtQta = new JFormattedTextField(formatPrice);
-				txtQta.setBounds(new Rectangle(59, 82, 60, 20));
+				txtQta.setBounds(new Rectangle(88, 82, 60, 20));
 				txtQta.setValue(0.0);
 				/*
 				 * txtQta.addFocusListener(new FocusAdapter() {
@@ -1368,15 +1430,23 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		return txtQta;
 	}
 
-	private JTextField getTxtUm() {
-		if (txtUm == null)
+	/**
+	 * This method initializes cmbMisura
+	 *
+	 * @return javax.swing.JComboBox
+	 */
+	private JComboBox getCmbMisura() {
+		if (cmbMisura == null) {
 			try {
-				txtUm = new JTextField();
-				txtUm.setBounds(new Rectangle(8, 82, 44, 20));
-				txtUm.setEditable(false);
-			} catch (Throwable throwable) {
+				cmbMisura = new JComboBox();
+				cmbMisura.setPreferredSize(new Dimension(70, 25)); // Generated
+				cmbMisura.setBounds(new Rectangle(8, 82, 70, 25)); // Generated
+				// caricaUnitaMisura(cmbMisura);
+			} catch (java.lang.Throwable e) {
+				// TODO: Something
 			}
-		return txtUm;
+		}
+		return cmbMisura;
 	}
 
 	private void initialize() {
@@ -1445,6 +1515,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		caricaFornitori(cmbFornitori);
 		caricaArticoli(cmbProdotti);
 		caricaDocumenti(cmbTipoDocumento);
+		caricaCmbUnitaDiMisura();
 		inizializzaListeners();
 		inizializzaRadioButton();
 
@@ -1471,6 +1542,10 @@ public class CaricoGui extends JFrame implements TableModelListener {
 	}
 
 	private void inserisci() {
+		if ( new Integer(txtNumeroCarico.getText()) == 0 ){
+			messaggioCampoMancante("Impossibile modificare il carico iniziale.", "WARNING");
+			return;
+		}
 		String doc = cmbTipoDocumento.getSelectedItem().toString();
 		if (doc.equalsIgnoreCase("")) {
 			messaggioCampoMancante("Tipo di documento non selezionato");
@@ -1910,7 +1985,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 	private JFormattedTextField txtQta;
 
-	private JTextField txtUm;
+	private JComboBox cmbMisura = null;
 
 	private JLabel lblDataDocumento;
 
@@ -1991,6 +2066,10 @@ public class CaricoGui extends JFrame implements TableModelListener {
 	private JPanel pnlSconto = null;
 
 	private JFormattedTextField txtSconto = null;
+	
+	private String[] descUnitaDiMisura;
+	
+	private String[] codUnitaDiMisura;
 
 	/**
 	 * This method initializes btnNuovoForn
@@ -2012,8 +2091,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 	}
 
 	protected void nuovoFornitore() {
-		FornitoriAdd add = new FornitoriAdd(this, DBManager
-				.getIstanceSingleton());
+		FornitoriAdd add = new FornitoriAdd(this);
 		add.setVisible(true);
 		caricaFornitori(cmbFornitori);
 

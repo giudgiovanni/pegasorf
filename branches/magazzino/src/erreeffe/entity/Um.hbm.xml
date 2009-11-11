@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 19-nov-2008 20.32.15 by Hibernate Tools 3.2.2.GA -->
+<hibernate-mapping>
+    <class name="erreeffe.entity.Um" table="um" schema="public">
+        <id name="idum" type="long" unsaved-value="0">
+            <column name="idum" />
+            <generator class="native" />
+        </id>
+        <property name="nome" type="string">
+            <column name="nome" length="40" not-null="true" />
+        </property>
+        <property name="descrizione" type="string">
+            <column name="descrizione" length="100" />
+        </property>
+        <set name="articolis" inverse="true">
+            <key>
+                <column name="um" />
+            </key>
+            <one-to-many class="erreeffe.entity.Articoli" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,650 @@
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 01:18:50 ----------------------------------
+ok
+--> FINE APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA FINE : 30-10-2007 / 01:20:14 ----------------------------------
+
+
+-------------------------------------------------------------------------------------
+
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 01:20:16 ----------------------------------
+
+org.postgresql.util.PSQLException: ERROR: relation "articoli" does not exist	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:1548)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:1316)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:191)
+	at org.postgresql.jdbc2.AbstractJdbc2Statement.execute(AbstractJdbc2Statement.java:452)
+	at org.postgresql.jdbc2.AbstractJdbc2Statement.executeWithFlags(AbstractJdbc2Statement.java:337)
+	at org.postgresql.jdbc2.AbstractJdbc2Statement.executeQuery(AbstractJdbc2Statement.java:236)
+	at rf.pegaso.db.DBManager.executeQuery(DBManager.java:93)
+	at rf.utility.gui.text.AutoCompleteTextComponent.inizialize(AutoCompleteTextComponent.java:113)
+	at rf.utility.gui.text.AutoCompleteTextComponent.<init>(AutoCompleteTextComponent.java:49)
+	at rf.pegaso.gui.gestione.CaricoGui.getTxtCodBarre(CaricoGui.java:1128)
+	at rf.pegaso.gui.gestione.CaricoGui.getPnlProdotto(CaricoGui.java:985)
+	at rf.pegaso.gui.gestione.CaricoGui.getPnlNord(CaricoGui.java:928)
+	at rf.pegaso.gui.gestione.CaricoGui.getPnlCentrale(CaricoGui.java:895)
+	at rf.pegaso.gui.gestione.CaricoGui.getTbp(CaricoGui.java:1116)
+	at rf.pegaso.gui.gestione.CaricoGui.getJContentPane(CaricoGui.java:852)
+	at rf.pegaso.gui.gestione.CaricoGui.initialize(CaricoGui.java:1305)
+	at rf.pegaso.gui.gestione.CaricoGui.<init>(CaricoGui.java:173)
+	at rf.pegaso.gui.internalframe.ArchivioInternalFrame.apriCaricoMerce(ArchivioInternalFrame.java:157)
+	at rf.pegaso.gui.internalframe.ArchivioInternalFrame.access$11(ArchivioInternalFrame.java:156)
+	at rf.pegaso.gui.internalframe.ArchivioInternalFrame$MyActionListener.actionPerformed(ArchivioInternalFrame.java:58)
+	at javax.swing.AbstractButton.fireActionPerformed(Unknown Source)
+	at javax.swing.AbstractButton$Handler.actionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.setPressed(Unknown Source)
+	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(Unknown Source)
+	at java.awt.Component.processMouseEvent(Unknown Source)
+	at javax.swing.JComponent.processMouseEvent(Unknown Source)
+	at java.awt.Component.processEvent(Unknown Source)
+	at java.awt.Container.processEvent(Unknown Source)
+	at java.awt.Component.dispatchEventImpl(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.processMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.dispatchEvent(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Window.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.EventQueue.dispatchEvent(Unknown Source)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.run(Unknown Source)
+
+org.postgresql.util.PSQLException: ERROR: relation "articoli" does not exist	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:1548)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:1316)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:191)
+	at org.postgresql.jdbc2.AbstractJdbc2Statement.execute(AbstractJdbc2Statement.java:452)
+	at org.postgresql.jdbc2.AbstractJdbc2Statement.executeWithFlags(AbstractJdbc2Statement.java:337)
+	at org.postgresql.jdbc2.AbstractJdbc2Statement.executeQuery(AbstractJdbc2Statement.java:236)
+	at rf.pegaso.db.tabelle.Articolo.allArticoli(Articolo.java:120)
+	at rf.pegaso.gui.gestione.CaricoGui.caricaArticoli(CaricoGui.java:406)
+	at rf.pegaso.gui.gestione.CaricoGui.initialize(CaricoGui.java:1320)
+	at rf.pegaso.gui.gestione.CaricoGui.<init>(CaricoGui.java:173)
+	at rf.pegaso.gui.internalframe.ArchivioInternalFrame.apriCaricoMerce(ArchivioInternalFrame.java:157)
+	at rf.pegaso.gui.internalframe.ArchivioInternalFrame.access$11(ArchivioInternalFrame.java:156)
+	at rf.pegaso.gui.internalframe.ArchivioInternalFrame$MyActionListener.actionPerformed(ArchivioInternalFrame.java:58)
+	at javax.swing.AbstractButton.fireActionPerformed(Unknown Source)
+	at javax.swing.AbstractButton$Handler.actionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.setPressed(Unknown Source)
+	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(Unknown Source)
+	at java.awt.Component.processMouseEvent(Unknown Source)
+	at javax.swing.JComponent.processMouseEvent(Unknown Source)
+	at java.awt.Component.processEvent(Unknown Source)
+	at java.awt.Container.processEvent(Unknown Source)
+	at java.awt.Component.dispatchEventImpl(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.processMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.dispatchEvent(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Window.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.EventQueue.dispatchEvent(Unknown Source)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.run(Unknown Source)
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 01:20:53 ----------------------------------
+--> FINE APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA FINE : 30-10-2007 / 01:22:05 ----------------------------------
+
+
+-------------------------------------------------------------------------------------
+
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 01:22:21 ----------------------------------
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 01:22:26 ----------------------------------
+--> FINE APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA FINE : 30-10-2007 / 02:21:43 ----------------------------------
+
+
+-------------------------------------------------------------------------------------
+
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 10:25:49 ----------------------------------
+--> FINE APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA FINE : 30-10-2007 / 11:24:05 ----------------------------------
+
+
+-------------------------------------------------------------------------------------
+
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 11:34:16 ----------------------------------
+
+Exception in thread "AWT-EventQueue-0" java.lang.NullPointerException	at java.awt.Container.addImpl(Unknown Source)
+	at java.awt.Container.add(Unknown Source)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.getPnlCentrale(UpdateIndiciCarico.java:97)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.getJContentPane(UpdateIndiciCarico.java:82)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.initialize(UpdateIndiciCarico.java:66)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.<init>(UpdateIndiciCarico.java:55)
+	at rf.pegaso.gui.internalframe.ArchivioInternalFrame$1.actionPerformed(ArchivioInternalFrame.java:567)
+	at javax.swing.AbstractButton.fireActionPerformed(Unknown Source)
+	at javax.swing.AbstractButton$Handler.actionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.setPressed(Unknown Source)
+	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(Unknown Source)
+	at java.awt.Component.processMouseEvent(Unknown Source)
+	at javax.swing.JComponent.processMouseEvent(Unknown Source)
+	at java.awt.Component.processEvent(Unknown Source)
+	at java.awt.Container.processEvent(Unknown Source)
+	at java.awt.Component.dispatchEventImpl(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.processMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.dispatchEvent(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Window.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.EventQueue.dispatchEvent(Unknown Source)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.run(Unknown Source)
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 11:35:42 ----------------------------------
+
+Exception in thread "AWT-EventQueue-0" java.lang.NullPointerException	at java.awt.Container.addImpl(Unknown Source)
+	at java.awt.Container.add(Unknown Source)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.getPnlCentrale(UpdateIndiciCarico.java:97)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.getJContentPane(UpdateIndiciCarico.java:82)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.initialize(UpdateIndiciCarico.java:66)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.<init>(UpdateIndiciCarico.java:55)
+	at rf.pegaso.gui.internalframe.ArchivioInternalFrame$1.actionPerformed(ArchivioInternalFrame.java:567)
+	at javax.swing.AbstractButton.fireActionPerformed(Unknown Source)
+	at javax.swing.AbstractButton$Handler.actionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.setPressed(Unknown Source)
+	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(Unknown Source)
+	at java.awt.Component.processMouseEvent(Unknown Source)
+	at javax.swing.JComponent.processMouseEvent(Unknown Source)
+	at java.awt.Component.processEvent(Unknown Source)
+	at java.awt.Container.processEvent(Unknown Source)
+	at java.awt.Component.dispatchEventImpl(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.processMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.dispatchEvent(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Window.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.EventQueue.dispatchEvent(Unknown Source)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.run(Unknown Source)
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 11:36:35 ----------------------------------
+
+Exception in thread "AWT-EventQueue-0" java.lang.NullPointerException	at java.awt.Container.addImpl(Unknown Source)
+	at java.awt.Container.add(Unknown Source)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.getPnlCentrale(UpdateIndiciCarico.java:97)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.getJContentPane(UpdateIndiciCarico.java:82)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.initialize(UpdateIndiciCarico.java:66)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.<init>(UpdateIndiciCarico.java:55)
+	at rf.pegaso.gui.internalframe.ArchivioInternalFrame$1.actionPerformed(ArchivioInternalFrame.java:567)
+	at javax.swing.AbstractButton.fireActionPerformed(Unknown Source)
+	at javax.swing.AbstractButton$Handler.actionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.setPressed(Unknown Source)
+	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(Unknown Source)
+	at java.awt.Component.processMouseEvent(Unknown Source)
+	at javax.swing.JComponent.processMouseEvent(Unknown Source)
+	at java.awt.Component.processEvent(Unknown Source)
+	at java.awt.Container.processEvent(Unknown Source)
+	at java.awt.Component.dispatchEventImpl(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.processMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.dispatchEvent(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Window.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.EventQueue.dispatchEvent(Unknown Source)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.run(Unknown Source)
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 11:38:29 ----------------------------------
+
+java.lang.NullPointerException	at java.awt.Container.addImpl(Unknown Source)
+	at java.awt.Container.add(Unknown Source)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.getPnlCentrale(UpdateIndiciCarico.java:103)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.getJContentPane(UpdateIndiciCarico.java:88)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.initialize(UpdateIndiciCarico.java:72)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.<init>(UpdateIndiciCarico.java:57)
+	at rf.pegaso.gui.internalframe.ArchivioInternalFrame$1.actionPerformed(ArchivioInternalFrame.java:567)
+	at javax.swing.AbstractButton.fireActionPerformed(Unknown Source)
+	at javax.swing.AbstractButton$Handler.actionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.setPressed(Unknown Source)
+	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(Unknown Source)
+	at java.awt.Component.processMouseEvent(Unknown Source)
+	at javax.swing.JComponent.processMouseEvent(Unknown Source)
+	at java.awt.Component.processEvent(Unknown Source)
+	at java.awt.Container.processEvent(Unknown Source)
+	at java.awt.Component.dispatchEventImpl(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.processMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.dispatchEvent(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Window.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.EventQueue.dispatchEvent(Unknown Source)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.run(Unknown Source)
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 11:40:43 ----------------------------------
+
+java.lang.NullPointerException	at java.awt.Container.addImpl(Unknown Source)
+	at java.awt.Container.add(Unknown Source)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.getPnlCentrale(UpdateIndiciCarico.java:103)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.getJContentPane(UpdateIndiciCarico.java:88)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.initialize(UpdateIndiciCarico.java:72)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.<init>(UpdateIndiciCarico.java:57)
+	at rf.pegaso.gui.internalframe.ArchivioInternalFrame$1.actionPerformed(ArchivioInternalFrame.java:568)
+	at javax.swing.AbstractButton.fireActionPerformed(Unknown Source)
+	at javax.swing.AbstractButton$Handler.actionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.setPressed(Unknown Source)
+	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(Unknown Source)
+	at java.awt.Component.processMouseEvent(Unknown Source)
+	at javax.swing.JComponent.processMouseEvent(Unknown Source)
+	at java.awt.Component.processEvent(Unknown Source)
+	at java.awt.Container.processEvent(Unknown Source)
+	at java.awt.Component.dispatchEventImpl(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.processMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.dispatchEvent(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Window.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.EventQueue.dispatchEvent(Unknown Source)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.run(Unknown Source)
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 11:41:50 ----------------------------------
+
+java.lang.NullPointerException	at java.awt.Container.addImpl(Unknown Source)
+	at java.awt.Container.add(Unknown Source)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.getPnlCentrale(UpdateIndiciCarico.java:103)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.getJContentPane(UpdateIndiciCarico.java:88)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.initialize(UpdateIndiciCarico.java:72)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.<init>(UpdateIndiciCarico.java:57)
+	at rf.pegaso.gui.internalframe.ArchivioInternalFrame.apriCorrezzioneID(ArchivioInternalFrame.java:576)
+	at rf.pegaso.gui.internalframe.ArchivioInternalFrame$1.actionPerformed(ArchivioInternalFrame.java:567)
+	at javax.swing.AbstractButton.fireActionPerformed(Unknown Source)
+	at javax.swing.AbstractButton$Handler.actionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.setPressed(Unknown Source)
+	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(Unknown Source)
+	at java.awt.Component.processMouseEvent(Unknown Source)
+	at javax.swing.JComponent.processMouseEvent(Unknown Source)
+	at java.awt.Component.processEvent(Unknown Source)
+	at java.awt.Container.processEvent(Unknown Source)
+	at java.awt.Component.dispatchEventImpl(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.processMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.dispatchEvent(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Window.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.EventQueue.dispatchEvent(Unknown Source)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.run(Unknown Source)
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 11:46:46 ----------------------------------
+
+Exception in thread "AWT-EventQueue-0" java.lang.NullPointerException	at java.awt.Container.addImpl(Unknown Source)
+	at java.awt.Container.add(Unknown Source)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.getPnlCentrale(UpdateIndiciCarico.java:99)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.getJContentPane(UpdateIndiciCarico.java:84)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.initialize(UpdateIndiciCarico.java:68)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.<init>(UpdateIndiciCarico.java:55)
+	at rf.pegaso.gui.internalframe.ArchivioInternalFrame.apriCorrezzioneID(ArchivioInternalFrame.java:576)
+	at rf.pegaso.gui.internalframe.ArchivioInternalFrame$1.actionPerformed(ArchivioInternalFrame.java:567)
+	at javax.swing.AbstractButton.fireActionPerformed(Unknown Source)
+	at javax.swing.AbstractButton$Handler.actionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.setPressed(Unknown Source)
+	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(Unknown Source)
+	at java.awt.Component.processMouseEvent(Unknown Source)
+	at javax.swing.JComponent.processMouseEvent(Unknown Source)
+	at java.awt.Component.processEvent(Unknown Source)
+	at java.awt.Container.processEvent(Unknown Source)
+	at java.awt.Component.dispatchEventImpl(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.processMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.dispatchEvent(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Window.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.EventQueue.dispatchEvent(Unknown Source)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.run(Unknown Source)
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 11:47:15 ----------------------------------
+
+Exception in thread "AWT-EventQueue-0" java.lang.NullPointerException	at java.awt.Container.addImpl(Unknown Source)
+	at java.awt.Container.add(Unknown Source)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.getPnlCentrale(UpdateIndiciCarico.java:99)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.getJContentPane(UpdateIndiciCarico.java:84)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.initialize(UpdateIndiciCarico.java:68)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.<init>(UpdateIndiciCarico.java:55)
+	at rf.pegaso.gui.internalframe.ArchivioInternalFrame.apriCorrezzioneID(ArchivioInternalFrame.java:576)
+	at rf.pegaso.gui.internalframe.ArchivioInternalFrame$1.actionPerformed(ArchivioInternalFrame.java:567)
+	at javax.swing.AbstractButton.fireActionPerformed(Unknown Source)
+	at javax.swing.AbstractButton$Handler.actionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.setPressed(Unknown Source)
+	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(Unknown Source)
+	at java.awt.Component.processMouseEvent(Unknown Source)
+	at javax.swing.JComponent.processMouseEvent(Unknown Source)
+	at java.awt.Component.processEvent(Unknown Source)
+	at java.awt.Container.processEvent(Unknown Source)
+	at java.awt.Component.dispatchEventImpl(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.processMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.dispatchEvent(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Window.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.EventQueue.dispatchEvent(Unknown Source)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.run(Unknown Source)
+--> FINE APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA FINE : 30-10-2007 / 11:47:38 ----------------------------------
+
+
+-------------------------------------------------------------------------------------
+
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 11:50:40 ----------------------------------
+
+Exception in thread "AWT-EventQueue-0" java.lang.NullPointerException	at java.awt.Container.addImpl(Unknown Source)
+	at java.awt.Container.add(Unknown Source)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.getPnlCentrale(UpdateIndiciCarico.java:99)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.getJContentPane(UpdateIndiciCarico.java:84)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.initialize(UpdateIndiciCarico.java:68)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.<init>(UpdateIndiciCarico.java:55)
+	at rf.pegaso.gui.internalframe.ArchivioInternalFrame.apriCorrezzioneID(ArchivioInternalFrame.java:576)
+	at rf.pegaso.gui.internalframe.ArchivioInternalFrame$1.actionPerformed(ArchivioInternalFrame.java:567)
+	at javax.swing.AbstractButton.fireActionPerformed(Unknown Source)
+	at javax.swing.AbstractButton$Handler.actionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.setPressed(Unknown Source)
+	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(Unknown Source)
+	at java.awt.Component.processMouseEvent(Unknown Source)
+	at javax.swing.JComponent.processMouseEvent(Unknown Source)
+	at java.awt.Component.processEvent(Unknown Source)
+	at java.awt.Container.processEvent(Unknown Source)
+	at java.awt.Component.dispatchEventImpl(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.processMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.dispatchEvent(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Window.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.EventQueue.dispatchEvent(Unknown Source)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.run(Unknown Source)
+--> FINE APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA FINE : 30-10-2007 / 11:51:13 ----------------------------------
+
+
+-------------------------------------------------------------------------------------
+
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 03:37:51 ----------------------------------
+--> FINE APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA FINE : 30-10-2007 / 03:37:58 ----------------------------------
+
+
+-------------------------------------------------------------------------------------
+
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 03:40:48 ----------------------------------
+
+Exception in thread "AWT-EventQueue-0" java.lang.NullPointerException	at java.awt.Container.addImpl(Container.java:1031)
+	at java.awt.Container.add(Container.java:903)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.getPnlCentrale(UpdateIndiciCarico.java:99)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.getJContentPane(UpdateIndiciCarico.java:84)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.initialize(UpdateIndiciCarico.java:68)
+	at rf.pegaso.gui.gestione.UpdateIndiciCarico.<init>(UpdateIndiciCarico.java:55)
+	at rf.pegaso.gui.InitialGUI.apriModificaID(InitialGUI.java:546)
+	at rf.pegaso.gui.InitialGUI$2.actionPerformed(InitialGUI.java:538)
+	at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:1995)
+	at javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2318)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:387)
+	at javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:242)
+	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(BasicButtonListener.java:236)
+	at java.awt.Component.processMouseEvent(Component.java:6038)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3265)
+	at java.awt.Component.processEvent(Component.java:5803)
+	at java.awt.Container.processEvent(Container.java:2058)
+	at java.awt.Component.dispatchEventImpl(Component.java:4410)
+	at java.awt.Container.dispatchEventImpl(Container.java:2116)
+	at java.awt.Component.dispatchEvent(Component.java:4240)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4322)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:3986)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:3916)
+	at java.awt.Container.dispatchEventImpl(Container.java:2102)
+	at java.awt.Window.dispatchEventImpl(Window.java:2429)
+	at java.awt.Component.dispatchEvent(Component.java:4240)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:599)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:273)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:183)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:173)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:168)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:160)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:121)
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 04:04:48 ----------------------------------
+--> FINE APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA FINE : 30-10-2007 / 04:05:31 ----------------------------------
+
+
+-------------------------------------------------------------------------------------
+
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 04:50:01 ----------------------------------
+--> FINE APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA FINE : 30-10-2007 / 05:39:19 ----------------------------------
+
+
+-------------------------------------------------------------------------------------
+
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 06:27:47 ----------------------------------
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 06:29:23 ----------------------------------
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 06:31:52 ----------------------------------
+--> FINE APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA FINE : 30-10-2007 / 06:32:18 ----------------------------------
+
+
+-------------------------------------------------------------------------------------
+
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 06:33:18 ----------------------------------
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 06:33:48 ----------------------------------
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 06:36:51 ----------------------------------
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 06:39:10 ----------------------------------
+--> FINE APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA FINE : 30-10-2007 / 06:39:33 ----------------------------------
+
+
+-------------------------------------------------------------------------------------
+
+--> FINE APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA FINE : 30-10-2007 / 06:39:38 ----------------------------------
+
+
+-------------------------------------------------------------------------------------
+
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 06:39:42 ----------------------------------
+
+Exception in thread "AWT-EventQueue-0" java.lang.IllegalArgumentException: setSelectedIndex: -2 out of bounds	at javax.swing.JComboBox.setSelectedIndex(JComboBox.java:603)
+	at rf.pegaso.gui.UpdateIndici.update(UpdateIndici.java:224)
+	at rf.pegaso.gui.UpdateIndici$1.actionPerformed(UpdateIndici.java:198)
+	at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:1995)
+	at javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2318)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:387)
+	at javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:242)
+	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(BasicButtonListener.java:236)
+	at java.awt.Component.processMouseEvent(Component.java:6038)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3265)
+	at java.awt.Component.processEvent(Component.java:5803)
+	at java.awt.Container.processEvent(Container.java:2058)
+	at java.awt.Component.dispatchEventImpl(Component.java:4410)
+	at java.awt.Container.dispatchEventImpl(Container.java:2116)
+	at java.awt.Component.dispatchEvent(Component.java:4240)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4322)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:3986)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:3916)
+	at java.awt.Container.dispatchEventImpl(Container.java:2102)
+	at java.awt.Window.dispatchEventImpl(Window.java:2429)
+	at java.awt.Component.dispatchEvent(Component.java:4240)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:599)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:273)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:183)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:173)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:168)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:160)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:121)
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 06:43:40 ----------------------------------
+--> FINE APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA FINE : 30-10-2007 / 06:43:44 ----------------------------------
+
+
+-------------------------------------------------------------------------------------
+
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 06:44:39 ----------------------------------
+
+Exception in thread "AWT-EventQueue-0" java.lang.IllegalArgumentException: setSelectedIndex: -2 out of bounds	at javax.swing.JComboBox.setSelectedIndex(JComboBox.java:603)
+	at rf.pegaso.gui.UpdateIndici.update(UpdateIndici.java:225)
+	at rf.pegaso.gui.UpdateIndici$1.actionPerformed(UpdateIndici.java:198)
+	at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:1995)
+	at javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2318)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:387)
+	at javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:242)
+	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(BasicButtonListener.java:236)
+	at java.awt.Component.processMouseEvent(Component.java:6038)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3265)
+	at java.awt.Component.processEvent(Component.java:5803)
+	at java.awt.Container.processEvent(Container.java:2058)
+	at java.awt.Component.dispatchEventImpl(Component.java:4410)
+	at java.awt.Container.dispatchEventImpl(Container.java:2116)
+	at java.awt.Component.dispatchEvent(Component.java:4240)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4322)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:3986)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:3916)
+	at java.awt.Container.dispatchEventImpl(Container.java:2102)
+	at java.awt.Window.dispatchEventImpl(Window.java:2429)
+	at java.awt.Component.dispatchEvent(Component.java:4240)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:599)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:273)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:183)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:173)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:168)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:160)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:121)
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 06:47:17 ----------------------------------
+
+Exception in thread "AWT-EventQueue-0" java.lang.IllegalArgumentException: setSelectedIndex: -2 out of bounds	at javax.swing.JComboBox.setSelectedIndex(JComboBox.java:603)
+	at rf.pegaso.gui.UpdateIndici.update(UpdateIndici.java:225)
+	at rf.pegaso.gui.UpdateIndici$1.actionPerformed(UpdateIndici.java:198)
+	at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:1995)
+	at javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2318)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:387)
+	at javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:242)
+	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(BasicButtonListener.java:236)
+	at java.awt.Component.processMouseEvent(Component.java:6038)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3265)
+	at java.awt.Component.processEvent(Component.java:5803)
+	at java.awt.Container.processEvent(Container.java:2058)
+	at java.awt.Component.dispatchEventImpl(Component.java:4410)
+	at java.awt.Container.dispatchEventImpl(Container.java:2116)
+	at java.awt.Component.dispatchEvent(Component.java:4240)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4322)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:3986)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:3916)
+	at java.awt.Container.dispatchEventImpl(Container.java:2102)
+	at java.awt.Window.dispatchEventImpl(Window.java:2429)
+	at java.awt.Component.dispatchEvent(Component.java:4240)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:599)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:273)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:183)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:173)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:168)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:160)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:121)
+--> START APPLICAZIONE ---------------------------------------------------------
+--> DATA E ORA INIZIO : 30-10-2007 / 06:48:29 ----------------------------------
+1
+2

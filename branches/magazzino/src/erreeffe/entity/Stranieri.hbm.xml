@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 20-nov-2008 2.05.45 by Hibernate Tools 3.2.2.GA -->
+<hibernate-mapping>
+    <class name="erreeffe.entity.Stranieri" table="stranieri" schema="public">
+        <id name="idstranieri" type="long">
+            <column name="idstranieri" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="modistatc59" class="erreeffe.entity.Modistatc59" fetch="select">
+            <column name="istat" />
+        </many-to-one>
+        <property name="nazionalita" type="string">
+            <column name="nazionalita" not-null="true" />
+        </property>
+        <property name="arrivati" type="java.lang.Long">
+            <column name="arrivati" />
+        </property>
+        <property name="partiti" type="java.lang.Long">
+            <column name="partiti" />
+        </property>
+        <property name="presenti" type="java.lang.Long">
+            <column name="presenti" />
+        </property>
+    </class>
+</hibernate-mapping>

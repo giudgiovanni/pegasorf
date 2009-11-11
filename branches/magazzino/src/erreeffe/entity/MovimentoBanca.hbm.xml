@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 20-nov-2008 2.05.45 by Hibernate Tools 3.2.2.GA -->
+<hibernate-mapping>
+    <class name="erreeffe.entity.MovimentoBanca" table="movimento_banca" schema="public">
+        <id name="idmov" type="long">
+            <column name="idmov" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="contoBancario" class="erreeffe.entity.ContoBancario" fetch="select">
+            <column name="idconto" not-null="true" />
+        </many-to-one>
+        <property name="dataInserimento" type="date">
+            <column name="data_inserimento" length="13" />
+        </property>
+        <property name="dataScadenza" type="date">
+            <column name="data_scadenza" length="13" />
+        </property>
+        <property name="descrizione" type="string">
+            <column name="descrizione" />
+        </property>
+        <property name="entrate" type="java.lang.Double">
+            <column name="entrate" precision="17" scale="17" />
+        </property>
+        <property name="uscite" type="java.lang.Double">
+            <column name="uscite" precision="17" scale="17" />
+        </property>
+        <property name="note" type="string">
+            <column name="note" />
+        </property>
+    </class>
+</hibernate-mapping>

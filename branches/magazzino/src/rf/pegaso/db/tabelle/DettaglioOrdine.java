@@ -1,15 +1,20 @@
 package rf.pegaso.db.tabelle;
 
+import it.infolabs.hibernate.Articoli;
+import it.infolabs.hibernate.ArticoliHome;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Vector;
 
 import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.utility.db.DBManager;
 
-public class DettaglioOrdine {
+public class DettaglioOrdine implements Comparator<DettaglioOrdine>{
 
 	private int idArticolo;
 	private String codiceBarre;
@@ -22,6 +27,7 @@ public class DettaglioOrdine {
 	private double prezzoVendita;
 	private int iva;
 	private int sconto;
+	private boolean qtaInfinita;
 
 	private DBManager dbm;
 
@@ -38,6 +44,7 @@ public class DettaglioOrdine {
 		this.prezzoVendita = 0.0;
 		this.iva = 0;
 		this.sconto = 0;
+		this.qtaInfinita = false;
 		this.dbm = DBManager.getIstanceSingleton();
 	}
 
@@ -138,30 +145,84 @@ public class DettaglioOrdine {
 	 */
 	public int loadByCB(String codice){
 		//verifichiamo che il codice inserito sia valido
-		if (codice.equalsIgnoreCase(""))
+		if (codice.trim().equalsIgnoreCase(""))
+			return -1;
+		//carichiamo l'articolo in memoria
+//		Articolo a = new Articolo();
+		try {
+			Object [] obj = ArticoliHome.getInstance().findByCodBarreWithPrezzoAcquisto(codice);
+			if (obj == null ){
+				return 0;
+			}
+			else{
+				Articoli a = (Articoli)obj[0];
+				idArticolo = (int)a.getIdarticolo();
+				descrizione = a.getDescrizione();
+				um = a.getUm().getNome();
+				prezzoAcquisto = a.getPrezzoAcquisto();
+				prezzoVendita = a.getPrezzoDettaglio();
+				codiceBarre = a.getCodbarre();
+				iva = (int)a.getIva();
+				qta = 1.0;
+				qtaInfinita = a.isQtaInfinita();
+				disponibilita = (Double)obj[1];
+			}
+			
+//			if (a.findByCodBarreWithPrezzoAcquisto(codice)) {
+//				idArticolo = a.getIdArticolo();
+//				descrizione = a.getDescrizione();
+//				UnitaDiMisura udm = new UnitaDiMisura();
+//				udm.caricaDati(a.getUm());
+//				um = udm.getNome();
+//				prezzoAcquisto = a.getPrezzoAcquisto();
+//				prezzoVendita = a.getPrezzoDettaglio();
+//				codiceBarre = a.getCodBarre();
+//				iva = a.getIva();
+//				qta = 1.0;
+//				disponibilita = a.getGiacenza2();
+//			}
+//			else 
+//				return 0;
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return -2;
+//		} catch (CodiceBarreInesistente e1) {
+//			e1.printStackTrace();
+//			return -2;
+		}
+		return 1;
+	}
+	
+	/**
+	 * Questo metodo carica in memoria i dettagli di un articolo
+	 * identificato tramite il codice a barre
+	 *
+	 * @param codice
+	 * @return int per verifica
+	 */
+	public int loadRepartoByCB(String codice){
+		//verifichiamo che il codice inserito sia valido
+		if (codice.trim().equalsIgnoreCase(""))
 			return -1;
 		//carichiamo l'articolo in memoria
 		Articolo a = new Articolo();
 		try {
-			if (a.findByCodBarre(codice)) {
-				if ( a.getGiacenza2() < 1 )
-					return 0;
+			if ( a.findByCodBarre(codice) ) {
 				idArticolo = a.getIdArticolo();
 				descrizione = a.getDescrizione();
 				UnitaDiMisura udm = new UnitaDiMisura();
 				udm.caricaDati(a.getUm());
 				um = udm.getNome();
-				prezzoAcquisto = a.getPrezzoAcquisto();
-				prezzoVendita = a.getPrezzoIngrosso();
 				codiceBarre = a.getCodBarre();
-				iva = a.getIva();
-				qta = 1.0;
-				disponibilita = a.getGiacenza2() - 1;
 			}
+			else 
+				return 0;
 		} catch (SQLException e1) {
 			e1.printStackTrace();
+			return -2;
 		} catch (CodiceBarreInesistente e1) {
 			e1.printStackTrace();
+			return -2;
 		}
 		return 1;
 	}
@@ -200,8 +261,8 @@ public class DettaglioOrdine {
 	}
 
 	/**
-	 * Questo metodo verifica se un dettaglio_ordine è
-	 * già stato inserito nel db
+	 * Questo metodo verifica se un dettaglio_ordine Ã¨
+	 * giÃ  stato inserito nel db
 	 *
 	 * @param codice
 	 * @return int per verifica
@@ -266,7 +327,7 @@ public class DettaglioOrdine {
 	}
 
 	/**
-	 * Questo metodo aggiorno un dettaglio ordine già presente nel db
+	 * Questo metodo aggiorno un dettaglio ordine gia' presente nel db
 	 *
 	 * @param codice
 	 * @return
@@ -293,6 +354,40 @@ public class DettaglioOrdine {
 
 			pst.executeUpdate();
 			//updateArticolo(qtaIniziale);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		} finally {
+			try {
+				if (pst != null)
+					pst.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return -1;
+			}
+		}
+		return 1;
+	}
+	
+	/**
+	 * Questo metodo aggiorno un dettaglio ordine gia' presente nel db
+	 *
+	 * @param codice
+	 * @return
+	 */
+	public int updatePrezzoVenditaPerArticoliReparto(){
+		PreparedStatement pst = null;
+		try{
+			String update = "update dettaglio_ordini " +
+					"set prezzo_vendita=((select prezzo_vendita from dettaglio_ordini where idordine=? and idarticolo=?) + ?) " +
+					"where idordine=? and idarticolo=? ";
+			pst = dbm.getNewPreparedStatement(update);
+			pst.setInt(1, idOrdine);
+			pst.setInt(2, idArticolo);
+			pst.setDouble(3, prezzoVendita);
+			pst.setInt(4, idOrdine);
+			pst.setInt(5, idArticolo);
+			pst.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return -1;
@@ -438,10 +533,10 @@ public class DettaglioOrdine {
 	}*/
 
 	/**
-	 * Questo metodo aggiorno la disponibilità degli articoli
+	 * Questo metodo aggiorno la disponibilitÃ  degli articoli
 	 * dopo l'inserimento di un dettaglio ordini
 	 *
-	 * @param quantità presente nel db prima di effettuare l'inserimento
+	 * @param quantitÃ  presente nel db prima di effettuare l'inserimento
 	 */
 	public void updateArticolo(double qtaIniziale)
 	throws SQLException {
@@ -480,4 +575,23 @@ public class DettaglioOrdine {
 	public boolean equals(DettaglioOrdine o){
 		return this.getIdArticolo()==o.getIdArticolo();
 	}
+
+	
+	public int compare(DettaglioOrdine o1, DettaglioOrdine o2) {
+		if ( o1.getIdArticolo() == o2.getIdArticolo() )
+			return 0;
+		else if ( o1.getIdArticolo() < o2.getIdArticolo() )
+			return -1;
+		else
+			return 1;
+	}
+
+	public boolean isQtaInfinita() {
+		return qtaInfinita;
+	}
+
+	public void setQtaInfinita(boolean qtaInfinita) {
+		this.qtaInfinita = qtaInfinita;
+	}
+	
 }

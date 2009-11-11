@@ -13,9 +13,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
+import java.util.List;
 
 import rf.pegaso.db.exception.CodiceBarreInesistente;
+import rf.utility.Constant;
+import rf.utility.ControlloDati;
 import rf.utility.db.DBManager;
+import rf.utility.db.eccezzioni.CodiceBarreEsistente;
 import rf.utility.db.eccezzioni.IDNonValido;
 
 public class Articolo {
@@ -29,9 +33,17 @@ public class Articolo {
 			throws SQLException {
 		DBManager dbm=DBManager.getIstanceSingleton();
 		ResultSet rs = null;
-		String query = "select deposito from giacenza_articoli_view where idarticolo=?";
+//		String query = "select deposito from giacenza_articoli_view where idarticolo=?";
+		String query="SELECT c.sum - o.sum AS deposito " +
+				"FROM articoli a JOIN ( (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum FROM articoli a, carichi c, dettaglio_carichi d " +
+				"WHERE d.idcarico = c.idcarico AND a.idarticolo = d.idarticolo and c.data_carico<=? and c.iddocumento<>0 GROUP BY a.idarticolo, a.codbarre) c LEFT JOIN (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum " +
+				"FROM articoli a, ordini c, dettaglio_ordini d WHERE d.idordine = c.idordine AND a.idarticolo = d.idarticolo and c.data_ordine<=? GROUP BY a.idarticolo, a.codbarre) o ON c.idarticolo = o.idarticolo) ON a.idarticolo = c.idarticolo and c.idarticolo=? JOIN um ON a.um = um.idum WHERE (c.sum - o.sum) > 0::numeric; ";
 		PreparedStatement st = dbm.getNewPreparedStatement(query);
-		st.setInt(1, idArticolo);
+		st.setInt(3, idArticolo);
+		Date data=new Date(new java.util.Date().getTime());
+		st.setDate(1, data);
+		st.setDate(2, data);
+		
 		rs = st.executeQuery();
 		rs.next();
 		int qta = 0;
@@ -70,6 +82,8 @@ public class Articolo {
 	private int idFornitore;
 
 	private int idReparto;
+	
+	private int idPannello;
 
 	private String imballo;
 
@@ -94,8 +108,12 @@ public class Articolo {
 	// ---------------------------------------------
 
 	private int scortaMinima;
+	
+	private int scortaMassima;
 
 	private int um;
+	
+	private int disponibilita;
 
 	/**
 	 * Metodo Costruttore di default
@@ -110,11 +128,17 @@ public class Articolo {
 	 * @return
 	 * @throws SQLException
 	 */
-	public Object[] allArticoli() throws SQLException {
+	public Object[] allArticoli(boolean withTabacchi) throws SQLException {
 		String[] o = null;
 		ResultSet rs = null;
 		Statement pst = null;
-		String query = "select idarticolo || ' - ' || descrizione from articoli order by descrizione";
+		String query;
+		if ( withTabacchi ){
+			query = "select idarticolo || ' - ' || descrizione from articoli order by descrizione";
+		}
+		else {
+			query = "select idarticolo || ' - ' || descrizione from articoli where idreparto <> "+Constant.REPARTO_TABACCHI+" order by descrizione";
+		}
 		pst = dbm.getNewStatement();
 		rs = pst.executeQuery(query);
 		rs.last();
@@ -133,7 +157,7 @@ public class Articolo {
 	}
 	
 	/**
-	 * Ritorna tutti gli articoli selezionati per categoria merceologica e ordinati per quantità venduta
+	 * Ritorna tutti gli articoli selezionati per categoria merceologica e ordinati per quantit\340 venduta
 	 * @return
 	 * @throws SQLException
 	 */
@@ -203,6 +227,33 @@ public class Articolo {
 			rs.close();
 		return o;
 	}
+	
+	/**
+	 * Ritorna tutti gli articoli che sono scesi sotto la soglia minima
+	 * @return
+	 * @throws SQLException
+	 */
+	public LinkedList<Object[]> allArticoliSottoSogliaMinima() throws SQLException {
+		LinkedList<Object[]> list = new LinkedList<Object[]>();
+		ResultSet rs = null;
+		Statement pst = null;
+		String query = "select a.idarticolo, (v.carico-v.scarico) from giacenza_articoli_all_view v, articoli a where v.idarticolo=a.idarticolo and (v.carico-v.scarico) < a.scorta_minima";
+//		String query = "select * from articoli_sotto_soglia_minima";
+		pst = dbm.getNewStatement();
+		rs = pst.executeQuery(query);
+		Object [] obj;
+		while (rs.next()) {
+			obj = new Object[2];
+			obj[0] = rs.getInt(1);
+			obj[1] = rs.getInt(2);
+			list.add(obj);
+		}
+		if (pst != null)
+			pst.close();
+		if (rs != null)
+			rs.close();
+		return list;
+	}
 
 	/**
 	 * @param idCliente
@@ -227,6 +278,7 @@ public class Articolo {
 			this.idArticolo = rs.getInt("idArticolo");
 			this.idFornitore = rs.getInt("idFornitore");
 			this.idReparto = rs.getInt("idReparto");
+			this.idPannello = rs.getInt("idPannello");
 			this.imballo = rs.getString("imballo");
 			this.iva = rs.getInt("iva");
 			this.note = rs.getString("note");
@@ -236,6 +288,7 @@ public class Articolo {
 			this.prezzoIngrosso = rs.getDouble("prezzo_Ingrosso");
 			this.sconto = rs.getInt("sconto");
 			this.scortaMinima = rs.getInt("scorta_Minima");
+			this.scortaMassima = rs.getInt("scorta_Massima");
 			this.um = rs.getInt("um");
 			if (st != null)
 				st.close();
@@ -270,6 +323,84 @@ public class Articolo {
 			return true;
 		return false;
 	}
+	
+	public boolean codBarreEsistenteForInsert(String codBarre) throws SQLException,
+	CodiceBarreInesistente {
+
+		String query = "SELECT a.idarticolo " +
+				"FROM articoli a " +
+				"where a.codbarre like '"+codBarre.substring(0, 4)+"%' " +
+				"and a.idreparto = " +Constant.REPARTO_GRATTA_E_VINCI;
+		Statement st = dbm.getNewStatement();
+		ResultSet rs = st.executeQuery(query);
+		rs.next();
+		int nRow = rs.getRow();
+		if (st != null)
+			st.close();
+		if (nRow > 0)
+			return true;
+		return false;
+	}
+	
+	public boolean codBarreEsistenteForUpdate(String codBarre) throws SQLException,
+	CodiceBarreInesistente {
+
+		String query = "SELECT a.idarticolo " +
+				"FROM articoli a " +
+				"where a.codbarre = '"+codBarre+"' " +
+				"and a.idarticolo = "+idArticolo;
+		Statement st = dbm.getNewStatement();
+		ResultSet rs = st.executeQuery(query);
+		rs.next();
+		int nRow = rs.getRow();
+		if (st != null)
+			st.close();
+		if (nRow > 0)
+			return true;
+		return false;
+	}
+	
+	/**
+	 * Metodo che verifica se un articolo di tabacchi e' gia' presente nel db
+	 * durante la procedura di aggiornamento del listino dei tabacchi
+	 * 
+	 * @return
+	 * @throws SQLException
+	 */
+	public boolean tabacchiEsistente()  throws SQLException{
+		String query = "select * from articoli a where a.codfornitore = '"+codFornitore+"' and a.descrizione = '"+descrizione+"'";
+		Statement st = dbm.getNewStatement();
+		ResultSet rs = st.executeQuery(query);
+		if ( rs.next() ){
+			this.caricoIniziale = rs.getInt("carico_Iniziale");
+			this.codBarre = rs.getString("codBarre");
+			this.codFornitore = rs.getString("codFornitore");
+			this.colore = rs.getString("colore");
+			this.dataInserimento = rs.getDate("data_Inserimento");
+			this.descrizione = rs.getString("descrizione");
+			this.idArticolo = rs.getInt("idArticolo");
+			this.idFornitore = rs.getInt("idFornitore");
+			this.idReparto = rs.getInt("idReparto");
+			this.idPannello = rs.getInt("idPannello");
+			this.imballo = rs.getString("imballo");
+			this.iva = rs.getInt("iva");
+			this.note = rs.getString("note");
+			this.peso = rs.getDouble("peso");
+			this.prezzoAcquisto = rs.getDouble("prezzo_Acquisto");
+			this.prezzoDettaglio = rs.getDouble("prezzo_Dettaglio");
+			this.prezzoIngrosso = rs.getDouble("prezzo_Ingrosso");
+			this.sconto = rs.getInt("sconto");
+			this.scortaMinima = rs.getInt("scorta_Minima");
+			this.scortaMassima = rs.getInt("scorta_Massima");
+			this.um = rs.getInt("um");
+			if (st != null)
+				st.close();
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 
 	/**
 	 * Questo metodo cancella un articolo dalla base di dati Riceve come
@@ -277,9 +408,9 @@ public class Articolo {
 	 *
 	 * @param idArticolo
 	 *            il codice della riga da cancellare
-	 * @return un intero positivo se tutto è andato bene
+	 * @return un intero positivo se tutto ï¿½ andato bene
 	 * @throws IDNonValido
-	 *             eccezzione generata se l'id è <=0
+	 *             eccezzione generata se l'id ï¿½ <=0
 	 */
 	public int deleteArticolo(int idArticolo) throws IDNonValido {
 
@@ -322,10 +453,80 @@ public class Articolo {
 		caricaDati(idArticolo);
 		if (st != null)
 			st.close();
+		if (idArticolo >= 0)
+			return true;
+		return false;
+	}
+	
+	public boolean findByCodFornitore(String codFornitore) throws SQLException,
+	CodiceBarreInesistente {
+
+		String query = "select idArticolo from articoli where codfornitore=?";
+		PreparedStatement st = dbm.getNewPreparedStatement(query);
+		st.setString(1, codFornitore);
+		ResultSet rs = st.executeQuery();
+		rs.last();
+		if (rs.getRow() < 1)
+			throw new CodiceBarreInesistente();
+		rs.beforeFirst();
+		rs.next();
+		this.idArticolo = rs.getInt(1);
+		caricaDati(idArticolo);
+		if (st != null)
+			st.close();
 		if (idArticolo > 0)
 			return true;
 		return false;
 	}
+	
+	public boolean findByCodBarreWithPrezzoAcquisto(String codBarre) throws SQLException,
+	CodiceBarreInesistente {
+		StringBuilder query = new StringBuilder();
+		query.append("select d.qta, d.prezzo_acquisto, c.data_carico, c.ora_carico, (carico - scarico) as giacenza, a.idarticolo, a.descrizione, a.um, a.prezzo_dettaglio, a.iva, a.qta_infinita ");
+		query.append("from carichi c, dettaglio_carichi d, articoli a, giacenza_articoli_all_view v ");
+//		query.append("where a.codbarre = ? ");
+		
+		query.append("where ((a.codbarre = ? ");
+		query.append("and a.idreparto = ?) ");
+		query.append("or a.codbarre = ?) ");
+		
+		query.append("and a.idarticolo = d.idarticolo ");
+		query.append("and c.idcarico = d.idcarico ");
+		query.append("and v.idarticolo = d.idarticolo ");
+		query.append("order by c.data_carico desc, c.ora_carico desc ");
+		PreparedStatement st = dbm.getNewPreparedStatement(query.toString());
+		st.setString(1, codBarre.substring(0, 4));
+		st.setInt(2, Constant.REPARTO_GRATTA_E_VINCI);
+		st.setString(3, codBarre);
+		ResultSet rs = st.executeQuery();
+		int qtaC = 0;
+		while ( rs.next() ){			
+			if ( rs.getInt("giacenza") <= (rs.getInt("qta") + qtaC)){
+				this.idArticolo = rs.getInt("idarticolo");
+				this.descrizione = rs.getString("descrizione");
+				this.um = rs.getInt("um");
+				this.prezzoAcquisto = rs.getDouble("prezzo_acquisto");
+				this.prezzoDettaglio = rs.getDouble("prezzo_dettaglio");
+				this.codBarre = codBarre;
+				this.iva = rs.getInt("iva");
+				this.disponibilita = rs.getInt("giacenza");
+				if (st != null)
+					st.close();
+				return true;
+			}
+			else if ( rs.getInt("giacenza") <= 0 ){				
+				if (st != null)
+					st.close();
+				return false;
+			}
+			else{
+				qtaC = qtaC + rs.getInt("qta");
+			}
+		}				
+		if (st != null)
+			st.close();		
+		return false;
+	}	
 
 	/**
 	 * @return the caricoIniziale
@@ -422,6 +623,10 @@ public class Articolo {
 	public int getScortaMinima() {
 		return scortaMinima;
 	}
+	
+	public int getScortaMassima() {
+		return scortaMassima;
+	}
 
 	/**
 	 * @return the um
@@ -436,17 +641,22 @@ public class Articolo {
 	 * @return un numero inferiore a 0 se ci sono stati problemi oppure maggiore
 	 *         altrimenti (in pratica ritorna il numero delle righe aggiornate)
 	 * @throws IDNonValido
-	 *             viene lanciata se l'attributo idArticolo è errato e quindi
-	 *             non si può effettuare l'aggiornamento della riga
+	 *             viene lanciata se l'attributo idArticolo ï¿½ errato e quindi
+	 *             non si puï¿½ effettuare l'aggiornamento della riga
+	 * @throws CodiceBarreInesistente 
+	 * @throws SQLException 
 	 */
-	public int insertArticolo() throws IDNonValido {
+	public int insertArticolo() throws IDNonValido, CodiceBarreEsistente, SQLException, CodiceBarreInesistente {
 
 		idArticolo = dbm.getNewID("articoli", "idArticolo");
 		if (idArticolo <= -1)
 			throw new IDNonValido();
+		if ( codBarreEsistenteForInsert(codBarre) ){
+			throw new CodiceBarreEsistente();
+		}
 		int ok = 0;
 		PreparedStatement pst = null;
-		String insert = "insert into articoli values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String insert = "insert into articoli values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		dataInserimento = new Date(new java.util.Date().getTime());
 		pst = dbm.getNewPreparedStatement(insert);
 		try {
@@ -469,6 +679,8 @@ public class Articolo {
 			pst.setDate(17, dataInserimento);
 			pst.setInt(18, idFornitore);
 			pst.setInt(19, caricoIniziale);
+			pst.setInt(20, scortaMassima);
+			pst.setInt(21, idPannello);
 			ok = pst.executeUpdate();
 			dbm.notifyDBStateChange();
 		} catch (SQLException e) {
@@ -589,6 +801,10 @@ public class Articolo {
 	public void setScortaMinima(int scortaMinima) {
 		this.scortaMinima = scortaMinima;
 	}
+	
+	public void setScortaMassima(int scortaMassima) {
+		this.scortaMassima = scortaMassima;
+	}
 
 	/**
 	 * @param um
@@ -604,20 +820,26 @@ public class Articolo {
 	 * @return un numero inferiore a 0 se ci sono stati problemi oppure maggiore
 	 *         altrimenti (in pratica ritorna il numero delle righe aggiornate)
 	 * @throws IDNonValido
-	 *             viene lanciata se l'attributo idArticolo è errato e quindi
-	 *             non si può effettuare l'aggiornamento della riga
+	 *             viene lanciata se l'attributo idArticolo ï¿½ errato e quindi
+	 *             non si puï¿½ effettuare l'aggiornamento della riga
+	 * @throws CodiceBarreEsistente 
+	 * @throws CodiceBarreInesistente 
+	 * @throws SQLException 
 	 */
-	public int updateArticolo() throws IDNonValido {
+	public int updateArticolo() throws IDNonValido, CodiceBarreEsistente, SQLException, CodiceBarreInesistente {
 
 		if (idArticolo <= -1)
 			throw new IDNonValido();
+		if ( codBarreEsistenteForUpdate(codBarre) ){
+			throw new CodiceBarreEsistente();
+		}
 		int ok = 0;
 		PreparedStatement pst = null;
 		String update = "UPDATE articoli SET idArticolo=?,"
 				+ "codFornitore=?,codBarre=?,descrizione=?,prezzo_acquisto=?,"
 				+ "iva=?,um=?,prezzo_dettaglio=?,prezzo_ingrosso=?,imballo=?,"
 				+ "peso=?,sconto=?,idReparto=?,colore=?,scorta_minima=?,note=?,"
-				+ "data_inserimento=?,idFornitore=?,carico_iniziale=? WHERE idArticolo=?";
+				+ "data_inserimento=?,idFornitore=?,carico_iniziale=?,scorta_massima=?,idPannello=? WHERE idArticolo=?";
 
 		pst = dbm.getNewPreparedStatement(update);
 		try {
@@ -640,7 +862,9 @@ public class Articolo {
 			pst.setDate(17, dataInserimento);
 			pst.setInt(18, idFornitore);
 			pst.setInt(19, caricoIniziale);
-			pst.setInt(20, idArticolo);
+			pst.setInt(20, scortaMassima);
+			pst.setInt(21, this.idPannello);
+			pst.setInt(22, idArticolo);
 			ok = pst.executeUpdate();
 			dbm.notifyDBStateChange();
 		} catch (SQLException e) {
@@ -679,7 +903,7 @@ public class Articolo {
 
 	}
 
-	public int duplicaArticolo(int idArticolo) throws SQLException, IDNonValido {
+	public int duplicaArticolo(int idArticolo) throws SQLException, IDNonValido, CodiceBarreEsistente, CodiceBarreInesistente {
 		this.caricaDati(idArticolo);
 		this.insertArticolo();
 		dbm.notifyDBStateChange();
@@ -775,6 +999,30 @@ public class Articolo {
 		if (rs != null)
 			rs.close();
 		return qta;
+	}
+
+
+
+	public int getDisponibilita() {
+		return disponibilita;
+	}
+
+
+
+	public void setDisponibilita(int disponibilita) {
+		this.disponibilita = disponibilita;
+	}
+
+
+
+	public int getIdPannello() {
+		return idPannello;
+	}
+
+
+
+	public void setIdPannello(int idPannello) {
+		this.idPannello = idPannello;
 	}
 
 }

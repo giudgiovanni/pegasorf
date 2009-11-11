@@ -24,6 +24,7 @@ public class ConfigurazioneInternalFrame extends JInternalFrame {
 	private JButton btnConfigAdmin = null;
 	private JButton btnConfigAppl = null;
 	private JFrame padre;
+	private JButton btnGestioneDb = null;
 
 	public ConfigurazioneInternalFrame(JFrame padre) {
 		this.padre=padre;
@@ -44,6 +45,9 @@ public class ConfigurazioneInternalFrame extends JInternalFrame {
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
 			try {
+				GridBagConstraints gridBagConstraints11 = new GridBagConstraints();
+				gridBagConstraints11.gridx = 2;
+				gridBagConstraints11.gridy = 0;
 				GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
 				gridBagConstraints1.gridx = 1; // Generated
 				gridBagConstraints1.insets = new Insets(10, 10, 10, 10); // Generated
@@ -56,6 +60,7 @@ public class ConfigurazioneInternalFrame extends JInternalFrame {
 				jContentPane.setLayout(new GridBagLayout()); // Generated
 				jContentPane.add(getBtnConfigAdmin(), gridBagConstraints); // Generated
 				jContentPane.add(getBtnConfigAppl(), gridBagConstraints1); // Generated
+				jContentPane.add(getBtnGestioneDb(), gridBagConstraints11);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -134,6 +139,31 @@ public class ConfigurazioneInternalFrame extends JInternalFrame {
 			}
 		}
 		return btnConfigAppl;
+	}
+
+	/**
+	 * This method initializes btnGestioneDb	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnGestioneDb() {
+		if (btnGestioneDb == null) {
+			btnGestioneDb = new JButton();
+			btnGestioneDb.setPreferredSize(new Dimension(120, 70));
+			btnGestioneDb.setText("<html><center>Gestione<br>Database</html>");
+			btnGestioneDb.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					apriGestioneDatabase(); 
+				}
+			});
+		}
+		return btnGestioneDb;
+	}
+
+	protected void apriGestioneDatabase() {
+		JDialogGestioneDatabase gdb=new JDialogGestioneDatabase(this.padre);
+		gdb.setVisible(true);
+		
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

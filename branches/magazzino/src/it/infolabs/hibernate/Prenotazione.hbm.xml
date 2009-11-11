@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="it.infolabs.hibernate.Prenotazione" table="prenotazione" schema="public">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <property name="idCliente" type="java.lang.Integer">
+            <column name="id_cliente" />
+        </property>
+        <property name="NPax" type="java.lang.Integer">
+            <column name="n_pax" />
+        </property>
+        <property name="numPersone" type="java.lang.Integer">
+            <column name="num_persone" />
+        </property>
+        <property name="dal" type="date">
+            <column name="dal" length="13" />
+        </property>
+        <property name="al" type="date">
+            <column name="al" length="13" />
+        </property>
+        <property name="idConvenzione" type="java.lang.Integer">
+            <column name="id_convenzione" />
+        </property>
+        <property name="acconto" type="string">
+            <column name="acconto" />
+        </property>
+        <property name="modArrivo" type="string">
+            <column name="mod_arrivo" />
+        </property>
+        <property name="note" type="string">
+            <column name="note" />
+        </property>
+        <property name="stato" type="string">
+            <column name="stato" />
+        </property>
+        <property name="accontoric" type="string">
+            <column name="accontoric" length="2" />
+        </property>
+        <property name="nbimbi" type="java.lang.Integer">
+            <column name="nbimbi" />
+        </property>
+        <property name="scontoperc" type="java.lang.Integer">
+            <column name="scontoperc" />
+        </property>
+        <property name="scontoeuro" type="java.lang.Double">
+            <column name="scontoeuro" precision="17" scale="17" />
+        </property>
+        <property name="scontobimbi" type="java.lang.Integer">
+            <column name="scontobimbi" />
+        </property>
+        <property name="chiuso" type="string">
+            <column name="chiuso" length="2" />
+        </property>
+        <property name="soloCamera" type="string">
+            <column name="solo_camera" length="2" />
+        </property>
+        <property name="ordine" type="java.lang.Long">
+            <column name="ordine" />
+        </property>
+        <property name="maggiorazione" type="java.lang.Integer">
+            <column name="maggiorazione" />
+        </property>
+        <property name="numeroRagazzi" type="java.lang.Integer">
+            <column name="numero_ragazzi" />
+        </property>
+        <property name="scontoRagazzi" type="java.lang.Integer">
+            <column name="sconto_ragazzi" />
+        </property>
+    </class>
+</hibernate-mapping>

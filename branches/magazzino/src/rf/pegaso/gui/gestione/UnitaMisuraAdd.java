@@ -23,8 +23,6 @@ import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
 
-import erreeffe.entity.Um;
-import erreeffe.entity.UmHome;
 
 import rf.pegaso.db.tabelle.UnitaDiMisura;
 import rf.utility.db.DBManager;
@@ -180,13 +178,13 @@ public class UnitaMisuraAdd extends JDialog {
 				jLabel2.setText("Descrizione"); // Generated
 				jLabel2.setBounds(new Rectangle(249, 26, 67, 16)); // Generated
 				jLabel1 = new JLabel();
-				jLabel1.setText("Nome Unità di Misura"); // Generated
+				jLabel1.setText("Nome Unit\u00E0 di Misura"); // Generated
 				jLabel1.setBounds(new Rectangle(5, 26, 120, 16)); // Generated
 				pnlCentrale = new JPanel();
 				pnlCentrale.setLayout(null); // Generated
 				pnlCentrale.setBorder(BorderFactory.createTitledBorder(
 						BorderFactory.createBevelBorder(BevelBorder.RAISED),
-						"Dati unità di misura",
+						"Dati unit\u00E0 di misura",
 						TitledBorder.DEFAULT_JUSTIFICATION,
 						TitledBorder.DEFAULT_POSITION, new Font("Dialog",
 								Font.BOLD, 12), new Color(51, 51, 51))); // Generated
@@ -246,7 +244,7 @@ public class UnitaMisuraAdd extends JDialog {
 	 */
 	private void initialize() {
 		this.setSize(547, 162);
-		this.setTitle("Inserimento Unitàdi Misura"); // Generated
+		this.setTitle("Inserimento Unit\u00E0 di Misura"); // Generated
 		this.setContentPane(getJContentPane());
 
 		UtilGUI.centraDialog(this);
@@ -257,12 +255,12 @@ public class UnitaMisuraAdd extends JDialog {
 		r.setDescrizione(this.txtDescrizione.getText());
 		r.setNome(this.txtNome.getText());
 //		try {
-			Um um = new Um();
-			um.setDescrizione(this.txtDescrizione.getText());
-			um.setNome(this.txtNome.getText());
-			UmHome.getInstance().begin();
-			UmHome.getInstance().attachDirty(um);
-			UmHome.getInstance().commit();
+//			Um um = new Um();
+//			um.setDescrizione(this.txtDescrizione.getText());
+//			um.setNome(this.txtNome.getText());
+//			UmHome.getInstance().begin();
+//			UmHome.getInstance().attachDirty(um);
+//			UmHome.getInstance().commit();
 			dbm.notifyDBStateChange();
 			//r.insertUnitaDiMisura();
 //		} catch (IDNonValido e) {

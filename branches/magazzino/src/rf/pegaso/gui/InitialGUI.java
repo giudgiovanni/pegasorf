@@ -3,6 +3,8 @@
  */
 package rf.pegaso.gui;
 
+import it.infolabs.hibernate.ArticoliHome;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -31,6 +33,7 @@ import rf.myswing.GregorianCalendarFormat;
 import rf.pegaso.gui.internalframe.ArchivioInternalFrame;
 import rf.pegaso.gui.internalframe.ConfigurazioneInternalFrame;
 import rf.pegaso.gui.internalframe.PrimaNotaInternalFrame;
+import rf.pegaso.gui.internalframe.VenditaInternalFrameOLD;
 import rf.pegaso.gui.internalframe.VenditaInternalFrame;
 import rf.utility.db.DBManager;
 import rf.utility.db.UtilityDBManager;
@@ -93,6 +96,8 @@ public class InitialGUI extends JFrame {
 	private InitialGUI padre;  //  @jve:decl-index=0:visual-constraint="141,8"
 
 	private JButton jButton = null;
+
+	private static InitialGUI mainInstance;
 
 	/**
 	 * This is the default constructor
@@ -183,6 +188,7 @@ public class InitialGUI extends JFrame {
 			venditaInternalFrame.setVisible(true);
 			try {
 				venditaInternalFrame.setMaximum(true);
+//				venditaInternalFrame.setSize(new Dimension(1000, 700));
 			} catch (PropertyVetoException e1) {
 
 				e1.printStackTrace();
@@ -191,10 +197,12 @@ public class InitialGUI extends JFrame {
 			try {
 				venditaInternalFrame.setSelected(true);
 				venditaInternalFrame.setMaximum(true);
+//				venditaInternalFrame.setSize(new Dimension(1000, 700));
 			} catch (PropertyVetoException e) {
 				e.printStackTrace();
 			}
 		}
+		venditaInternalFrame.setFocusRicerca();
 	}
 
 	/**
@@ -321,7 +329,7 @@ public class InitialGUI extends JFrame {
 				jDesktopPane.add(getArchivioInternalFrame(), null);
 				jDesktopPane.add(getConfigurazioneInternalFrame(),null);
 				jDesktopPane.add(getVenditaInternalFrame(), null);
-				jDesktopPane.add(getPrimanotaInternalFrame(), null);
+//				jDesktopPane.add(getPrimanotaInternalFrame(), null);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -379,7 +387,7 @@ public class InitialGUI extends JFrame {
 				jJToolBarBar = new JToolBar();
 				jJToolBarBar.add(getBtnArchivio()); // Generated
 				jJToolBarBar.add(getBtnVendita()); // Generated
-				jJToolBarBar.add(getBtnPrimaNota()); // Generated
+//				jJToolBarBar.add(getBtnPrimaNota()); // Generated
 				jJToolBarBar.add(getBtnConfigurazione());
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -456,6 +464,7 @@ public class InitialGUI extends JFrame {
 	 */
 	private void initialize() {
 
+		ArticoliHome.getInstance().begin();
 		this.padre = this;
 		padre.setSize(new Dimension(513, 115));
 		System.out
@@ -518,19 +527,9 @@ public class InitialGUI extends JFrame {
 		// Centriamo il frame sullo schermo
 		UtilGUI.centraFrame(this);
 
-		//effettuiamo alcune modifiche alla base di dati per adattarla
-		File f=new File("modificheok4");
-		if(!f.exists()){
-			//creiamo la tabella per la stampa delle etichette
-			DBManager.getIstanceSingleton().executeQuery("CREATE TABLE tmp_etichette_fornitori(idfornitore bigint NOT NULL,nome character varying,via character varying,cap character varying,  citta character varying,  provincia character varying,CONSTRAINT key_fornitori PRIMARY KEY (idfornitore)) WITHOUT OIDS;");
-			DBManager.getIstanceSingleton().executeQuery("ALTER TABLE tmp_etichette_fornitori OWNER TO postgres;");
-			try {
-				f.createNewFile();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
+		if (mainInstance==null) {
+            mainInstance = this;
+        }
 
 		//effettuiamo il backup del db all'apertura se impostato si
 		try {
@@ -542,8 +541,10 @@ public class InitialGUI extends JFrame {
 			JOptionPane.showMessageDialog(this, "File di configurazione per backup\nmancante o danneggiato", "ERRORE FILE", JOptionPane.ERROR_MESSAGE);
 			e1.printStackTrace();
 		}
-
-
+	}
+	
+	public static InitialGUI getMainInstance(){
+		return mainInstance;
 	}
 
 	/**

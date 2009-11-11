@@ -1099,7 +1099,7 @@ public class FatturaImmediata extends JFrame{
 		Articolo a = new Articolo();
 		try {
 
-			String as[] = (String[]) a.allArticoli();
+			String as[] = (String[]) a.allArticoli(true);
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
 			((IDJComboBox) cmbProdotti).caricaNewValueComboBox(as, true);

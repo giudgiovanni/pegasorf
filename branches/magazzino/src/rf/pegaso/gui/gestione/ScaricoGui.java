@@ -446,8 +446,8 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 		// Calcoliamo ora la parte totale dello scarico di tutti gli articoli.
 		try {
 
-			imponibile = Scarico.getTotAcquistoImponibileAllOrders();
-			imposta = Scarico.getTotAcquistoImpostaAllOrders();
+			imponibile = Scarico.getTotAcquistoImponibileAllOrders(null, null, -2, "00:00", "24:00");
+			imposta = Scarico.getTotAcquistoImpostaAllOrders(null, null, -2, "00:00", "24:00");
 			tot = imponibile + imposta;
 
 			// impostiamo i campi
@@ -501,7 +501,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 		Articolo f = new Articolo();
 		try {
 
-			String as[] = (String[]) f.allArticoli();
+			String as[] = (String[]) f.allArticoli(true);
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
 			((IDJComboBox) cmbProdotti).caricaNewValueComboBox(as, true);
@@ -831,7 +831,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 				lblQta.setBounds(new Rectangle(59, 65, 60, 16)); // Generated
 				lblQta.setHorizontalTextPosition(SwingConstants.CENTER); // Generated
 				lblQta.setHorizontalAlignment(SwingConstants.CENTER); // Generated
-				lblQta.setText("qtà"); // Generated
+				lblQta.setText("qt\u00E0"); // Generated
 				lblUm = new JLabel();
 				lblUm.setBounds(new Rectangle(8, 65, 44, 16)); // Generated
 				lblUm.setHorizontalAlignment(SwingConstants.CENTER); // Generated
@@ -884,13 +884,13 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 			try {
 				lblTotIng = new JLabel();
 				lblTotIng.setBounds(new Rectangle(424, 8, 85, 25)); // Generated
-				lblTotIng.setText("Totale €."); // Generated
+				lblTotIng.setText("Totale \u20AC"); // Generated
 				lblIngImposta = new JLabel();
 				lblIngImposta.setBounds(new Rectangle(236, 8, 89, 25)); // Generated
-				lblIngImposta.setText("Imposta €."); // Generated
+				lblIngImposta.setText("Imposta \u20AC"); // Generated
 				lblIngImponibile = new JLabel();
 				lblIngImponibile.setBounds(new Rectangle(32, 8, 105, 25)); // Generated
-				lblIngImponibile.setText("Imponibile €."); // Generated
+				lblIngImponibile.setText("Imponibile \u20AC"); // Generated
 				pnlSud = new JPanel();
 				pnlSud.setLayout(null); // Generated
 				pnlSud.setPreferredSize(new Dimension(0, 50)); // Generated
@@ -1350,7 +1350,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 				double qta1 = ((Number)txtQta.getValue()).doubleValue();
 				if ((giacenza - qta1) < 0) {
 					JOptionPane.showMessageDialog(this,
-							"Quantità richiesta non disponibile\nDisponibilità magazzino = "
+							"Quantit\u00E0 richiesta non disponibile\nDisponibilit\u00E0 magazzino = "
 									+ giacenza, "AVVISO",
 							JOptionPane.INFORMATION_MESSAGE);
 					return;
@@ -1367,7 +1367,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 
 				if ((giacenza - qta) < 0) {
 					JOptionPane.showMessageDialog(this,
-							"Quantità non disponibile", "AVVISO",
+							"Quantit\u00E0 non disponibile", "AVVISO",
 							JOptionPane.INFORMATION_MESSAGE);
 					return;
 				} else {
@@ -1910,7 +1910,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 	private JXTable getTblArticoliScaricati() {
 		if (tblArticoliScaricati == null) {
 			try {
-				articoliScaricatiView = new ArticoliScaricatiViewModel(dbm);
+				articoliScaricatiView = new ArticoliScaricatiViewModel();
 				tblArticoliScaricati = new JXTable();
 				tblArticoliScaricati
 						.setAutoResizeMode(JXTable.AUTO_RESIZE_ALL_COLUMNS); // Generated
@@ -1953,7 +1953,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 				gridBagConstraints4.gridy = 0; // Generated
 				gridBagConstraints4.insets = new Insets(0, 20, 0, 0); // Generated
 				lblTot = new JLabel();
-				lblTot.setText("Totale €."); // Generated
+				lblTot.setText("Totale \u20AC"); // Generated
 				GridBagConstraints gridBagConstraints3 = new GridBagConstraints();
 				gridBagConstraints3.anchor = GridBagConstraints.WEST; // Generated
 				gridBagConstraints3.insets = new Insets(0, 2, 0, 0); // Generated
@@ -1967,7 +1967,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 				gridBagConstraints2.gridy = 0; // Generated
 				gridBagConstraints2.insets = new Insets(0, 20, 0, 0); // Generated
 				lblImpostaTot = new JLabel();
-				lblImpostaTot.setText("Imposta tot. €."); // Generated
+				lblImpostaTot.setText("Imposta tot. \u20AC"); // Generated
 				GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
 				gridBagConstraints1.anchor = GridBagConstraints.WEST; // Generated
 				gridBagConstraints1.insets = new Insets(0, 2, 0, 0); // Generated
@@ -1981,7 +1981,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 				gridBagConstraints.insets = new Insets(0, 10, 0, 0); // Generated
 				gridBagConstraints.gridy = 0; // Generated
 				lblImponibile = new JLabel();
-				lblImponibile.setText("Imponibile tot. €."); // Generated
+				lblImponibile.setText("Imponibile tot. \u20AC"); // Generated
 				jPanel1 = new JPanel();
 				jPanel1.setLayout(new GridBagLayout()); // Generated
 				jPanel1.setPreferredSize(new Dimension(0, 50)); // Generated

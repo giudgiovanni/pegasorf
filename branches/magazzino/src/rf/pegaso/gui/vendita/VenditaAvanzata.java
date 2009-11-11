@@ -135,8 +135,8 @@ public class VenditaAvanzata extends JFrame{
 	private void m_jNumberKeysKeyPerformed(JNumberEvent evt) {
 		if ( evt.getKey() == '\0' ){
 			 DettaglioOrdine dv = new DettaglioOrdine();
-             dv.loadByID(evt.getIdArticolo());
-             pannelloRiepilogo.addDettaglioOrdine(dv);
+//             dv.loadByID(Integer.parseInt(evt.getIdArticolo()));
+             pannelloRiepilogo.addDettaglioOrdine(dv, false);
 		}
 		else
 			stateTransition(evt.getKey());
@@ -170,7 +170,7 @@ public class VenditaAvanzata extends JFrame{
                 DettaglioOrdine dv = new DettaglioOrdine();
                 dv.loadByCB(sCode);
                 //dv.loadByCB("ASTA");
-                pannelloRiepilogo.addDettaglioOrdine(dv);
+                pannelloRiepilogo.addDettaglioOrdine(dv, false);
             } else {
                 Toolkit.getDefaultToolkit().beep();
             }
@@ -330,7 +330,7 @@ public class VenditaAvanzata extends JFrame{
                 }
 
             // Incrementa la qta della riga selezionata nel riepilogo
-            //    con il valore della 2° label
+            //    con il valore della 2ï¿½ label
             } else if (cTrans == '+' 
                     && m_iNumberStatusInput == NUMBERZERO && m_iNumberStatusPor == NUMBERVALID) {
                 int i = pannelloRiepilogo.getIdSelectedItem();
@@ -522,11 +522,11 @@ public class VenditaAvanzata extends JFrame{
 			pnlOvest = new JPanel();
 			pnlOvest.setPreferredSize(new Dimension(541, 578));
 			pnlOvest.setLayout(new BorderLayout());
-			pannelloArticoli.addJNumberEventListener(new JNumberEventListener() {
-	            public void keyPerformed(JNumberEvent evt) {
-	                m_jNumberKeysKeyPerformed(evt);
-	            }
-	        });
+//			pannelloArticoli.addJNumberEventListener(new JNumberEventListener() {
+//	            public void keyPerformed(JNumberEvent evt) {
+//	                m_jNumberKeysKeyPerformed(evt);
+//	            }
+//	        });
 			pnlOvest.add(getPnlOvestNord(), BorderLayout.NORTH);
 			pnlOvest.add(pannelloArticoli, BorderLayout.CENTER);
 			pnlOvest.add(getPnlOvestSud(), BorderLayout.SOUTH);
@@ -592,11 +592,11 @@ public class VenditaAvanzata extends JFrame{
 				public void itemStateChanged(java.awt.event.ItemEvent e) {
 					Articolo a = new Articolo();
 					int categoria = Integer.parseInt(cmbCategoria.getIDSelectedItem());
-					try {
-						pannelloArticoli.caricaArticoli(a.allArticoliByCategoria(categoria));
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
+//					try {
+////						pannelloArticoli.caricaArticoli(a.allArticoliByCategoria(categoria));
+//					} catch (SQLException e1) {
+//						e1.printStackTrace();
+//					}
 				}
 			});
 		}

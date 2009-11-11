@@ -116,13 +116,45 @@ public class Scarico {
 		return tot;
 	}
 
-	public static double getTotAcquistoImponibileAllOrders()
+	public static double getTotAcquistoImponibileAllOrders(java.util.Date start, java.util.Date end, int idReparto, String dalle, String alle)
 			throws SQLException {
 		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
-		String query = "select sum(prezzo_acquisto*qta) from articoli_scaricati_view";
-		rs = st.executeQuery(query);
+		PreparedStatement pst;
+		String query;
+		if ( start != null && idReparto != -1 ){
+//			query = "select sum(prezzo_vendita*qta) from articoli_scaricati_view where data_ordine >=? and data_ordine <= ?";
+			query = "select sum(d.prezzo_vendita * d.qta) " +
+					"from ordini o, dettaglio_ordini d, articoli a " +
+					"where o.idordine = d.idordine " +
+					"and a.idarticolo = d.idarticolo " +
+					"and o.ora_ordine >= '"+dalle+"' and o.ora_ordine<='"+alle+"' " +
+					"and a.idreparto = ? and data_ordine >= ? and data_ordine <= ?";
+		}
+		else if ( start != null ){
+			query = "select sum(d.prezzo_vendita * d.qta) " +
+			"from ordini o, dettaglio_ordini d, articoli a " +
+			"where o.idordine = d.idordine " +
+			"and a.idarticolo = d.idarticolo " +
+			"and o.ora_ordine >= '"+dalle+"' and o.ora_ordine<='"+alle+"' " +
+			"and data_ordine >= ? and data_ordine <= ?";
+		}
+		else{
+			query = "select sum(prezzo_vendita*qta) from articoli_scaricati_view";
+		}
+		pst = dbm.getNewPreparedStatement(query);
+		if ( start != null && idReparto != -1){
+			pst.setInt(1, idReparto);
+			pst.setDate(2, new java.sql.Date(start.getTime()));
+			pst.setDate(3, new java.sql.Date(end.getTime()));
+		}
+		else if ( start != null ){
+			pst.setDate(1, new java.sql.Date(start.getTime()));
+			pst.setDate(2, new java.sql.Date(end.getTime()));
+		}
+		rs = pst.executeQuery();
+//		rs = st.executeQuery(query);
 		rs.next();
 		double tot = rs.getDouble(1);
 		if (st != null)
@@ -181,12 +213,108 @@ public class Scarico {
 		return tot;
 	}
 
-	public static double getTotAcquistoImpostaAllOrders() throws SQLException {
+//	public static double getTotAcquistoImpostaAllOrders() throws SQLException {
+//		DBManager dbm = DBManager.getIstanceSingleton();
+//		ResultSet rs = null;
+//		Statement st = dbm.getNewStatement();
+//		String query = "select sum((prezzo_acquisto/100*iva)*qta) from articoli_scaricati_view";
+//		rs = st.executeQuery(query);
+//		rs.next();
+//		double tot = rs.getDouble(1);
+//		if (st != null)
+//			st.close();
+//		if (rs != null)
+//			rs.close();
+//		return tot;
+//	}
+	
+	public static double getTotAcquistoImpostaAllOrders(java.util.Date start, java.util.Date end, int idReparto, String dalle, String alle)
+	throws SQLException {
 		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
-		String query = "select sum((prezzo_acquisto/100*iva)*qta) from articoli_scaricati_view";
-		rs = st.executeQuery(query);
+		PreparedStatement pst;
+		String query;
+		if ( start != null && idReparto != -1 ){
+			//	query = "select sum(prezzo_vendita*qta) from articoli_scaricati_view where data_ordine >=? and data_ordine <= ?";
+			query = "select sum((d.prezzo_acquisto/100*d.iva)*d.qta) " +
+			"from ordini o, dettaglio_ordini d, articoli a " +
+			"where o.idordine = d.idordine " +
+			"and a.idarticolo = d.idarticolo " +
+			"and o.ora_ordine >= '"+dalle+"' and o.ora_ordine<='"+alle+"' " +
+			"and a.idreparto = ? and data_ordine >= ? and data_ordine <= ?";
+		}
+		else if ( start != null ){
+			query = "select sum((d.prezzo_acquisto/100*d.iva)*d.qta) " +
+			"from ordini o, dettaglio_ordini d, articoli a " +
+			"where o.idordine = d.idordine " +
+			"and a.idarticolo = d.idarticolo " +
+			"and o.ora_ordine >= '"+dalle+"' and o.ora_ordine<='"+alle+"' " +
+			"and data_ordine >= ? and data_ordine <= ?";
+		}
+		else{
+			query = "select sum((prezzo_acquisto/100*iva)*qta) from articoli_scaricati_view";
+		}
+		pst = dbm.getNewPreparedStatement(query);
+		if ( start != null && idReparto != -1){
+			pst.setInt(1, idReparto);
+			pst.setDate(2, new java.sql.Date(start.getTime()));
+			pst.setDate(3, new java.sql.Date(end.getTime()));
+		}
+		else if ( start != null ){
+			pst.setDate(1, new java.sql.Date(start.getTime()));
+			pst.setDate(2, new java.sql.Date(end.getTime()));
+		}
+		rs = pst.executeQuery();
+		//rs = st.executeQuery(query);
+		rs.next();
+		double tot = rs.getDouble(1);
+		if (st != null)
+			st.close();
+		if (rs != null)
+			rs.close();
+		return tot;
+	}
+	
+	public static double getTotAgioAllOrders(java.util.Date start, java.util.Date end, int idReparto, String dalle, String alle)
+	throws SQLException {
+		DBManager dbm = DBManager.getIstanceSingleton();
+		ResultSet rs = null;
+		Statement st = dbm.getNewStatement();
+		PreparedStatement pst;
+		String query;
+		if ( start != null && idReparto != -1 ){
+			//	query = "select sum(prezzo_vendita*qta) from articoli_scaricati_view where data_ordine >=? and data_ordine <= ?";
+			query = "select sum((d.prezzo_vendita - d.prezzo_acquisto)*d.qta) " +
+			"from ordini o, dettaglio_ordini d, articoli a " +
+			"where o.idordine = d.idordine " +
+			"and a.idarticolo = d.idarticolo " +
+			"and o.ora_ordine >= '"+dalle+"' and o.ora_ordine<='"+alle+"' " +
+			"and a.idreparto = ? and data_ordine >= ? and data_ordine <= ?";
+		}
+		else if ( start != null ){
+			query = "select sum((d.prezzo_vendita - d.prezzo_acquisto)*d.qta) " +
+			"from ordini o, dettaglio_ordini d, articoli a " +
+			"where o.idordine = d.idordine " +
+			"and a.idarticolo = d.idarticolo " +
+			"and o.ora_ordine >= '"+dalle+"' and o.ora_ordine<='"+alle+"' " +
+			"and data_ordine >= ? and data_ordine <= ?";
+		}
+		else{
+			query = "select sum((d.prezzo_vendita - d.prezzo_acquisto)*qta) from articoli_scaricati_view";
+		}
+		pst = dbm.getNewPreparedStatement(query);
+		if ( start != null && idReparto != -1){
+			pst.setInt(1, idReparto);
+			pst.setDate(2, new java.sql.Date(start.getTime()));
+			pst.setDate(3, new java.sql.Date(end.getTime()));
+		}
+		else if ( start != null ){
+			pst.setDate(1, new java.sql.Date(start.getTime()));
+			pst.setDate(2, new java.sql.Date(end.getTime()));
+		}
+		rs = pst.executeQuery();
+		//rs = st.executeQuery(query);
 		rs.next();
 		double tot = rs.getDouble(1);
 		if (st != null)

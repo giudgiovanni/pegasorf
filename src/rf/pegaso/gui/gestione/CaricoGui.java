@@ -459,7 +459,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		cmbProdotti.removeAllItems();
 		Articolo f = new Articolo();
 		try {
-			String as[] = (String[]) f.allArticoli(false);
+			String as[] = (String[]) f.allArticoli();
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
 			((IDJComboBox) cmbProdotti).caricaNewValueComboBox(as, true);
@@ -722,12 +722,6 @@ public class CaricoGui extends JFrame implements TableModelListener {
 				} catch (IDNonValido e) {
 					e.printStackTrace();
 				} catch (CodiceBarreEsistente e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (CodiceBarreInesistente e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -1305,7 +1299,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 			try {
 				txtCodBarre = new JTextField();
 				AutoCompleteTextComponent complete = new AutoCompleteTextComponent(
-						txtCodBarre, dbm, "articoli", "codbarre", " where idreparto <> "+Constant.REPARTO_TABACCHI);
+						txtCodBarre, dbm, "articoli", "codbarre");
 				dbm.addDBStateChange(complete);
 				txtCodBarre.setDocument(new UpperAutoCompleteDocument(complete,
 						true));

@@ -5,6 +5,15 @@
 
 package rf.pegaso.db.tabelle;
 
+import it.infolabs.hibernate.Articoli;
+import it.infolabs.hibernate.ArticoliHome;
+import it.infolabs.hibernate.FornitoriHome;
+import it.infolabs.hibernate.PannelliHome;
+import it.infolabs.hibernate.RepartiHome;
+import it.infolabs.hibernate.UmHome;
+import it.infolabs.hibernate.exception.FindByNotFoundException;
+import it.infolabs.hibernate.exception.PersistEntityException;
+
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.sql.Date;
@@ -128,17 +137,11 @@ public class Articolo {
 	 * @return
 	 * @throws SQLException
 	 */
-	public Object[] allArticoli(boolean withTabacchi) throws SQLException {
+	public Object[] allArticoli() throws SQLException {
 		String[] o = null;
 		ResultSet rs = null;
 		Statement pst = null;
-		String query;
-		if ( withTabacchi ){
-			query = "select idarticolo || ' - ' || descrizione from articoli order by descrizione";
-		}
-		else {
-			query = "select idarticolo || ' - ' || descrizione from articoli where idreparto <> "+Constant.REPARTO_TABACCHI+" order by descrizione";
-		}
+		String query = "select idarticolo || ' - ' || descrizione from articoli order by descrizione";
 		pst = dbm.getNewStatement();
 		rs = pst.executeQuery(query);
 		rs.last();
@@ -324,41 +327,23 @@ public class Articolo {
 		return false;
 	}
 	
-	public boolean codBarreEsistenteForInsert(String codBarre) throws SQLException,
-	CodiceBarreInesistente {
-
-		String query = "SELECT a.idarticolo " +
-				"FROM articoli a " +
-				"where a.codbarre like '"+codBarre.substring(0, 4)+"%' " +
-				"and a.idreparto = " +Constant.REPARTO_GRATTA_E_VINCI;
-		Statement st = dbm.getNewStatement();
-		ResultSet rs = st.executeQuery(query);
-		rs.next();
-		int nRow = rs.getRow();
-		if (st != null)
-			st.close();
-		if (nRow > 0)
-			return true;
-		return false;
-	}
-	
-	public boolean codBarreEsistenteForUpdate(String codBarre) throws SQLException,
-	CodiceBarreInesistente {
-
-		String query = "SELECT a.idarticolo " +
-				"FROM articoli a " +
-				"where a.codbarre = '"+codBarre+"' " +
-				"and a.idarticolo = "+idArticolo;
-		Statement st = dbm.getNewStatement();
-		ResultSet rs = st.executeQuery(query);
-		rs.next();
-		int nRow = rs.getRow();
-		if (st != null)
-			st.close();
-		if (nRow > 0)
-			return true;
-		return false;
-	}
+//	public boolean codBarreEsistenteForUpdate(String codBarre) throws SQLException,
+//	CodiceBarreInesistente {
+//
+//		String query = "SELECT a.idarticolo " +
+//				"FROM articoli a " +
+//				"where a.codbarre = '"+codBarre+"' " +
+//				"and a.idarticolo = "+idArticolo;
+//		Statement st = dbm.getNewStatement();
+//		ResultSet rs = st.executeQuery(query);
+//		rs.next();
+//		int nRow = rs.getRow();
+//		if (st != null)
+//			st.close();
+//		if (nRow > 0)
+//			return true;
+//		return false;
+//	}
 	
 	/**
 	 * Metodo che verifica se un articolo di tabacchi e' gia' presente nel db
@@ -478,55 +463,6 @@ public class Articolo {
 			return true;
 		return false;
 	}
-	
-	public boolean findByCodBarreWithPrezzoAcquisto(String codBarre) throws SQLException,
-	CodiceBarreInesistente {
-		StringBuilder query = new StringBuilder();
-		query.append("select d.qta, d.prezzo_acquisto, c.data_carico, c.ora_carico, (carico - scarico) as giacenza, a.idarticolo, a.descrizione, a.um, a.prezzo_dettaglio, a.iva, a.qta_infinita ");
-		query.append("from carichi c, dettaglio_carichi d, articoli a, giacenza_articoli_all_view v ");
-//		query.append("where a.codbarre = ? ");
-		
-		query.append("where ((a.codbarre = ? ");
-		query.append("and a.idreparto = ?) ");
-		query.append("or a.codbarre = ?) ");
-		
-		query.append("and a.idarticolo = d.idarticolo ");
-		query.append("and c.idcarico = d.idcarico ");
-		query.append("and v.idarticolo = d.idarticolo ");
-		query.append("order by c.data_carico desc, c.ora_carico desc ");
-		PreparedStatement st = dbm.getNewPreparedStatement(query.toString());
-		st.setString(1, codBarre.substring(0, 4));
-		st.setInt(2, Constant.REPARTO_GRATTA_E_VINCI);
-		st.setString(3, codBarre);
-		ResultSet rs = st.executeQuery();
-		int qtaC = 0;
-		while ( rs.next() ){			
-			if ( rs.getInt("giacenza") <= (rs.getInt("qta") + qtaC)){
-				this.idArticolo = rs.getInt("idarticolo");
-				this.descrizione = rs.getString("descrizione");
-				this.um = rs.getInt("um");
-				this.prezzoAcquisto = rs.getDouble("prezzo_acquisto");
-				this.prezzoDettaglio = rs.getDouble("prezzo_dettaglio");
-				this.codBarre = codBarre;
-				this.iva = rs.getInt("iva");
-				this.disponibilita = rs.getInt("giacenza");
-				if (st != null)
-					st.close();
-				return true;
-			}
-			else if ( rs.getInt("giacenza") <= 0 ){				
-				if (st != null)
-					st.close();
-				return false;
-			}
-			else{
-				qtaC = qtaC + rs.getInt("qta");
-			}
-		}				
-		if (st != null)
-			st.close();		
-		return false;
-	}	
 
 	/**
 	 * @return the caricoIniziale
@@ -646,60 +582,120 @@ public class Articolo {
 	 * @throws CodiceBarreInesistente 
 	 * @throws SQLException 
 	 */
-	public int insertArticolo() throws IDNonValido, CodiceBarreEsistente, SQLException, CodiceBarreInesistente {
-
+//	public int insertArticolo2() throws IDNonValido, CodiceBarreEsistente, SQLException, CodiceBarreInesistente {
+//
+//		idArticolo = dbm.getNewID("articoli", "idArticolo");
+//		if (idArticolo <= -1)
+//			throw new IDNonValido();
+//		ArticoliHome.getInstance().begin();
+//		if ( ArticoliHome.getInstance().codBarreEsistenteForInsert(codBarre) ){
+//			throw new CodiceBarreEsistente();
+//		}
+//		int ok = 0;
+//		PreparedStatement pst = null;
+//		String insert = "insert into articoli values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+//		dataInserimento = new Date(new java.util.Date().getTime());
+//		pst = dbm.getNewPreparedStatement(insert);
+//		try {
+//			pst.setInt(1, this.idArticolo);
+//			pst.setString(2, codFornitore);
+//			pst.setString(3, codBarre);
+//			pst.setString(4, this.descrizione);
+//			pst.setDouble(5, this.prezzoAcquisto);
+//			pst.setInt(6, this.iva);
+//			pst.setInt(7, this.um);
+//			pst.setDouble(8, this.prezzoDettaglio);
+//			pst.setDouble(9, this.prezzoIngrosso);
+//			pst.setString(10, imballo);
+//			pst.setDouble(11, peso);
+//			pst.setInt(12, sconto);
+//			pst.setInt(13, idReparto);
+//			pst.setString(14, colore);
+//			pst.setInt(15, scortaMinima);
+//			pst.setString(16, note);
+//			pst.setDate(17, dataInserimento);
+//			pst.setInt(18, idFornitore);
+//			pst.setInt(19, caricoIniziale);
+//			pst.setInt(20, scortaMassima);
+//			pst.setInt(21, idPannello);
+//			ok = pst.executeUpdate();
+//			dbm.notifyDBStateChange();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			try {
+//				if (pst != null)
+//					pst.close();
+//			} catch (SQLException e) {
+//				try {
+//					e.printStackTrace(new PrintWriter("articolo_inserimento"));
+//				} catch (FileNotFoundException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//			}
+//		}
+//		Scarico.insertScaricoInizialeZero(idArticolo);
+//		return ok;
+//	}
+	
+	public int insertArticolo() throws IDNonValido, CodiceBarreEsistente{
 		idArticolo = dbm.getNewID("articoli", "idArticolo");
-		if (idArticolo <= -1)
+		if (idArticolo <= -1){
 			throw new IDNonValido();
-		if ( codBarreEsistenteForInsert(codBarre) ){
+		}
+		ArticoliHome.getInstance().begin();
+		if ( ArticoliHome.getInstance().codBarreEsistenteForInsert(codBarre) ){
 			throw new CodiceBarreEsistente();
 		}
-		int ok = 0;
-		PreparedStatement pst = null;
-		String insert = "insert into articoli values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-		dataInserimento = new Date(new java.util.Date().getTime());
-		pst = dbm.getNewPreparedStatement(insert);
+		Articoli art = new Articoli();
+		art.setIdarticolo(this.idArticolo);
+		art.setCodfornitore(codFornitore);
+		art.setCodbarre(codBarre);
+		art.setDescrizione(this.descrizione);
+		art.setPrezzoAcquisto(this.prezzoAcquisto);
+		art.setIva(this.iva);
 		try {
-			pst.setInt(1, this.idArticolo);
-			pst.setString(2, codFornitore);
-			pst.setString(3, codBarre);
-			pst.setString(4, this.descrizione);
-			pst.setDouble(5, this.prezzoAcquisto);
-			pst.setInt(6, this.iva);
-			pst.setInt(7, this.um);
-			pst.setDouble(8, this.prezzoDettaglio);
-			pst.setDouble(9, this.prezzoIngrosso);
-			pst.setString(10, imballo);
-			pst.setDouble(11, peso);
-			pst.setInt(12, sconto);
-			pst.setInt(13, idReparto);
-			pst.setString(14, colore);
-			pst.setInt(15, scortaMinima);
-			pst.setString(16, note);
-			pst.setDate(17, dataInserimento);
-			pst.setInt(18, idFornitore);
-			pst.setInt(19, caricoIniziale);
-			pst.setInt(20, scortaMassima);
-			pst.setInt(21, idPannello);
-			ok = pst.executeUpdate();
-			dbm.notifyDBStateChange();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
+			UmHome.getInstance().begin();
+			art.setUm(UmHome.getInstance().findById(this.um));
+		} catch (FindByNotFoundException e1) {
+			return -1;
+		}
+		art.setPrezzoDettaglio(this.prezzoDettaglio);
+		art.setPrezzoIngrosso(this.prezzoIngrosso);
+		art.setImballo(imballo);
+		art.setPeso(peso);
+		art.setSconto((long)sconto);
+		if ( idReparto > 0 ){
 			try {
-				if (pst != null)
-					pst.close();
-			} catch (SQLException e) {
-				try {
-					e.printStackTrace(new PrintWriter("articolo_inserimento"));
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				RepartiHome.getInstance().begin();
+				art.setReparti(RepartiHome.getInstance().findById(idReparto));
+			} catch (FindByNotFoundException e) {
 			}
 		}
+		art.setColore(colore);
+		art.setScortaMinima((long)scortaMinima);
+		art.setNote(note);
+		art.setDataInserimento(dataInserimento);
+		if ( idFornitore > 0 ){
+			try {
+				FornitoriHome.getInstance().begin();
+				art.setFornitori(FornitoriHome.getInstance().findById(idFornitore));
+			} catch (FindByNotFoundException e) {
+			}
+		}
+		art.setCaricoIniziale((long)caricoIniziale);
+		art.setScortaMassima((long)scortaMassima);
+		art.setPannelli(PannelliHome.getInstance().findById(idPannello));
+		ArticoliHome.getInstance().begin();
+		try {
+			ArticoliHome.getInstance().persist(art);
+		} catch (PersistEntityException e) {
+			return -1;
+		}
+		dbm.notifyDBStateChange();
 		Scarico.insertScaricoInizialeZero(idArticolo);
-		return ok;
+		return 1;
 	}
 
 	/**
@@ -826,58 +822,121 @@ public class Articolo {
 	 * @throws CodiceBarreInesistente 
 	 * @throws SQLException 
 	 */
-	public int updateArticolo() throws IDNonValido, CodiceBarreEsistente, SQLException, CodiceBarreInesistente {
-
-		if (idArticolo <= -1)
+//	public int updateArticolo() throws IDNonValido, CodiceBarreEsistente, SQLException, CodiceBarreInesistente {
+//
+//		if (idArticolo <= -1)
+//			throw new IDNonValido();
+//		if ( codBarreEsistenteForUpdate(codBarre) ){
+//			throw new CodiceBarreEsistente();
+//		}
+//		int ok = 0;
+//		PreparedStatement pst = null;
+//		String update = "UPDATE articoli SET idArticolo=?,"
+//				+ "codFornitore=?,codBarre=?,descrizione=?,prezzo_acquisto=?,"
+//				+ "iva=?,um=?,prezzo_dettaglio=?,prezzo_ingrosso=?,imballo=?,"
+//				+ "peso=?,sconto=?,idReparto=?,colore=?,scorta_minima=?,note=?,"
+//				+ "data_inserimento=?,idFornitore=?,carico_iniziale=?,scorta_massima=?,idPannello=? WHERE idArticolo=?";
+//
+//		pst = dbm.getNewPreparedStatement(update);
+//		try {
+//			pst.setInt(1, this.idArticolo);
+//			pst.setString(2, codFornitore);
+//			pst.setString(3, codBarre);
+//			pst.setString(4, this.descrizione);
+//			pst.setDouble(5, this.prezzoAcquisto);
+//			pst.setInt(6, this.iva);
+//			pst.setInt(7, this.um);
+//			pst.setDouble(8, this.prezzoDettaglio);
+//			pst.setDouble(9, this.prezzoIngrosso);
+//			pst.setString(10, imballo);
+//			pst.setDouble(11, peso);
+//			pst.setInt(12, sconto);
+//			pst.setInt(13, idReparto);
+//			pst.setString(14, colore);
+//			pst.setInt(15, scortaMinima);
+//			pst.setString(16, note);
+//			pst.setDate(17, dataInserimento);
+//			pst.setInt(18, idFornitore);
+//			pst.setInt(19, caricoIniziale);
+//			pst.setInt(20, scortaMassima);
+//			pst.setInt(21, this.idPannello);
+//			pst.setInt(22, idArticolo);
+//			ok = pst.executeUpdate();
+//			dbm.notifyDBStateChange();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			try {
+//				if (pst != null)
+//					pst.close();
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		return ok;
+//	}
+	public int updateArticolo() throws IDNonValido, CodiceBarreEsistente{
+		if (idArticolo <= -1){
 			throw new IDNonValido();
-		if ( codBarreEsistenteForUpdate(codBarre) ){
+		}
+		ArticoliHome.getInstance().begin();
+		if ( ArticoliHome.getInstance().codBarreEsistenteForUpdate(codBarre, idArticolo) ){
 			throw new CodiceBarreEsistente();
 		}
-		int ok = 0;
-		PreparedStatement pst = null;
-		String update = "UPDATE articoli SET idArticolo=?,"
-				+ "codFornitore=?,codBarre=?,descrizione=?,prezzo_acquisto=?,"
-				+ "iva=?,um=?,prezzo_dettaglio=?,prezzo_ingrosso=?,imballo=?,"
-				+ "peso=?,sconto=?,idReparto=?,colore=?,scorta_minima=?,note=?,"
-				+ "data_inserimento=?,idFornitore=?,carico_iniziale=?,scorta_massima=?,idPannello=? WHERE idArticolo=?";
-
-		pst = dbm.getNewPreparedStatement(update);
+		Articoli art;
 		try {
-			pst.setInt(1, this.idArticolo);
-			pst.setString(2, codFornitore);
-			pst.setString(3, codBarre);
-			pst.setString(4, this.descrizione);
-			pst.setDouble(5, this.prezzoAcquisto);
-			pst.setInt(6, this.iva);
-			pst.setInt(7, this.um);
-			pst.setDouble(8, this.prezzoDettaglio);
-			pst.setDouble(9, this.prezzoIngrosso);
-			pst.setString(10, imballo);
-			pst.setDouble(11, peso);
-			pst.setInt(12, sconto);
-			pst.setInt(13, idReparto);
-			pst.setString(14, colore);
-			pst.setInt(15, scortaMinima);
-			pst.setString(16, note);
-			pst.setDate(17, dataInserimento);
-			pst.setInt(18, idFornitore);
-			pst.setInt(19, caricoIniziale);
-			pst.setInt(20, scortaMassima);
-			pst.setInt(21, this.idPannello);
-			pst.setInt(22, idArticolo);
-			ok = pst.executeUpdate();
-			dbm.notifyDBStateChange();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
+			ArticoliHome.getInstance().begin();
+			art = ArticoliHome.getInstance().findById(idArticolo);
+		} catch (FindByNotFoundException e2) {
+			throw new IDNonValido();
+		}
+		art.setIdarticolo(this.idArticolo);
+		art.setCodfornitore(codFornitore);
+		art.setCodbarre(codBarre);
+		art.setDescrizione(this.descrizione);
+		art.setPrezzoAcquisto(this.prezzoAcquisto);
+		art.setIva(this.iva);
+		try {
+			UmHome.getInstance().begin();
+			art.setUm(UmHome.getInstance().findById(this.um));
+		} catch (FindByNotFoundException e1) {
+			return -1;
+		}
+		art.setPrezzoDettaglio(this.prezzoDettaglio);
+		art.setPrezzoIngrosso(this.prezzoIngrosso);
+		art.setImballo(imballo);
+		art.setPeso(peso);
+		art.setSconto((long)sconto);
+		if ( idReparto > 0 ){
 			try {
-				if (pst != null)
-					pst.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
+				RepartiHome.getInstance().begin();
+				art.setReparti(RepartiHome.getInstance().findById(idReparto));
+			} catch (FindByNotFoundException e) {
 			}
 		}
-		return ok;
+		art.setColore(colore);
+		art.setScortaMinima((long)scortaMinima);
+		art.setNote(note);
+		art.setDataInserimento(dataInserimento);
+		if ( idFornitore > 0 ){
+			try {
+				FornitoriHome.getInstance().begin();
+				art.setFornitori(FornitoriHome.getInstance().findById(idFornitore));
+			} catch (FindByNotFoundException e) {
+			}
+		}
+		art.setCaricoIniziale((long)caricoIniziale);
+		art.setScortaMassima((long)scortaMassima);
+		art.setPannelli(PannelliHome.getInstance().findById(idPannello));
+		ArticoliHome.getInstance().begin();
+		try {
+			ArticoliHome.getInstance().persist(art);
+		} catch (PersistEntityException e) {
+			return -1;
+		}
+		dbm.notifyDBStateChange();
+		Scarico.insertScaricoInizialeZero(idArticolo);
+		return 1;
 	}
 
 	/**

@@ -8,9 +8,7 @@ public class Constant {
 	public static final int FATTURA = 3;
 	public static final int DOCUMENTO_DI_TRASPORTO = 4;
 	public static final String NUM_DOC_SCARICATO_AL_BANCO = "1234";
-	public static final int FORNITORE_TABACCHI = 0;
-	public static final int REPARTO_TABACCHI = 1;
-	public static final int REPARTO_GRATTA_E_VINCI = 4;
+	public static final int FORNITORE_TABACCHI = 0;	
 	public static final int UNITA_MISURA_PEZZI = 2;
 	public static final int CARICO_INIZIALE = 0;
 	
@@ -40,14 +38,6 @@ public class Constant {
 	
 	public static int getFornitoreTabacchi() {
 		return FORNITORE_TABACCHI;
-	}
-	
-	public static int getRepartoTabacchi() {
-		return REPARTO_TABACCHI;
-	}
-	
-	public static int getRepartoGrattaEVinci() {
-		return REPARTO_GRATTA_E_VINCI;
 	}
 
 	public static int getUnitaMisuraPezzi() {

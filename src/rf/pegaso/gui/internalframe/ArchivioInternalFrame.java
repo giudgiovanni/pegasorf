@@ -19,18 +19,14 @@ import javax.swing.WindowConstants;
 
 import rf.myswing.util.ModalFrameUtil;
 import rf.pegaso.gui.gestione.ArticoliGestione;
-import rf.pegaso.gui.gestione.CaricaAggiornaTabacchiGui;
 import rf.pegaso.gui.gestione.CaricoGui;
-import rf.pegaso.gui.gestione.CaricoTabacchiGui;
 import rf.pegaso.gui.gestione.ClientiGestione;
 import rf.pegaso.gui.gestione.DocumentiGestione;
 import rf.pegaso.gui.gestione.FatturaByDdt;
 import rf.pegaso.gui.gestione.FornitoriGestione;
-import rf.pegaso.gui.gestione.GrattaVinciGestione;
 import rf.pegaso.gui.gestione.RepartiGestione;
 import rf.pegaso.gui.gestione.ScaricoGui;
 import rf.pegaso.gui.gestione.StampeEtichette;
-import rf.pegaso.gui.gestione.TabacchiGestione;
 import rf.pegaso.gui.gestione.UnitaDiMisuraGestione;
 import rf.pegaso.gui.gestione.VenditeGui;
 import rf.pegaso.gui.viste.GiacenzeGUI;
@@ -48,16 +44,12 @@ public class ArchivioInternalFrame extends JInternalFrame {
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == btnArticoli) {
 				apriArticoli();
-			} else if (e.getSource() == btnTabacchi) {
-				apriTabacchi();
 			} else if (e.getSource() == btnClienti) {
 				apriClienti();
 			} else if (e.getSource() == btnFornitori) {
 				apriFornitori();
 			} else if (e.getSource() == btnCarico) {
 				apriCaricoMerce();
-			} else if (e.getSource() == btnCaricoTabacchi) {
-				apriCaricoMerceTabacchi();
 			} else if (e.getSource() == btnScarico) {
 				apriVenditeGUI();
 			} else if (e.getSource() == btnInventario) {
@@ -66,10 +58,6 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				apriStampe();
 			} else if (e.getSource() == btnRicerche) {
 				apriRicerche();
-			}else if (e.getSource() == btnAggiornaTabacchi) {
-				apriAggTabacchi();
-			}else if (e.getSource() == btnGrattaVinci) {
-				apriGrattaVinci();
 			}
 		}
 
@@ -98,10 +86,6 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	private JPanel pnlCentrale = null;
 	private JButton jButton = null;
 	private JButton btnFtByDdt = null;
-	private JButton btnTabacchi = null;
-	private JButton btnCaricoTabacchi = null;
-	private JButton btnAggiornaTabacchi = null;
-	private JButton btnGrattaVinci = null;
 	/**
 	 * This is the xxx default constructor
 	 */
@@ -110,16 +94,6 @@ public class ArchivioInternalFrame extends JInternalFrame {
 		this.dbm=DBManager.getIstanceSingleton();
 		this.padre = padre;
 		initialize();
-	}
-
-	public void apriTabacchi() {
-		TabacchiGestione cg = new TabacchiGestione();
-		//Apriamo la finestra in modo modale e
-		//la massimizziamo
-		//ModalFrameUtil.showAsModal(cg, padre);
-		cg.setVisible(true);
-		cg.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		
 	}
 
 	/**
@@ -179,12 +153,6 @@ public class ArchivioInternalFrame extends JInternalFrame {
 		carico.setVisible(true);
 
 	}
-	
-	private void apriCaricoMerceTabacchi() {
-		CaricoTabacchiGui carico = new CaricoTabacchiGui(padre);
-		carico.setVisible(true);
-
-	}
 
 	/**
 	 *
@@ -220,16 +188,6 @@ public class ArchivioInternalFrame extends JInternalFrame {
 		RicercheArchivio ric = new RicercheArchivio(this.padre);
 		ric.setVisible(true);
 
-	}
-	
-	private void apriAggTabacchi(){
-		CaricaAggiornaTabacchiGui cat = new CaricaAggiornaTabacchiGui(this.padre);
-		cat.setVisible(true);
-	}
-	
-	private void apriGrattaVinci(){
-		GrattaVinciGestione gvg = new GrattaVinciGestione();
-		gvg.setVisible(true);
 	}
 
 	/**
@@ -438,20 +396,6 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	private JPanel getPnlCentrale() {
 		if (pnlCentrale == null) {
 			try {
-				GridBagConstraints gridBagConstraints22 = new GridBagConstraints();
-				gridBagConstraints22.gridx = 2;
-				gridBagConstraints22.gridy = 1;
-				GridBagConstraints gridBagConstraints13 = new GridBagConstraints();
-				gridBagConstraints13.gridx = 3;
-				gridBagConstraints13.insets = new Insets(10, 10, 10, 10);
-				gridBagConstraints13.gridy = 0;
-				GridBagConstraints gridBagConstraints = new GridBagConstraints();
-				gridBagConstraints.gridx = 2;
-				gridBagConstraints.insets = new Insets(10, 10, 10, 10);
-				gridBagConstraints.gridy = 0;
-				GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
-				gridBagConstraints1.gridx = 0;
-				gridBagConstraints1.gridy = 0;
 				GridBagConstraints gridBagConstraints15 = new GridBagConstraints();
 				gridBagConstraints15.gridx = 0;
 				gridBagConstraints15.gridy = 2;
@@ -505,10 +449,6 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				pnlCentrale.add(getBtnStampe(), gridBagConstraints17);
 				pnlCentrale.add(getBtnRicerche(), gridBagConstraints18);
 				pnlCentrale.add(getBtnFtByDdt(), gridBagConstraints15);
-				pnlCentrale.add(getBtnTabacchi(), gridBagConstraints1);
-				pnlCentrale.add(getBtnCaricoTabacchi(), gridBagConstraints);
-				pnlCentrale.add(getBtnAggiornaTabacchi(), gridBagConstraints13);
-				pnlCentrale.add(getBtnGrattaVinci(), gridBagConstraints22);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -562,70 +502,6 @@ public class ArchivioInternalFrame extends JInternalFrame {
 			});
 		}
 		return btnFtByDdt;
-	}
-
-	/**
-	 * This method initializes btnTabacchi	
-	 * 	
-	 * @return javax.swing.JButton	
-	 */
-	private JButton getBtnTabacchi() {
-		if (btnTabacchi == null) {
-			btnTabacchi = new JButton();
-			btnTabacchi.setPreferredSize(new Dimension(120, 70));
-			btnTabacchi.setText("Tabacchi");
-			btnTabacchi.addActionListener(myActionListener);
-		}
-		return btnTabacchi;
-	}
-
-	/**
-	 * This method initializes btnCaricoTabacchi	
-	 * 	
-	 * @return javax.swing.JButton	
-	 */
-	private JButton getBtnCaricoTabacchi() {
-		if (btnCaricoTabacchi == null) {
-			btnCaricoTabacchi = new JButton();
-			btnCaricoTabacchi.setPreferredSize(new Dimension(120, 70));
-			btnCaricoTabacchi.setText("<html>Ordine<P>Tabacchi</html>");
-			btnCaricoTabacchi.addActionListener(myActionListener);
-		}
-		return btnCaricoTabacchi;
-	}
-
-	/**
-	 * This method initializes btnAggiornaTabacchi	
-	 * 	
-	 * @return javax.swing.JButton	
-	 */
-	private JButton getBtnAggiornaTabacchi() {
-		if (btnAggiornaTabacchi == null) {
-			btnAggiornaTabacchi = new JButton();
-			btnAggiornaTabacchi.setText("<html>Aggiorna<P>Tabacchi</html>");
-			btnAggiornaTabacchi.setPreferredSize(new Dimension(120, 70));
-			btnAggiornaTabacchi.addActionListener(myActionListener);
-		}
-		return btnAggiornaTabacchi;
-	}
-
-	/**
-	 * This method initializes btnGrattaVinci	
-	 * 	
-	 * @return javax.swing.JButton	
-	 */
-	private JButton getBtnGrattaVinci() {
-		if (btnGrattaVinci == null) {
-			try {
-				btnGrattaVinci = new JButton();
-				btnGrattaVinci.setText("Gratta e Vinci"); // Generated
-				btnGrattaVinci.setPreferredSize(new Dimension(120, 70)); // Generated
-				btnGrattaVinci.addActionListener(myActionListener);
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return btnGrattaVinci;
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

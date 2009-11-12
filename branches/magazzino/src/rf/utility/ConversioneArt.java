@@ -130,9 +130,6 @@ public class ConversioneArt extends JDialog {
 				} catch (CodiceBarreEsistente e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} catch (CodiceBarreInesistente e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
 
 				riga++;

@@ -128,8 +128,6 @@ public class ArticoloModel extends AbstractTableModel implements DBStateChange {
 	private void recuperaDati() throws FindAllEntityException {
 		ArticoliHome.getInstance().begin();
 		Criteria crit = ArticoliHome.getInstance().getSessionFactory().getCurrentSession().createCriteria("it.infolabs.hibernate.Articoli");
-		crit.add(Restrictions.not(Restrictions.eq("reparti.idreparto", (long)Constant.REPARTO_GRATTA_E_VINCI)));
-		crit.add(Restrictions.not(Restrictions.eq("reparti.idreparto", (long)Constant.REPARTO_TABACCHI)));
 		resultList = crit.list();
 	}
 

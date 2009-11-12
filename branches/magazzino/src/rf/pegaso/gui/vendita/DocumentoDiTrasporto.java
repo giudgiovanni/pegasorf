@@ -977,7 +977,7 @@ public class DocumentoDiTrasporto extends JFrame{
 		Articolo a = new Articolo();
 		try {
 
-			String as[] = (String[]) a.allArticoli(true);
+			String as[] = (String[]) a.allArticoli();
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
 			((IDJComboBox) cmbProdotti).caricaNewValueComboBox(as, true);

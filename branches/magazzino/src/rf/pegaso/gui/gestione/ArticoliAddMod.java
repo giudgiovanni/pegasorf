@@ -13,6 +13,7 @@ import it.infolabs.hibernate.PannelliHome;
 import it.infolabs.hibernate.RepartiHome;
 import it.infolabs.hibernate.UmHome;
 import it.infolabs.hibernate.exception.FindByNotFoundException;
+import it.infolabs.hibernate.exception.PersistEntityException;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -1421,7 +1422,13 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		// carichiamo i cari dati negli oggetti
 		if (modalita == MOD) {
 			this.setTitle("Modifica Articolo");
-			Articoli art = ArticoliHome.getInstance().findById(idArticolo);
+			Articoli art;
+			try {
+				art = ArticoliHome.getInstance().findById(idArticolo);
+			} catch (FindByNotFoundException e) {
+				messaggioErroreCampo("Impossibile Caricare l'Articolo Selezionato.");
+				return;
+			}
 			ultimoArticolo[0]=art.getCodbarre();
 			impostaCampi(art);
 //			calcoloPercentualeRicarico();
@@ -1441,7 +1448,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				txtCodFornitore.setEditable(true);
 				btnSuggerimento.setEnabled(true);
 			}
-			if ( art.getImmagineArticolos().size() != 0 ){
+			if ( art != null && art.getImmagineArticolos().size() != 0 ){
 				ArrayList<ImmagineArticolo> imgList = new ArrayList(art.getImmagineArticolos());
 				imgArticolo = imgList.get(0);
 				lbl1.setIcon(UtilityImage.resizeImage(new ImageIcon(imgArticolo.getFile()), 50, 50));
@@ -1645,6 +1652,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				ArticoliHome.getInstance().begin();
 				if ( !ArticoliHome.getInstance().codBarreEsistenteForInsert(a.getCodbarre()) ){
 					a.setIdarticolo(dbm.getNewID("articoli","idarticolo"));
+					ArticoliHome.getInstance().begin();
 					ArticoliHome.getInstance().persist(a);
 					ArticoliHome.getInstance().begin();
 					ArticoliHome.getInstance().commit();
@@ -1678,6 +1686,9 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			JOptionPane.showMessageDialog(this, fe.toString(),
 					"ERRORE", JOptionPane.ERROR_MESSAGE);
 			fe.printStackTrace();
+		} catch (PersistEntityException pe) {
+			JOptionPane.showMessageDialog(this, pe.toString(),
+					"ERRORE", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
@@ -1726,6 +1737,9 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			JOptionPane.showMessageDialog(this, fe.toString(),
 					"ERRORE", JOptionPane.ERROR_MESSAGE);
 			fe.printStackTrace();
+		} catch (PersistEntityException pe) {
+			JOptionPane.showMessageDialog(this, pe.toString(),
+					"ERRORE", JOptionPane.ERROR_MESSAGE);
 		}
 
 	}

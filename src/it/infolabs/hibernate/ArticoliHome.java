@@ -4,6 +4,9 @@ import org.apache.log4j.Logger;
 
 // Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA
 
+import it.infolabs.hibernate.exception.FindByNotFoundException;
+import it.infolabs.hibernate.exception.PersistEntityException;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,14 +43,14 @@ public class ArticoliHome extends BusinessObjectHome{
 		return instance;
 	}
 
-	public void persist(Articoli transientInstance) {
+	public void persist(Articoli transientInstance) throws PersistEntityException{
 		log.debug("persisting Articoli instance");
 		try {
 			sessionFactory.getCurrentSession().persist(transientInstance);
 			log.debug("persist successful");
 		} catch (RuntimeException re) {
 			log.error("persist failed", re);
-			throw re;
+			throw new PersistEntityException();
 		}
 	}
 
@@ -97,7 +100,7 @@ public class ArticoliHome extends BusinessObjectHome{
 		}
 	}
 
-	public Articoli findById(long id) {
+	public Articoli findById(long id) throws FindByNotFoundException{
 		log.debug("getting Articoli instance with id: " + id);
 		try {
 			Articoli instance = (Articoli) sessionFactory.getCurrentSession()
@@ -110,7 +113,7 @@ public class ArticoliHome extends BusinessObjectHome{
 			return instance;
 		} catch (RuntimeException re) {
 			log.error("get failed", re);
-			throw re;
+			throw new FindByNotFoundException();
 		}
 	}
 
@@ -153,7 +156,12 @@ public class ArticoliHome extends BusinessObjectHome{
 	
 	
 	public Double getQtaRiordino(long articolo, double qtaOrdinare){
-		Articoli a=ArticoliHome.getInstance().findById(articolo);
+		Articoli a;
+		try {
+			a = ArticoliHome.getInstance().findById(articolo);
+		} catch (FindByNotFoundException e) {
+			return 0.0;
+		}
 //		double qtaOrdinare=(int)(getGiacenza(articolo)- a.getScortaMinima());
 		int numeroPacchetti=a.getNumeroPacchetti()==null?0:a.getNumeroPacchetti();
 		double diff=0;
@@ -209,11 +217,7 @@ public class ArticoliHome extends BusinessObjectHome{
 	
 	public boolean codBarreEsistenteForInsert(String codBarre) {
 		Criteria crit = sessionFactory.getCurrentSession().createCriteria("it.infolabs.hibernate.Articoli");
-		crit.add(Restrictions.or(
-				Restrictions.and(
-						Restrictions.ilike("codbarre", codBarre.substring(0, 4)+"%"), 
-						Restrictions.eq("reparti.idreparto", ((long)Constant.REPARTO_GRATTA_E_VINCI))), 
-						Restrictions.eq("codbarre", codBarre)));
+		crit.add(Restrictions.eq("codbarre", codBarre));				
 		if ( crit.list().size() > 0)
 			return true;
 		return false;
@@ -221,10 +225,7 @@ public class ArticoliHome extends BusinessObjectHome{
 	
 	public boolean codBarreEsistenteForUpdate(String codBarre, long idArticolo) {
 		Criteria crit = sessionFactory.getCurrentSession().createCriteria("it.infolabs.hibernate.Articoli");
-		crit.add(Restrictions.and(Restrictions.or(
-				Restrictions.eq("codbarre", codBarre), 
-				Restrictions.like("codbarre", codBarre.substring(0, 4)+"%")), 
-				Restrictions.not(Restrictions.idEq(idArticolo))));
+		crit.add(Restrictions.and(Restrictions.eq("codbarre", codBarre),Restrictions.not(Restrictions.idEq(idArticolo))));
 		if ( crit.list().size() > 0 )
 			return true;
 		return false;
@@ -243,9 +244,7 @@ public class ArticoliHome extends BusinessObjectHome{
 			query.append("inner join d.articoli a, ");
 			query.append("it.infolabs.hibernate.GiacenzaArticoliAllView v ");
 			query.append("where v.id.idarticolo = a.idarticolo ");
-			query.append("and ((a.codbarre = '"+codBarre.substring(0, 4)+"' ");
-			query.append("and a.reparti.idreparto = "+Constant.REPARTO_GRATTA_E_VINCI+") ");
-			query.append("or a.codbarre = '"+codBarre+"') ");
+			query.append("and a.codbarre = '"+codBarre+"') ");
 			query.append("order by c.dataCarico desc, c.oraCarico desc");
 			
 			results = (List<Object[]>) sessionFactory.getCurrentSession().createQuery(query.toString()).list();

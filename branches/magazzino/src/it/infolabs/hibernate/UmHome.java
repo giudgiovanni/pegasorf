@@ -2,6 +2,8 @@ package it.infolabs.hibernate;
 
 // Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA
 
+import it.infolabs.hibernate.exception.FindByNotFoundException;
+
 import java.util.List;
 import javax.naming.InitialContext;
 import org.apache.commons.logging.Log;
@@ -92,7 +94,7 @@ public class UmHome extends BusinessObjectHome{
 		}
 	}
 
-	public Um findById(long id) {
+	public Um findById(long id) throws FindByNotFoundException{
 		log.debug("getting Um instance with id: " + id);
 		try {
 			Um instance = (Um) sessionFactory.getCurrentSession().get(
@@ -105,7 +107,7 @@ public class UmHome extends BusinessObjectHome{
 			return instance;
 		} catch (RuntimeException re) {
 			log.error("get failed", re);
-			throw re;
+			throw new FindByNotFoundException();
 		}
 	}
 

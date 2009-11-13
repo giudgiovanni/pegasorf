@@ -50,7 +50,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				apriFornitori();
 			} else if (e.getSource() == btnCarico) {
 				apriCaricoMerce();
-			} else if (e.getSource() == btnScarico) {
+			} else if (e.getSource() == btnVendite) {
 				apriVenditeGUI();
 			} else if (e.getSource() == btnInventario) {
 				apriGiacenze();
@@ -58,6 +58,8 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				apriStampe();
 			} else if (e.getSource() == btnRicerche) {
 				apriRicerche();
+			}else if (e.getSource() == btnScarico) {
+				apriScarico();
 			}
 		}
 
@@ -77,7 +79,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	private JButton btnFornitori = null;
 	private JButton btnInventario = null;
 	private JButton btnRicerche = null;
-	private JButton btnScarico = null;
+	private JButton btnVendite = null;
 	private JButton btnStampe = null;
 	private DBManager dbm;
 	private JPanel jContentPane = null;
@@ -86,6 +88,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	private JPanel pnlCentrale = null;
 	private JButton jButton = null;
 	private JButton btnFtByDdt = null;
+	private JButton btnScarico = null;
 	/**
 	 * This is the xxx default constructor
 	 */
@@ -94,6 +97,14 @@ public class ArchivioInternalFrame extends JInternalFrame {
 		this.dbm=DBManager.getIstanceSingleton();
 		this.padre = padre;
 		initialize();
+	}
+
+	public void apriScarico() {
+		ScaricoGui ordine = new ScaricoGui();
+		//Apriamo il Frame in modo modale
+		ModalFrameUtil.showAsModal(ordine, padre);
+		//ordine.setVisible(true);
+		//ordine.setVisible(true);		 
 	}
 
 	/**
@@ -268,7 +279,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				btnClienti = new JButton();
 				btnClienti.setText("Clienti"); // Generated
 				btnClienti.setPreferredSize(new Dimension(120, 70)); // Generated
-				btnClienti.setVisible(false);
+				btnClienti.setVisible(true);
 				btnClienti.addActionListener(myActionListener);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -288,7 +299,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				btnFornitori = new JButton();
 				btnFornitori.setText("Fornitori"); // Generated
 				btnFornitori.setPreferredSize(new Dimension(120, 70)); // Generated
-				btnFornitori.setVisible(false);
+				btnFornitori.setVisible(true);
 				btnFornitori.addActionListener(myActionListener);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -341,37 +352,18 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	 * @return javax.swing.JButton
 	 */
 	private JButton getBtnScarico() {
-		if (btnScarico == null) {
+		if (btnVendite == null) {
 			try {
-				btnScarico = new JButton();
-				btnScarico.setText("Vendite"); // Generated
-				btnScarico.setPreferredSize(new Dimension(120, 70)); // Generated
+				btnVendite = new JButton();
+				btnVendite.setText("Vendite"); // Generated
+				btnVendite.setPreferredSize(new Dimension(120, 70)); // Generated
 //				btnScarico.setVisible(false);
-				btnScarico.addActionListener(myActionListener);
+				btnVendite.addActionListener(myActionListener);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
 		}
-		return btnScarico;
-	}
-
-	/**
-	 * This method initializes btnStampe
-	 *
-	 * @return javax.swing.JButton
-	 */
-	private JButton getBtnStampe() {
-		if (btnStampe == null) {
-			try {
-				btnStampe = new JButton();
-				btnStampe.setPreferredSize(new Dimension(120, 70)); // Generated
-				btnStampe.setText("Stampe");
-				btnStampe.addActionListener(myActionListener);
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return btnStampe;
+		return btnVendite;
 	}
 
 	/**
@@ -396,6 +388,15 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	private JPanel getPnlCentrale() {
 		if (pnlCentrale == null) {
 			try {
+				GridBagConstraints gridBagConstraints22 = new GridBagConstraints();
+				gridBagConstraints22.gridx = 2;
+				gridBagConstraints22.gridy = 1;
+				GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
+				gridBagConstraints1.gridx = 4;
+				gridBagConstraints1.gridy = 1;
+				GridBagConstraints gridBagConstraints = new GridBagConstraints();
+				gridBagConstraints.gridx = 3;
+				gridBagConstraints.gridy = 1;
 				GridBagConstraints gridBagConstraints15 = new GridBagConstraints();
 				gridBagConstraints15.gridx = 0;
 				gridBagConstraints15.gridy = 2;
@@ -417,7 +418,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				GridBagConstraints gridBagConstraints12 = new GridBagConstraints();
 				gridBagConstraints12.gridx = 4; // Generated
 				gridBagConstraints12.insets = new Insets(10, 10, 10, 10); // Generated
-				gridBagConstraints12.gridy = 0; // Generated
+				gridBagConstraints12.gridy = 1; // Generated
 				GridBagConstraints gridBagConstraints31 = new GridBagConstraints();
 				gridBagConstraints31.gridx = 3; // Generated
 				gridBagConstraints31.gridy = 1; // Generated
@@ -429,7 +430,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				gridBagConstraints4.gridheight = 1; // Generated
 				gridBagConstraints4.ipadx = 0; // Generated
 				gridBagConstraints4.weightx = 0.0; // Generated
-				gridBagConstraints4.gridy = 1; // Generated
+				gridBagConstraints4.gridy = 2; // Generated
 				GridBagConstraints gridBagConstraints3 = new GridBagConstraints();
 				gridBagConstraints3.gridx = 3; // Generated
 				gridBagConstraints3.insets = new Insets(10, 10, 10, 10); // Generated
@@ -446,9 +447,10 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				pnlCentrale.add(getBtnCarico(), gridBagConstraints31);
 				pnlCentrale.add(getBtnScarico(), gridBagConstraints12);
 				pnlCentrale.add(getBtnInventario(), gridBagConstraints21);
-				pnlCentrale.add(getBtnStampe(), gridBagConstraints17);
 				pnlCentrale.add(getBtnRicerche(), gridBagConstraints18);
 				pnlCentrale.add(getBtnFtByDdt(), gridBagConstraints15);
+				pnlCentrale.add(getBtnStampe(), gridBagConstraints22);
+				
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -494,7 +496,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 			btnFtByDdt = new JButton();
 			btnFtByDdt.setPreferredSize(new Dimension(120, 70));
 			btnFtByDdt.setText("Fattura da DDT");
-			btnFtByDdt.setVisible(false);
+			btnFtByDdt.setVisible(true);
 			btnFtByDdt.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					apriDdtAFattura();
@@ -503,5 +505,27 @@ public class ArchivioInternalFrame extends JInternalFrame {
 		}
 		return btnFtByDdt;
 	}
+
+	/**
+	 * This method initializes btnStampe1	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnStampe() {
+		if (btnStampe == null) {
+			try {
+				btnStampe = new JButton();
+				btnStampe.setPreferredSize(new Dimension(120, 70)); // Generated
+				btnStampe.setText("Stampe");
+				btnStampe.addActionListener(myActionListener);
+			} catch (java.lang.Throwable e) {
+				
+			}
+			
+		}
+		return btnStampe;
+	}
+
+	
 
 } // @jve:decl-index=0:visual-constraint="10,10"

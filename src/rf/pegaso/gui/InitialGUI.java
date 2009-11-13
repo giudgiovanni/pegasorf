@@ -370,7 +370,7 @@ public class InitialGUI extends JFrame {
 				venditaInternalFrame
 						.setBounds(new Rectangle(260, 28, 369, 236)); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return venditaInternalFrame;

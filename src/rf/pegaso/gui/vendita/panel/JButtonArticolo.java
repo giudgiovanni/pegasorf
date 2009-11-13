@@ -40,7 +40,7 @@ public class JButtonArticolo extends javax.swing.JButton {
             setFocusPainted(false);
             setFocusable(false);
             setRequestFocusEnabled(false);
-            setPreferredSize(new Dimension(100, 100));
+            setPreferredSize(new Dimension(articolo.getDescrizione().length()*15, 100));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

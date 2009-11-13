@@ -2,7 +2,10 @@ package rf.pegaso.gui.vendita.panel;
 
 import it.infolabs.hibernate.Articoli;
 
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import java.awt.Insets;
@@ -10,6 +13,7 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.Vector;
 
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import javax.swing.JScrollPane;
@@ -59,7 +63,8 @@ public class JPanelArticoli extends JPanel{
 	public void caricaArticoli(LinkedList<Articoli> articoli){
 		try{
 			pnlPulsanti.removeAll();
-			pnlPulsanti.setLayout(new GridBagLayout());
+//			pnlPulsanti.setLayout(new GridBagLayout());
+			pnlPulsanti.setLayout(new FlowLayout());
 			int nRiga = 0, nCol = 0;
 			for (Articoli art : articoli){
 				GridBagConstraints gridBagConstraints = new GridBagConstraints();
@@ -67,9 +72,11 @@ public class JPanelArticoli extends JPanel{
 				gridBagConstraints.insets = new Insets(10, 10, 10, 10);
 				gridBagConstraints.gridy = nCol;
 				JButtonArticolo btnArticolo = new JButtonArticolo(art);
-				btnArticolo.addActionListener(new MyButtonListener(art));
-				btnArticolo.setPreferredSize(new Dimension(100, 100));
-				pnlPulsanti.add(btnArticolo, gridBagConstraints);
+				MyButtonListener btnListener = new MyButtonListener(art);
+				btnArticolo.addActionListener(btnListener);
+//				btnArticolo.setPreferredSize(new Dimension(100, 100));
+//				pnlPulsanti.add(btnArticolo, gridBagConstraints);
+				pnlPulsanti.add(btnArticolo);
 				if ( nRiga == ncolonne ){
 					nRiga = 0;
 					nCol++;
@@ -133,7 +140,8 @@ public class JPanelArticoli extends JPanel{
 	private JPanel getPnlPulsanti() {
 		if (pnlPulsanti == null) {
 			pnlPulsanti = new JPanel();
-			pnlPulsanti.setLayout(new GridBagLayout());
+			pnlPulsanti.setLayout(new FlowLayout());
+			pnlPulsanti.setPreferredSize(new Dimension(width, 410));
 		}
 		return pnlPulsanti;
 	}

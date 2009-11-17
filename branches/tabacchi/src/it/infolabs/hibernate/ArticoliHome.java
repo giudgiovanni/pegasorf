@@ -15,6 +15,7 @@ import org.hibernate.criterion.Restrictions;
 
 import rf.pegaso.db.tabelle.Articolo;
 import rf.utility.Constant;
+import rf.utility.db.DBManager;
 import static org.hibernate.criterion.Example.create;
 
 /**
@@ -44,6 +45,7 @@ public class ArticoliHome extends BusinessObjectHome{
 		log.debug("persisting Articoli instance");
 		try {
 			sessionFactory.getCurrentSession().persist(transientInstance);
+			DBManager.getIstanceSingleton().notifyDBStateChange();
 			log.debug("persist successful");
 		} catch (RuntimeException re) {
 			log.error("persist failed", re);
@@ -55,6 +57,7 @@ public class ArticoliHome extends BusinessObjectHome{
 		log.debug("attaching dirty Articoli instance");
 		try {
 			sessionFactory.getCurrentSession().saveOrUpdate(instance);
+			DBManager.getIstanceSingleton().notifyDBStateChange();
 			log.debug("attach successful");
 		} catch (RuntimeException re) {
 			log.error("attach failed", re);
@@ -77,6 +80,7 @@ public class ArticoliHome extends BusinessObjectHome{
 		log.debug("deleting Articoli instance");
 		try {
 			sessionFactory.getCurrentSession().delete(persistentInstance);
+			DBManager.getIstanceSingleton().notifyDBStateChange();
 			log.debug("delete successful");
 		} catch (RuntimeException re) {
 			log.error("delete failed", re);
@@ -89,6 +93,7 @@ public class ArticoliHome extends BusinessObjectHome{
 		try {
 			Articoli result = (Articoli) sessionFactory.getCurrentSession()
 					.merge(detachedInstance);
+			DBManager.getIstanceSingleton().notifyDBStateChange();
 			log.debug("merge successful");
 			return result;
 		} catch (RuntimeException re) {

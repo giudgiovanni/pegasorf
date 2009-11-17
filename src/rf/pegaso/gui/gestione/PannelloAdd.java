@@ -5,6 +5,7 @@ package rf.pegaso.gui.gestione;
 
 import it.infolabs.hibernate.Pannelli;
 import it.infolabs.hibernate.PannelliHome;
+import it.infolabs.hibernate.exception.PersistEntityException;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -221,8 +222,12 @@ public class PannelloAdd extends JDialog {
 		pan.setNome(this.txtNome.getText());
 		pan.setIdpannelli(DBManager.getIstanceSingleton().getNewID("pannelli", "idpannelli"));
 		PannelliHome.getInstance().begin();
-		PannelliHome.getInstance().persist(pan);
-		PannelliHome.getInstance().commit();
+		try {
+			PannelliHome.getInstance().persist(pan);
+			PannelliHome.getInstance().commit();
+		} catch (PersistEntityException e) {
+			e.printStackTrace();
+		}
 		dispose();
 
 	}

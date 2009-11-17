@@ -12,6 +12,7 @@ import it.infolabs.hibernate.Pannelli;
 import it.infolabs.hibernate.PannelliHome;
 import it.infolabs.hibernate.RepartiHome;
 import it.infolabs.hibernate.UmHome;
+import it.infolabs.hibernate.exception.FindAllEntityException;
 import it.infolabs.hibernate.exception.FindByNotFoundException;
 
 import java.awt.BorderLayout;
@@ -1553,7 +1554,8 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	}
 	
 	private void caricaCmbPannelli() {
-		cmbPannelli.removeAllItems();
+		
+		try {cmbPannelli.removeAllItems();
 		PannelliHome.getInstance().begin();
 		ArrayList<Pannelli> pannelli = PannelliHome.getInstance().allPannelli();
 		String [] allPannelli = new String[pannelli.size()];
@@ -1576,6 +1578,11 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		
 		//new ComboBoxAutoComplete(cmbReparto);
 		AutoCompletion.enable(cmbPannelli);
+		} catch (FindAllEntityException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, "Si \u00E8 verificato un errore inaspettato!!!", "ERRORE",
+					JOptionPane.ERROR_MESSAGE);
+		}
 
 	}
 

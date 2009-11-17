@@ -1,6 +1,8 @@
 package rf.pegaso.gui.vendita.panel;
 
 import it.infolabs.hibernate.Articoli;
+import it.infolabs.hibernate.PannelliHome;
+import it.infolabs.hibernate.exception.FindByNotFoundException;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -9,6 +11,7 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.Vector;
@@ -19,11 +22,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import rf.pegaso.db.tabelle.Articolo;
+import rf.utility.db.DBEvent;
+import rf.utility.db.DBStateChange;
+import rf.utility.db.RowEvent;
 
 import java.awt.GridBagLayout;
 
 
-public class JPanelArticoli extends JPanel{
+public class JPanelArticoli extends JPanel implements DBStateChange{
 
 	private static final long serialVersionUID = 1L;
 	private Vector<JButtonEventListener> m_Listeners = new Vector<JButtonEventListener>();
@@ -31,6 +37,7 @@ public class JPanelArticoli extends JPanel{
 	private JPanel pnlPulsanti = null;
 	private int width;
 	private int ncolonne;
+	private long idPannello = -1;
 
 	/**
 	 * This is the default constructor
@@ -63,28 +70,21 @@ public class JPanelArticoli extends JPanel{
 	public void caricaArticoli(LinkedList<Articoli> articoli){
 		try{
 			pnlPulsanti.removeAll();
-//			pnlPulsanti.setLayout(new GridBagLayout());
-			pnlPulsanti.setLayout(new FlowLayout());
-			int nRiga = 0, nCol = 0;
+			pnlPulsanti.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+			int countWidth = 0, row = 3;
 			for (Articoli art : articoli){
-				GridBagConstraints gridBagConstraints = new GridBagConstraints();
-				gridBagConstraints.gridx = nRiga;
-				gridBagConstraints.insets = new Insets(10, 10, 10, 10);
-				gridBagConstraints.gridy = nCol;
+				idPannello = art.getPannelli().getIdpannelli();
 				JButtonArticolo btnArticolo = new JButtonArticolo(art);
 				MyButtonListener btnListener = new MyButtonListener(art);
 				btnArticolo.addActionListener(btnListener);
-//				btnArticolo.setPreferredSize(new Dimension(100, 100));
-//				pnlPulsanti.add(btnArticolo, gridBagConstraints);
 				pnlPulsanti.add(btnArticolo);
-				if ( nRiga == ncolonne ){
-					nRiga = 0;
-					nCol++;
-				}
-				else{
-					nRiga++;
+				countWidth += btnArticolo.getPreferredSize().width;
+				if( countWidth >= (width - 20) ){
+					countWidth = 0; row ++;
 				}
 			}
+			int height = (row*100)+(row*10);
+			pnlPulsanti.setPreferredSize(new Dimension(width-20, height));
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -140,9 +140,36 @@ public class JPanelArticoli extends JPanel{
 	private JPanel getPnlPulsanti() {
 		if (pnlPulsanti == null) {
 			pnlPulsanti = new JPanel();
-			pnlPulsanti.setLayout(new FlowLayout());
-			pnlPulsanti.setPreferredSize(new Dimension(width, 410));
+			pnlPulsanti.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+			pnlPulsanti.setMinimumSize(new Dimension(width-10, 410));
+			pnlPulsanti.setPreferredSize(new Dimension(width-10, 5000));
 		}
 		return pnlPulsanti;
+	}
+
+	@Override
+	public String getNomeTabella() {
+		return null;
+	}
+
+	@Override
+	public void rowStateChange(RowEvent re) {
+	}
+
+	@Override
+	public void stateChange() {
+		if ( idPannello != -1 ){
+			PannelliHome.getInstance().begin();
+			try {
+				caricaArticoli(new LinkedList(PannelliHome.getInstance().findById(idPannello).getArticolis()));
+			} catch (FindByNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	public void stateChange(DBEvent dbe) {
+		stateChange();
 	}
 }

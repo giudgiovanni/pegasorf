@@ -3,6 +3,12 @@ package it.infolabs.hibernate;
 
 import static org.hibernate.criterion.Example.create;
 
+import it.infolabs.hibernate.exception.DeleteEntityException;
+import it.infolabs.hibernate.exception.FindAllEntityException;
+import it.infolabs.hibernate.exception.FindByNotFoundException;
+import it.infolabs.hibernate.exception.MergeEntityException;
+import it.infolabs.hibernate.exception.PersistEntityException;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +19,8 @@ import org.apache.log4j.Logger;
 import org.hibernate.LockMode;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Example;
+
+import rf.utility.db.DBManager;
 
 /**
  * Home object for domain model class Pannelli.
@@ -38,14 +46,15 @@ public class PannelliHome extends BusinessObjectHome {
 		return instance;
 	}
 
-	public void persist(Pannelli transientInstance) {
+	public void persist(Pannelli transientInstance) throws PersistEntityException {
 		log.debug("persisting Pannelli instance");
 		try {
 			sessionFactory.getCurrentSession().persist(transientInstance);
+			DBManager.getIstanceSingleton().notifyDBStateChange();
 			log.debug("persist successful");
 		} catch (RuntimeException re) {
 			log.error("persist failed", re);
-			throw re;
+			throw new PersistEntityException();
 		}
 	}
 
@@ -71,31 +80,33 @@ public class PannelliHome extends BusinessObjectHome {
 		}
 	}
 
-	public void delete(Pannelli persistentInstance) {
+	public void delete(Pannelli persistentInstance) throws DeleteEntityException{
 		log.debug("deleting Pannelli instance");
 		try {
 			sessionFactory.getCurrentSession().delete(persistentInstance);
+			DBManager.getIstanceSingleton().notifyDBStateChange();
 			log.debug("delete successful");
 		} catch (RuntimeException re) {
 			log.error("delete failed", re);
-			throw re;
+			throw new DeleteEntityException();
 		}
 	}
 
-	public Pannelli merge(Pannelli detachedInstance) {
+	public Pannelli merge(Pannelli detachedInstance) throws MergeEntityException{
 		log.debug("merging Pannelli instance");
 		try {
 			Pannelli result = (Pannelli) sessionFactory.getCurrentSession()
 					.merge(detachedInstance);
+			DBManager.getIstanceSingleton().notifyDBStateChange();
 			log.debug("merge successful");
 			return result;
 		} catch (RuntimeException re) {
 			log.error("merge failed", re);
-			throw re;
+			throw new MergeEntityException();
 		}
 	}
 
-	public Pannelli findById(long id) {
+	public Pannelli findById(long id) throws FindByNotFoundException{
 		log.debug("getting Pannelli instance with id: " + id);
 		try {
 			Pannelli instance = (Pannelli) sessionFactory.getCurrentSession()
@@ -108,11 +119,11 @@ public class PannelliHome extends BusinessObjectHome {
 			return instance;
 		} catch (RuntimeException re) {
 			log.error("get failed", re);
-			throw re;
+			throw new FindByNotFoundException();
 		}
 	}
 
-	public List findByExample(Pannelli instance) {
+	public List findByExample(Pannelli instance) throws FindByNotFoundException{
 		log.debug("finding Pannelli instance by example");
 		try {
 			List results = sessionFactory.getCurrentSession().createCriteria(
@@ -123,7 +134,7 @@ public class PannelliHome extends BusinessObjectHome {
 			return results;
 		} catch (RuntimeException re) {
 			log.error("find by example failed", re);
-			throw re;
+			throw new FindByNotFoundException();
 		}
 	}
 	
@@ -131,7 +142,7 @@ public class PannelliHome extends BusinessObjectHome {
 	 * Ritorna tutti i pannelli da visualizzare
 	 * @return
 	 */
-	public ArrayList<Pannelli> allPannelli() {		
+	public ArrayList<Pannelli> allPannelli() throws FindAllEntityException{		
 		log.debug("finding all Pannelli.");
 		try {
 			ArrayList<Pannelli> results = (ArrayList<Pannelli>) sessionFactory.
@@ -142,7 +153,7 @@ public class PannelliHome extends BusinessObjectHome {
 			return results;
 		} catch (RuntimeException re) {
 			log.error("finding all Pannelli failed", re);
-			throw re;
+			throw new FindAllEntityException();
 		}
 	}
 }

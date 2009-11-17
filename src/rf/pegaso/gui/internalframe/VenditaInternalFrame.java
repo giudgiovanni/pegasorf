@@ -3,6 +3,7 @@ package rf.pegaso.gui.internalframe;
 import it.infolabs.hibernate.Articoli;
 import it.infolabs.hibernate.Pannelli;
 import it.infolabs.hibernate.PannelliHome;
+import it.infolabs.hibernate.exception.FindAllEntityException;
 import it.infolabs.pos.PosDriver;
 import it.infolabs.pos.PosException;
 import it.infolabs.pos.Ticket;
@@ -12,6 +13,7 @@ import it.infolabs.pos.driver.RCHDriver;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.awt.HeadlessException;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 
@@ -159,17 +161,26 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 	}
 	
 	private void initializePannelliRapidi(){
-		for ( Pannelli pan : PannelliHome.getInstance().allPannelli() ){
-			if ( pan.getArticolis().size() > 0 ){
-				JPanelArticoli pnlArticolo = new JPanelArticoli(new Integer((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()) - 650);
-				pnlArticolo.caricaArticoli(new LinkedList<Articoli>(pan.getArticolis()));
-				pnlArticolo.addJButtonEventListener(new JButtonEventListener() {
-					public void keyPerformed(JButtonEvent evt) {
-						inserisciNelCarrello(evt.getArticolo().getCodbarre());
-					}
-				});
-				jTabbedPane.addTab(pan.getNome(), null, pnlArticolo, null);
+		try {
+			for ( Pannelli pan : PannelliHome.getInstance().allPannelli() ){
+				if ( pan.getArticolis().size() > 0 ){
+					JPanelArticoli pnlArticolo = new JPanelArticoli(new Integer((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()) - 650);
+					pnlArticolo.caricaArticoli(new LinkedList<Articoli>(pan.getArticolis()));
+					pnlArticolo.addJButtonEventListener(new JButtonEventListener() {
+						public void keyPerformed(JButtonEvent evt) {
+							inserisciNelCarrello(evt.getArticolo().getCodbarre());
+						}
+					});
+					DBManager.getIstanceSingleton().addDBStateChange(pnlArticolo);
+					jTabbedPane.addTab(pan.getNome(), null, pnlArticolo, null);
+				}
 			}
+		} catch (HeadlessException e) {
+			e.printStackTrace();
+			messaggioAVideo("Si \u00E8 verificato un errore inaspettato!!!", "ERRORE");
+		} catch (FindAllEntityException e) {
+			e.printStackTrace();
+			messaggioAVideo("Si \u00E8 verificato un errore inaspettato!!!", "ERRORE");
 		}
 	}
 	

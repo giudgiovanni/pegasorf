@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 20-set-2009 12.54.15 by Hibernate Tools 3.2.5.Beta -->
+<hibernate-mapping>
+    <class name="it.infolabs.hibernate.Articoli" table="articoli" schema="public">
+        <id name="idarticolo" type="long">
+            <column name="idarticolo" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="um" class="it.infolabs.hibernate.Um" fetch="select">
+            <column name="um" />
+        </many-to-one>
+        <many-to-one name="fornitori" class="it.infolabs.hibernate.Fornitori" fetch="select">
+            <column name="idfornitore" />
+        </many-to-one>
+        <many-to-one name="reparti" class="it.infolabs.hibernate.Reparti" fetch="select">
+            <column name="idreparto" />
+        </many-to-one>
+        <many-to-one name="pannelli" class="it.infolabs.hibernate.Pannelli" fetch="select">
+            <column name="idpannello" />
+        </many-to-one>
+        <property name="codfornitore" type="string">
+            <column name="codfornitore" length="40" />
+        </property>
+        <property name="codbarre" type="string">
+            <column name="codbarre" length="40" />
+        </property>
+        <property name="descrizione" type="string">
+            <column name="descrizione" length="100" not-null="true" />
+        </property>
+        <property name="prezzoAcquisto" type="java.lang.Double">
+            <column name="prezzo_acquisto" precision="17" scale="17" />
+        </property>
+        <property name="iva" type="java.lang.Long">
+            <column name="iva" />
+        </property>
+        <property name="prezzoDettaglio" type="java.lang.Double">
+            <column name="prezzo_dettaglio" precision="17" scale="17" />
+        </property>
+        <property name="prezzoIngrosso" type="java.lang.Double">
+            <column name="prezzo_ingrosso" precision="17" scale="17" />
+        </property>
+        <property name="imballo" type="string">
+            <column name="imballo" length="50" />
+        </property>
+        <property name="peso" type="java.lang.Double">
+            <column name="peso" precision="17" scale="17" />
+        </property>
+        <property name="sconto" type="java.lang.Long">
+            <column name="sconto" />
+        </property>
+        <property name="colore" type="string">
+            <column name="colore" length="40" />
+        </property>
+        <property name="scortaMinima" type="java.lang.Long">
+            <column name="scorta_minima" />
+        </property>
+        <property name="note" type="string">
+            <column name="note" length="200" />
+        </property>
+        <property name="dataInserimento" type="date">
+            <column name="data_inserimento" length="13" />
+        </property>
+        <property name="caricoIniziale" type="java.lang.Long">
+            <column name="carico_iniziale" />
+        </property>
+        <property name="scortaMassima" type="java.lang.Long">
+            <column name="scorta_massima" />
+        </property>
+        <property name="numeroPacchetti" type="java.lang.Integer">
+            <column name="numero_pacchetti" />
+        </property>
+        <property name="qtaInfinita" type="boolean">
+            <column name="qta_infinita" not-null="true" />
+        </property>
+        <set name="dettaglioOrdinis" inverse="true" lazy="true" table="dettaglio_ordini" fetch="select">
+            <key>
+                <column name="idarticolo" not-null="true" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.DettaglioOrdini" />
+        </set>
+        <set name="immagineArticolos" inverse="true" lazy="true" table="immagine_articolo" fetch="select">
+            <key>
+                <column name="articolo" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.ImmagineArticolo" />
+        </set>
+        <set name="immagineArticolos_1" inverse="true" lazy="true" table="immagine_articolo" fetch="select">
+            <key>
+                <column name="articolo" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.ImmagineArticolo" />
+        </set>
+        <set name="dettaglioOrdinis_1" inverse="true" lazy="true" table="dettaglio_ordini" fetch="select">
+            <key>
+                <column name="idarticolo" not-null="true" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.DettaglioOrdini" />
+        </set>
+        <set name="dettaglioCarichis" inverse="true" lazy="true" table="dettaglio_carichi" fetch="select">
+            <key>
+                <column name="idarticolo" not-null="true" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.DettaglioCarichi" />
+        </set>
+        <set name="dettaglioCarichis_1" inverse="true" lazy="true" table="dettaglio_carichi" fetch="select">
+            <key>
+                <column name="idarticolo" not-null="true" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.DettaglioCarichi" />
+        </set>
+        <set name="dettaglioOrdinis_2" inverse="true" lazy="true" table="dettaglio_ordini" fetch="select">
+            <key>
+                <column name="idarticolo" not-null="true" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.DettaglioOrdini" />
+        </set>
+        <set name="immagineArticolos_2" inverse="true" lazy="true" table="immagine_articolo" fetch="select">
+            <key>
+                <column name="articolo" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.ImmagineArticolo" />
+        </set>
+        <set name="dettaglioCarichis_2" inverse="true" lazy="true" table="dettaglio_carichi" fetch="select">
+            <key>
+                <column name="idarticolo" not-null="true" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.DettaglioCarichi" />
+        </set>
+    </class>
+</hibernate-mapping>

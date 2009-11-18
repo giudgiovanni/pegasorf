@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="it.infolabs.hibernate.ImmagineArticolo" table="immagine_articolo" schema="public">
+        <id name="id" type="long">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="articoli" class="it.infolabs.hibernate.Articoli" fetch="select">
+            <column name="articolo" />
+        </many-to-one>
+        <property name="nome" type="string">
+            <column name="nome" not-null="true" />
+        </property>
+        <property name="estensione" type="string">
+            <column name="estensione" length="10" />
+        </property>
+        <property name="file" type="binary">
+            <column name="file" />
+        </property>
+    </class>
+</hibernate-mapping>

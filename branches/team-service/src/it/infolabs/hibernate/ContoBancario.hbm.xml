@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="it.infolabs.hibernate.ContoBancario" table="conto_bancario" schema="public">
+        <id name="idconto" type="long">
+            <column name="idconto" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="banca" class="it.infolabs.hibernate.Banca" fetch="select">
+            <column name="idbanca" not-null="true" />
+        </many-to-one>
+        <property name="abi" type="java.lang.Integer">
+            <column name="abi" />
+        </property>
+        <property name="cab" type="java.lang.Integer">
+            <column name="cab" />
+        </property>
+        <property name="cc" type="java.lang.Integer">
+            <column name="cc" />
+        </property>
+        <property name="iban" type="string">
+            <column name="iban" />
+        </property>
+        <set name="movimentoBancas" inverse="true" lazy="true" table="movimento_banca" fetch="select">
+            <key>
+                <column name="idconto" not-null="true" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.MovimentoBanca" />
+        </set>
+        <set name="movimentoBancas_1" inverse="true" lazy="true" table="movimento_banca" fetch="select">
+            <key>
+                <column name="idconto" not-null="true" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.MovimentoBanca" />
+        </set>
+        <set name="movimentoBancas_2" inverse="true" lazy="true" table="movimento_banca" fetch="select">
+            <key>
+                <column name="idconto" not-null="true" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.MovimentoBanca" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -3,6 +3,10 @@
  */
 package rf.pegaso.db.tabelle;
 
+import it.infolabs.hibernate.Clienti;
+import it.infolabs.hibernate.ClientiHome;
+import it.infolabs.hibernate.exception.FindByNotFoundException;
+
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -311,56 +315,86 @@ public class Cliente {
 	 * @throws IDNonValido
 	 *             viene lanciata se l'attributo idArticolo è errato e quindi
 	 *             non si può effettuare l'aggiornamento della riga
+	 * @throws FindByNotFoundException 
 	 */
-	public int insertCliente() throws IDNonValido {
+	public int insertCliente() throws IDNonValido, FindByNotFoundException {
 
 		idCliente = dbm.getNewID("clienti", "idCliente");
 		if (idCliente <= -1)
 			throw new IDNonValido();
-		int ok = 0;
-		PreparedStatement pst = null;
-		String update = "insert into clienti values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-		Calendar c = Calendar.getInstance();
-		dataInserimento = new Date(c.getTimeInMillis());
-		pst = dbm.getNewPreparedStatement(update);
-		try {
-			pst.setInt(1, idCliente);
-			pst.setDate(2, dataInserimento);
-			pst.setString(3, nome);
-			pst.setString(4, cognome);
-			pst.setString(5, piva);
-			pst.setString(6, codfisc);
-			pst.setString(7, via);
-			pst.setString(8, cap);
-			pst.setString(9, citta);
-			pst.setString(10, tel);
-			pst.setString(11, cell);
-			pst.setString(12, fax);
-			pst.setString(13, email);
-			pst.setString(14, website);
-			pst.setString(15, note);
-			pst.setDate(16, DateManager.convertDateToSqlDate(this.dataNascita));
-			pst.setString(17, documento);
-			pst.setString(18, numDoc);
-			pst.setDate(19, DateManager.convertDateToSqlDate(rilasciatoIl));
-			pst.setString(20, rilasciatoDa);
-			pst.setString(21, natoa);
-			pst.setString(22, intestazione);
-			pst.setString(23, nazionalita);
-			pst.setInt(24, provincia);
-			ok = pst.executeUpdate();
-			dbm.notifyDBStateChange();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (pst != null)
-					pst.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return ok;
+		
+		ClientiHome.getInstance().begin();
+		Clienti cliente=new Clienti();
+		cliente.setCap(cap);
+		cliente.setCell(cell);
+		cliente.setCitta(citta);
+		cliente.setCodfisc(codfisc);
+		cliente.setCognome(cognome);
+		cliente.setDataInserimento(new java.util.Date());
+		cliente.setDataNascita(dataNascita);
+		cliente.setRilasciatoIl(rilasciatoIl);
+		cliente.setDocumentoCliente(null);
+		cliente.setEmail(email);
+		cliente.setEnte(null);
+		it.infolabs.hibernate.Provincia provincia=it.infolabs.hibernate.ProvinciaHome.getInstance().findById(this.provincia);
+		cliente.setProvincia(provincia);
+		cliente.setFax(fax);
+		cliente.setIntestazione(intestazione);
+		cliente.setNatoA(this.natoa);
+		cliente.setNazionalita(null);
+		cliente.setNome(nome);
+		cliente.setNote(note);
+		cliente.setPiva(piva);
+		cliente.setTel(tel);
+		cliente.setVia(via);
+		cliente.setWebsite(website);
+		ClientiHome.getInstance().attachDirty(cliente);
+		ClientiHome.getInstance().commitAndClose();
+		
+//		int ok = 0;
+//		PreparedStatement pst = null;
+//		String update = "insert into clienti values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+//		Calendar c = Calendar.getInstance();
+//		dataInserimento = new Date(c.getTimeInMillis());
+//		pst = dbm.getNewPreparedStatement(update);
+//		try {
+//			pst.setInt(1, idCliente);
+//			pst.setDate(2, dataInserimento);
+//			pst.setString(3, nome);
+//			pst.setString(4, cognome);
+//			pst.setString(5, piva);
+//			pst.setString(6, codfisc);
+//			pst.setString(7, via);
+//			pst.setString(8, cap);
+//			pst.setString(9, citta);
+//			pst.setString(10, tel);
+//			pst.setString(11, cell);
+//			pst.setString(12, fax);
+//			pst.setString(13, email);
+//			pst.setString(14, website);
+//			pst.setString(15, note);
+//			pst.setDate(16, DateManager.convertDateToSqlDate(this.dataNascita));
+//			pst.setString(17, documento);
+//			pst.setString(18, numDoc);
+//			pst.setDate(19, DateManager.convertDateToSqlDate(rilasciatoIl));
+//			pst.setString(20, rilasciatoDa);
+//			pst.setString(21, natoa);
+//			pst.setString(22, intestazione);
+//			pst.setString(23, nazionalita);
+//			pst.setInt(24, provincia);
+//			ok = pst.executeUpdate();
+//			dbm.notifyDBStateChange();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			try {
+//				if (pst != null)
+//					pst.close();
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			}
+//		}
+		return 1;
 	}
 
 	public void setCap(String cap) {

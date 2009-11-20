@@ -45,7 +45,7 @@ public class ClientiGestione extends JDialog {
 
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == btnNuovo) {
-				nuovoReparto();
+				nuovoCliente();
 			} else if (e.getSource() == btnModifica) {
 				modificaCliente();
 			} else if (e.getSource() == btnElimina) {
@@ -369,7 +369,7 @@ public class ClientiGestione extends JDialog {
 	/**
 	 *
 	 */
-	private void nuovoReparto() {
+	private void nuovoCliente() {
 		ClientiAdd add = new ClientiAdd(this, dbm);
 		add.setVisible(true);
 

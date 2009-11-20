@@ -3,6 +3,9 @@
  */
 package rf.pegaso.gui.gestione;
 
+import it.infolabs.hibernate.Clienti;
+import it.infolabs.hibernate.ClientiHome;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -39,6 +42,7 @@ import org.jdesktop.swingx.JXTable;
 
 import rf.pegaso.db.model.ArticoloModel;
 import rf.pegaso.db.model.ArticoloModelRidotto;
+import rf.pegaso.db.model.ClienteModel;
 import rf.pegaso.db.model.search.ArticoliSearchCodiceModel;
 import rf.pegaso.db.model.search.ArticoliSearchDescModel;
 import rf.pegaso.db.tabelle.Articolo;
@@ -80,23 +84,13 @@ public class StampeEtichette extends JFrame {
 
 	private JSeparator jSeparator = null;
 
-	private JLabel lblCodBarre = null;
-
-	private JLabel lblDescrizioneProdotto = null;
-
 	private Frame padre;
 
 	private JPanel pnlCentrale = null;
 
 	private JPanel pnlNord = null;
 
-	private JPanel pnlRicerca = null;
-
-	private JXTable tblArticoli = null;
-
-	private JTextField txtCodBarre = null;
-
-	private JTextField txtDescrizione = null;
+	private JXTable tblClienti = null;
 
 	private JButton btnEtichetta48 = null;
 
@@ -225,13 +219,12 @@ public class StampeEtichette extends JFrame {
 			try {
 				pnlNord = new JPanel();
 				pnlNord.setLayout(null); // Generated
-				pnlNord.setPreferredSize(new Dimension(0, 135)); // Generated
+				pnlNord.setPreferredSize(new Dimension(0, 60)); // Generated
 				pnlNord.setBorder(BorderFactory
 						.createBevelBorder(BevelBorder.RAISED)); // Generated
 				pnlNord.add(getJSeparator(), null); // Generated
 				pnlNord.add(getBtnChiudi(), null); // Generated
 				pnlNord.add(getBtnStampaEtichetta(), null); // Generated
-				pnlNord.add(getPnlRicerca(), null); // Generated
 				pnlNord.add(getBtnEtichetta48(), null); // Generated
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -241,56 +234,22 @@ public class StampeEtichette extends JFrame {
 	}
 
 	/**
-	 * This method initializes pnlRicerca
-	 *
-	 * @return javax.swing.JPanel
-	 */
-	private JPanel getPnlRicerca() {
-		if (pnlRicerca == null) {
-			try {
-				lblDescrizioneProdotto = new JLabel();
-				lblDescrizioneProdotto
-						.setBounds(new Rectangle(148, 24, 82, 13)); // Generated
-				lblDescrizioneProdotto.setText("Descrizione"); // Generated
-				lblCodBarre = new JLabel();
-				lblCodBarre.setBounds(new Rectangle(8, 24, 94, 13)); // Generated
-				lblCodBarre.setText("Codice prodotto"); // Generated
-				pnlRicerca = new JPanel();
-				pnlRicerca.setLayout(null); // Generated
-				pnlRicerca.setBounds(new Rectangle(12, 56, 668, 69)); // Generated
-				pnlRicerca.setBorder(BorderFactory.createTitledBorder(
-						BorderFactory.createBevelBorder(BevelBorder.RAISED),
-						"Filtro prodotti", TitledBorder.DEFAULT_JUSTIFICATION,
-						TitledBorder.DEFAULT_POSITION, new Font("Dialog",
-								Font.BOLD, 12), new Color(51, 51, 51))); // Generated
-				pnlRicerca.add(lblCodBarre, null); // Generated
-				pnlRicerca.add(getTxtCodBarre(), null); // Generated
-				pnlRicerca.add(lblDescrizioneProdotto, null); // Generated
-				pnlRicerca.add(getTxtDescrizione(), null); // Generated
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return pnlRicerca;
-	}
-
-	/**
 	 * This method initializes tblArticoli
 	 *
 	 * @return javax.swing.JTable
 	 */
 	private JTable getTblArticoli() {
-		if (tblArticoli == null) {
+		if (tblClienti == null) {
 			try {
-				ArticoloModelRidotto modello = new ArticoloModelRidotto(dbm);
+				ClienteModel modello = new ClienteModel(dbm);
 				dbm.addDBStateChange(modello);
-				tblArticoli = new JXTable();
+				tblClienti = new JXTable();
 				// tblArticoli.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				tblArticoli.setModel(modello);
-				tblArticoli.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-				tblArticoli.packAll();
-				tblArticoli.getTableHeader().setReorderingAllowed(false);
-				TableColumn col = tblArticoli.getColumnModel().getColumn(0);
+				tblClienti.setModel(modello);
+				tblClienti.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+				tblClienti.packAll();
+				tblClienti.getTableHeader().setReorderingAllowed(false);
+				TableColumn col = tblClienti.getColumnModel().getColumn(0);
 				col.setMinWidth(0);
 				col.setMaxWidth(0);
 				col.setPreferredWidth(0);
@@ -299,88 +258,7 @@ public class StampeEtichette extends JFrame {
 				e.printStackTrace();
 			}
 		}
-		return tblArticoli;
-	}
-
-	/**
-	 * This method initializes txtCodBarre
-	 *
-	 * @return javax.swing.JTextField
-	 */
-	private JTextField getTxtCodBarre() {
-		if (txtCodBarre == null) {
-			try {
-				txtCodBarre = new JTextField();
-				txtCodBarre.setBounds(new Rectangle(8, 40, 137, 21)); // Generated
-				txtCodBarre.setDocument(new UpperTextDocument()); // Generated
-				txtCodBarre.addKeyListener(new java.awt.event.KeyAdapter() {
-					@Override
-					public void keyReleased(java.awt.event.KeyEvent e) {
-						try {
-							ArticoliSearchCodiceModel g = new ArticoliSearchCodiceModel(
-									dbm, txtCodBarre.getText());
-							tblArticoli.setModel(g);
-							tblArticoli.packAll();
-						} catch (SQLException e1) {
-
-							messaggioErroreCampo("Errore nella ricerca del codice");
-							e1.printStackTrace();
-						}
-					}
-				});
-				txtCodBarre.addFocusListener(new java.awt.event.FocusAdapter() {
-					@Override
-					public void focusGained(java.awt.event.FocusEvent e) {
-						txtDescrizione.setText("");
-						ricaricaAllArticoli();
-					}
-				});
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return txtCodBarre;
-	}
-
-	/**
-	 * This method initializes txtDescrizione
-	 *
-	 * @return javax.swing.JTextField
-	 */
-	private JTextField getTxtDescrizione() {
-		if (txtDescrizione == null) {
-			try {
-				txtDescrizione = new JTextField();
-				txtDescrizione.setBounds(new Rectangle(148, 40, 366, 21)); // Generated
-				txtDescrizione.setDocument(new UpperTextDocument()); // Generated
-				txtDescrizione
-						.addFocusListener(new java.awt.event.FocusAdapter() {
-							@Override
-							public void focusGained(java.awt.event.FocusEvent e) {
-								txtCodBarre.setText("");
-								ricaricaAllArticoli();
-							}
-						});
-				txtDescrizione.addKeyListener(new java.awt.event.KeyAdapter() {
-					@Override
-					public void keyReleased(java.awt.event.KeyEvent e) {
-						try {
-							ArticoliSearchDescModel g = new ArticoliSearchDescModel(
-									dbm, txtDescrizione.getText());
-							tblArticoli.setModel(g);
-							tblArticoli.packAll();
-
-						} catch (SQLException e1) {
-							messaggioErroreCampo("Errore nella ricerca del codice");
-							e1.printStackTrace();
-						}
-					}
-				});
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return txtDescrizione;
+		return tblClienti;
 	}
 
 	/**
@@ -416,8 +294,8 @@ public class StampeEtichette extends JFrame {
 			//messaggioErroreCampo("Errore ricerca di tutte le giacenze");
 			//e1.printStackTrace();
 		//}
-		tblArticoli.setModel(modello);
-		tblArticoli.packAll();
+		tblClienti.setModel(modello);
+		tblClienti.packAll();
 	}
 
 	/**
@@ -426,7 +304,7 @@ public class StampeEtichette extends JFrame {
 	private void stampaEtichetta(int nEtichette) {
 		// Apre la Dialog delegata alla modifica
 		// di un reparto
-		if (tblArticoli.getSelectedRow() <= -1) {
+		if (tblClienti.getSelectedRow() <= -1) {
 			JOptionPane.showMessageDialog(this, "Selezionare una o più righe",
 					"AVVISO", JOptionPane.INFORMATION_MESSAGE);
 			return;
@@ -458,7 +336,7 @@ public class StampeEtichette extends JFrame {
 		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
 		// prendiamo il numero di righe selezionate con i loro id
-		int riga[] = tblArticoli.getSelectedRows();
+		int riga[] = tblClienti.getSelectedRows();
 
 		// dopo di che creiamo un altro array
 		// della dimensione di riga.length + la pos di partenza
@@ -486,7 +364,7 @@ public class StampeEtichette extends JFrame {
 		//multiple di ogni etichetta.
 		int cicli=((((riga.length * nCopie[0])+ (startPos[0] - 1))-(startPos[0] - 1))/nCopie[0]);
 		for (int i = startPos[0] - 1,n=0; n < cicli; i++,n++) {
-			long cod = ((Long) tblArticoli.getValueAt(riga[i-(startPos[0] - 1)], 0)).intValue();
+			long cod = ((Long) tblClienti.getValueAt(riga[i-(startPos[0] - 1)], 0)).intValue();
 			for(int k=0;k<nCopie[0];k++){
 				list.add(new Long(cod));
 			}
@@ -549,14 +427,14 @@ public class StampeEtichette extends JFrame {
 			}
 		}
 		for (int i = pos; i <= list.size(); i++) {
-			Articolo a = new Articolo();
+			Clienti cliente = new Clienti();
+			cliente=ClientiHome.getInstance().findById(list.get(i - 1).intValue());
 			try {
-				a.caricaDati(list.get(i - 1).intValue());
 				pst.setInt(1, i);
-				pst.setString(2, a.getCodBarre());
-				pst.setString(3, a.getDescrizione());
-				pst.setDouble(4, a.getPrezzoIngrosso());
-				pst.setString(5, a.getNote());
+				pst.setString(2, cliente.getCognome());
+				pst.setString(3, cliente.getNome());
+				pst.setDouble(4, new Double(0));
+				pst.setString(5, cliente.getCodfisc());
 				pst.execute();
 			} catch (SQLException e) {
 				messaggioErroreCampo("Errore caricamento dati per etichette");

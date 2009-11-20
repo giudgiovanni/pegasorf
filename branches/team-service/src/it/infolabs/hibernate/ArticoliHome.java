@@ -31,8 +31,6 @@ public class ArticoliHome extends BusinessObjectHome{
 	 */
 	private static final Logger logger = Logger.getLogger(ArticoliHome.class);
 
-	private static final Log log = LogFactory.getLog(ArticoliHome.class);
-
 	private static final ArticoliHome instance=new ArticoliHome();
 
 	private ArticoliHome() {

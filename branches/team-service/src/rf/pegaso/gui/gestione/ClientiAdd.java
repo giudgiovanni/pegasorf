@@ -3,6 +3,8 @@
  */
 package rf.pegaso.gui.gestione;
 
+import it.infolabs.hibernate.exception.FindByNotFoundException;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -694,6 +696,9 @@ public class ClientiAdd extends JDialog {
 		try {
 			c.insertCliente();
 		} catch (IDNonValido e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FindByNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

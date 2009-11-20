@@ -3,6 +3,11 @@
  */
 package rf.pegaso.gui.gestione;
 
+import it.infolabs.hibernate.Clienti;
+import it.infolabs.hibernate.ClientiHome;
+import it.infolabs.hibernate.ProvinciaHome;
+import it.infolabs.hibernate.exception.FindByNotFoundException;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -45,7 +50,12 @@ public class ClientiMod extends JDialog {
 				dispose();
 			}
 			if (e.getSource() == btnModifica) {
-				modifica();
+				try {
+					modifica();
+				} catch (FindByNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 
 		}
@@ -710,7 +720,7 @@ public class ClientiMod extends JDialog {
 		AutoCompletion.enable(cmbProvince);
 	}
 
-	private void modifica() {
+	private void modifica() throws FindByNotFoundException {
 		if (idCliente < 0)
 			JOptionPane.showMessageDialog(this, "Codice idCliente errato",
 					"ERRORE", JOptionPane.ERROR_MESSAGE);
@@ -720,8 +730,9 @@ public class ClientiMod extends JDialog {
 				JOptionPane.INFORMATION_MESSAGE);
 		if (scelta != JOptionPane.YES_OPTION)
 			return;
-		Cliente c = new Cliente();
-		c.setIdCliente(this.idCliente);
+		
+		ClientiHome.getInstance().begin();
+		Clienti c = new Clienti();
 		c.setNome(txtNome.getText());
 		c.setCognome(txtCognome.getText());
 		c.setPiva(txtPiva.getText());
@@ -729,19 +740,23 @@ public class ClientiMod extends JDialog {
 		c.setVia(txtVia.getText());
 		c.setCap(txtCap.getText());
 		c.setCitta(txtCitta.getText());
-		c.setProvincia(new Integer(cmbProvincia.getIDSelectedItem()));
-		c.setTelefono(txtTel.getText());
-		c.setCellulare(txtCell.getText());
+		int idpr=new Integer(cmbProvincia.getIDSelectedItem());
+		it.infolabs.hibernate.Provincia prov=ProvinciaHome.getInstance().findById(idpr);
+		c.setProvincia(prov);
+		c.setTel(txtTel.getText());
+		c.setCell(txtCell.getText());
 		c.setFax(txtFax.getText());
 		c.setEmail(txtEmail.getText());
 		c.setWebsite(txtWebSite.getText());
 		c.setNote(txtNote.getText());
-		try {
-			c.updateCliente();
-		} catch (IDNonValido e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		ClientiHome.getInstance().attachDirty(c);
+		ClientiHome.getInstance().commitAndClose();
+//		try {
+//			c.updateCliente();
+//		} catch (IDNonValido e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		dispose();
 
 	}

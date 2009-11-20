@@ -49,13 +49,7 @@ public class InitialGUI extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == btnArchivio) {
 				apriArchivio();
-			} else if (e.getSource() == btnVendita) {
-				apriVendita();
-			} else if (e.getSource() == btnPrimaNota) {
-				apriPrimaNota();
-			} else if (e.getSource() == btnConfigurazione) {
-				apriConfigurazione();
-			}
+			} 
 
 		}
 	}
@@ -63,19 +57,7 @@ public class InitialGUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private ArchivioInternalFrame archivioInternalFrame = null;
-	private ConfigurazioneInternalFrame confInternalFrame = null;
-	private VenditaInternalFrame venditaInternalFrame = null;
-	private PrimaNotaInternalFrame primanotaInternalFrame=null;
-
 	private JButton btnArchivio = null;
-
-	private JButton btnConfigurazione = null;
-
-	private JButton btnPrimaNota = null;
-
-	private JButton btnVendita = null;
-
-	//private DBManager dbm; // @jve:decl-index=0:
 
 	private JPanel jContentPane = null;
 
@@ -131,79 +113,9 @@ public class InitialGUI extends JFrame {
 
 	}
 
-	/**
-	 *
-	 */
-	private void apriConfigurazione() {
-		if (!confInternalFrame.isVisible()) {
+	
 
-			confInternalFrame.setVisible(true);
-			try {
-				confInternalFrame.setMaximum(true);
-			} catch (PropertyVetoException e1) {
-
-				e1.printStackTrace();
-			}
-		} else if (!confInternalFrame.isFocusOwner()) {
-			try {
-				confInternalFrame.setSelected(true);
-				confInternalFrame.setMaximum(true);
-			} catch (PropertyVetoException e) {
-				e.printStackTrace();
-			}
-		}
-
-	}
-
-	/**
-	 *
-	 */
-	private void apriPrimaNota() {
-		if (!primanotaInternalFrame.isVisible()) {
-
-			primanotaInternalFrame.setVisible(true);
-			try {
-				primanotaInternalFrame.setMaximum(true);
-			} catch (PropertyVetoException e1) {
-
-				e1.printStackTrace();
-			}
-		} else if (!primanotaInternalFrame.isFocusOwner()) {
-			try {
-				primanotaInternalFrame.setSelected(true);
-				primanotaInternalFrame.setMaximum(true);
-			} catch (PropertyVetoException e) {
-				e.printStackTrace();
-			}
-		}
-
-	}
-
-	/**
-	 *
-	 */
-	private void apriVendita() {
-		if (!venditaInternalFrame.isVisible()) {
-
-			venditaInternalFrame.setVisible(true);
-			try {
-				venditaInternalFrame.setMaximum(true);
-//				venditaInternalFrame.setSize(new Dimension(1000, 700));
-			} catch (PropertyVetoException e1) {
-
-				e1.printStackTrace();
-			}
-		} else if (!venditaInternalFrame.isFocusOwner()) {
-			try {
-				venditaInternalFrame.setSelected(true);
-				venditaInternalFrame.setMaximum(true);
-//				venditaInternalFrame.setSize(new Dimension(1000, 700));
-			} catch (PropertyVetoException e) {
-				e.printStackTrace();
-			}
-		}
-		venditaInternalFrame.setFocusRicerca();
-	}
+	
 
 	/**
 	 * This method initializes archivioInternalFrame
@@ -232,7 +144,7 @@ public class InitialGUI extends JFrame {
 		if (btnArchivio == null) {
 			try {
 				btnArchivio = new JButton();
-				btnArchivio.setText("Archivio"); // Generated
+				btnArchivio.setText("Gestione"); // Generated
 				btnArchivio.setSize(new Dimension(100, 30)); // Generated
 				btnArchivio.setPreferredSize(new Dimension(100, 30)); // Generated
 				btnArchivio.addActionListener(myActionListener);
@@ -241,64 +153,6 @@ public class InitialGUI extends JFrame {
 			}
 		}
 		return btnArchivio;
-	}
-
-	/**
-	 * This method initializes btnConfigurazione
-	 *
-	 * @return javax.swing.JButton
-	 */
-	private JButton getBtnConfigurazione() {
-		if (btnConfigurazione == null) {
-			try {
-				btnConfigurazione = new JButton();
-				btnConfigurazione.setText("Configurazione"); // Generated
-				btnConfigurazione.setPreferredSize(new Dimension(100, 30)); // Generated
-				btnConfigurazione.addActionListener(myActionListener);
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return btnConfigurazione;
-	}
-
-	/**
-	 * This method initializes btnPrimaNota
-	 *
-	 * @return javax.swing.JButton
-	 */
-	private JButton getBtnPrimaNota() {
-		if (btnPrimaNota == null) {
-			try {
-				btnPrimaNota = new JButton();
-				btnPrimaNota.setText("Prima Nota"); // Generated
-				btnPrimaNota.setSize(new Dimension(100, 30)); // Generated
-				btnPrimaNota.setPreferredSize(new Dimension(100, 30)); // Generated
-				btnPrimaNota.addActionListener(myActionListener);
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return btnPrimaNota;
-	}
-
-	/**
-	 * This method initializes btnVendita
-	 *
-	 * @return javax.swing.JButton
-	 */
-	private JButton getBtnVendita() {
-		if (btnVendita == null) {
-			try {
-				btnVendita = new JButton();
-				btnVendita.setText("Vendita"); // Generated
-				btnVendita.setPreferredSize(new Dimension(100, 30)); // Generated
-				btnVendita.addActionListener(myActionListener);
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return btnVendita;
 	}
 
 	/**
@@ -327,53 +181,11 @@ public class InitialGUI extends JFrame {
 			try {
 				jDesktopPane = new DecoratedDesktopPane("resource/erreeffe.jpg");
 				jDesktopPane.add(getArchivioInternalFrame(), null);
-				jDesktopPane.add(getConfigurazioneInternalFrame(),null);
-				jDesktopPane.add(getVenditaInternalFrame(), null);
-//				jDesktopPane.add(getPrimanotaInternalFrame(), null);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
 		}
 		return jDesktopPane;
-	}
-
-	private Component getPrimanotaInternalFrame() {
-		if (primanotaInternalFrame == null) {
-			try {
-				primanotaInternalFrame = new PrimaNotaInternalFrame(this);
-				primanotaInternalFrame
-						.setBounds(new Rectangle(260, 28, 369, 236)); // Generated
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return primanotaInternalFrame;
-	}
-
-	private ConfigurazioneInternalFrame getConfigurazioneInternalFrame() {
-		if (confInternalFrame == null) {
-			try {
-				confInternalFrame = new ConfigurazioneInternalFrame(this);
-				confInternalFrame
-						.setBounds(new Rectangle(260, 28, 369, 236)); // Generated
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return confInternalFrame;
-	}
-
-	private VenditaInternalFrame getVenditaInternalFrame() {
-		if (venditaInternalFrame == null) {
-			try {
-				venditaInternalFrame = new VenditaInternalFrame(this);
-				venditaInternalFrame
-						.setBounds(new Rectangle(260, 28, 369, 236)); // Generated
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return venditaInternalFrame;
 	}
 
 	/**
@@ -386,9 +198,7 @@ public class InitialGUI extends JFrame {
 			try {
 				jJToolBarBar = new JToolBar();
 				jJToolBarBar.add(getBtnArchivio()); // Generated
-				jJToolBarBar.add(getBtnVendita()); // Generated
 //				jJToolBarBar.add(getBtnPrimaNota()); // Generated
-				jJToolBarBar.add(getBtnConfigurazione());
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}

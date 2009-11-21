@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 21-nov-2009 23.21.44 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="it.infolabs.hibernate.Provincia" table="provincia" schema="public">
         <id name="idprovincia" type="long">
@@ -14,37 +14,7 @@
         <property name="targa" type="string">
             <column name="targa" length="2" />
         </property>
-        <set name="fornitoris" inverse="true" lazy="true" table="fornitori" fetch="select">
-            <key>
-                <column name="provincia" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.Fornitori" />
-        </set>
-        <set name="fornitoris_1" inverse="true" lazy="true" table="fornitori" fetch="select">
-            <key>
-                <column name="provincia" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.Fornitori" />
-        </set>
-        <set name="fornitoris_2" inverse="true" lazy="true" table="fornitori" fetch="select">
-            <key>
-                <column name="provincia" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.Fornitori" />
-        </set>
         <set name="clientis" inverse="true" lazy="true" table="clienti" fetch="select">
-            <key>
-                <column name="provincia" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.Clienti" />
-        </set>
-        <set name="clientis_1" inverse="true" lazy="true" table="clienti" fetch="select">
-            <key>
-                <column name="provincia" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.Clienti" />
-        </set>
-        <set name="clientis_2" inverse="true" lazy="true" table="clienti" fetch="select">
             <key>
                 <column name="provincia" />
             </key>

@@ -1,6 +1,6 @@
 package it.infolabs.hibernate;
 
-// Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA
+// Generated 21-nov-2009 23.21.44 by Hibernate Tools 3.2.4.GA
 
 import java.util.Date;
 import java.util.HashSet;
@@ -23,10 +23,6 @@ public class Documenti implements java.io.Serializable {
 	private Double totaleDocumento;
 	private Set<DettagliDocumenti> dettagliDocumentis = new HashSet<DettagliDocumenti>(
 			0);
-	private Set<DettagliDocumenti> dettagliDocumentis_1 = new HashSet<DettagliDocumenti>(
-			0);
-	private Set<DettagliDocumenti> dettagliDocumentis_2 = new HashSet<DettagliDocumenti>(
-			0);
 
 	public Documenti() {
 	}
@@ -39,9 +35,7 @@ public class Documenti implements java.io.Serializable {
 	public Documenti(int id, int numDocumento, Date dataDocumento, String tipo,
 			String stato, Double imponibileNetto, Double sconto,
 			Double imponibileScontato, Double imposta, Double totaleDocumento,
-			Set<DettagliDocumenti> dettagliDocumentis,
-			Set<DettagliDocumenti> dettagliDocumentis_1,
-			Set<DettagliDocumenti> dettagliDocumentis_2) {
+			Set<DettagliDocumenti> dettagliDocumentis) {
 		this.id = id;
 		this.numDocumento = numDocumento;
 		this.dataDocumento = dataDocumento;
@@ -53,8 +47,6 @@ public class Documenti implements java.io.Serializable {
 		this.imposta = imposta;
 		this.totaleDocumento = totaleDocumento;
 		this.dettagliDocumentis = dettagliDocumentis;
-		this.dettagliDocumentis_1 = dettagliDocumentis_1;
-		this.dettagliDocumentis_2 = dettagliDocumentis_2;
 	}
 
 	public int getId() {
@@ -143,24 +135,6 @@ public class Documenti implements java.io.Serializable {
 
 	public void setDettagliDocumentis(Set<DettagliDocumenti> dettagliDocumentis) {
 		this.dettagliDocumentis = dettagliDocumentis;
-	}
-
-	public Set<DettagliDocumenti> getDettagliDocumentis_1() {
-		return this.dettagliDocumentis_1;
-	}
-
-	public void setDettagliDocumentis_1(
-			Set<DettagliDocumenti> dettagliDocumentis_1) {
-		this.dettagliDocumentis_1 = dettagliDocumentis_1;
-	}
-
-	public Set<DettagliDocumenti> getDettagliDocumentis_2() {
-		return this.dettagliDocumentis_2;
-	}
-
-	public void setDettagliDocumentis_2(
-			Set<DettagliDocumenti> dettagliDocumentis_2) {
-		this.dettagliDocumentis_2 = dettagliDocumentis_2;
 	}
 
 }

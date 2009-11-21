@@ -1,16 +1,13 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 21-nov-2009 23.21.44 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="it.infolabs.hibernate.Clienti" table="clienti" schema="public">
-        <id name="idcliente" type="long" unsaved-value="0">
+        <id name="idcliente" type="long">
             <column name="idcliente" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
-        <many-to-one name="nazionalita" class="it.infolabs.hibernate.Nazionalita" fetch="select">
-            <column name="nazionalita" />
-        </many-to-one>
         <many-to-one name="documentoCliente" class="it.infolabs.hibernate.DocumentoCliente" fetch="select">
             <column name="documento" />
         </many-to-one>
@@ -77,26 +74,20 @@
         <property name="intestazione" type="string">
             <column name="intestazione" />
         </property>
+        <property name="nazionalita" type="java.lang.Long">
+            <column name="nazionalita" />
+        </property>
         <property name="rilasciatoDi" type="string">
             <column name="rilasciato_di" />
         </property>
-        <set name="ordinis" inverse="true" lazy="true" table="ordini" fetch="select">
-            <key>
-                <column name="idcliente" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.Ordini" />
-        </set>
-        <set name="ordinis_1" inverse="true" lazy="true" table="ordini" fetch="select">
-            <key>
-                <column name="idcliente" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.Ordini" />
-        </set>
-        <set name="ordinis_2" inverse="true" lazy="true" table="ordini" fetch="select">
-            <key>
-                <column name="idcliente" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.Ordini" />
-        </set>
+        <property name="tel2" type="string">
+            <column name="tel2" />
+        </property>
+        <property name="cell2" type="string">
+            <column name="cell2" />
+        </property>
+        <property name="categoriaCliente" type="java.lang.Long">
+            <column name="categoria_cliente" />
+        </property>
     </class>
 </hibernate-mapping>

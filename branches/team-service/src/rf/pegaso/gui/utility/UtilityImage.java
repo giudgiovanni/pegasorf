@@ -1,6 +1,5 @@
 package rf.pegaso.gui.utility;
 
-import it.infolabs.hibernate.ImmagineArticolo;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -66,44 +65,6 @@ public class UtilityImage {
 		}
 	}
 	
-	public static void loadImageFromURL(String strUrl, ImmagineArticolo imgArticolo, JFrame padre){
-	    int intPos;
-
-	    //guess file extension
-	    intPos = strUrl.lastIndexOf(".");
-	    if (intPos >= 0){
-	       imgArticolo.setEstensione(strUrl.substring(intPos + 1));
-	    }else{
-	        //assign default jpg extension
-	    	 imgArticolo.setEstensione("jpg");
-	    }
-	    try {
-
-	        //load the image from the Internet
-	        ImageIcon objImageIcon = new ImageIcon(strUrl);
-
-	        //wait the loading of the image
-	        MediaTracker objMediaTracker = new MediaTracker(padre);
-	        objMediaTracker.addImage(objImageIcon.getImage(), 0);
-	        objMediaTracker.waitForID(0, 5000);
-
-	        //convert the image
-	        BufferedImage objBI = new BufferedImage(objImageIcon.getIconWidth(), objImageIcon.getIconHeight(),
-	                BufferedImage.TYPE_INT_ARGB);
-	        Graphics2D g2 = objBI.createGraphics();
-	        g2.drawImage(objImageIcon.getImage(), 0, 0, null);
-	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	        ImageIO.write(objBI,  imgArticolo.getEstensione(), baos);
-
-	        imgArticolo.setFile(baos.toByteArray());
-
-	    } catch (MalformedURLException ex) {
-//	        Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
-	    } catch (IOException ex) {
-//	        Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
-	    } catch (InterruptedException ex) {
-//	        Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
-	    }
-	}
+	
 
 }

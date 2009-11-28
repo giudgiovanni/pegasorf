@@ -7,7 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -20,18 +19,23 @@ import rf.utility.db.RowEvent;
  * @author Hunter
  *
  */
-public class MovimentiContoModel extends AbstractTableModel implements DBStateChange {
+public class CategorieClientiModello extends AbstractTableModel implements DBStateChange {
 
 	private DBManager dbm;
 	private PreparedStatement pst = null;
 	private String query = "";
 	private ResultSet rs = null;
 	private ResultSetMetaData rsmd = null;
-	private int idconto;
 
-	public MovimentiContoModel(int idconto) throws SQLException {
-		this.dbm = DBManager.getIstanceSingleton();
-		this.idconto=idconto;
+	public CategorieClientiModello() throws SQLException {
+		this.dbm = dbm.getIstanceSingleton();
+		recuperaDati();
+
+	}
+
+	public CategorieClientiModello(int idListino) throws SQLException {
+		this.dbm = dbm.getIstanceSingleton();
+
 		recuperaDati();
 
 	}
@@ -74,7 +78,7 @@ public class MovimentiContoModel extends AbstractTableModel implements DBStateCh
 	}
 
 	public String getTableName() {
-		return "articoli";
+		return "categoria_cliente";
 	}
 
 	public Object getValueAt(int r, int c) {
@@ -88,14 +92,6 @@ public class MovimentiContoModel extends AbstractTableModel implements DBStateCh
 			o = rs.getObject(c + 1);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-
-		if (o instanceof Double) {
-			Double d = (Double) o;
-			DecimalFormat numberFormatter = new DecimalFormat("#,##0.00");
-			numberFormatter.setMaximumFractionDigits(2);
-			numberFormatter.setMinimumFractionDigits(2);
-			return numberFormatter.format(d);
 		}
 		return o;
 	}
@@ -120,13 +116,9 @@ public class MovimentiContoModel extends AbstractTableModel implements DBStateCh
 	 *
 	 */
 	private void recuperaDati() throws SQLException {
-		// questa query è disabilitata per non visualizzare il ricarico listino.
-		//this.query = "select a.idArticolo,a.codbarre as codice,a.descrizione,a.prezzo_acquisto,a.prezzo_ingrosso as prezzo_listino, ((prezzo_ingrosso - prezzo_acquisto) / CASE prezzo_acquisto WHEN 0 THEN NULL ELSE prezzo_acquisto END) * 100 as ricario_listino,f.nome as fornitore from articoli a, fornitori f where a.idfornitore=f.idfornitore order by codice";
-		//
-		// la sostituiamo con questa che elimina quella colonna.
-		this.query = "select * from movimento_banca where idconto=? order by data_inserimento desc";
+
+		this.query = "select * from categoria_cliente order by descrizione";
 		pst = dbm.getNewPreparedStatement(query);
-		pst.setInt(1, this.idconto);
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();
 
@@ -134,7 +126,7 @@ public class MovimentiContoModel extends AbstractTableModel implements DBStateCh
 
 	public String getNomeTabella() {
 		// TODO Auto-generated method stub
-		return null;
+		return "categoria_cliente";
 	}
 
 	public void rowStateChange(RowEvent re) {
@@ -142,13 +134,5 @@ public class MovimentiContoModel extends AbstractTableModel implements DBStateCh
 
 	}
 
-
-	public int getIdconto() {
-		return idconto;
-	}
-
-	public void setIdconto(int idconto) {
-		this.idconto = idconto;
-	}
 
 }

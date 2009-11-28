@@ -109,7 +109,7 @@ public class ClienteModel extends AbstractTableModel implements DBStateChange {
 	 *
 	 */
 	private void recuperaDati() throws SQLException {
-		this.query = "select idcliente,nome,cognome,tel,cell,fax from clienti order by idcliente";
+		this.query = "select idcliente,cognome,nome,tel,cell,fax, intestazione, descrizione as categoria from clienti cl,categoria_cliente c where cl.categoria_cliente=c.id order by cognome";
 		pst = dbm.getNewPreparedStatement(query);
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();

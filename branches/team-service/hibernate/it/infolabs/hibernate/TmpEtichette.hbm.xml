@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 22-nov-2009 2.09.36 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="it.infolabs.hibernate.TmpEtichette" table="tmp_etichette" schema="public">
+        <id name="id" type="long">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <property name="codice" type="string">
+            <column name="codice" />
+        </property>
+        <property name="descrizione" type="string">
+            <column name="descrizione" />
+        </property>
+        <property name="prezzo" type="java.lang.Double">
+            <column name="prezzo" precision="17" scale="17" />
+        </property>
+        <property name="note" type="string">
+            <column name="note" />
+        </property>
+    </class>
+</hibernate-mapping>

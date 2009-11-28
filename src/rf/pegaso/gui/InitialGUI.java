@@ -3,7 +3,8 @@
  */
 package rf.pegaso.gui;
 
-import it.infolabs.hibernate.ArticoliHome;
+
+import it.infolabs.hibernate.ClientiHome;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -31,10 +32,6 @@ import javax.swing.WindowConstants;
 
 import rf.myswing.GregorianCalendarFormat;
 import rf.pegaso.gui.internalframe.ArchivioInternalFrame;
-import rf.pegaso.gui.internalframe.ConfigurazioneInternalFrame;
-import rf.pegaso.gui.internalframe.PrimaNotaInternalFrame;
-import rf.pegaso.gui.internalframe.VenditaInternalFrameOLD;
-import rf.pegaso.gui.internalframe.VenditaInternalFrame;
 import rf.utility.db.DBManager;
 import rf.utility.db.UtilityDBManager;
 import rf.utility.gui.UtilGUI;
@@ -274,7 +271,7 @@ public class InitialGUI extends JFrame {
 	 */
 	private void initialize() {
 
-		ArticoliHome.getInstance().begin();
+		ClientiHome.getInstance().begin();
 		this.padre = this;
 		padre.setSize(new Dimension(513, 115));
 		System.out

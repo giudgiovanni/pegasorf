@@ -40,12 +40,9 @@ import net.sf.jasperreports.engine.JasperPrintManager;
 import org.jdesktop.swingx.JXTable;
 
 
-import rf.pegaso.db.model.ArticoloModel;
-import rf.pegaso.db.model.ArticoloModelRidotto;
 import rf.pegaso.db.model.ClienteModel;
 import rf.pegaso.db.model.search.ArticoliSearchCodiceModel;
 import rf.pegaso.db.model.search.ArticoliSearchDescModel;
-import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.gui.print.StartLabelPrint;
 import rf.utility.db.DBManager;
 import rf.utility.gui.UtilGUI;
@@ -59,12 +56,9 @@ public class StampeEtichette extends JFrame {
 	class MyActionListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == btnEtichetta24) {
-				stampaEtichetta(24);
-			} else if (e.getSource() == btnChiudi) {
+			if (e.getSource() == btnChiudi) {
 				dispose();
-			} else if (e.getSource() == btnEtichetta48)
-				stampaEtichetta(48);
+			}
 
 		}
 
@@ -73,8 +67,6 @@ public class StampeEtichette extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private JButton btnChiudi = null;
-
-	private JButton btnEtichetta24 = null;
 
 	private DBManager dbm;
 
@@ -92,7 +84,7 @@ public class StampeEtichette extends JFrame {
 
 	private JXTable tblClienti = null;
 
-	private JButton btnEtichetta48 = null;
+	private JButton btnBustaTeamService = null;
 
 	/**
 	 * @param owner
@@ -112,7 +104,7 @@ public class StampeEtichette extends JFrame {
 		if (btnChiudi == null) {
 			try {
 				btnChiudi = new JButton();
-				btnChiudi.setBounds(new Rectangle(328, 8, 81, 41)); // Generated
+				btnChiudi.setBounds(new Rectangle(169, 8, 81, 41)); // Generated
 				btnChiudi.setText("Chiudi");
 				btnChiudi.addActionListener(new MyActionListener());
 			} catch (java.lang.Throwable e) {
@@ -120,26 +112,6 @@ public class StampeEtichette extends JFrame {
 			}
 		}
 		return btnChiudi;
-	}
-
-	/**
-	 * This method initializes btnStampaEtichetta
-	 *
-	 * @return javax.swing.JButton
-	 */
-	private JButton getBtnStampaEtichetta() {
-		if (btnEtichetta24 == null) {
-			try {
-				btnEtichetta24 = new JButton();
-				btnEtichetta24.setBounds(new Rectangle(12, 8, 153, 41)); // Generated
-				btnEtichetta24
-						.setText("<html><div align=\"center\">Stampa Etichetta<br/>(24 etichette 70x36)</html>"); // Generated
-				btnEtichetta24.addActionListener(new MyActionListener());
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return btnEtichetta24;
 	}
 
 	/**
@@ -224,8 +196,7 @@ public class StampeEtichette extends JFrame {
 						.createBevelBorder(BevelBorder.RAISED)); // Generated
 				pnlNord.add(getJSeparator(), null); // Generated
 				pnlNord.add(getBtnChiudi(), null); // Generated
-				pnlNord.add(getBtnStampaEtichetta(), null); // Generated
-				pnlNord.add(getBtnEtichetta48(), null); // Generated
+				pnlNord.add(getBtnBustaTeamService(), null);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -286,17 +257,7 @@ public class StampeEtichette extends JFrame {
 
 	}
 
-	private void ricaricaAllArticoli() {
-		ArticoloModel modello = null;
-		//try {
-			modello = new ArticoloModel();
-		//} catch (SQLException e1) {
-			//messaggioErroreCampo("Errore ricerca di tutte le giacenze");
-			//e1.printStackTrace();
-		//}
-		tblClienti.setModel(modello);
-		tblClienti.packAll();
-	}
+	
 
 	/**
 	 *
@@ -385,6 +346,10 @@ public class StampeEtichette extends JFrame {
 				JasperPrintManager.printReport(JasperFillManager.fillReport(
 						"report/etichette51x24.jasper", null, this.dbm
 								.getConnessione()), true);
+			}else if (nEtichette == 0) {
+				JasperPrintManager.printReport(JasperFillManager.fillReport(
+						"report/buste.jasper", null, this.dbm
+								.getConnessione()), true);
 			}
 
 			this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -403,7 +368,7 @@ public class StampeEtichette extends JFrame {
 		dbm.executeQuery("delete from tmp_etichette");
 
 		// ora prepariamo l'inserimento dei nuovi dati da stampare
-		String query = "insert into tmp_etichette values(?,?,?,?,?)";
+		String query = "insert into tmp_etichette values(?,?,?,?,?,?)";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 
 		// se la posizione è maggiore di 1 vuol dire che dobbiamo aggiungere
@@ -417,8 +382,9 @@ public class StampeEtichette extends JFrame {
 					pst.setInt(1, i);
 					pst.setString(2, "");
 					pst.setString(3, "");
-					pst.setDouble(4, 0.0);
+					pst.setString(4, "");
 					pst.setString(5, "");
+					pst.setString(6, "");
 					pst.execute();
 				} catch (SQLException e) {
 					messaggioErroreCampo("Errore inserimento dati temporanei per etichette");
@@ -426,16 +392,29 @@ public class StampeEtichette extends JFrame {
 				}
 			}
 		}
+		ClientiHome.getInstance().begin();
 		for (int i = pos; i <= list.size(); i++) {
 			Clienti cliente = new Clienti();
+			
 			cliente=ClientiHome.getInstance().findById(list.get(i - 1).intValue());
 			try {
 				pst.setInt(1, i);
-				pst.setString(2, cliente.getCognome());
-				pst.setString(3, cliente.getNome());
-				pst.setDouble(4, new Double(0));
-				pst.setString(5, cliente.getCodfisc());
-				pst.execute();
+				if(!cliente.getIntestazione().equalsIgnoreCase("")){
+					pst.setString(2, cliente.getIntestazione());
+					pst.setString(3, cliente.getCognome()+cliente.getNome());
+					pst.setString(4, cliente.getVia());
+					pst.setString(5, cliente.getCap()+" - "+cliente.getCitta()+"("+cliente.getProvincia().getTarga()+")");
+					pst.setString(6, "");
+					pst.execute();
+				}else{
+					pst.setString(2, cliente.getCognome()+" "+cliente.getNome());
+					pst.setString(3, cliente.getVia());
+					pst.setString(4, cliente.getCap()+" - "+cliente.getCitta()+"("+cliente.getProvincia().getTarga()+")");
+					pst.setString(5, "");
+					pst.setString(6, "");
+					pst.execute();
+				}
+				
 			} catch (SQLException e) {
 				messaggioErroreCampo("Errore caricamento dati per etichette");
 				e.printStackTrace();
@@ -446,23 +425,22 @@ public class StampeEtichette extends JFrame {
 	}
 
 	/**
-	 * This method initializes btnEtichetta48
-	 *
-	 * @return javax.swing.JButton
+	 * This method initializes btnBustaTeamService	
+	 * 	
+	 * @return javax.swing.JButton	
 	 */
-	private JButton getBtnEtichetta48() {
-		if (btnEtichetta48 == null) {
-			try {
-				btnEtichetta48 = new JButton();
-				btnEtichetta48.setBounds(new Rectangle(172, 8, 147, 42)); // Generated
-				btnEtichetta48
-						.setText("<html><div align=\"center\">Stampa Etichetta<br/>(48 etichette 51x24)</html>"); // Generated
-				btnEtichetta48.addActionListener(new MyActionListener());
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
+	private JButton getBtnBustaTeamService() {
+		if (btnBustaTeamService == null) {
+			btnBustaTeamService = new JButton();
+			btnBustaTeamService.setBounds(new Rectangle(14, 8, 147, 42));
+			btnBustaTeamService.setText("<html><div align=\"center\">Stampa Busta<br/>(22,9cm x 11cm)</html>");
+			btnBustaTeamService.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					stampaEtichetta(0); // TODO Auto-generated Event stub actionPerformed()
+				}
+			});
 		}
-		return btnEtichetta48;
+		return btnBustaTeamService;
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

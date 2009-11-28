@@ -1,6 +1,8 @@
 package rf.pegaso.gui.gestione;
 
 
+import it.infolabs.hibernate.ProvinciaHome;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dialog;
@@ -37,7 +39,7 @@ import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.UpperTextDocument;
 
-public class ProvinciaGestione extends JDialog {
+public class ProvincieGestione extends JDialog {
 
 	private class MyMouseAdapter extends MouseAdapter {
 
@@ -53,13 +55,8 @@ public class ProvinciaGestione extends JDialog {
 				// Impostiamo tutti i campi per poi eventualmente modificarli
 				int id = ((Number) table.getValueAt(row, 0)).intValue();
 				savedListino = id;
-				Provincia l = new Provincia();
-				try {
-					l.caricaDati(savedListino);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				ProvinciaHome.getInstance().begin();
+				it.infolabs.hibernate.Provincia l = ProvinciaHome.getInstance().findById(savedListino);
 				txtProvince.setText(l.getProvincia());
 				txtTarga.setText(l.getTarga());
 			}
@@ -108,12 +105,12 @@ public class ProvinciaGestione extends JDialog {
 	/**
 	 * @param owner
 	 */
-	public ProvinciaGestione(Frame owner) {
+	public ProvincieGestione(Frame owner) {
 		super(owner,true);
 
 		initialize();
 	}
-	public ProvinciaGestione(Dialog owner) {
+	public ProvincieGestione(Dialog owner) {
 		super(owner,true);
 
 		initialize();
@@ -355,32 +352,22 @@ public class ProvinciaGestione extends JDialog {
 	}
 
 	protected void salva() {
-		Provincia l = new Provincia();
+		ProvinciaHome.getInstance().begin();
+		it.infolabs.hibernate.Provincia l = ProvinciaHome.getInstance().findById(savedListino);
 		l.setProvincia(txtProvince.getText());
 		l.setTarga(txtTarga.getText());
-		l.setIdprovincia(this.idprovincia);
 		if (l.getProvincia().equals("")) {
 			JOptionPane.showMessageDialog(this,
 					"Il campo provincia non può essere nullo", "Errore",
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		try {
-			if (savedListino > -1) {
-				l.updateProvincia(savedListino);
-				this.savedListino=-1;
-				txtProvince.setText("");
-				txtTarga.setText("");
-				return;
-			}
-			l.insertProvincia();
-			this.savedListino=-1;
-			txtProvince.setText("");
-			txtTarga.setText("");
-		}  catch (IDNonValido e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		ProvinciaHome.getInstance().attachDirty(l);
+		ProvinciaHome.getInstance().commitAndClose();
+		this.savedListino=-1;
+		txtProvince.setText("");
+		txtTarga.setText("");
+		
 
 
 	}
@@ -432,13 +419,10 @@ public class ProvinciaGestione extends JDialog {
 			return;
 		// Impostiamo tutti i campi per poi eventualmente modificarli
 		int id = ((Number) tblProvince.getValueAt(row, 0)).intValue();
-		Provincia l=new Provincia();
-		try {
-			l.deleteProvincia(id);
-		} catch (IDNonValido e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		ProvinciaHome.getInstance().begin();
+		it.infolabs.hibernate.Provincia l=ProvinciaHome.getInstance().findById(id);
+		ProvinciaHome.getInstance().delete(l);
+		ProvinciaHome.getInstance().commitAndClose();
 	}
 
 

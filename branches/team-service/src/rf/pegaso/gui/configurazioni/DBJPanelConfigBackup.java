@@ -76,7 +76,7 @@ public class DBJPanelConfigBackup extends JPanel {
 	p=new Properties();
 	try {
 	    // crichiamo i dati
-	    p.load(new FileReader("utilitydbconfig.properties"));
+	    p.load(new FileReader("configurazione.properties"));
 	    // impostiamo tutti i campi di testo
 	    txtNomeDB.setText(p.getProperty("nameDb"));
 	    txtPAthCommand.setText(p.getProperty("pathCommand"));
@@ -349,7 +349,7 @@ public class DBJPanelConfigBackup extends JPanel {
 	    p.setProperty("insert", txtInsert.getText());
 	    p.setProperty("delet", txtDelete.getText());
 	    try {
-		p.store(new FileWriter("utilitydbconfig.properties"),null);
+		p.store(new FileWriter("configurazione.properties"),null);
 	    } catch (IOException e) {
 		JOptionPane.showMessageDialog(getParent(), "Errore nel salvataggio del\nfile di configurazione", "ERRORE SALVATAGGIO", JOptionPane.ERROR_MESSAGE);
 		e.printStackTrace();

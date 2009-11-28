@@ -1,22 +1,19 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 21-nov-2009 23.21.44 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 22-nov-2009 2.09.36 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
-    <class name="it.infolabs.hibernate.DocumentoCliente" table="documento_cliente" schema="public">
-        <id name="id" type="long">
+    <class name="it.infolabs.hibernate.CategoriaCliente" table="categoria_cliente" schema="public">
+        <id name="id" type="long" unsaved-value="0">
             <column name="id" />
             <generator class="increment" />
         </id>
         <property name="descrizione" type="string">
-            <column name="descrizione" not-null="true" />
-        </property>
-        <property name="abbreviazione" type="string">
-            <column name="abbreviazione" length="10" />
+            <column name="descrizione" unique="true" />
         </property>
         <set name="clientis" inverse="true" lazy="true" table="clienti" fetch="select">
             <key>
-                <column name="documento" />
+                <column name="categoria_cliente" />
             </key>
             <one-to-many class="it.infolabs.hibernate.Clienti" />
         </set>

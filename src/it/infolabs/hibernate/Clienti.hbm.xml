@@ -1,13 +1,16 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 21-nov-2009 23.21.44 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 22-nov-2009 2.09.36 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="it.infolabs.hibernate.Clienti" table="clienti" schema="public">
-        <id name="idcliente" type="long">
+        <id name="idcliente" type="long" unsaved-value="0">
             <column name="idcliente" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
+        <many-to-one name="categoriaCliente" class="it.infolabs.hibernate.CategoriaCliente" fetch="select">
+            <column name="categoria_cliente" />
+        </many-to-one>
         <many-to-one name="documentoCliente" class="it.infolabs.hibernate.DocumentoCliente" fetch="select">
             <column name="documento" />
         </many-to-one>
@@ -85,9 +88,6 @@
         </property>
         <property name="cell2" type="string">
             <column name="cell2" />
-        </property>
-        <property name="categoriaCliente" type="java.lang.Long">
-            <column name="categoria_cliente" />
         </property>
     </class>
 </hibernate-mapping>

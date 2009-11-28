@@ -1,6 +1,6 @@
 package it.infolabs.hibernate;
 
-// Generated 21-nov-2009 23.21.45 by Hibernate Tools 3.2.4.GA
+// Generated 22-nov-2009 2.09.37 by Hibernate Tools 3.2.4.GA
 
 import java.util.List;
 import javax.naming.InitialContext;
@@ -89,7 +89,7 @@ public class TmpEtichetteHome {
 		}
 	}
 
-	public TmpEtichette findById(it.infolabs.hibernate.TmpEtichetteId id) {
+	public TmpEtichette findById(long id) {
 		log.debug("getting TmpEtichette instance with id: " + id);
 		try {
 			TmpEtichette instance = (TmpEtichette) sessionFactory

@@ -15,21 +15,20 @@ import static org.hibernate.criterion.Example.create;
  * @see it.infolabs.hibernate.Provincia
  * @author Hibernate Tools
  */
-public class ProvinciaHome {
-
+public class ProvinciaHome extends BusinessObjectHome{
+	/**
+	 * Logger for this class
+	 */
 	private static final Log log = LogFactory.getLog(ProvinciaHome.class);
 
-	private final SessionFactory sessionFactory = getSessionFactory();
+	private static final ProvinciaHome instance=new ProvinciaHome();
 
-	protected SessionFactory getSessionFactory() {
-		try {
-			return (SessionFactory) new InitialContext()
-					.lookup("SessionFactory");
-		} catch (Exception e) {
-			log.error("Could not locate SessionFactory in JNDI", e);
-			throw new IllegalStateException(
-					"Could not locate SessionFactory in JNDI");
-		}
+	private ProvinciaHome() {
+		super();
+	}
+
+	public static ProvinciaHome getInstance() {
+		return instance;
 	}
 
 	public void persist(Provincia transientInstance) {
@@ -98,6 +97,9 @@ public class ProvinciaHome {
 				log.debug("get successful, no instance found");
 			} else {
 				log.debug("get successful, instance found");
+			}
+			if(instance==null){
+				return new Provincia();
 			}
 			return instance;
 		} catch (RuntimeException re) {

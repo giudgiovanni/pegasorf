@@ -6,7 +6,7 @@
     <class name="it.infolabs.hibernate.Documenti" table="documenti" schema="public">
         <id name="id" type="int">
             <column name="id" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="numDocumento" type="int">
             <column name="num_documento" not-null="true" />

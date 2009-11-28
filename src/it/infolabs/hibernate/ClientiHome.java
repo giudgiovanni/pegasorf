@@ -4,8 +4,10 @@ package it.infolabs.hibernate;
 
 import java.util.List;
 import javax.naming.InitialContext;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.hibernate.LockMode;
 import org.hibernate.SessionFactory;
 import static org.hibernate.criterion.Example.create;
@@ -15,21 +17,20 @@ import static org.hibernate.criterion.Example.create;
  * @see it.infolabs.hibernate.Clienti
  * @author Hibernate Tools
  */
-public class ClientiHome {
-
+public class ClientiHome extends BusinessObjectHome{
+	/**
+	 * Logger for this class
+	 */
 	private static final Log log = LogFactory.getLog(ClientiHome.class);
 
-	private final SessionFactory sessionFactory = getSessionFactory();
+	private static final ClientiHome instance=new ClientiHome();
 
-	protected SessionFactory getSessionFactory() {
-		try {
-			return (SessionFactory) new InitialContext()
-					.lookup("SessionFactory");
-		} catch (Exception e) {
-			log.error("Could not locate SessionFactory in JNDI", e);
-			throw new IllegalStateException(
-					"Could not locate SessionFactory in JNDI");
-		}
+	private ClientiHome() {
+		super();
+	}
+
+	public static ClientiHome getInstance() {
+		return instance;
 	}
 
 	public void persist(Clienti transientInstance) {
@@ -99,7 +100,7 @@ public class ClientiHome {
 			} else {
 				log.debug("get successful, instance found");
 			}
-			return instance;
+			return instance==null?new Clienti():instance;
 		} catch (RuntimeException re) {
 			log.error("get failed", re);
 			throw re;

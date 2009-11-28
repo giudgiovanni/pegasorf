@@ -6,7 +6,7 @@
     <class name="it.infolabs.hibernate.DettagliDocumenti" table="dettagli_documenti" schema="public">
         <id name="id" type="int">
             <column name="id" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <many-to-one name="documenti" class="it.infolabs.hibernate.Documenti" fetch="select">
             <column name="id_documento" not-null="true" />

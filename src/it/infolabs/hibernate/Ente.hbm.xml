@@ -6,7 +6,7 @@
     <class name="it.infolabs.hibernate.Ente" table="ente" schema="public">
         <id name="idente" type="long">
             <column name="idente" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="descrizione" type="string">
             <column name="descrizione" not-null="true" />

@@ -6,7 +6,7 @@
     <class name="it.infolabs.hibernate.TipoDocumento" table="tipo_documento" schema="public">
         <id name="iddocumento" type="long">
             <column name="iddocumento" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="tipo" type="string">
             <column name="tipo" length="40" not-null="true" />

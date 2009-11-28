@@ -78,7 +78,7 @@ public class UtilityDBManager {
 	private UtilityDBManager() throws FileNotFoundException, IOException {
 		props = new Properties();
 		// carichiamo il file di properties
-		props.load(new FileReader("configurazione.properties"));
+		props.load(new FileReader("configurazioni.properties"));
 
 		// impostiamo tutti i campi
 		this.nameDb = props.getProperty("nameDb");

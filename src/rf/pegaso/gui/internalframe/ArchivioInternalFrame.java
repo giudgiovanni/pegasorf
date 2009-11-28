@@ -18,21 +18,9 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import rf.myswing.util.ModalFrameUtil;
-import rf.pegaso.gui.gestione.ArticoliGestione;
-import rf.pegaso.gui.gestione.CaricoGui;
 import rf.pegaso.gui.gestione.ClientiGestione;
 import rf.pegaso.gui.gestione.DocumentiGestione;
-import rf.pegaso.gui.gestione.FatturaByDdt;
-import rf.pegaso.gui.gestione.FornitoriGestione;
-import rf.pegaso.gui.gestione.RepartiGestione;
-import rf.pegaso.gui.gestione.ScaricoGui;
 import rf.pegaso.gui.gestione.StampeEtichette;
-import rf.pegaso.gui.gestione.UnitaDiMisuraGestione;
-import rf.pegaso.gui.gestione.VenditeGui;
-import rf.pegaso.gui.viste.GiacenzeGUI;
-import rf.pegaso.gui.viste.RicercheArchivio;
-import rf.utility.ConversioneArt;
-import rf.utility.ConversioneForn;
 import rf.utility.db.DBManager;
 
 /**
@@ -78,38 +66,11 @@ public class ArchivioInternalFrame extends JInternalFrame {
 		initialize();
 	}
 
-	public void apriScarico() {
-		ScaricoGui ordine = new ScaricoGui();
-		//Apriamo il Frame in modo modale
-		ModalFrameUtil.showAsModal(ordine, padre);
-		//ordine.setVisible(true);
-		//ordine.setVisible(true);		 
-	}
+	
 
-	/**
-	 *
-	 */
-	public void apriGiacenze() {
-		GiacenzeGUI inventario = new GiacenzeGUI(padre);
-		inventario.setVisible(true);
+	
 
-	}
-
-	/**
-	 *
-	 */
-	public void apriVenditeGUI() {
-		VenditeGui ordine = new VenditeGui();
-		//Apriamo il Frame in modo modale
-		ModalFrameUtil.showAsModal(ordine, padre);
-		//ordine.setVisible(true);
-		//ordine.setVisible(true);
-	}
-
-	public void apriDdtAFattura(){
-		FatturaByDdt f=new FatturaByDdt(padre);
-		f.setVisible(true);
-	}
+	
 
 	/**
 	 *
@@ -122,27 +83,9 @@ public class ArchivioInternalFrame extends JInternalFrame {
 
 
 
-	/**
-	 *
-	 */
-	private void apriArticoli() {
-		ArticoliGestione cg = new ArticoliGestione();
-		//Apriamo la finestra in modo modale e
-		//la massimizziamo
-		//ModalFrameUtil.showAsModal(cg, padre);
-		cg.setVisible(true);
-		cg.setExtendedState(JFrame.MAXIMIZED_BOTH);
+	
 
-	}
-
-	/**
-	 *
-	 */
-	private void apriCaricoMerce() {
-		CaricoGui carico = new CaricoGui(padre);
-		carico.setVisible(true);
-
-	}
+	
 
 	/**
 	 *
@@ -153,59 +96,17 @@ public class ArchivioInternalFrame extends JInternalFrame {
 
 	}
 
-	/**
-	 *
-	 */
-	private void apriFornitori() {
-		FornitoriGestione cg = new FornitoriGestione(padre);
-		cg.setVisible(true);
+	
 
-	}
+	
 
-	/**
-	 * Apre il pannello per la gestione dei reparti
-	 */
-	private void apriReparti() {
-		RepartiGestione rg = new RepartiGestione(padre);
-		rg.setVisible(true);
+	
 
-	}
+	
 
-	/**
-	 *
-	 */
-	private void apriRicerche() {
-		RicercheArchivio ric = new RicercheArchivio(this.padre);
-		ric.setVisible(true);
+	
 
-	}
-
-	/**
-	 *
-	 */
-	private void apriUnitadiMisura() {
-		UnitaDiMisuraGestione rg = new UnitaDiMisuraGestione(padre);
-		rg.setVisible(true);
-
-	}
-
-	/**
-	 *
-	 */
-	private void conversioneArchivio() {
-		ConversioneArt c = new ConversioneArt(padre);
-		c.setVisible(true);
-
-	}
-
-	/**
-	 *
-	 */
-	private void conversioneArchivioForn() {
-		ConversioneForn c = new ConversioneForn(padre);
-		c.setVisible(true);
-
-	}
+	
 
 	/**
 	 * This method initializes btnClienti

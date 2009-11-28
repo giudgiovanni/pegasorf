@@ -1,6 +1,6 @@
 package it.infolabs.hibernate;
 
-// Generated 21-nov-2009 23.21.44 by Hibernate Tools 3.2.4.GA
+// Generated 22-nov-2009 2.09.36 by Hibernate Tools 3.2.4.GA
 
 import java.util.HashSet;
 import java.util.Set;

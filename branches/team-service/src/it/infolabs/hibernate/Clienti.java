@@ -1,6 +1,6 @@
 package it.infolabs.hibernate;
 
-// Generated 21-nov-2009 23.21.44 by Hibernate Tools 3.2.4.GA
+// Generated 22-nov-2009 2.09.36 by Hibernate Tools 3.2.4.GA
 
 import java.util.Date;
 
@@ -10,6 +10,7 @@ import java.util.Date;
 public class Clienti implements java.io.Serializable {
 
 	private long idcliente;
+	private CategoriaCliente categoriaCliente;
 	private DocumentoCliente documentoCliente;
 	private Provincia provincia;
 	private Ente ente;
@@ -36,7 +37,6 @@ public class Clienti implements java.io.Serializable {
 	private String rilasciatoDi;
 	private String tel2;
 	private String cell2;
-	private Long categoriaCliente;
 
 	public Clienti() {
 	}
@@ -47,15 +47,16 @@ public class Clienti implements java.io.Serializable {
 		this.cognome = cognome;
 	}
 
-	public Clienti(long idcliente, DocumentoCliente documentoCliente,
-			Provincia provincia, Ente ente, Date dataInserimento, String nome,
-			String cognome, String piva, String codfisc, String via,
-			String cap, String citta, String tel, String cell, String fax,
-			String email, String website, String note, Date dataNascita,
-			String numDoc, Date rilasciatoIl, String natoA,
+	public Clienti(long idcliente, CategoriaCliente categoriaCliente,
+			DocumentoCliente documentoCliente, Provincia provincia, Ente ente,
+			Date dataInserimento, String nome, String cognome, String piva,
+			String codfisc, String via, String cap, String citta, String tel,
+			String cell, String fax, String email, String website, String note,
+			Date dataNascita, String numDoc, Date rilasciatoIl, String natoA,
 			String intestazione, Long nazionalita, String rilasciatoDi,
-			String tel2, String cell2, Long categoriaCliente) {
+			String tel2, String cell2) {
 		this.idcliente = idcliente;
+		this.categoriaCliente = categoriaCliente;
 		this.documentoCliente = documentoCliente;
 		this.provincia = provincia;
 		this.ente = ente;
@@ -82,7 +83,6 @@ public class Clienti implements java.io.Serializable {
 		this.rilasciatoDi = rilasciatoDi;
 		this.tel2 = tel2;
 		this.cell2 = cell2;
-		this.categoriaCliente = categoriaCliente;
 	}
 
 	public long getIdcliente() {
@@ -91,6 +91,14 @@ public class Clienti implements java.io.Serializable {
 
 	public void setIdcliente(long idcliente) {
 		this.idcliente = idcliente;
+	}
+
+	public CategoriaCliente getCategoriaCliente() {
+		return this.categoriaCliente;
+	}
+
+	public void setCategoriaCliente(CategoriaCliente categoriaCliente) {
+		this.categoriaCliente = categoriaCliente;
 	}
 
 	public DocumentoCliente getDocumentoCliente() {
@@ -299,14 +307,6 @@ public class Clienti implements java.io.Serializable {
 
 	public void setCell2(String cell2) {
 		this.cell2 = cell2;
-	}
-
-	public Long getCategoriaCliente() {
-		return this.categoriaCliente;
-	}
-
-	public void setCategoriaCliente(Long categoriaCliente) {
-		this.categoriaCliente = categoriaCliente;
 	}
 
 }

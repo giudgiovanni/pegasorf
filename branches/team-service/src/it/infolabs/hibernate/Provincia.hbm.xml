@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 21-nov-2009 23.21.44 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 22-nov-2009 2.09.36 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="it.infolabs.hibernate.Provincia" table="provincia" schema="public">
-        <id name="idprovincia" type="long">
+        <id name="idprovincia" type="long" unsaved-value="0">
             <column name="idprovincia" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <property name="provincia" type="string">
             <column name="provincia" not-null="true" />

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 22-nov-2009 2.09.36 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="it.infolabs.hibernate.TipoDocumento" table="tipo_documento" schema="public">
+        <id name="iddocumento" type="long">
+            <column name="iddocumento" />
+            <generator class="assigned" />
+        </id>
+        <property name="tipo" type="string">
+            <column name="tipo" length="40" not-null="true" />
+        </property>
+        <property name="descrizione" type="string">
+            <column name="descrizione" length="200" />
+        </property>
+    </class>
+</hibernate-mapping>

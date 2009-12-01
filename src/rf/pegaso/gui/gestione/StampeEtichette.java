@@ -399,12 +399,19 @@ public class StampeEtichette extends JFrame {
 			cliente=ClientiHome.getInstance().findById(list.get(i - 1).intValue());
 			try {
 				pst.setInt(1, i);
-				if(!cliente.getIntestazione().equalsIgnoreCase("")){
+				if(!cliente.getIntestazione().equals("")){
 					pst.setString(2, cliente.getIntestazione());
-					pst.setString(3, cliente.getCognome()+cliente.getNome());
-					pst.setString(4, cliente.getVia());
-					pst.setString(5, cliente.getCap()+" - "+cliente.getCitta()+"("+cliente.getProvincia().getTarga()+")");
-					pst.setString(6, "");
+					if(cliente.getCognome().equals("") && cliente.getNome().equals("")){
+						pst.setString(3, cliente.getVia());
+						pst.setString(4, cliente.getCap()+" - "+cliente.getCitta()+"("+cliente.getProvincia().getTarga()+")");
+						pst.setString(5, "");
+						pst.setString(6, "");
+					}else{
+						pst.setString(3, cliente.getCognome()+" "+cliente.getNome());
+						pst.setString(4, cliente.getVia());
+						pst.setString(5, cliente.getCap()+" - "+cliente.getCitta()+"("+cliente.getProvincia().getTarga()+")");
+						pst.setString(6, "");
+					}
 					pst.execute();
 				}else{
 					pst.setString(2, cliente.getCognome()+" "+cliente.getNome());

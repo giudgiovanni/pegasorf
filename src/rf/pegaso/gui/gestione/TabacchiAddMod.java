@@ -57,6 +57,7 @@ import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.Carico;
 import rf.pegaso.db.tabelle.Fornitore;
 import rf.pegaso.db.tabelle.Reparto;
+import rf.pegaso.db.tabelle.Scarico;
 import rf.pegaso.db.tabelle.UnitaDiMisura;
 import rf.pegaso.gui.utility.SuggerimentoCodice;
 import rf.pegaso.gui.viste.ViewDocCarico;
@@ -1134,6 +1135,10 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 					if ( !txtFldQtaIniziale.getText().trim().equals("") && !txtFldQtaIniziale.getText().trim().equals("0,00") ){
 						inserisciQuantitaIniziale();
 					}
+					// Inseriamo l'articolo nello scarico per avere la giacenza
+					Scarico c = new Scarico();
+					c.setIdScarico(0);
+					c.insertScaricoInizialeZero((int)a.getIdarticolo());
 					svuotaCampi();
 				}
 				else {

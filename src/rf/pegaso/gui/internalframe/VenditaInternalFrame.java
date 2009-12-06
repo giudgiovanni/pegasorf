@@ -4,11 +4,6 @@ import it.infolabs.hibernate.Articoli;
 import it.infolabs.hibernate.Pannelli;
 import it.infolabs.hibernate.PannelliHome;
 import it.infolabs.hibernate.exception.FindAllEntityException;
-import it.infolabs.pos.PosDriver;
-import it.infolabs.pos.PosException;
-import it.infolabs.pos.Ticket;
-import it.infolabs.pos.TicketRow;
-import it.infolabs.pos.driver.RCHDriver;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -30,21 +25,16 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 
-import rf.pegaso.db.exception.CodiceBarreInesistente;
-import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.DettaglioOrdine;
-import rf.pegaso.db.tabelle.ImmagineArticolo;
 import rf.pegaso.gui.vendita.panel.JButtonEvent;
 import rf.pegaso.gui.vendita.panel.JButtonEventListener;
 import rf.pegaso.gui.vendita.panel.JPanelArticoli;
 import rf.pegaso.gui.vendita.panel.JPanelRiepilogoVendita;
 import rf.utility.ControlloDati;
 import rf.utility.db.DBManager;
-import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.text.UpperTextDocument;
 
 import java.awt.Font;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.LinkedList;
 import java.awt.Color;
@@ -55,8 +45,6 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JTabbedPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
@@ -240,10 +228,8 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 				txtFldResto.setText(ControlloDati.convertDoubleToPrezzo(d - pannelloCarrello.getTotaleCarrello()));
 			}
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

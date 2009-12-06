@@ -150,6 +150,7 @@ public class DettaglioOrdine implements Comparator<DettaglioOrdine>{
 		//carichiamo l'articolo in memoria
 //		Articolo a = new Articolo();
 		try {
+			ArticoliHome.getInstance().begin();
 			Object [] obj = ArticoliHome.getInstance().findByCodBarreWithPrezzoAcquisto(codice);
 			if (obj == null ){
 				return 0;

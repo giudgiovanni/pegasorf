@@ -117,13 +117,10 @@ public class ClienteModel extends AbstractTableModel implements DBStateChange {
 	}
 
 	public String getNomeTabella() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public void rowStateChange(RowEvent re) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

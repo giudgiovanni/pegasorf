@@ -31,6 +31,7 @@ import rf.pegaso.gui.vendita.panel.JButtonEventListener;
 import rf.pegaso.gui.vendita.panel.JPanelArticoli;
 import rf.pegaso.gui.vendita.panel.JPanelRiepilogoVendita;
 import rf.utility.ControlloDati;
+import rf.utility.MathUtility;
 import rf.utility.db.DBManager;
 import rf.utility.gui.text.UpperTextDocument;
 
@@ -176,7 +177,15 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 		try {
 			DettaglioOrdine dv = new DettaglioOrdine();
 			dv.loadRepartoByCB(repo);
-			dv.setPrezzoVendita(ControlloDati.convertPrezzoToDouble(ControlloDati.costruisciPrezzoLikePOS(importo)));
+			double prezzo = ControlloDati.convertPrezzoToDouble(ControlloDati.costruisciPrezzoLikePOS(importo));
+			if (repo.equals("REPARTO 5")){
+				dv.setPrezzoVendita(prezzo);
+				dv.setIva(0);
+			}
+			else {
+				dv.setPrezzoVendita(prezzo-MathUtility.scontoPercentuale(prezzo, 16.666666666666667));
+				dv.setIva(20);
+			}
 			if ( txtQta.getText().trim().equals("")){
 				dv.setQta(1);
 			}
@@ -184,7 +193,6 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 				dv.setQta(Double.valueOf(txtQta.getText().trim()));
 			}
 			dv.setDisponibilita(dv.getQta());
-			dv.setIva(0);
 			pannelloCarrello.addDettaglioOrdine(dv, true);
 			txtFldTotale.setText(ControlloDati.convertDoubleToPrezzo(pannelloCarrello.getTotaleCarrello()));
 			aggiornaResto();
@@ -413,7 +421,7 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 				inserisciDaRepo("REPARTO 1");
 			}
 			else if ( e.getSource() == btnRep2 ){
-				inserisciDaRepo("REPARTO 2");
+				inserisciDaRepo("REPARTO 5");
 			}
 			else if ( e.getSource() == btnRep3 ){
 				inserisciDaRepo("REPARTO 3");
@@ -1073,7 +1081,7 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 		if (btnRep2 == null) {
 			btnRep2 = new JButton();
 			btnRep2.setBounds(new Rectangle(310, 295, 75, 70));
-			btnRep2.setText("Repo2");
+			btnRep2.setText("Repo5");
 			btnRep2.addActionListener(new MyButtonListener());
 		}
 		return btnRep2;
@@ -1090,6 +1098,7 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 			btnRep3.setBounds(new Rectangle(310, 215, 75, 70));
 			btnRep3.setText("Repo3");
 			btnRep3.addActionListener(new MyButtonListener());
+			btnRep3.setVisible(false);
 		}
 		return btnRep3;
 	}
@@ -1105,6 +1114,7 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 			btnRep4.setBounds(new Rectangle(310, 135, 75, 70));
 			btnRep4.setText("Repo4");
 			btnRep4.addActionListener(new MyButtonListener());
+			btnRep4.setVisible(false);
 		}
 		return btnRep4;
 	}

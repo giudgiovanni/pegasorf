@@ -5,6 +5,7 @@ import it.infolabs.hibernate.ImmagineArticolo;
 
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
 
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
@@ -40,11 +41,17 @@ public class JButtonArticolo extends javax.swing.JButton {
             setFocusPainted(false);
             setFocusable(false);
             setRequestFocusEnabled(false);
-            setPreferredSize(new Dimension(articolo.getDescrizione().length()*15, 100));
+            FontMetrics met = this.getFontMetrics(getFont());            
+            setPreferredSize(new Dimension(met.stringWidth(articolo.getDescrizione())+40, 100));            
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public int getHeight() {
+		return 100;
+	};
 
 	public Articoli getArticolo() {
 		return articolo;

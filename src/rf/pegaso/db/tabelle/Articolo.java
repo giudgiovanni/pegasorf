@@ -819,6 +819,7 @@ public class Articolo {
 	 *             viene lanciata se l'attributo idArticolo � errato e quindi
 	 *             non si pu� effettuare l'aggiornamento della riga
 	 * @throws CodiceBarreEsistente 
+	 * @throws SQLException 
 	 * @throws CodiceBarreInesistente 
 	 * @throws SQLException 
 	 */
@@ -875,7 +876,7 @@ public class Articolo {
 //		}
 //		return ok;
 //	}
-	public int updateArticolo() throws IDNonValido, CodiceBarreEsistente{
+	public int updateArticolo() throws IDNonValido, CodiceBarreEsistente, SQLException{
 		if (idArticolo <= -1){
 			throw new IDNonValido();
 		}
@@ -931,11 +932,14 @@ public class Articolo {
 		ArticoliHome.getInstance().begin();
 		try {
 			ArticoliHome.getInstance().persist(art);
+			ArticoliHome.getInstance().commit();
 		} catch (PersistEntityException e) {
 			return -1;
 		}
 		dbm.notifyDBStateChange();
-		Scarico.insertScaricoInizialeZero(idArticolo);
+		if(!Scarico.codiceBarrePresenteInScarico(art.getCodbarre(), 0)){
+			Scarico.insertScaricoInizialeZero(idArticolo);
+		}
 		return 1;
 	}
 

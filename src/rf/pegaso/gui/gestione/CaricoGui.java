@@ -722,7 +722,8 @@ public class CaricoGui extends JFrame implements TableModelListener {
 				} catch (IDNonValido e) {
 					e.printStackTrace();
 				} catch (CodiceBarreEsistente e) {
-					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 			}

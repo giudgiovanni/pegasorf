@@ -2,12 +2,18 @@ package it.infolabs.hibernate;
 
 // Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA
 
+import it.infolabs.hibernate.exception.DeleteEntityException;
+import it.infolabs.hibernate.exception.FindAllEntityException;
+import it.infolabs.hibernate.exception.FindByNotFoundException;
+import it.infolabs.hibernate.exception.MergeEntityException;
+import it.infolabs.hibernate.exception.PersistEntityException;
+
 import java.util.List;
-import javax.naming.InitialContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.LockMode;
-import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
+
 import static org.hibernate.criterion.Example.create;
 
 /**
@@ -15,31 +21,28 @@ import static org.hibernate.criterion.Example.create;
  * @see it.infolabs.hibernate.Clienti
  * @author Hibernate Tools
  */
-public class ClientiHome {
+public class ClientiHome extends BusinessObjectHome {
 
 	private static final Log log = LogFactory.getLog(ClientiHome.class);
 
-	private final SessionFactory sessionFactory = getSessionFactory();
+	private static final ClientiHome instance = new ClientiHome();
 
-	protected SessionFactory getSessionFactory() {
-		try {
-			return (SessionFactory) new InitialContext()
-					.lookup("SessionFactory");
-		} catch (Exception e) {
-			log.error("Could not locate SessionFactory in JNDI", e);
-			throw new IllegalStateException(
-					"Could not locate SessionFactory in JNDI");
-		}
+	private ClientiHome() {
+		super();
 	}
 
-	public void persist(Clienti transientInstance) {
+	public static ClientiHome getInstance() {
+		return instance;
+	}
+
+	public void persist(Clienti transientInstance) throws PersistEntityException{
 		log.debug("persisting Clienti instance");
 		try {
 			sessionFactory.getCurrentSession().persist(transientInstance);
 			log.debug("persist successful");
 		} catch (RuntimeException re) {
 			log.error("persist failed", re);
-			throw re;
+			throw new PersistEntityException();
 		}
 	}
 
@@ -65,18 +68,18 @@ public class ClientiHome {
 		}
 	}
 
-	public void delete(Clienti persistentInstance) {
+	public void delete(Clienti persistentInstance) throws DeleteEntityException{
 		log.debug("deleting Clienti instance");
 		try {
 			sessionFactory.getCurrentSession().delete(persistentInstance);
 			log.debug("delete successful");
 		} catch (RuntimeException re) {
 			log.error("delete failed", re);
-			throw re;
+			throw new DeleteEntityException();
 		}
 	}
 
-	public Clienti merge(Clienti detachedInstance) {
+	public Clienti merge(Clienti detachedInstance) throws MergeEntityException{
 		log.debug("merging Clienti instance");
 		try {
 			Clienti result = (Clienti) sessionFactory.getCurrentSession()
@@ -85,11 +88,11 @@ public class ClientiHome {
 			return result;
 		} catch (RuntimeException re) {
 			log.error("merge failed", re);
-			throw re;
+			throw new MergeEntityException();
 		}
 	}
 
-	public Clienti findById(long id) {
+	public Clienti findById(long id) throws FindByNotFoundException{
 		log.debug("getting Clienti instance with id: " + id);
 		try {
 			Clienti instance = (Clienti) sessionFactory.getCurrentSession()
@@ -102,11 +105,11 @@ public class ClientiHome {
 			return instance;
 		} catch (RuntimeException re) {
 			log.error("get failed", re);
-			throw re;
+			throw new FindByNotFoundException();
 		}
 	}
 
-	public List<Clienti> findByExample(Clienti instance) {
+	public List<Clienti> findByExample(Clienti instance) throws FindByNotFoundException{
 		log.debug("finding Clienti instance by example");
 		try {
 			List<Clienti> results = (List<Clienti>) sessionFactory
@@ -118,7 +121,23 @@ public class ClientiHome {
 			return results;
 		} catch (RuntimeException re) {
 			log.error("find by example failed", re);
-			throw re;
+			throw new FindByNotFoundException();
+		}
+	}
+	
+	public List<Clienti> allClienti() throws FindAllEntityException {
+		log.debug("finding allClienti instance");
+		try {
+			List<Clienti> results = (List<Clienti>) sessionFactory
+			.getCurrentSession().createCriteria("select idcliente || ' - ' || nome || ' ' || cognome from "+
+			"it.infolabs.hibernate.Clienti order by nome").add(
+					create(instance)).list();
+			log.debug("find by example successful, result size: "
+					+ results.size());
+			return results;
+		} catch (RuntimeException re) {
+			log.error("find by example failed", re);
+			throw new FindAllEntityException();
 		}
 	}
 }

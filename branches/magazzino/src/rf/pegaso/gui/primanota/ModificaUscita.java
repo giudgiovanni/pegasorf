@@ -31,7 +31,6 @@ import javax.swing.border.TitledBorder;
 
 import rf.myswing.IDJComboBox;
 import rf.pegaso.db.tabelle.Carico;
-import rf.pegaso.db.tabelle.Cliente;
 import rf.pegaso.db.tabelle.Documento;
 import rf.pegaso.db.tabelle.Fornitore;
 import rf.utility.db.UtilityDBManager;
@@ -44,6 +43,7 @@ import com.toedter.calendar.JDateChooser;
 
 public class ModificaUscita extends JDialog {
 
+	private static final long serialVersionUID = 1L;
 	public static final int USCITA = 0;
 	private JPanel jContentPane = null;
 	private JPanel jPanel = null;
@@ -66,7 +66,6 @@ public class ModificaUscita extends JDialog {
 	private JPanel jPanel1 = null;
 	private JButton jButton = null;
 	private int id;
-	private int modalita;
 	private JLabel lblIvaDocUscite = null;
 	private JFormattedTextField txtIvaDocUscita = null;
 	private NumberFormat f1 = null;
@@ -81,10 +80,9 @@ public class ModificaUscita extends JDialog {
 		initialize();
 	}
 
-	public ModificaUscita(int ID, Frame padre, int modalita) {
+	public ModificaUscita(int id, Frame padre, int modalita) {
 		super(padre,true);
 		this.id=id;
-		this.modalita=modalita;
 		initialize();
 	}
 
@@ -102,21 +100,6 @@ public class ModificaUscita extends JDialog {
         UtilGUI.centraDialog(this);
         caricaDati();
 
-	}
-
-	private void caricaClienti(JComboBox cmbFornitori) {
-		Cliente c = new Cliente();
-		try {
-
-			String as[] = (String[]) c.allClienti();
-			// carichiamo tutti i dati in due array
-			// da passre al combobox
-			((IDJComboBox) cmbClienti).caricaNewValueComboBox(as, false);
-		} catch (SQLException e) {
-			messaggioCampoMancante("Errore caricamento clienti nel combobox", "ERRORE");
-			e.printStackTrace();
-		}
-		AutoCompletion.enable(cmbClienti);
 	}
 
 	private void caricaDocumenti(JComboBox cmbDocumenti) {
@@ -167,7 +150,6 @@ public class ModificaUscita extends JDialog {
 			txtTotale.setValue(new Double(s.getTotaleIvato()));
 			txtIvaDocUscita.setValue(s.getIva_doc());
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -262,14 +244,6 @@ public class ModificaUscita extends JDialog {
 			dataDocumento.setDate(new Date());
 		}
 		return dataDocumento;
-	}
-
-	/**
-	 * @param string
-	 */
-	private void messaggioCampoMancante(String testo, String tipo) {
-		JOptionPane.showMessageDialog(this, testo, tipo,
-				JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	/**
@@ -482,10 +456,8 @@ public class ModificaUscita extends JDialog {
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IDNonValido e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

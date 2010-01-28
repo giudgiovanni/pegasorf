@@ -1,7 +1,10 @@
-/**
- *
- */
 package rf.pegaso.gui.gestione;
+
+import it.infolabs.hibernate.Clienti;
+import it.infolabs.hibernate.ClientiHome;
+import it.infolabs.hibernate.ProvinciaHome;
+import it.infolabs.hibernate.exception.FindByNotFoundException;
+import it.infolabs.hibernate.exception.PersistEntityException;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -25,10 +28,8 @@ import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
 import rf.myswing.IDJComboBox;
-import rf.pegaso.db.tabelle.Cliente;
 import rf.pegaso.db.tabelle.Provincia;
 import rf.utility.db.DBManager;
-import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompletion;
 import rf.utility.gui.text.UpperTextDocument;
@@ -57,8 +58,6 @@ public class ClientiMod extends JDialog {
 	private JButton btnChiudi = null;
 
 	private JButton btnModifica = null;
-
-	private DBManager dbm;
 
 	private int idCliente;
 
@@ -139,7 +138,6 @@ public class ClientiMod extends JDialog {
 	 */
 	public ClientiMod(JDialog owner, DBManager dbm, int idCliente) {
 		super(owner, true);
-		this.dbm = dbm;
 		this.idCliente = idCliente;
 		initialize();
 	}
@@ -175,7 +173,7 @@ public class ClientiMod extends JDialog {
 				btnModifica.setText("Modifica"); // Generated
 				btnModifica.addActionListener(new MyActionListener());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return btnModifica;
@@ -214,7 +212,7 @@ public class ClientiMod extends JDialog {
 				jPanel.add(getBtnModifica(), null); // Generated
 				jPanel.add(getBtnChiudi(), null); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return jPanel;
@@ -232,7 +230,7 @@ public class ClientiMod extends JDialog {
 				jScrollPane.setBounds(new Rectangle(280, 103, 272, 112)); // Generated
 				jScrollPane.setViewportView(getTxtNote()); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return jScrollPane;
@@ -251,7 +249,7 @@ public class ClientiMod extends JDialog {
 						getPnlDatiPersonali(), null); // Generated
 				jTabbedPane.addTab("Altri dati", null, getPnlAltriDati(), null); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return jTabbedPane;
@@ -300,7 +298,7 @@ public class ClientiMod extends JDialog {
 				pnlAltriDati.add(getTxtWebSite(), null); // Generated
 				pnlAltriDati.add(getJScrollPane(), null); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return pnlAltriDati;
@@ -318,7 +316,7 @@ public class ClientiMod extends JDialog {
 				pnlCentrale.setLayout(new BorderLayout()); // Generated
 				pnlCentrale.add(getJTabbedPane(), BorderLayout.CENTER); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return pnlCentrale;
@@ -378,7 +376,7 @@ public class ClientiMod extends JDialog {
 				pnlDatiPersonali.add(getTxtPiva(), null); // Generated
 				pnlDatiPersonali.add(getBtnProvincia(), null);
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return pnlDatiPersonali;
@@ -398,7 +396,7 @@ public class ClientiMod extends JDialog {
 				txtCap.setDocument(new UpperTextDocument());
 
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtCap;
@@ -417,7 +415,7 @@ public class ClientiMod extends JDialog {
 				txtCell.setBounds(new Rectangle(280, 21, 140, 20)); // Generated
 				txtCell.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtCell;
@@ -436,7 +434,7 @@ public class ClientiMod extends JDialog {
 				txtCitta.setBounds(new Rectangle(104, 131, 180, 20)); // Generated
 				txtCitta.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtCitta;
@@ -455,7 +453,7 @@ public class ClientiMod extends JDialog {
 				txtCodFisc.setBounds(new Rectangle(6, 172, 140, 20)); // Generated
 				txtCodFisc.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtCodFisc;
@@ -474,7 +472,7 @@ public class ClientiMod extends JDialog {
 				txtCognome.setBounds(new Rectangle(191, 49, 181, 20)); // Generated
 				txtCognome.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtCognome;
@@ -493,7 +491,7 @@ public class ClientiMod extends JDialog {
 				txtEmail.setBounds(new Rectangle(280, 62, 277, 20)); // Generated
 				txtEmail.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtEmail;
@@ -512,7 +510,7 @@ public class ClientiMod extends JDialog {
 				txtFax.setBounds(new Rectangle(5, 62, 140, 20)); // Generated
 				txtFax.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtFax;
@@ -531,7 +529,7 @@ public class ClientiMod extends JDialog {
 				txtNome.setBounds(new Rectangle(6, 49, 180, 20)); // Generated
 				txtNome.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtNome;
@@ -549,7 +547,7 @@ public class ClientiMod extends JDialog {
 				txtNote.setDocument(new UpperTextDocument());
 				txtNote.setLineWrap(true);
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtNote;
@@ -568,7 +566,7 @@ public class ClientiMod extends JDialog {
 				txtPiva.setBounds(new Rectangle(191, 172, 140, 20)); // Generated
 				txtPiva.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtPiva;
@@ -586,7 +584,7 @@ public class ClientiMod extends JDialog {
 				cmbProvincia.setPreferredSize(new Dimension(140, 20)); // Generated
 				cmbProvincia.setBounds(new Rectangle(293, 130, 199, 20)); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return cmbProvincia;
@@ -605,7 +603,7 @@ public class ClientiMod extends JDialog {
 				txtTel.setBounds(new Rectangle(5, 21, 140, 20)); // Generated
 				txtTel.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtTel;
@@ -624,7 +622,7 @@ public class ClientiMod extends JDialog {
 				txtVia.setBounds(new Rectangle(6, 90, 366, 20)); // Generated
 				txtVia.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtVia;
@@ -643,7 +641,7 @@ public class ClientiMod extends JDialog {
 				txtWebSite.setBounds(new Rectangle(5, 103, 270, 20)); // Generated
 				txtWebSite.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtWebSite;
@@ -652,7 +650,7 @@ public class ClientiMod extends JDialog {
 	/**
 	 *
 	 */
-	private void impostaCampi(Cliente c) {
+	private void impostaCampi(Clienti c) {
 		txtNome.setText(c.getNome());
 		txtCognome.setText(c.getCognome());
 		txtPiva.setText(c.getPiva());
@@ -660,9 +658,9 @@ public class ClientiMod extends JDialog {
 		txtVia.setText(c.getVia());
 		txtCap.setText(c.getCap());
 		txtCitta.setText(c.getCitta());
-		cmbProvincia.setSelectedItemByID(c.getProvincia());
-		txtTel.setText(c.getTelefono());
-		txtCell.setText(c.getCellulare());
+		cmbProvincia.setSelectedItemByID(c.getProvincia().getIdprovincia());
+		txtTel.setText(c.getTel());
+		txtCell.setText(c.getCell());
 		txtFax.setText(c.getFax());
 		txtEmail.setText(c.getEmail());
 		txtWebSite.setText(c.getWebsite());
@@ -681,16 +679,15 @@ public class ClientiMod extends JDialog {
 		this.setTitle("Modifica Clienti"); // Generated
 		this.setContentPane(getJContentPane());
 		UtilGUI.centraDialog(this);
-		Cliente c = new Cliente();
+		ClientiHome.getInstance().begin();
+		Clienti c;
 		try {
-			c.caricaDati(this.idCliente);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			c = ClientiHome.getInstance().findById(idCliente);
+			caricaProvince(cmbProvincia);
+			impostaCampi(c);
+		} catch (FindByNotFoundException e) {
 			e.printStackTrace();
 		}
-		caricaProvince(cmbProvincia);
-		impostaCampi(c);
-
 	}
 
 	private void caricaProvince(JComboBox cmbProvince) {
@@ -720,8 +717,8 @@ public class ClientiMod extends JDialog {
 				JOptionPane.INFORMATION_MESSAGE);
 		if (scelta != JOptionPane.YES_OPTION)
 			return;
-		Cliente c = new Cliente();
-		c.setIdCliente(this.idCliente);
+		Clienti c = new Clienti();
+		c.setIdcliente(this.idCliente);
 		c.setNome(txtNome.getText());
 		c.setCognome(txtCognome.getText());
 		c.setPiva(txtPiva.getText());
@@ -729,17 +726,24 @@ public class ClientiMod extends JDialog {
 		c.setVia(txtVia.getText());
 		c.setCap(txtCap.getText());
 		c.setCitta(txtCitta.getText());
-		c.setProvincia(new Integer(cmbProvincia.getIDSelectedItem()));
-		c.setTelefono(txtTel.getText());
-		c.setCellulare(txtCell.getText());
+		ProvinciaHome.getInstance().begin();
+		try {
+			c.setProvincia(ProvinciaHome.getInstance().findById(new Long(cmbProvincia.getIDSelectedItem())));
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (FindByNotFoundException e) {
+			e.printStackTrace();
+		}
+		c.setTel(txtTel.getText());
+		c.setCell(txtCell.getText());
 		c.setFax(txtFax.getText());
 		c.setEmail(txtEmail.getText());
 		c.setWebsite(txtWebSite.getText());
 		c.setNote(txtNote.getText());
+		ClientiHome.getInstance().begin();
 		try {
-			c.updateCliente();
-		} catch (IDNonValido e) {
-			// TODO Auto-generated catch block
+			ClientiHome.getInstance().persist(c);
+		} catch (PersistEntityException e) {
 			e.printStackTrace();
 		}
 		dispose();
@@ -758,7 +762,7 @@ public class ClientiMod extends JDialog {
 			btnProvincia.setText("...");
 			btnProvincia.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					gestioneProvincia(); // TODO Auto-generated Event stub actionPerformed()
+					gestioneProvincia();
 				}
 			});
 		}

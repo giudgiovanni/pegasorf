@@ -1,5 +1,8 @@
 package rf.pegaso.gui.primanota;
 
+import it.infolabs.hibernate.ClientiHome;
+import it.infolabs.hibernate.exception.FindAllEntityException;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -30,7 +33,6 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
 
 import rf.myswing.IDJComboBox;
-import rf.pegaso.db.tabelle.Cliente;
 import rf.pegaso.db.tabelle.Documento;
 import rf.pegaso.db.tabelle.Scarico;
 import rf.utility.db.UtilityDBManager;
@@ -43,6 +45,7 @@ import com.toedter.calendar.JDateChooser;
 
 public class ModificaEntrata extends JDialog {
 
+	private static final long serialVersionUID = 1L;
 	public static final int USCITA = 0;
 	private JPanel jContentPane = null;
 	private JPanel jPanel = null;
@@ -64,7 +67,6 @@ public class ModificaEntrata extends JDialog {
 	private JPanel jPanel1 = null;
 	private JButton jButton = null;
 	private int id;
-	private int modalita;
 	private JLabel lblIvaDocumento = null;
 	private JFormattedTextField txtIvaDocumento = null;
 	private NumberFormat formatPrezzoDocumento = null;
@@ -79,10 +81,9 @@ public class ModificaEntrata extends JDialog {
 		initialize();
 	}
 
-	public ModificaEntrata(int ID, Frame padre, int modalita) {
+	public ModificaEntrata(int id, Frame padre, int modalita) {
 		super(padre,true);
 		this.id=id;
-		this.modalita=modalita;
 		initialize();
 	}
 
@@ -103,14 +104,14 @@ public class ModificaEntrata extends JDialog {
 	}
 
 	private void caricaClienti(JComboBox cmbFornitori) {
-		Cliente c = new Cliente();
 		try {
+			ClientiHome.getInstance().begin();
 
-			String as[] = (String[]) c.allClienti();
+			String as[] = (String[]) ClientiHome.getInstance().allClienti().toArray();
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
 			((IDJComboBox) cmbClienti).caricaNewValueComboBox(as, false);
-		} catch (SQLException e) {
+		} catch (FindAllEntityException e) {
 			messaggioCampoMancante("Errore caricamento clienti nel combobox", "ERRORE");
 			e.printStackTrace();
 		}
@@ -148,7 +149,6 @@ public class ModificaEntrata extends JDialog {
 			txtTotale.setValue(new Double(s.getTotaleIvato()));
 			txtIvaDocumento.setValue(s.getIvaDocumento());
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -449,10 +449,8 @@ public class ModificaEntrata extends JDialog {
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IDNonValido e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

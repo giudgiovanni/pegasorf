@@ -1,7 +1,8 @@
-/**
- *
- */
 package rf.pegaso.gui.gestione;
+
+import it.infolabs.hibernate.ClientiHome;
+import it.infolabs.hibernate.exception.DeleteEntityException;
+import it.infolabs.hibernate.exception.FindByNotFoundException;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -9,7 +10,6 @@ import java.awt.Frame;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -31,9 +31,7 @@ import net.sf.jasperreports.view.JasperViewer;
 import org.jdesktop.swingx.JXTable;
 
 import rf.pegaso.db.model.ClienteModel;
-import rf.pegaso.db.tabelle.Cliente;
 import rf.utility.db.DBManager;
-import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 
 /**
@@ -133,17 +131,14 @@ public class ClientiGestione extends JDialog {
 			return;
 		int riga = tblClienti.getSelectedRow();
 		int idCliente = ((Number) tblClienti.getValueAt(riga, 0)).intValue();
-		Cliente c = new Cliente();
+		ClientiHome.getInstance().begin();
 		try {
-			c.deleteCliente(idCliente);
-		} catch (IDNonValido e) {
-			// TODO Auto-generated catch block
+			ClientiHome.getInstance().delete(ClientiHome.getInstance().findById(idCliente));
+		} catch (DeleteEntityException e) {
 			e.printStackTrace();
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(this, e.getMessage(), "ERRORE", JOptionPane.ERROR_MESSAGE);
+		} catch (FindByNotFoundException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	/**
@@ -160,7 +155,7 @@ public class ClientiGestione extends JDialog {
 				btnElimina.setPreferredSize(new Dimension(82, 26)); // Generated
 				btnElimina.addActionListener(new MyActionListener());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return btnElimina;
@@ -179,7 +174,7 @@ public class ClientiGestione extends JDialog {
 				btnModifica.setBounds(new Rectangle(110, 8, 82, 26)); // Generated
 				btnModifica.addActionListener(new MyActionListener());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return btnModifica;
@@ -199,7 +194,7 @@ public class ClientiGestione extends JDialog {
 				btnNuovo.setPreferredSize(new Dimension(82, 26)); // Generated
 				btnNuovo.addActionListener(new MyActionListener());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return btnNuovo;
@@ -231,7 +226,7 @@ public class ClientiGestione extends JDialog {
 				jScrollPane = new JScrollPane();
 				jScrollPane.setViewportView(getTblClienti()); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return jScrollPane;
@@ -248,7 +243,7 @@ public class ClientiGestione extends JDialog {
 				jSeparator = new JSeparator();
 				jSeparator.setBounds(new Rectangle(0, 0, 0, 0)); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return jSeparator;
@@ -266,7 +261,7 @@ public class ClientiGestione extends JDialog {
 				pnlCentrale.setLayout(new BorderLayout()); // Generated
 				pnlCentrale.add(getJScrollPane(), BorderLayout.CENTER); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return pnlCentrale;
@@ -291,7 +286,7 @@ public class ClientiGestione extends JDialog {
 				pnlNord.add(getJSeparator(), null); // Generated
 				pnlNord.add(getBtnStampa(), null); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return pnlNord;
@@ -388,7 +383,7 @@ public class ClientiGestione extends JDialog {
 				btnStampa.setText("Stampa");
 				btnStampa.addActionListener(new MyActionListener());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return btnStampa;

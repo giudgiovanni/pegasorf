@@ -1,7 +1,8 @@
-/**
- *
- */
 package rf.pegaso.gui.vendita;
+
+import it.infolabs.hibernate.Aspetto;
+import it.infolabs.hibernate.AspettoHome;
+import it.infolabs.hibernate.exception.PersistEntityException;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -18,7 +19,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
-import rf.pegaso.db.tabelle.Aspetto;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.UpperTextDocument;
 
@@ -205,10 +205,10 @@ public class AspettoAdd extends JDialog {
 	private void inserisci() {
 		Aspetto a = new Aspetto();
 		a.setNome(txtNome.getText());
+		AspettoHome.getInstance().begin();
 		try {
-			a.insertAspetto();
-		} catch (rf.utility.db.eccezzioni.IDNonValido e) {
-			// TODO Auto-generated catch block
+			AspettoHome.getInstance().persist(a);
+		} catch (PersistEntityException e) {
 			e.printStackTrace();
 		}
 		dispose();

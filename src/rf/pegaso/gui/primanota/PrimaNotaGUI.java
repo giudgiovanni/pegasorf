@@ -1,5 +1,8 @@
 package rf.pegaso.gui.primanota;
 
+import it.infolabs.hibernate.ClientiHome;
+import it.infolabs.hibernate.exception.FindAllEntityException;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -52,7 +55,6 @@ import rf.pegaso.db.model.PrimaNotaModelUscite;
 import rf.pegaso.db.model.PrimanotaModelEntrate;
 import rf.pegaso.db.tabelle.Banca;
 import rf.pegaso.db.tabelle.Carico;
-import rf.pegaso.db.tabelle.Cliente;
 import rf.pegaso.db.tabelle.ContoCorrente;
 import rf.pegaso.db.tabelle.Documento;
 import rf.pegaso.db.tabelle.Fornitore;
@@ -104,8 +106,6 @@ public class PrimaNotaGUI extends JFrame {
 	private JXTable tblEntrate = null;
 
 	private PrimanotaModelEntrate modello;
-
-	private DecimalFormat formatPrice = null;
 
 	private JScrollPane jScrollPane2 = null;
 
@@ -326,6 +326,7 @@ public class PrimaNotaGUI extends JFrame {
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "ESC");
 
 		this.getRootPane().getActionMap().put("ENTER", new AbstractAction() {
+			private static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent a) {
 				int tabbed = jTabbedPane.getSelectedIndex();
 				if (tabbed == 0)
@@ -335,6 +336,7 @@ public class PrimaNotaGUI extends JFrame {
 
 		});
 		this.getRootPane().getActionMap().put("CANC", new AbstractAction() {
+			private static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent a) {
 				int tabbed = jTabbedPane.getSelectedIndex();
 				if (tabbed == 0)
@@ -344,6 +346,7 @@ public class PrimaNotaGUI extends JFrame {
 
 		});
 		this.getRootPane().getActionMap().put("MOD", new AbstractAction() {
+			private static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent a) {
 				int tabbed = jTabbedPane.getSelectedIndex();
 				if (tabbed == 0)
@@ -353,6 +356,7 @@ public class PrimaNotaGUI extends JFrame {
 
 		});
 		this.getRootPane().getActionMap().put("ESC", new AbstractAction() {
+			private static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent a) {
 				dispose();
 			}
@@ -985,7 +989,6 @@ public class PrimaNotaGUI extends JFrame {
 			try {
 				modello = new PrimanotaModelEntrate();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			DBManager.getIstanceSingleton().addDBStateChange(modello);
@@ -1036,16 +1039,16 @@ public class PrimaNotaGUI extends JFrame {
 
 	private void caricaClienti(JComboBox cmbFornitori) {
 		cmbFornitori.removeAllItems();
-		Cliente c = new Cliente();
 		try {
-
-			String as[] = (String[]) c.allClienti();
+			ClientiHome.getInstance().begin();
+			String as[] = (String[]) ClientiHome.getInstance().allClienti().toArray();
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
 			((IDJComboBox) cmbClienti).caricaNewValueComboBox(as, false);
-		} catch (SQLException e) {
+		} catch (FindAllEntityException e) {
 			messaggioCampoMancante("Errore caricamento clienti nel combobox",
-					"ERRORE");
+			"ERRORE");
+
 			e.printStackTrace();
 		}
 		AutoCompletion.enable(cmbClienti);
@@ -1075,20 +1078,6 @@ public class PrimaNotaGUI extends JFrame {
 		doc.setVisible(true);
 		caricaDocumenti(cmbTipoDocumento);
 
-	}
-
-	/**
-	 * This method initializes formatPrice
-	 *
-	 * @return java.text.DecimalFormat
-	 */
-	private DecimalFormat getFormatPrice() {
-		if (formatPrice == null) {
-			formatPrice = new DecimalFormat();
-			formatPrice.setMinimumFractionDigits(2);
-			formatPrice.setMaximumFractionDigits(2);
-		}
-		return formatPrice;
 	}
 
 	protected void inserisciEntrata() {
@@ -1179,7 +1168,6 @@ public class PrimaNotaGUI extends JFrame {
 			try {
 				modelloUscite = new PrimaNotaModelUscite();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -1635,10 +1623,8 @@ public class PrimaNotaGUI extends JFrame {
 							JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				} catch (IDNonValido e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (ResultSetVuoto e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -2274,7 +2260,6 @@ public class PrimaNotaGUI extends JFrame {
 			try {
 				m = new MovimentiContoModel(this.idconto);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			tblMovimentiBanca = new JTable(m);
@@ -2434,7 +2419,7 @@ public class PrimaNotaGUI extends JFrame {
 			cmbBanche.setBounds(new Rectangle(115, 5, 216, 31));
 			cmbBanche.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					ricaricaCmbCC(); // TODO Auto-generated Event stub actionPerformed()
+					ricaricaCmbCC();
 				}
 			});
 		}

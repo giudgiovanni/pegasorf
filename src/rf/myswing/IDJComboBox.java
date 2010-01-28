@@ -58,8 +58,8 @@ public class IDJComboBox extends JComboBox{
 		super.setSelectedItem(o);
 	}
 
-	public void setSelectedItemByID(int id){
-		String codId=new Integer(id).toString();
+	public void setSelectedItemByID(long id){
+		String codId = String.valueOf(id);// new Integer(id).toString();
 		int pos=ricercaLineare(this.codId, codId);
 
 		//se il combo contiene la prima riga vuota allora

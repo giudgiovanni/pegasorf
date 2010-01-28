@@ -1,7 +1,10 @@
-/**
- *
- */
 package rf.pegaso.gui.gestione;
+
+import it.infolabs.hibernate.Clienti;
+import it.infolabs.hibernate.ClientiHome;
+import it.infolabs.hibernate.ProvinciaHome;
+import it.infolabs.hibernate.exception.FindByNotFoundException;
+import it.infolabs.hibernate.exception.PersistEntityException;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -26,10 +29,8 @@ import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
 import rf.myswing.IDJComboBox;
-import rf.pegaso.db.tabelle.Cliente;
 import rf.pegaso.db.tabelle.Provincia;
 import rf.utility.db.DBManager;
-import rf.utility.db.eccezzioni.IDNonValido;
 import rf.utility.gui.UtilGUI;
 import rf.utility.gui.text.AutoCompletion;
 import rf.utility.gui.text.UpperTextDocument;
@@ -58,10 +59,6 @@ public class ClientiAdd extends JDialog {
 	private JButton btnChiudi = null;
 
 	private JButton btnInserisci = null;
-
-	private DBManager dbm;
-
-	private int idCliente;
 
 	private JPanel jContentPane = null;
 
@@ -133,8 +130,6 @@ public class ClientiAdd extends JDialog {
 
 	private JTextField txtWebSite = null;
 
-	private JFrame padre;
-
 	private JButton btnProvincia = null;
 
 	/**
@@ -142,16 +137,11 @@ public class ClientiAdd extends JDialog {
 	 */
 	public ClientiAdd(JDialog owner, DBManager dbm) {
 		super(owner, true);
-		this.dbm = dbm;
-		this.idCliente = idCliente;
 		initialize();
 	}
 
 	public ClientiAdd(JFrame frame, DBManager dbm) {
 		super(frame, true);
-		this.dbm=dbm;
-		this.padre=frame;
-		this.idCliente = idCliente;
 		initialize();
 	}
 
@@ -186,7 +176,7 @@ public class ClientiAdd extends JDialog {
 				btnInserisci.setText("Inserisci"); // Generated
 				btnInserisci.addActionListener(new MyActionListener());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return btnInserisci;
@@ -225,7 +215,7 @@ public class ClientiAdd extends JDialog {
 				jPanel.add(getBtnInserisci(), null); // Generated
 				jPanel.add(getBtnChiudi(), null); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return jPanel;
@@ -243,7 +233,7 @@ public class ClientiAdd extends JDialog {
 				jScrollPane.setBounds(new Rectangle(280, 103, 140, 19)); // Generated
 				jScrollPane.setViewportView(getTxtNote()); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return jScrollPane;
@@ -262,7 +252,7 @@ public class ClientiAdd extends JDialog {
 						getPnlDatiPersonali(), null); // Generated
 				jTabbedPane.addTab("Altri dati", null, getPnlAltriDati(), null); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return jTabbedPane;
@@ -311,7 +301,7 @@ public class ClientiAdd extends JDialog {
 				pnlAltriDati.add(getTxtWebSite(), null); // Generated
 				pnlAltriDati.add(getJScrollPane(), null); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return pnlAltriDati;
@@ -329,7 +319,7 @@ public class ClientiAdd extends JDialog {
 				pnlCentrale.setLayout(new BorderLayout()); // Generated
 				pnlCentrale.add(getJTabbedPane(), BorderLayout.CENTER); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return pnlCentrale;
@@ -387,7 +377,7 @@ public class ClientiAdd extends JDialog {
 				pnlDatiPersonali.add(getTxtPiva(), null); // Generated
 				pnlDatiPersonali.add(getBtnProvincia(), null);
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return pnlDatiPersonali;
@@ -408,7 +398,7 @@ public class ClientiAdd extends JDialog {
 				txtCap.setDocument(new UpperTextDocument());
 
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtCap;
@@ -427,7 +417,7 @@ public class ClientiAdd extends JDialog {
 				txtCell.setBounds(new Rectangle(280, 21, 140, 20)); // Generated
 				txtCell.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtCell;
@@ -446,7 +436,7 @@ public class ClientiAdd extends JDialog {
 				txtCitta.setBounds(new Rectangle(104, 132, 180, 20)); // Generated
 				txtCitta.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtCitta;
@@ -465,7 +455,7 @@ public class ClientiAdd extends JDialog {
 				txtCodFisc.setBounds(new Rectangle(6, 172, 140, 20)); // Generated
 				txtCodFisc.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtCodFisc;
@@ -484,7 +474,7 @@ public class ClientiAdd extends JDialog {
 				txtCognome.setBounds(new Rectangle(191, 49, 181, 20)); // Generated
 				txtCognome.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtCognome;
@@ -503,7 +493,7 @@ public class ClientiAdd extends JDialog {
 				txtEmail.setBounds(new Rectangle(280, 62, 140, 20)); // Generated
 				txtEmail.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtEmail;
@@ -522,7 +512,7 @@ public class ClientiAdd extends JDialog {
 				txtFax.setBounds(new Rectangle(5, 62, 140, 20)); // Generated
 				txtFax.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtFax;
@@ -541,7 +531,7 @@ public class ClientiAdd extends JDialog {
 				txtNome.setBounds(new Rectangle(6, 49, 180, 20)); // Generated
 				txtNome.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtNome;
@@ -559,7 +549,7 @@ public class ClientiAdd extends JDialog {
 				txtNote.setDocument(new UpperTextDocument());
 				txtNote.setLineWrap(true);
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtNote;
@@ -578,7 +568,7 @@ public class ClientiAdd extends JDialog {
 				txtPiva.setBounds(new Rectangle(191, 172, 140, 20)); // Generated
 				txtPiva.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtPiva;
@@ -597,7 +587,7 @@ public class ClientiAdd extends JDialog {
 				cmbProvincia.setBounds(new Rectangle(294, 131, 180, 20)); // Generated
 
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return cmbProvincia;
@@ -616,7 +606,7 @@ public class ClientiAdd extends JDialog {
 				txtTel.setBounds(new Rectangle(5, 21, 140, 20)); // Generated
 				txtTel.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtTel;
@@ -635,7 +625,7 @@ public class ClientiAdd extends JDialog {
 				txtVia.setBounds(new Rectangle(6, 90, 366, 20)); // Generated
 				txtVia.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtVia;
@@ -654,7 +644,7 @@ public class ClientiAdd extends JDialog {
 				txtWebSite.setBounds(new Rectangle(5, 103, 270, 20)); // Generated
 				txtWebSite.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return txtWebSite;
@@ -676,7 +666,8 @@ public class ClientiAdd extends JDialog {
 	}
 
 	private void inserisci() {
-		Cliente c = new Cliente();
+		Clienti c = new Clienti();
+		c.setIdcliente(DBManager.getIstanceSingleton().getNewID("clienti", "idcliente"));
 		c.setNome(txtNome.getText());
 		c.setCognome(txtCognome.getText());
 		c.setPiva(txtPiva.getText());
@@ -684,17 +675,25 @@ public class ClientiAdd extends JDialog {
 		c.setVia(txtVia.getText());
 		c.setCap(txtCap.getText());
 		c.setCitta(txtCitta.getText());
-		c.setProvincia(new Integer(cmbProvincia.getIDSelectedItem()));
-		c.setTelefono(txtTel.getText());
-		c.setCellulare(txtCell.getText());
+		ProvinciaHome.getInstance().begin();
+		try {
+			c.setProvincia(ProvinciaHome.getInstance().findById(new Long(cmbProvincia.getIDSelectedItem())));
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (FindByNotFoundException e) {
+			e.printStackTrace();
+		}
+		c.setTel(txtTel.getText());
+		c.setCell(txtCell.getText());
 		c.setFax(txtFax.getText());
 		c.setEmail(txtEmail.getText());
 		c.setWebsite(txtWebSite.getText());
 		c.setNote(txtNote.getText());
+		ClientiHome.getInstance().begin();
 		try {
-			c.insertCliente();
-		} catch (IDNonValido e) {
-			// TODO Auto-generated catch block
+			ClientiHome.getInstance().persist(c);
+			ClientiHome.getInstance().commit();
+		} catch (PersistEntityException e) {
 			e.printStackTrace();
 		}
 		dispose();
@@ -730,7 +729,7 @@ public class ClientiAdd extends JDialog {
 			btnProvincia.setText("...");
 			btnProvincia.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					gestioneProvincia(); // TODO Auto-generated Event stub actionPerformed()
+					gestioneProvincia();
 				}
 			});
 		}

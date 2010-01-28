@@ -2522,6 +2522,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 					+ "FROM Articoli AS A, Carichi AS C, DettaglioCarichi AS D, Fornitori AS F "
 					+ "WHERE A.idarticolo=D.articoli.idarticolo AND C.idcarico=D.carichi.idcarico AND C.fornitori.idfornitore=F.idfornitore and C.idcarico="
 					+ idcarico;
+				CarichiHome.getInstance().begin();
 				ArrayList<Object[]> resultObject = (ArrayList<Object[]>)CarichiHome.getInstance()
 					.getSessionFactory().getCurrentSession().createQuery(query.toString()).list();
 
@@ -2598,12 +2599,13 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			JOptionPane.showMessageDialog(this, "Creazione effettuata con successo!!!", "Stampa File XLS", 1);
 
 		} catch (IOException e) {
+			JOptionPane.showMessageDialog(this, "Si \u00E8 verificato un errore durante il salvataggio!!!", "Stampa File XLS", 1);
 			e.printStackTrace();
 		} catch (RowsExceededException e) {
-			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(this, "Si \u00E8 verificato un errore durante il salvataggio!!!", "Stampa File XLS", 1);
 			e.printStackTrace();
 		} catch (WriteException e) {
-			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(this, "Si \u00E8 verificato un errore durante il salvataggio!!!", "Stampa File XLS", 1);
 			e.printStackTrace();
 		} 
 	}

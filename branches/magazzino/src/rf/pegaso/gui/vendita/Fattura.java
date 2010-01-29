@@ -43,7 +43,6 @@ import rf.myswing.util.MyTableCellRendererAlignment;
 import rf.myswing.util.QuantitaDisponibileEditorSQL;
 import rf.pegaso.db.model.DdtFatturaModel;
 import rf.pegaso.db.model.VenditeModel;
-import rf.pegaso.db.tabelle.Cliente;
 import rf.pegaso.db.tabelle.DettaglioScarico;
 import rf.pegaso.db.tabelle.Pagamento;
 import rf.pegaso.db.tabelle.Scarico;
@@ -784,18 +783,18 @@ public class Fattura extends JFrame{
 //			e.printStackTrace();
 //		}
 
-		Cliente c = new Cliente();
-		try {
-
-			String as[] = (String[]) c.allClienti();
-			// carichiamo tutti i dati in due array
-			// da passre al combobox
-			((IDJComboBox) cmbClienti).caricaNewValueComboBox(as, true);
-		} catch (SQLException e) {
-			messaggioCampoMancante("Errore caricamento fornitori nel combobox", "ERRORE");
-			e.printStackTrace();
-		}
-		AutoCompletion.enable(cmbClienti);
+//		Cliente c = new Cliente();
+//		try {
+//
+//			String as[] = (String[]) c.allClienti();
+//			// carichiamo tutti i dati in due array
+//			// da passre al combobox
+//			((IDJComboBox) cmbClienti).caricaNewValueComboBox(as, true);
+//		} catch (SQLException e) {
+//			messaggioCampoMancante("Errore caricamento fornitori nel combobox", "ERRORE");
+//			e.printStackTrace();
+//		}
+//		AutoCompletion.enable(cmbClienti);
 	}
 
 	private void caricaPagamento(){

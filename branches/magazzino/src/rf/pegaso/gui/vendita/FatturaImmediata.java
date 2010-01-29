@@ -52,9 +52,7 @@ import rf.myswing.util.QuantitaDisponibileEditor;
 import rf.pegaso.db.model.FatturaViewModel;
 import rf.pegaso.db.model.VenditeModel;
 import rf.pegaso.db.tabelle.Articolo;
-import rf.pegaso.db.tabelle.Aspetto;
 import rf.pegaso.db.tabelle.Causale;
-import rf.pegaso.db.tabelle.Cliente;
 import rf.pegaso.db.tabelle.DettaglioScarico;
 import rf.pegaso.db.tabelle.Pagamento;
 import rf.pegaso.db.tabelle.Scarico;
@@ -993,34 +991,34 @@ public class FatturaImmediata extends JFrame{
 			try {
 				cmbClienti = new IDJComboBox();
 				cmbClienti.setBounds(new Rectangle(100, 50, 270, 26));
-				cmbClienti.getEditor().getEditorComponent().addFocusListener(new java.awt.event.FocusAdapter() {
-					public void focusLost(java.awt.event.FocusEvent e) {
-						if ( cmbClienti.getIDSelectedItem() != null ){
-							Cliente c = new Cliente();
-							try {
-								c.caricaDati(Integer.parseInt(cmbClienti.getIDSelectedItem()));
-							} catch (NumberFormatException e1) {
-								e1.printStackTrace();
-							} catch (SQLException e1) {
-								e1.printStackTrace();
-							}
-							String dest = "";
-							if ( c.getVia() != null )
-								dest += c.getVia()+" ";
-							if ( c.getCap() != null )
-								dest += c.getCap()+" ";
-							if ( c.getCitta() != null )
-								dest += c.getCitta()+" ";
-							try {
-								if ( c.getProvinciaToString() != null )
-									dest += c.getProvincia();
-							} catch (SQLException e1) {
-								e1.printStackTrace();
-							}
-							txtDestinazione.setText(dest);
-						}
-					}
-				});
+//				cmbClienti.getEditor().getEditorComponent().addFocusListener(new java.awt.event.FocusAdapter() {
+//					public void focusLost(java.awt.event.FocusEvent e) {
+//						if ( cmbClienti.getIDSelectedItem() != null ){
+//							Cliente c = new Cliente();
+//							try {
+//								c.caricaDati(Integer.parseInt(cmbClienti.getIDSelectedItem()));
+//							} catch (NumberFormatException e1) {
+//								e1.printStackTrace();
+//							} catch (SQLException e1) {
+//								e1.printStackTrace();
+//							}
+//							String dest = "";
+//							if ( c.getVia() != null )
+//								dest += c.getVia()+" ";
+//							if ( c.getCap() != null )
+//								dest += c.getCap()+" ";
+//							if ( c.getCitta() != null )
+//								dest += c.getCitta()+" ";
+//							try {
+//								if ( c.getProvinciaToString() != null )
+//									dest += c.getProvincia();
+//							} catch (SQLException e1) {
+//								e1.printStackTrace();
+//							}
+//							txtDestinazione.setText(dest);
+//						}
+//					}
+//				});
 			} catch (Throwable throwable) {
 			}
 		return cmbClienti;
@@ -1079,20 +1077,20 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	private void caricaClienti(){
-		Cliente c = new Cliente();
-		try {
-
-			String as[] = (String[]) c.allClienti();
-			// carichiamo tutti i dati in due array
-			// da passre al combobox
-			((IDJComboBox) cmbClienti).caricaNewValueComboBox(as, false);
-			((IDJComboBox) cmbClientiR).caricaNewValueComboBox(as, false);
-		} catch (SQLException e) {
-			messaggioCampoMancante("Errore caricamento clienti nel combobox", "ERRORE");
-			e.printStackTrace();
-		}
-		AutoCompletion.enable(cmbClienti);
-		AutoCompletion.enable(cmbClientiR);
+//		Cliente c = new Cliente();
+//		try {
+//
+//			String as[] = (String[]) c.allClienti();
+//			// carichiamo tutti i dati in due array
+//			// da passre al combobox
+//			((IDJComboBox) cmbClienti).caricaNewValueComboBox(as, false);
+//			((IDJComboBox) cmbClientiR).caricaNewValueComboBox(as, false);
+//		} catch (SQLException e) {
+//			messaggioCampoMancante("Errore caricamento clienti nel combobox", "ERRORE");
+//			e.printStackTrace();
+//		}
+//		AutoCompletion.enable(cmbClienti);
+//		AutoCompletion.enable(cmbClientiR);
 	}
 
 	private void caricaDescrizione(){
@@ -1143,18 +1141,18 @@ public class FatturaImmediata extends JFrame{
 	}
 
 	private void caricaAspetto(){
-		Aspetto a = new Aspetto();
-		try {
-
-			String as[] = (String[]) a.allAspetti();
-			// carichiamo tutti i dati in due array
-			// da passre al combobox
-			((IDJComboBox) cmbAspetto).caricaNewValueComboBox(as, false);
-		} catch (SQLException e) {
-			messaggioCampoMancante("Errore caricamento aspetto nel combobox", "ERRORE");
-			e.printStackTrace();
-		}
-		AutoCompletion.enable(cmbAspetto);
+//		Aspetto a = new Aspetto();
+//		try {
+//
+//			String as[] = (String[]) a.allAspetti();
+//			// carichiamo tutti i dati in due array
+//			// da passre al combobox
+//			((IDJComboBox) cmbAspetto).caricaNewValueComboBox(as, false);
+//		} catch (SQLException e) {
+//			messaggioCampoMancante("Errore caricamento aspetto nel combobox", "ERRORE");
+//			e.printStackTrace();
+//		}
+//		AutoCompletion.enable(cmbAspetto);
 	}
 
 	/**

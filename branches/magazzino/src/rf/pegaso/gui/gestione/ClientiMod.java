@@ -1,7 +1,7 @@
 package rf.pegaso.gui.gestione;
 
-import it.infolabs.hibernate.Clienti;
-import it.infolabs.hibernate.ClientiHome;
+import it.infolabs.hibernate.Cliente;
+import it.infolabs.hibernate.ClienteHome;
 import it.infolabs.hibernate.ProvinciaHome;
 import it.infolabs.hibernate.exception.FindByNotFoundException;
 import it.infolabs.hibernate.exception.PersistEntityException;
@@ -650,7 +650,7 @@ public class ClientiMod extends JDialog {
 	/**
 	 *
 	 */
-	private void impostaCampi(Clienti c) {
+	private void impostaCampi(Cliente c) {
 		txtNome.setText(c.getNome());
 		txtCognome.setText(c.getCognome());
 		txtPiva.setText(c.getPiva());
@@ -679,10 +679,10 @@ public class ClientiMod extends JDialog {
 		this.setTitle("Modifica Clienti"); // Generated
 		this.setContentPane(getJContentPane());
 		UtilGUI.centraDialog(this);
-		ClientiHome.getInstance().begin();
-		Clienti c;
+		ClienteHome.getInstance().begin();
+		Cliente c;
 		try {
-			c = ClientiHome.getInstance().findById(idCliente);
+			c = ClienteHome.getInstance().findById(idCliente);
 			caricaProvince(cmbProvincia);
 			impostaCampi(c);
 		} catch (FindByNotFoundException e) {
@@ -717,7 +717,7 @@ public class ClientiMod extends JDialog {
 				JOptionPane.INFORMATION_MESSAGE);
 		if (scelta != JOptionPane.YES_OPTION)
 			return;
-		Clienti c = new Clienti();
+		Cliente c = new Cliente();
 		c.setIdcliente(this.idCliente);
 		c.setNome(txtNome.getText());
 		c.setCognome(txtCognome.getText());
@@ -740,9 +740,9 @@ public class ClientiMod extends JDialog {
 		c.setEmail(txtEmail.getText());
 		c.setWebsite(txtWebSite.getText());
 		c.setNote(txtNote.getText());
-		ClientiHome.getInstance().begin();
+		ClienteHome.getInstance().begin();
 		try {
-			ClientiHome.getInstance().persist(c);
+			ClienteHome.getInstance().persist(c);
 		} catch (PersistEntityException e) {
 			e.printStackTrace();
 		}

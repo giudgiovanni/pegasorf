@@ -1,6 +1,6 @@
 package rf.pegaso.gui.gestione;
 
-import it.infolabs.hibernate.ClientiHome;
+import it.infolabs.hibernate.ClienteHome;
 import it.infolabs.hibernate.exception.DeleteEntityException;
 import it.infolabs.hibernate.exception.FindByNotFoundException;
 
@@ -131,9 +131,9 @@ public class ClientiGestione extends JDialog {
 			return;
 		int riga = tblClienti.getSelectedRow();
 		int idCliente = ((Number) tblClienti.getValueAt(riga, 0)).intValue();
-		ClientiHome.getInstance().begin();
+		ClienteHome.getInstance().begin();
 		try {
-			ClientiHome.getInstance().delete(ClientiHome.getInstance().findById(idCliente));
+			ClienteHome.getInstance().delete(ClienteHome.getInstance().findById(idCliente));
 		} catch (DeleteEntityException e) {
 			e.printStackTrace();
 		} catch (FindByNotFoundException e) {

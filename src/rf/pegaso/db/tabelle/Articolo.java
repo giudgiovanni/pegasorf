@@ -7,7 +7,7 @@ package rf.pegaso.db.tabelle;
 
 import it.infolabs.hibernate.Articoli;
 import it.infolabs.hibernate.ArticoliHome;
-import it.infolabs.hibernate.FornitoriHome;
+import it.infolabs.hibernate.FornitoreHome;
 import it.infolabs.hibernate.PannelliHome;
 import it.infolabs.hibernate.RepartiHome;
 import it.infolabs.hibernate.UmHome;
@@ -679,8 +679,8 @@ public class Articolo {
 		art.setDataInserimento(dataInserimento);
 		if ( idFornitore > 0 ){
 			try {
-				FornitoriHome.getInstance().begin();
-				art.setFornitori(FornitoriHome.getInstance().findById(idFornitore));
+				FornitoreHome.getInstance().begin();
+				art.setFornitori(FornitoreHome.getInstance().findById(idFornitore));
 			} catch (FindByNotFoundException e) {
 			}
 		}
@@ -921,8 +921,8 @@ public class Articolo {
 		art.setDataInserimento(dataInserimento);
 		if ( idFornitore > 0 ){
 			try {
-				FornitoriHome.getInstance().begin();
-				art.setFornitori(FornitoriHome.getInstance().findById(idFornitore));
+				FornitoreHome.getInstance().begin();
+				art.setFornitori(FornitoreHome.getInstance().findById(idFornitore));
 			} catch (FindByNotFoundException e) {
 			}
 		}

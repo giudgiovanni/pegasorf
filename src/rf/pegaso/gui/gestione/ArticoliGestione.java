@@ -188,16 +188,12 @@ public class ArticoliGestione extends JFrame {
 			ArticoloAddMod mod = new ArticoloAddMod((JFrame)this, idNewArticolo,ArticoloAddMod.MOD);
 			mod.setVisible(true);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IDNonValido e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (CodiceBarreEsistente e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (CodiceBarreInesistente e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -274,7 +270,7 @@ public class ArticoliGestione extends JFrame {
 				btnChiudi.setText("Chiudi");
 				btnChiudi.addActionListener(new MyActionListener());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return btnChiudi;
@@ -294,7 +290,7 @@ public class ArticoliGestione extends JFrame {
 				btnElimina.setPreferredSize(new Dimension(82, 26)); // Generated
 				btnElimina.addActionListener(new MyActionListener());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return btnElimina;
@@ -313,7 +309,7 @@ public class ArticoliGestione extends JFrame {
 				btnModifica.setBounds(new Rectangle(102, 5, 82, 26)); // Generated
 				btnModifica.addActionListener(new MyActionListener());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return btnModifica;
@@ -334,7 +330,7 @@ public class ArticoliGestione extends JFrame {
 				btnNuovo.setPreferredSize(new Dimension(82, 26)); // Generated
 				btnNuovo.addActionListener(new MyActionListener());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return btnNuovo;
@@ -366,7 +362,7 @@ public class ArticoliGestione extends JFrame {
 				jScrollPane = new JScrollPane();
 				jScrollPane.setViewportView(getTblArticoli()); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return jScrollPane;
@@ -383,7 +379,7 @@ public class ArticoliGestione extends JFrame {
 				jSeparator = new JSeparator();
 				jSeparator.setBounds(new Rectangle(0, 0, 0, 0)); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return jSeparator;
@@ -401,7 +397,7 @@ public class ArticoliGestione extends JFrame {
 				pnlCentrale.setLayout(new BorderLayout()); // Generated
 				pnlCentrale.add(getJScrollPane(), BorderLayout.CENTER); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return pnlCentrale;
@@ -428,7 +424,7 @@ public class ArticoliGestione extends JFrame {
 				pnlNord.add(getBtnDuplica(), null); // Generated
 				pnlNord.add(getBtnStampa(), null); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return pnlNord;
@@ -488,6 +484,14 @@ public class ArticoliGestione extends JFrame {
 				col.setMinWidth(0);
 				col.setMaxWidth(100);
 				col.setPreferredWidth(100);
+				
+				col = tblArticoli.getColumn("Iva %");
+				DefaultTableCellRenderer ivaColumnRenderer = new DefaultTableCellRenderer();
+				ivaColumnRenderer.setHorizontalAlignment(JLabel.CENTER);
+				col.setCellRenderer(ivaColumnRenderer);
+				col.setMinWidth(0);
+				col.setMaxWidth(50);
+				col.setPreferredWidth(50);
 
 				col = tblArticoli.getColumn("Fornitore");
 				DefaultTableCellRenderer fornitoreRenderer = new DefaultTableCellRenderer();
@@ -573,7 +577,7 @@ public class ArticoliGestione extends JFrame {
 				btnDuplica.setText("Duplica");
 				btnDuplica.addActionListener(new MyActionListener());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return btnDuplica;
@@ -592,7 +596,7 @@ public class ArticoliGestione extends JFrame {
 				btnStampa.setText("Stampa");
 				btnStampa.addActionListener(new MyActionListener());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return btnStampa;

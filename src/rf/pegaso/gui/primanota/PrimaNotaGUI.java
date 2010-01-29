@@ -1,6 +1,6 @@
 package rf.pegaso.gui.primanota;
 
-import it.infolabs.hibernate.ClientiHome;
+import it.infolabs.hibernate.ClienteHome;
 import it.infolabs.hibernate.exception.FindAllEntityException;
 
 import java.awt.BorderLayout;
@@ -1040,8 +1040,8 @@ public class PrimaNotaGUI extends JFrame {
 	private void caricaClienti(JComboBox cmbFornitori) {
 		cmbFornitori.removeAllItems();
 		try {
-			ClientiHome.getInstance().begin();
-			String as[] = (String[]) ClientiHome.getInstance().allClienti().toArray();
+			ClienteHome.getInstance().begin();
+			String as[] = (String[]) ClienteHome.getInstance().allClienti().toArray();
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
 			((IDJComboBox) cmbClienti).caricaNewValueComboBox(as, false);

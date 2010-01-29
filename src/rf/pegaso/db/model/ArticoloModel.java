@@ -14,9 +14,8 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Order;
 
-import rf.utility.Constant;
 import rf.utility.db.DBEvent;
 import rf.utility.db.DBStateChange;
 import rf.utility.db.RowEvent;
@@ -48,9 +47,10 @@ public class ArticoloModel extends AbstractTableModel implements DBStateChange {
 		ArrayList<String> col = new ArrayList<String>();
 		col.add("IdArticolo");
 		col.add("Codice");
-		col.add("Descrizione");
+		col.add("Descrizione");		
 		col.add("Prezzo Acquisto");
 		col.add("Prezzo Listino");
+		col.add("Iva %");
 		col.add("Fornitore");
 		return col;
 	}
@@ -82,7 +82,7 @@ public class ArticoloModel extends AbstractTableModel implements DBStateChange {
 		}
 		else if ( c == 2 ){
 			return tmp.getDescrizione();
-		}
+		}		
 		else if ( c == 3 ){
 			Double d = tmp.getPrezzoAcquisto();
 			DecimalFormat numberFormatter = new DecimalFormat("#,##0.00");
@@ -96,6 +96,9 @@ public class ArticoloModel extends AbstractTableModel implements DBStateChange {
 			numberFormatter.setMaximumFractionDigits(2);
 			numberFormatter.setMinimumFractionDigits(2);
 			return numberFormatter.format(d);
+		}
+		else if ( c == 5 ){
+			return tmp.getIva();
 		}
 		else{
 			if ( tmp.getFornitori() != null ){
@@ -127,7 +130,8 @@ public class ArticoloModel extends AbstractTableModel implements DBStateChange {
 	 */
 	private void recuperaDati() throws FindAllEntityException {
 		ArticoliHome.getInstance().begin();
-		Criteria crit = ArticoliHome.getInstance().getSessionFactory().getCurrentSession().createCriteria("it.infolabs.hibernate.Articoli");
+		Criteria crit = ArticoliHome.getInstance().getSessionFactory()
+			.getCurrentSession().createCriteria("it.infolabs.hibernate.Articoli").addOrder(Order.asc("descrizione"));
 		resultList = crit.list();
 	}
 

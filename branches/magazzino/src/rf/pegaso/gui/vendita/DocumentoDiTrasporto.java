@@ -1,5 +1,8 @@
 package rf.pegaso.gui.vendita;
 
+import it.infolabs.hibernate.Aspetto;
+import it.infolabs.hibernate.Cliente;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -57,7 +60,6 @@ import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.Causale;
 import rf.pegaso.db.tabelle.DettaglioScarico;
 import rf.pegaso.db.tabelle.Scarico;
-import rf.pegaso.db.tabelle.Vendita;
 import rf.pegaso.gui.gestione.ClientiAdd;
 import rf.utility.ControlloDati;
 import rf.utility.db.DBManager;

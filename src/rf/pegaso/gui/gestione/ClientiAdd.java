@@ -1,7 +1,7 @@
 package rf.pegaso.gui.gestione;
 
-import it.infolabs.hibernate.Clienti;
-import it.infolabs.hibernate.ClientiHome;
+import it.infolabs.hibernate.Cliente;
+import it.infolabs.hibernate.ClienteHome;
 import it.infolabs.hibernate.ProvinciaHome;
 import it.infolabs.hibernate.exception.FindByNotFoundException;
 import it.infolabs.hibernate.exception.PersistEntityException;
@@ -666,7 +666,7 @@ public class ClientiAdd extends JDialog {
 	}
 
 	private void inserisci() {
-		Clienti c = new Clienti();
+		Cliente c = new Cliente();
 		c.setIdcliente(DBManager.getIstanceSingleton().getNewID("clienti", "idcliente"));
 		c.setNome(txtNome.getText());
 		c.setCognome(txtCognome.getText());
@@ -689,10 +689,10 @@ public class ClientiAdd extends JDialog {
 		c.setEmail(txtEmail.getText());
 		c.setWebsite(txtWebSite.getText());
 		c.setNote(txtNote.getText());
-		ClientiHome.getInstance().begin();
+		ClienteHome.getInstance().begin();
 		try {
-			ClientiHome.getInstance().persist(c);
-			ClientiHome.getInstance().commit();
+			ClienteHome.getInstance().persist(c);
+			ClienteHome.getInstance().commit();
 		} catch (PersistEntityException e) {
 			e.printStackTrace();
 		}

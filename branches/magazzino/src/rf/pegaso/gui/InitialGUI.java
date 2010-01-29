@@ -1,6 +1,3 @@
-/**
- *
- */
 package rf.pegaso.gui;
 
 import it.infolabs.hibernate.ArticoliHome;
@@ -14,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyVetoException;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -33,11 +29,11 @@ import rf.myswing.GregorianCalendarFormat;
 import rf.pegaso.gui.internalframe.ArchivioInternalFrame;
 import rf.pegaso.gui.internalframe.ConfigurazioneInternalFrame;
 import rf.pegaso.gui.internalframe.PrimaNotaInternalFrame;
-import rf.pegaso.gui.internalframe.VenditaInternalFrameOLD;
 import rf.pegaso.gui.internalframe.VenditaInternalFrame;
 import rf.utility.db.DBManager;
 import rf.utility.db.UtilityDBManager;
 import rf.utility.gui.UtilGUI;
+import javax.swing.JProgressBar;
 
 /**
  * @author Hunter
@@ -93,11 +89,11 @@ public class InitialGUI extends JFrame {
 
 	private JPanel pnlSud = null;
 
-	private InitialGUI padre;  //  @jve:decl-index=0:visual-constraint="141,8"
-
-	private JButton jButton = null;
+	private InitialGUI padre;
 
 	private static InitialGUI mainInstance;
+
+	private JProgressBar jProgressBar = null;
 
 	/**
 	 * This is the default constructor
@@ -217,7 +213,7 @@ public class InitialGUI extends JFrame {
 				archivioInternalFrame
 						.setBounds(new Rectangle(260, 28, 369, 236)); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return archivioInternalFrame;
@@ -237,7 +233,7 @@ public class InitialGUI extends JFrame {
 				btnArchivio.setPreferredSize(new Dimension(100, 30)); // Generated
 				btnArchivio.addActionListener(myActionListener);
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return btnArchivio;
@@ -256,7 +252,7 @@ public class InitialGUI extends JFrame {
 				btnConfigurazione.setPreferredSize(new Dimension(100, 30)); // Generated
 				btnConfigurazione.addActionListener(myActionListener);
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return btnConfigurazione;
@@ -276,7 +272,7 @@ public class InitialGUI extends JFrame {
 				btnPrimaNota.setPreferredSize(new Dimension(100, 30)); // Generated
 				btnPrimaNota.addActionListener(myActionListener);
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return btnPrimaNota;
@@ -295,7 +291,7 @@ public class InitialGUI extends JFrame {
 				btnVendita.setPreferredSize(new Dimension(100, 30)); // Generated
 				btnVendita.addActionListener(myActionListener);
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return btnVendita;
@@ -329,9 +325,9 @@ public class InitialGUI extends JFrame {
 				jDesktopPane.add(getArchivioInternalFrame(), null);
 				jDesktopPane.add(getConfigurazioneInternalFrame(),null);
 				jDesktopPane.add(getVenditaInternalFrame(), null);
-//				jDesktopPane.add(getPrimanotaInternalFrame(), null);
+				jDesktopPane.add(getPrimanotaInternalFrame(), null);
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return jDesktopPane;
@@ -344,7 +340,7 @@ public class InitialGUI extends JFrame {
 				primanotaInternalFrame
 						.setBounds(new Rectangle(260, 28, 369, 236)); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return primanotaInternalFrame;
@@ -357,7 +353,7 @@ public class InitialGUI extends JFrame {
 				confInternalFrame
 						.setBounds(new Rectangle(260, 28, 369, 236)); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return confInternalFrame;
@@ -370,7 +366,7 @@ public class InitialGUI extends JFrame {
 				venditaInternalFrame
 						.setBounds(new Rectangle(260, 28, 369, 236)); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return venditaInternalFrame;
@@ -387,10 +383,11 @@ public class InitialGUI extends JFrame {
 				jJToolBarBar = new JToolBar();
 				jJToolBarBar.add(getBtnArchivio()); // Generated
 				jJToolBarBar.add(getBtnVendita()); // Generated
-//				jJToolBarBar.add(getBtnPrimaNota()); // Generated
+				jJToolBarBar.add(getBtnPrimaNota()); // Generated
 				jJToolBarBar.add(getBtnConfigurazione());
+				jJToolBarBar.add(getJProgressBar());
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return jJToolBarBar;
@@ -408,7 +405,7 @@ public class InitialGUI extends JFrame {
 				pnlCentro.setLayout(new BorderLayout()); // Generated
 				pnlCentro.add(getJDesktopPane(), BorderLayout.CENTER); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return pnlCentro;
@@ -429,7 +426,7 @@ public class InitialGUI extends JFrame {
 				pnlNord.setPreferredSize(new Dimension(0, 60)); // Generated
 				pnlNord.add(getJJToolBarBar(), BorderLayout.CENTER); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return pnlNord;
@@ -451,7 +448,7 @@ public class InitialGUI extends JFrame {
 				pnlSud.setPreferredSize(new Dimension(0, 20)); // Generated
 				pnlSud.add(lblFooter, null); // Generated
 			} catch (java.lang.Throwable e) {
-				// TODO: Something
+				e.printStackTrace();
 			}
 		}
 		return pnlSud;
@@ -553,6 +550,19 @@ public class InitialGUI extends JFrame {
 	private void inizializzaAscoltatori() {
 		myActionListener = new MyActionListener();
 
+	}
+
+	/**
+	 * This method initializes jProgressBar	
+	 * 	
+	 * @return javax.swing.JProgressBar	
+	 */
+	private JProgressBar getJProgressBar() {
+		if (jProgressBar == null) {
+			jProgressBar = new JProgressBar();
+			jProgressBar.setBounds(new Rectangle(60, 20, 500, 5));
+		}
+		return jProgressBar;
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="21,79"

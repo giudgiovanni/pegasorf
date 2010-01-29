@@ -125,7 +125,7 @@ public class ClienteHome extends BusinessObjectHome {
 		}
 	}
 	
-	public List<Cliente> allCliente() throws FindAllEntityException {
+	public List<Cliente> allClienti() throws FindAllEntityException {
 		log.debug("finding allCliente instance");
 		try {
 			List<Cliente> results = (List<Cliente>) sessionFactory

@@ -33,7 +33,6 @@ import rf.pegaso.gui.internalframe.VenditaInternalFrame;
 import rf.utility.db.DBManager;
 import rf.utility.db.UtilityDBManager;
 import rf.utility.gui.UtilGUI;
-import javax.swing.JProgressBar;
 
 /**
  * @author Hunter
@@ -92,8 +91,6 @@ public class InitialGUI extends JFrame {
 	private InitialGUI padre;
 
 	private static InitialGUI mainInstance;
-
-	private JProgressBar jProgressBar = null;
 
 	/**
 	 * This is the default constructor
@@ -385,7 +382,6 @@ public class InitialGUI extends JFrame {
 				jJToolBarBar.add(getBtnVendita()); // Generated
 				jJToolBarBar.add(getBtnPrimaNota()); // Generated
 				jJToolBarBar.add(getBtnConfigurazione());
-				jJToolBarBar.add(getJProgressBar());
 			} catch (java.lang.Throwable e) {
 				e.printStackTrace();
 			}
@@ -550,19 +546,6 @@ public class InitialGUI extends JFrame {
 	private void inizializzaAscoltatori() {
 		myActionListener = new MyActionListener();
 
-	}
-
-	/**
-	 * This method initializes jProgressBar	
-	 * 	
-	 * @return javax.swing.JProgressBar	
-	 */
-	private JProgressBar getJProgressBar() {
-		if (jProgressBar == null) {
-			jProgressBar = new JProgressBar();
-			jProgressBar.setBounds(new Rectangle(60, 20, 500, 5));
-		}
-		return jProgressBar;
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="21,79"

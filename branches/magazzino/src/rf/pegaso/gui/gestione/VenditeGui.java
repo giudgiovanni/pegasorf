@@ -6,7 +6,7 @@ package rf.pegaso.gui.gestione;
 import org.apache.log4j.Logger;
 
 
-import it.infolabs.hibernate.OrdiniHome;
+import it.infolabs.hibernate.ScaricoHome;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

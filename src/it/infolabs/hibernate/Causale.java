@@ -12,9 +12,9 @@ public class Causale implements java.io.Serializable {
 
 	private long idcausale;
 	private String nome;
-	private Set<Ordini> ordinis = new HashSet<Ordini>(0);
-	private Set<Ordini> ordinis_1 = new HashSet<Ordini>(0);
-	private Set<Ordini> ordinis_2 = new HashSet<Ordini>(0);
+	private Set<Scarico> ordinis = new HashSet<Scarico>(0);
+	private Set<Scarico> ordinis_1 = new HashSet<Scarico>(0);
+	private Set<Scarico> ordinis_2 = new HashSet<Scarico>(0);
 
 	public Causale() {
 	}
@@ -24,8 +24,8 @@ public class Causale implements java.io.Serializable {
 		this.nome = nome;
 	}
 
-	public Causale(long idcausale, String nome, Set<Ordini> ordinis,
-			Set<Ordini> ordinis_1, Set<Ordini> ordinis_2) {
+	public Causale(long idcausale, String nome, Set<Scarico> ordinis,
+			Set<Scarico> ordinis_1, Set<Scarico> ordinis_2) {
 		this.idcausale = idcausale;
 		this.nome = nome;
 		this.ordinis = ordinis;
@@ -49,27 +49,27 @@ public class Causale implements java.io.Serializable {
 		this.nome = nome;
 	}
 
-	public Set<Ordini> getOrdinis() {
+	public Set<Scarico> getOrdinis() {
 		return this.ordinis;
 	}
 
-	public void setOrdinis(Set<Ordini> ordinis) {
+	public void setOrdinis(Set<Scarico> ordinis) {
 		this.ordinis = ordinis;
 	}
 
-	public Set<Ordini> getOrdinis_1() {
+	public Set<Scarico> getOrdinis_1() {
 		return this.ordinis_1;
 	}
 
-	public void setOrdinis_1(Set<Ordini> ordinis_1) {
+	public void setOrdinis_1(Set<Scarico> ordinis_1) {
 		this.ordinis_1 = ordinis_1;
 	}
 
-	public Set<Ordini> getOrdinis_2() {
+	public Set<Scarico> getOrdinis_2() {
 		return this.ordinis_2;
 	}
 
-	public void setOrdinis_2(Set<Ordini> ordinis_2) {
+	public void setOrdinis_2(Set<Scarico> ordinis_2) {
 		this.ordinis_2 = ordinis_2;
 	}
 

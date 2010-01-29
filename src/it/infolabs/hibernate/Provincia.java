@@ -13,12 +13,12 @@ public class Provincia implements java.io.Serializable {
 	private long idprovincia;
 	private String provincia;
 	private String targa;
-	private Set<Fornitori> fornitoris = new HashSet<Fornitori>(0);
-	private Set<Fornitori> fornitoris_1 = new HashSet<Fornitori>(0);
-	private Set<Fornitori> fornitoris_2 = new HashSet<Fornitori>(0);
-	private Set<Clienti> clientis = new HashSet<Clienti>(0);
-	private Set<Clienti> clientis_1 = new HashSet<Clienti>(0);
-	private Set<Clienti> clientis_2 = new HashSet<Clienti>(0);
+	private Set<Fornitore> fornitoris = new HashSet<Fornitore>(0);
+	private Set<Fornitore> fornitoris_1 = new HashSet<Fornitore>(0);
+	private Set<Fornitore> fornitoris_2 = new HashSet<Fornitore>(0);
+	private Set<Cliente> clientis = new HashSet<Cliente>(0);
+	private Set<Cliente> clientis_1 = new HashSet<Cliente>(0);
+	private Set<Cliente> clientis_2 = new HashSet<Cliente>(0);
 
 	public Provincia() {
 	}
@@ -29,9 +29,9 @@ public class Provincia implements java.io.Serializable {
 	}
 
 	public Provincia(long idprovincia, String provincia, String targa,
-			Set<Fornitori> fornitoris, Set<Fornitori> fornitoris_1,
-			Set<Fornitori> fornitoris_2, Set<Clienti> clientis,
-			Set<Clienti> clientis_1, Set<Clienti> clientis_2) {
+			Set<Fornitore> fornitoris, Set<Fornitore> fornitoris_1,
+			Set<Fornitore> fornitoris_2, Set<Cliente> clientis,
+			Set<Cliente> clientis_1, Set<Cliente> clientis_2) {
 		this.idprovincia = idprovincia;
 		this.provincia = provincia;
 		this.targa = targa;
@@ -67,51 +67,51 @@ public class Provincia implements java.io.Serializable {
 		this.targa = targa;
 	}
 
-	public Set<Fornitori> getFornitoris() {
+	public Set<Fornitore> getFornitoris() {
 		return this.fornitoris;
 	}
 
-	public void setFornitoris(Set<Fornitori> fornitoris) {
+	public void setFornitoris(Set<Fornitore> fornitoris) {
 		this.fornitoris = fornitoris;
 	}
 
-	public Set<Fornitori> getFornitoris_1() {
+	public Set<Fornitore> getFornitoris_1() {
 		return this.fornitoris_1;
 	}
 
-	public void setFornitoris_1(Set<Fornitori> fornitoris_1) {
+	public void setFornitoris_1(Set<Fornitore> fornitoris_1) {
 		this.fornitoris_1 = fornitoris_1;
 	}
 
-	public Set<Fornitori> getFornitoris_2() {
+	public Set<Fornitore> getFornitoris_2() {
 		return this.fornitoris_2;
 	}
 
-	public void setFornitoris_2(Set<Fornitori> fornitoris_2) {
+	public void setFornitoris_2(Set<Fornitore> fornitoris_2) {
 		this.fornitoris_2 = fornitoris_2;
 	}
 
-	public Set<Clienti> getClientis() {
+	public Set<Cliente> getClientis() {
 		return this.clientis;
 	}
 
-	public void setClientis(Set<Clienti> clientis) {
+	public void setClientis(Set<Cliente> clientis) {
 		this.clientis = clientis;
 	}
 
-	public Set<Clienti> getClientis_1() {
+	public Set<Cliente> getClientis_1() {
 		return this.clientis_1;
 	}
 
-	public void setClientis_1(Set<Clienti> clientis_1) {
+	public void setClientis_1(Set<Cliente> clientis_1) {
 		this.clientis_1 = clientis_1;
 	}
 
-	public Set<Clienti> getClientis_2() {
+	public Set<Cliente> getClientis_2() {
 		return this.clientis_2;
 	}
 
-	public void setClientis_2(Set<Clienti> clientis_2) {
+	public void setClientis_2(Set<Cliente> clientis_2) {
 		this.clientis_2 = clientis_2;
 	}
 

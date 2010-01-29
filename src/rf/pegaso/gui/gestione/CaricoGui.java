@@ -315,7 +315,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 					"RICERCA FALLITA", 1);
 			return;
 		}
-		ArticoliAddMod a = new ArticoliAddMod(this, id, 1);
+		ArticoloAddMod a = new ArticoloAddMod(this, id, 1);
 		a.setVisible(true);
 		double prezzo = 0.0D;
 		try {
@@ -1795,7 +1795,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 	protected void newArticolo() {
 		String codArticolo[] = new String[1];
-		ArticoliAddMod add = new ArticoliAddMod(this, 0, codArticolo);
+		ArticoloAddMod add = new ArticoloAddMod(this, 0, codArticolo);
 		add.setCloseOnOk(true);
 		add.setVisible(true);
 		txtCodBarre.setText(codArticolo[0]);

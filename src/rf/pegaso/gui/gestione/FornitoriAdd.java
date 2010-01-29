@@ -3,8 +3,8 @@
  */
 package rf.pegaso.gui.gestione;
 
-import it.infolabs.hibernate.Fornitori;
-import it.infolabs.hibernate.FornitoriHome;
+import it.infolabs.hibernate.Fornitore;
+import it.infolabs.hibernate.FornitoreHome;
 import it.infolabs.hibernate.Provincia;
 import it.infolabs.hibernate.ProvinciaHome;
 import it.infolabs.hibernate.exception.FindAllEntityException;
@@ -643,8 +643,8 @@ public class FornitoriAdd extends JDialog {
 
 	private void inserisci() {
 		try {
-			FornitoriHome.getInstance().begin();
-			Fornitori fornitore = new Fornitori();
+			FornitoreHome.getInstance().begin();
+			Fornitore fornitore = new Fornitore();
 			fornitore.setNome(txtNome.getText());
 			fornitore.setPiva(txtPiva.getText());
 			fornitore.setCodfisc(txtCodFisc.getText());
@@ -658,8 +658,8 @@ public class FornitoriAdd extends JDialog {
 			fornitore.setEmail(txtEmail.getText());
 			fornitore.setWebsite(txtWebSite.getText());
 			fornitore.setNote(txtNote.getText());		
-			FornitoriHome.getInstance().attachDirty(fornitore);
-			FornitoriHome.getInstance().commitAndClose();
+			FornitoreHome.getInstance().attachDirty(fornitore);
+			FornitoreHome.getInstance().commitAndClose();
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (FindByNotFoundException fe) {

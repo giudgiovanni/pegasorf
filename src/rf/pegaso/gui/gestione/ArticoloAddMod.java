@@ -5,7 +5,7 @@ package rf.pegaso.gui.gestione;
 
 import it.infolabs.hibernate.Articoli;
 import it.infolabs.hibernate.ArticoliHome;
-import it.infolabs.hibernate.FornitoriHome;
+import it.infolabs.hibernate.FornitoreHome;
 import it.infolabs.hibernate.ImmagineArticolo;
 import it.infolabs.hibernate.ImmagineArticoloHome;
 import it.infolabs.hibernate.Pannelli;
@@ -76,7 +76,7 @@ import javax.swing.JCheckBox;
  * @author Hunter
  *
  */
-public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
+public class ArticoloAddMod extends JFrame implements PropertyChangeListener {
 	class MyActionListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
@@ -88,9 +88,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 					modifica();
 				else
 					inserisci();
-			} else if (e.getSource() == btnNewFornitore) {
-				apriNuovoFornitore();
-			} else if (e.getSource() == btnNewReparto) {
+			}  else if (e.getSource() == btnNewReparto) {
 				apriNuovaCategoria();
 			} else if (e.getSource() == btnNewPannello) {
 				apriNuovoPannello();
@@ -158,13 +156,9 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	private JButton btnInsMod = null;
 
-	private JButton btnNewFornitore = null;
-
 	private JButton btnNewReparto = null;
 
 	private JButton btnNewUM = null;
-
-	private JComboBox cmbFornitori = null;
 
 	private JComboBox cmbMisura = null;
 
@@ -193,8 +187,6 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	private JLabel lblCodFornitore = null;
 
 	private JLabel lblDescrizione = null;
-
-	private JLabel lblFornitore = null;
 
 	private JLabel lblIngrosso = null;
 
@@ -263,7 +255,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	/**
 	 * @param owner
 	 */
-	public ArticoliAddMod(JFrame owner, int modalita) {
+	public ArticoloAddMod(JFrame owner, int modalita) {
 		//super(owner, true);
 		this.dbm = DBManager.getIstanceSingleton();
 		this.idArticolo = idArticolo;
@@ -272,7 +264,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		initialize();
 	}
 
-	public ArticoliAddMod(JFrame owner, int idArticolo,int modalita) {
+	public ArticoloAddMod(JFrame owner, int idArticolo,int modalita) {
 		//super(owner, true);
 		this.dbm = DBManager.getIstanceSingleton();
 		this.idArticolo = idArticolo;
@@ -288,7 +280,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	// ci serve per memorizzare l'ultimo codArticolo lavorato
 	// questo viene particolarmente usato nel caso di un nuovo articolo
 	// quando ci si trova nel carico merce.
-	public ArticoliAddMod(JFrame owner,int modalita, String[] codArticolo){
+	public ArticoloAddMod(JFrame owner,int modalita, String[] codArticolo){
 		//super(owner, true);
 		this.dbm = DBManager.getIstanceSingleton();
 		this.idArticolo = idArticolo;
@@ -303,7 +295,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	// ci serve per memorizzare l'ultimo codArticolo lavorato
 	// questo viene particolarmente usato nel caso di un nuovo articolo
 	// quando ci si trova nel carico merce.
-	public ArticoliAddMod(JFrame owner,int idArticolo, int modalita, String[] codArticolo){
+	public ArticoloAddMod(JFrame owner,int idArticolo, int modalita, String[] codArticolo){
 		//super(owner, true);
 		this.dbm = DBManager.getIstanceSingleton();
 		this.idArticolo = idArticolo;
@@ -396,13 +388,13 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	/**
 	 *
 	 */
-	public void apriNuovoFornitore() {
-		FornitoriAdd add = new FornitoriAdd(this);
-		add.setVisible(true);
-		caricaCmbFornitori();
-		// caricaFornitori(cmbFornitori);
-
-	}
+//	public void apriNuovoFornitore() {
+//		FornitoriAdd add = new FornitoriAdd(this);
+//		add.setVisible(true);
+//		caricaCmbFornitori();
+//		// caricaFornitori(cmbFornitori);
+//
+//	}
 
 	/**
 	 *
@@ -770,25 +762,6 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	}
 
 	/**
-	 * This method initializes btnNewFornitore
-	 *
-	 * @return javax.swing.JButton
-	 */
-	private JButton getBtnNewFornitore() {
-		if (btnNewFornitore == null) {
-			try {
-				btnNewFornitore = new JButton();
-				btnNewFornitore.setText("Nuovo"); // Generated
-				btnNewFornitore.setBounds(new Rectangle(540, 103, 69, 26)); // Generated
-				btnNewFornitore.addActionListener(new MyActionListener());
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return btnNewFornitore;
-	}
-
-	/**
 	 * This method initializes btnNewReparto
 	 *
 	 * @return javax.swing.JButton
@@ -797,7 +770,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		if (btnNewReparto == null) {
 			try {
 				btnNewReparto = new JButton();
-				btnNewReparto.setBounds(new Rectangle(190, 235, 69, 26)); // Generated
+				btnNewReparto.setBounds(new Rectangle(192, 196, 69, 26)); // Generated
 				btnNewReparto.setText("Nuovo");
 				btnNewReparto.addActionListener(new MyActionListener());
 			} catch (java.lang.Throwable e) {
@@ -816,7 +789,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		if (btnNewUM == null) {
 			try {
 				btnNewUM = new JButton();
-				btnNewUM.setBounds(new Rectangle(310, 148, 69, 26)); // Generated
+				btnNewUM.setBounds(new Rectangle(312, 109, 69, 26)); // Generated
 				btnNewUM.setText("Nuovo");
 				btnNewUM.addActionListener(new MyActionListener());
 			} catch (java.lang.Throwable e) {
@@ -824,25 +797,6 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			}
 		}
 		return btnNewUM;
-	}
-
-	/**
-	 * This method initializes cmbFornitori
-	 *
-	 * @return javax.swing.JComboBox
-	 */
-	private JComboBox getCmbFornitori() {
-		if (cmbFornitori == null) {
-
-			try {
-				cmbFornitori = new JComboBox();
-				cmbFornitori.setBounds(new Rectangle(5, 103, 530, 26)); // Generated
-				// caricaFornitori(cmbFornitori);
-			} catch (java.lang.Throwable e) {
-				// TODO: Something
-			}
-		}
-		return cmbFornitori;
 	}
 
 	/**
@@ -855,7 +809,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			try {
 				cmbMisura = new JComboBox();
 				cmbMisura.setPreferredSize(new Dimension(70, 25)); // Generated
-				cmbMisura.setBounds(new Rectangle(230, 148, 70, 25)); // Generated
+				cmbMisura.setBounds(new Rectangle(232, 109, 70, 25)); // Generated
 				// caricaUnitaMisura(cmbMisura);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -874,7 +828,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			try {
 				cmbReparto = new JComboBox();
 				cmbReparto.setPreferredSize(new Dimension(150, 25)); // Generated
-				cmbReparto.setBounds(new Rectangle(5, 236, 169, 25)); // Generated
+				cmbReparto.setBounds(new Rectangle(7, 197, 169, 25)); // Generated
 				// caricaReparti(cmbReparto);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -936,7 +890,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				lblIngrosso.setText("Pubblico \u20AC"); // Generated
 				jPanel1 = new JPanel();
 				jPanel1.setLayout(null); // Generated
-				jPanel1.setBounds(new Rectangle(400, 140, 201, 49)); // Generated
+				jPanel1.setBounds(new Rectangle(402, 101, 201, 49)); // Generated
 				jPanel1.setBorder(BorderFactory.createTitledBorder(
 						BorderFactory.createBevelBorder(BevelBorder.RAISED),
 						"Prezzo al Pubblico",
@@ -965,7 +919,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				lblQta.setText("Quantit\u00E0"); // Generated
 				jPanel2 = new JPanel();
 				jPanel2.setLayout(null); // Generated
-				jPanel2.setBounds(new Rectangle(400, 200, 201, 65)); // Generated
+				jPanel2.setBounds(new Rectangle(402, 161, 201, 65)); // Generated
 				jPanel2.setBorder(BorderFactory.createTitledBorder(
 						BorderFactory.createBevelBorder(BevelBorder.RAISED),
 						"Magazzino", TitledBorder.DEFAULT_JUSTIFICATION,
@@ -989,7 +943,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		if (jScrollPane1 == null) {
 			try {
 				jScrollPane1 = new JScrollPane();
-				jScrollPane1.setBounds(new Rectangle(4, 329, 297, 41)); // Generated
+				jScrollPane1.setBounds(new Rectangle(6, 290, 297, 41)); // Generated
 				jScrollPane1.setViewportView(getTxtNote()); // Generated
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -1043,53 +997,50 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		if (pnlDatiPersonali == null) {
 			try {
 				lblQtaInfinita = new JLabel();
-				lblQtaInfinita.setBounds(new Rectangle(285, 176, 99, 16));
+				lblQtaInfinita.setBounds(new Rectangle(287, 137, 99, 16));
 				lblQtaInfinita.setText("Qta Infinita");
 				lblPannelli = new JLabel();
-				lblPannelli.setBounds(new Rectangle(5, 269, 120, 16));
+				lblPannelli.setBounds(new Rectangle(7, 230, 120, 16));
 				lblPannelli.setText("Pannello Rapido");
 				lblNo = new JLabel();
-				lblNo.setBounds(new Rectangle(430, 22, 15, 16));
+				lblNo.setBounds(new Rectangle(432, 30, 15, 16));
 				lblNo.setText("No");
 				lblSi = new JLabel();
-				lblSi.setBounds(new Rectangle(370, 22, 11, 16));
+				lblSi.setBounds(new Rectangle(372, 30, 11, 16));
 				lblSi.setText("Si");
 				lblrButtonSiNo = new JLabel();
-				lblrButtonSiNo.setBounds(new Rectangle(370, 4, 86, 16));
+				lblrButtonSiNo.setBounds(new Rectangle(372, 12, 86, 16));
 				lblrButtonSiNo.setText("Modificabili");
 				lblNota = new JLabel();
 				lblNota.setText("Note"); // Generated
-				lblNota.setBounds(new Rectangle(4, 313, 40, 16)); // Generated
+				lblNota.setBounds(new Rectangle(6, 274, 40, 16)); // Generated
 				lblReaprto = new JLabel();
 				lblReaprto.setText("Categoria Merceologica"); // Generated
-				lblReaprto.setBounds(new Rectangle(5, 220, 149, 16)); // Generated
+				lblReaprto.setBounds(new Rectangle(7, 181, 149, 16)); // Generated
 				lblRicaricoIngrosso = new JLabel();
 				lblRicaricoIngrosso.setText("Ricarico Listino %"); // Generated
-				lblRicaricoIngrosso.setBounds(new Rectangle(145, 176, 112, 16)); // Generated
+				lblRicaricoIngrosso.setBounds(new Rectangle(147, 137, 112, 16)); // Generated
 				lblUnitaMisura = new JLabel();
 				lblUnitaMisura.setText("UM"); // Generated
-				lblUnitaMisura.setBounds(new Rectangle(230, 132, 28, 16)); // Generated
+				lblUnitaMisura.setBounds(new Rectangle(232, 93, 28, 16)); // Generated
 				lblIva = new JLabel();
 				lblIva.setText("% Iva"); // Generated
-				lblIva.setBounds(new Rectangle(145, 134, 38, 16)); // Generated
-				lblFornitore = new JLabel();
-				lblFornitore.setText("Fornitore"); // Generated
-				lblFornitore.setBounds(new Rectangle(5, 87, 60, 16)); // Generated
+				lblIva.setBounds(new Rectangle(147, 95, 38, 16)); // Generated
 				lblPrezzoIngrosso = new JLabel();
 				lblPrezzoIngrosso.setText("Prezzo di Listino"); // Generated
-				lblPrezzoIngrosso.setBounds(new Rectangle(4, 176, 113, 16)); // Generated
+				lblPrezzoIngrosso.setBounds(new Rectangle(6, 137, 113, 16)); // Generated
 				lblPrezzoAcquisto = new JLabel();
 				lblPrezzoAcquisto.setText("Prezzo Acquisto"); // Generated
-				lblPrezzoAcquisto.setBounds(new Rectangle(5, 134, 110, 16)); // Generated
+				lblPrezzoAcquisto.setBounds(new Rectangle(7, 95, 110, 16)); // Generated
 				lblDescrizione = new JLabel();
 				lblDescrizione.setText("Descrizione"); // Generated
-				lblDescrizione.setBounds(new Rectangle(5, 46, 80, 16)); // Generated
+				lblDescrizione.setBounds(new Rectangle(7, 54, 80, 16)); // Generated
 				lblCodFornitore = new JLabel();
 				lblCodFornitore.setText("Codice Fornitore"); // Generated
-				lblCodFornitore.setBounds(new Rectangle(204, 4, 110, 16)); // Generated
+				lblCodFornitore.setBounds(new Rectangle(206, 12, 110, 16)); // Generated
 				lblCodBarre = new JLabel();
 				lblCodBarre.setText("Codice Articolo"); // Generated
-				lblCodBarre.setBounds(new Rectangle(5, 5, 110, 16)); // Generated
+				lblCodBarre.setBounds(new Rectangle(7, 13, 110, 16)); // Generated
 				pnlDatiPersonali = new JPanel();
 				pnlDatiPersonali.setLayout(null); // Generated
 				pnlDatiPersonali.setBorder(BorderFactory
@@ -1104,9 +1055,6 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				pnlDatiPersonali.add(getTxtPrezzoAcquisto(), null); // Generated
 				pnlDatiPersonali.add(lblPrezzoIngrosso, null); // Generated
 				pnlDatiPersonali.add(getTxtPrezzoIngrosso(), null); // Generated
-				pnlDatiPersonali.add(lblFornitore, null); // Generated
-				pnlDatiPersonali.add(getCmbFornitori(), null); // Generated
-				pnlDatiPersonali.add(getBtnNewFornitore(), null); // Generated
 				pnlDatiPersonali.add(lblIva, null); // Generated
 				pnlDatiPersonali.add(getTxtIva(), null); // Generated
 				pnlDatiPersonali.add(lblUnitaMisura, null); // Generated
@@ -1150,7 +1098,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			try {
 				txtCodBarre = new JTextField();
 				txtCodBarre.setPreferredSize(new Dimension(140, 20)); // Generated
-				txtCodBarre.setBounds(new Rectangle(5, 21, 154, 20)); // Generated
+				txtCodBarre.setBounds(new Rectangle(7, 29, 154, 20)); // Generated
 				txtCodBarre.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -1169,7 +1117,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			try {
 				txtCodFornitore = new JTextField();
 				txtCodFornitore.setPreferredSize(new Dimension(140, 20)); // Generated
-				txtCodFornitore.setBounds(new Rectangle(204, 20, 154, 20)); // Generated
+				txtCodFornitore.setBounds(new Rectangle(206, 28, 154, 20)); // Generated
 				txtCodFornitore.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -1188,7 +1136,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			try {
 				txtDescrizione = new JTextField();
 				txtDescrizione.setPreferredSize(new Dimension(140, 20)); // Generated
-				txtDescrizione.setBounds(new Rectangle(5, 62, 541, 20)); // Generated
+				txtDescrizione.setBounds(new Rectangle(7, 70, 541, 20)); // Generated
 				txtDescrizione.setDocument(new UpperTextDocument());
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -1242,7 +1190,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				f.setMaximumIntegerDigits(2);
 				txtIva = new JFormattedTextField(f);
 				txtIva.setPreferredSize(new Dimension(40, 20)); // Generated
-				txtIva.setBounds(new Rectangle(145, 150, 40, 20)); // Generated
+				txtIva.setBounds(new Rectangle(147, 111, 40, 20)); // Generated
 				txtIva.setText("0");
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -1283,7 +1231,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				formatPrice.setMinimumFractionDigits(2);
 				txtPrezzoAcquisto = new JFormattedTextField(formatPrice);
 				txtPrezzoAcquisto.setPreferredSize(new Dimension(100, 20)); // Generated
-				txtPrezzoAcquisto.setBounds(new Rectangle(5, 150, 101, 20)); // Generated
+				txtPrezzoAcquisto.setBounds(new Rectangle(7, 111, 101, 20)); // Generated
 				txtPrezzoAcquisto.setDocument(new UpperTextDocument());
 				txtPrezzoAcquisto.addPropertyChangeListener("value", this);
 				txtPrezzoAcquisto.setValue(new Double(0));
@@ -1307,7 +1255,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				formatPrice.setMinimumFractionDigits(2);
 				txtPrezzoListino = new JFormattedTextField(formatPrice);
 				txtPrezzoListino.setPreferredSize(new Dimension(100, 20)); // Generated
-				txtPrezzoListino.setBounds(new Rectangle(4, 192, 113, 20)); // Generated
+				txtPrezzoListino.setBounds(new Rectangle(6, 153, 113, 20)); // Generated
 				/*
 				 * txtPrezzoListino.addFocusListener(new
 				 * java.awt.event.FocusAdapter() { public void
@@ -1355,7 +1303,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				formatPrice.setMinimumFractionDigits(2);
 				txtRicaricoListino = new JFormattedTextField(formatPrice);
 				txtRicaricoListino.setPreferredSize(new Dimension(100, 20)); // Generated
-				txtRicaricoListino.setBounds(new Rectangle(145, 192, 112, 20));
+				txtRicaricoListino.setBounds(new Rectangle(147, 153, 112, 20));
 				/*
 				 * txtRicaricoListino.addFocusListener(new
 				 * java.awt.event.FocusAdapter() { public void
@@ -1383,10 +1331,10 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		this.txtPrezzoListino.setValue(art.getPrezzoIngrosso());
 		int pos;
 		// cerchiamo la pos del codice nell'array fornitori
-		if ( art.getFornitori() != null ){
-			pos = Arrays.ricercaLineare(codFornitori, new Long(art.getFornitori().getIdfornitore()).toString());
-			this.cmbFornitori.setSelectedIndex(pos+1);
-		}
+//		if ( art.getFornitori() != null ){
+//			pos = Arrays.ricercaLineare(codFornitori, new Long(art.getFornitori().getIdfornitore()).toString());
+//			this.cmbFornitori.setSelectedIndex(pos+1);
+//		}
 		// cerchiamo la pos del codice nell'array unità di misura
 		pos = Arrays.ricercaLineare(codUnitaDiMisura, new Long(art.getUm().getIdum()).toString());
 		this.cmbMisura.setSelectedIndex(pos+1);
@@ -1407,7 +1355,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(636, 500);
+		this.setSize(636, 444);
 		this.setResizable(false); // Generated
 
 		this.setContentPane(getJContentPane());
@@ -1474,7 +1422,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	 *
 	 */
 	private void caricaComboBox() {
-		caricaCmbFornitori();
+//		caricaCmbFornitori();
 		caricaCmbCategoria();
 		caricaCmbUnitaDiMisura();
 		caricaCmbPannelli();
@@ -1586,46 +1534,46 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 
 	}
 
-	/**
-	 *
-	 */
-	private void caricaCmbFornitori() {
-		cmbFornitori.removeAllItems();
-		Fornitore f = new Fornitore();
-		String allFornitori[] = null;
-
-		try {
-			allFornitori = (String[]) f.allFornitori();
-		} catch (SQLException e2) {
-			messaggioErroreCampo("Errore caricamento dati fornitori");
-			e2.printStackTrace();
-		}
-
-		// questi due array li usiamo per tenere
-		// traccia dei codici del fornitore in
-		// base alla posizione che si trovano nel combo
-		int size = allFornitori.length;
-		codFornitori = new String[size];
-		descFornitori = new String[size];
-
-		// Impostiamo e carichiamo i dati nel combobox
-		cmbFornitori.setEditable(true);
-		cmbFornitori.addItem("");
-		for (int i = 0; i < size; i++) {
-			String cod = allFornitori[i].substring(0, allFornitori[i]
-					.indexOf("-") - 1);
-			String des = allFornitori[i]
-					.substring(allFornitori[i].indexOf("-") + 2);
-			codFornitori[i] = cod;
-			descFornitori[i] = des;
-			cmbFornitori.addItem(descFornitori[i]);
-		}
-		// cambiamo l'edito del combo
-		JTextComponent editor = (JTextComponent) cmbFornitori.getEditor()
-				.getEditorComponent();
-		AutoCompletion.enable(cmbFornitori);
-
-	}
+//	/**
+//	 *
+//	 */
+//	private void caricaCmbFornitori() {
+//		cmbFornitori.removeAllItems();
+//		Fornitore f = new Fornitore();
+//		String allFornitori[] = null;
+//
+//		try {
+//			allFornitori = (String[]) f.allFornitori();
+//		} catch (SQLException e2) {
+//			messaggioErroreCampo("Errore caricamento dati fornitori");
+//			e2.printStackTrace();
+//		}
+//
+//		// questi due array li usiamo per tenere
+//		// traccia dei codici del fornitore in
+//		// base alla posizione che si trovano nel combo
+//		int size = allFornitori.length;
+//		codFornitori = new String[size];
+//		descFornitori = new String[size];
+//
+//		// Impostiamo e carichiamo i dati nel combobox
+//		cmbFornitori.setEditable(true);
+//		cmbFornitori.addItem("");
+//		for (int i = 0; i < size; i++) {
+//			String cod = allFornitori[i].substring(0, allFornitori[i]
+//					.indexOf("-") - 1);
+//			String des = allFornitori[i]
+//					.substring(allFornitori[i].indexOf("-") + 2);
+//			codFornitori[i] = cod;
+//			descFornitori[i] = des;
+//			cmbFornitori.addItem(descFornitori[i]);
+//		}
+//		// cambiamo l'edito del combo
+//		JTextComponent editor = (JTextComponent) cmbFornitori.getEditor()
+//				.getEditorComponent();
+//		AutoCompletion.enable(cmbFornitori);
+//
+//	}
 	
 	private void caricaImmagine(){
 		JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
@@ -1783,14 +1731,14 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 //		}
 
 		// Preleviamo il codice fornitore
-		pos = cmbFornitori.getSelectedIndex();
-		if (pos != 0){
-			// descrementiamo di uno perchè nel combobox è presente
-			// anche un oggetto vuoto
-			pos--;
-			cod = new Integer(codFornitori[pos]);
-			a.setFornitori(FornitoriHome.getInstance().findById(cod));
-		}
+//		pos = cmbFornitori.getSelectedIndex();
+//		if (pos != 0){
+//			// descrementiamo di uno perchè nel combobox è presente
+//			// anche un oggetto vuoto
+//			pos--;
+//			cod = new Integer(codFornitori[pos]);
+//			a.setFornitori(FornitoreHome.getInstance().findById(cod));
+//		}
 
 		// controllo se è stato selezionato il reparto
 		if (((String) cmbReparto.getSelectedItem()).equalsIgnoreCase("")) {
@@ -1936,7 +1884,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		if (btnSuggerimento == null) {
 			try {
 				btnSuggerimento = new JButton();
-				btnSuggerimento.setBounds(new Rectangle(160, 20, 37, 21));  // Generated
+				btnSuggerimento.setBounds(new Rectangle(162, 28, 37, 21));  // Generated
 				btnSuggerimento.setText(". . .");
 				btnSuggerimento.addActionListener(new MyActionListener());
 			} catch (java.lang.Throwable e) {
@@ -1954,7 +1902,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	private JRadioButton getRbtnSi() {
 		if (rbtnSi == null) {
 			rbtnSi = new JRadioButton("Si");
-			rbtnSi.setBounds(new Rectangle(390, 20, 21, 21));
+			rbtnSi.setBounds(new Rectangle(392, 28, 21, 21));
 			rbtnSi.addActionListener(new MyActionListener());
 		}
 		return rbtnSi;
@@ -1968,7 +1916,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	private JRadioButton getRbtnNo() {
 		if (rbtnNo == null) {
 			rbtnNo = new JRadioButton();
-			rbtnNo.setBounds(new Rectangle(450, 20, 21, 21));
+			rbtnNo.setBounds(new Rectangle(452, 28, 21, 21));
 			rbtnNo.addActionListener(new MyActionListener());
 		}
 		return rbtnNo;
@@ -1982,7 +1930,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	private JComboBox getCmbPannelli() {
 		if (cmbPannelli == null) {
 			cmbPannelli = new JComboBox();
-			cmbPannelli.setBounds(new Rectangle(5, 285, 169, 25));
+			cmbPannelli.setBounds(new Rectangle(7, 246, 169, 25));
 		}
 		return cmbPannelli;
 	}
@@ -1995,7 +1943,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	private JButton getBtnNewPannello() {
 		if (btnNewPannello == null) {
 			btnNewPannello = new JButton();
-			btnNewPannello.setBounds(new Rectangle(190, 284, 75, 29));
+			btnNewPannello.setBounds(new Rectangle(192, 245, 75, 29));
 			btnNewPannello.setText("Nuovo");
 			btnNewPannello.addActionListener(new MyActionListener());
 		}
@@ -2010,7 +1958,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 	private JCheckBox getChkBoxQtaInfinita() {
 		if (chkBoxQtaInfinita == null) {
 			chkBoxQtaInfinita = new JCheckBox();
-			chkBoxQtaInfinita.setBounds(new Rectangle(285, 190, 28, 23));
+			chkBoxQtaInfinita.setBounds(new Rectangle(287, 151, 28, 23));
 		}
 		return chkBoxQtaInfinita;
 	}
@@ -2026,7 +1974,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 			lbl1.setBounds(new Rectangle(0, 0, 80, 80));
 			pnlImage = new JPanel();
 			pnlImage.setLayout(null);
-			pnlImage.setBounds(new Rectangle(400, 290, 200, 80));
+			pnlImage.setBounds(new Rectangle(402, 251, 200, 80));
 			pnlImage.setBorder(BorderFactory.createTitledBorder(
 					BorderFactory.createBevelBorder(BevelBorder.RAISED),
 					"Immagine",
@@ -2075,4 +2023,4 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 		return btnRemoveImage;
 	}
 
-} // @jve:decl-index=0:visual-constraint="10,10"
+}  //  @jve:decl-index=0:visual-constraint="10,7"

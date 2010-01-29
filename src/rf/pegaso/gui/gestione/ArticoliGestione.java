@@ -185,7 +185,7 @@ public class ArticoliGestione extends JFrame {
 			idNewArticolo = r.duplicaArticolo(idArticolo);
 
 			// ora apriamo la finestra per modificare i dati
-			ArticoliAddMod mod = new ArticoliAddMod((JFrame)this, idNewArticolo,ArticoliAddMod.MOD);
+			ArticoloAddMod mod = new ArticoloAddMod((JFrame)this, idNewArticolo,ArticoloAddMod.MOD);
 			mod.setVisible(true);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -543,7 +543,7 @@ public class ArticoliGestione extends JFrame {
 		}
 		int riga = tblArticoli.getSelectedRow();
 		int idArticolo = ((Long) tblArticoli.getValueAt(riga, 0)).intValue();
-		ArticoliAddMod mod = new ArticoliAddMod(this,idArticolo,ArticoliAddMod.MOD);
+		ArticoloAddMod mod = new ArticoloAddMod(this,idArticolo,ArticoloAddMod.MOD);
 		mod.setVisible(true);
 		tblArticoli.setRowSelectionInterval(riga, riga);
 
@@ -555,7 +555,7 @@ public class ArticoliGestione extends JFrame {
 	private void nuovoArticolo() {
 		// Apre la finestra delegata all'inserimento
 		// del nuovo reparto
-		ArticoliAddMod add = new ArticoliAddMod(this, ArticoliAddMod.ADD);
+		ArticoloAddMod add = new ArticoloAddMod(this, ArticoloAddMod.ADD);
 		add.setVisible(true);
 
 	}

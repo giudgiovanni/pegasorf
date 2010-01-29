@@ -11,6 +11,7 @@ import java.util.Set;
  */
 public class Articoli implements java.io.Serializable {
 
+	private static final long serialVersionUID = 1L;
 	private long idarticolo;
 	private Um um;
 	private Fornitore fornitori;

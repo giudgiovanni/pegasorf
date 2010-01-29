@@ -8,7 +8,7 @@ import javax.swing.WindowConstants;
 
 import rf.myswing.IDJComboBox;
 import rf.pegaso.db.tabelle.Articolo;
-import rf.pegaso.db.tabelle.DettaglioOrdine;
+import rf.pegaso.db.tabelle.DettaglioScarico;
 import rf.pegaso.db.tabelle.Reparto;
 import rf.pegaso.gui.vendita.panel.JNumberEvent;
 import rf.pegaso.gui.vendita.panel.JNumberEventListener;
@@ -134,7 +134,7 @@ public class VenditaAvanzata extends JFrame{
 	//evento generato dalla pressione di un tasto della tastiera numerica
 	private void m_jNumberKeysKeyPerformed(JNumberEvent evt) {
 		if ( evt.getKey() == '\0' ){
-			 DettaglioOrdine dv = new DettaglioOrdine();
+			 DettaglioScarico dv = new DettaglioScarico();
 //             dv.loadByID(Integer.parseInt(evt.getIdArticolo()));
              pannelloRiepilogo.addDettaglioOrdine(dv, false);
 		}
@@ -167,7 +167,7 @@ public class VenditaAvanzata extends JFrame{
             // Effettua la ricerca tramite codice a barre
             if (m_sBarcode.length() > 0) {            
                 String sCode = m_sBarcode.toString();
-                DettaglioOrdine dv = new DettaglioOrdine();
+                DettaglioScarico dv = new DettaglioScarico();
                 dv.loadByCB(sCode);
                 //dv.loadByCB("ASTA");
                 pannelloRiepilogo.addDettaglioOrdine(dv, false);

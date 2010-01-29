@@ -48,7 +48,7 @@ import rf.myswing.util.QuantitaDisponibileEditor;
 import rf.pegaso.db.model.FatturaViewModel;
 import rf.pegaso.db.model.VenditeModel;
 import rf.pegaso.db.tabelle.Articolo;
-import rf.pegaso.db.tabelle.DettaglioOrdine;
+import rf.pegaso.db.tabelle.DettaglioScarico;
 import rf.pegaso.db.tabelle.Scarico;
 import rf.utility.ControlloDati;
 import rf.utility.db.DBManager;
@@ -87,7 +87,7 @@ public class AlBanco extends JFrame{
 	private JComboBox cmbProdotti = null;
 	private JLabel lblUtile = null;
 	private JTextField txtUtile = null;
-	private Vector<DettaglioOrdine> carrello = null;
+	private Vector<DettaglioScarico> carrello = null;
 	private Vector<String> colonne = null;
 	private VenditeModel model = null;
 	private double utile = 0.00;
@@ -130,8 +130,8 @@ public class AlBanco extends JFrame{
 	 * @return void
 	 */
 	private void initialize() {
-		carrello = new Vector<DettaglioOrdine>();
-		DettaglioOrdine v = new DettaglioOrdine();
+		carrello = new Vector<DettaglioScarico>();
+		DettaglioScarico v = new DettaglioScarico();
 		carrello.add(v);
 		scarico = new Scarico();
 		colonne = new Vector<String>();
@@ -193,7 +193,7 @@ public class AlBanco extends JFrame{
 
 	}
 
-	private void inserisci(DettaglioOrdine dv) {
+	private void inserisci(DettaglioScarico dv) {
 		dv.setIdVendita(dbm.getNewID("ordini", "idordine"));
 		carrello.add(dv);
 		DBManager.getIstanceSingleton().notifyDBStateChange();
@@ -430,7 +430,7 @@ public class AlBanco extends JFrame{
 
 		//salviamo i dettagli della fattura
 		carrello.remove(0);
-		for (DettaglioOrdine dv : carrello) {
+		for (DettaglioScarico dv : carrello) {
 			dv.insert();
 			//dv.salvaInDb("dettaglio_banco");
 		}
@@ -441,7 +441,7 @@ public class AlBanco extends JFrame{
 	private void resetCampi(){
 		txtNumero.setText(String.valueOf(dbm.getNewID("banco", "idvendita")));
 		carrello.removeAllElements();
-		DettaglioOrdine v = new DettaglioOrdine();
+		DettaglioScarico v = new DettaglioScarico();
 		carrello.add(v);
 		calcoliBarraInferiore();
 	}
@@ -552,7 +552,7 @@ public class AlBanco extends JFrame{
 					@Override
 					public void keyPressed(java.awt.event.KeyEvent e) {
 						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-							DettaglioOrdine dv = new DettaglioOrdine();
+							DettaglioScarico dv = new DettaglioScarico();
 							dv.loadByCB(txtCodice.getText());
 							int er = dv.loadByCB(txtCodice.getText());
 							if ( er == 0 )
@@ -585,7 +585,7 @@ public class AlBanco extends JFrame{
 					public void keyPressed(java.awt.event.KeyEvent e) {
 						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 							int id = Integer.parseInt(((IDJComboBox)cmbProdotti).getIDSelectedItem());
-							DettaglioOrdine dv = new DettaglioOrdine();
+							DettaglioScarico dv = new DettaglioScarico();
 							int er = dv.loadByID(id);
 							if ( er == 0 )
 								messaggioCampoMancante("Articolo non disponibile", "AVVISO");
@@ -639,7 +639,7 @@ public class AlBanco extends JFrame{
 
 	private void calcoliBarraInferiore() {
 		azzeraCampi();
-		for( DettaglioOrdine v : carrello ) {
+		for( DettaglioScarico v : carrello ) {
 			qta += v.getQta();
 			double prezzoV = 0.00;
 			if(v.getSconto() == 0)

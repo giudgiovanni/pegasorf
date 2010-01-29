@@ -30,7 +30,7 @@ import javax.swing.WindowConstants;
 
 import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.pegaso.db.tabelle.Articolo;
-import rf.pegaso.db.tabelle.DettaglioOrdine;
+import rf.pegaso.db.tabelle.DettaglioScarico;
 import rf.pegaso.db.tabelle.ImmagineArticolo;
 import rf.pegaso.gui.vendita.panel.JButtonEvent;
 import rf.pegaso.gui.vendita.panel.JButtonEventListener;
@@ -175,7 +175,7 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 	
 	private void inserisciDaRepo(String repo){
 		try {
-			DettaglioOrdine dv = new DettaglioOrdine();
+			DettaglioScarico dv = new DettaglioScarico();
 			dv.loadRepartoByCB(repo);
 			dv.setPrezzoVendita(ControlloDati.convertPrezzoToDouble(ControlloDati.costruisciPrezzoLikePOS(importo)));
 			if ( txtQta.getText().trim().equals("")){
@@ -206,7 +206,7 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 			messaggioAVideo("Codice inserito non valido!", "INFO");
 		}
 		else{
-			DettaglioOrdine dv = new DettaglioOrdine();
+			DettaglioScarico dv = new DettaglioScarico();
 			int esito = dv.loadByCB(codeBarre);
 			if ( esito == 1 ){
 				if ( pannelloCarrello.addDettaglioOrdine(dv, false) == -1){
@@ -675,7 +675,7 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 	}
 	
 	private void m_jButtonKeysKeyPerformed(JButtonEvent evt) {
-			 DettaglioOrdine dv = new DettaglioOrdine();
+			 DettaglioScarico dv = new DettaglioScarico();
              dv.loadByID((int)evt.getArticolo().getIdarticolo());
              if ( pannelloCarrello.addDettaglioOrdine(dv, false) == -1){
  				messaggioAVideo("Quantita' richiesta non disponibile.", "INFO");

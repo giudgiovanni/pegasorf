@@ -35,7 +35,7 @@ import javax.swing.JTable;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.AlternateRowHighlighter;
 
-import rf.pegaso.db.tabelle.DettaglioOrdine;
+import rf.pegaso.db.tabelle.DettaglioScarico;
 import rf.pegaso.db.tabelle.Scarico;
 import rf.pegaso.gui.InitialGUI;
 import rf.utility.Constant;
@@ -46,12 +46,12 @@ import rf.utility.db.UtilityDBManager;
 
 public class JPanelRiepilogoVendita extends JPanel {
 
-	class MyArrayList extends ArrayList<DettaglioOrdine> {
+	class MyArrayList extends ArrayList<DettaglioScarico> {
 
 		@Override
 		public boolean contains(Object o) {
-			for (DettaglioOrdine ord : carrello) {
-				if (ord.getIdArticolo() == ((DettaglioOrdine) o)
+			for (DettaglioScarico ord : carrello) {
+				if (ord.getIdArticolo() == ((DettaglioScarico) o)
 						.getIdArticolo())
 					return true;
 			}
@@ -66,7 +66,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 						return i;
 			} else {
 				for (int i = 0; i < carrello.size(); i++)
-					if (((DettaglioOrdine) o).getIdArticolo() == carrello
+					if (((DettaglioScarico) o).getIdArticolo() == carrello
 							.get(i).getIdArticolo())
 						return i;
 			}
@@ -162,7 +162,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
-			DettaglioOrdine ord = carrello.get(rowIndex);
+			DettaglioScarico ord = carrello.get(rowIndex);
 			if ((ord.getDescrizione().equals("REPARTO 1")
 					|| ord.getDescrizione().equals("REPARTO 2")
 					|| ord.getDescrizione().equals("REPARTO 3") || ord
@@ -175,7 +175,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 
 		@Override
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-			DettaglioOrdine ord = carrello.get(rowIndex);
+			DettaglioScarico ord = carrello.get(rowIndex);
 			double oldPrezzo = 0;
 			if (ord.getDescrizione().equals("REPARTO 1")
 					|| ord.getDescrizione().equals("REPARTO 2")
@@ -203,7 +203,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 		}
 
 		public Object getValueAt(int r, int c) {
-			DettaglioOrdine riga = carrello.get(r);
+			DettaglioScarico riga = carrello.get(r);
 			Object o = null;
 
 			switch (c) {
@@ -359,7 +359,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 							if (row == -1)
 								idSelectedItem = -1;
 							else {
-								DettaglioOrdine o = carrello.get(row);
+								DettaglioScarico o = carrello.get(row);
 								idSelectedItem = o.getIdArticolo();
 							}
 						}
@@ -379,7 +379,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 	 * @param e
 	 * @return
 	 */
-	public int addDettaglioOrdine(DettaglioOrdine ord, boolean insDiretto) {
+	public int addDettaglioOrdine(DettaglioScarico ord, boolean insDiretto) {
 		if (insDiretto) {
 			carrello.add(ord);
 		} else {
@@ -394,7 +394,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 					carrello.add(ord);
 				}
 			else {
-				DettaglioOrdine tmp = carrello.get(contiene);
+				DettaglioScarico tmp = carrello.get(contiene);
 				// Se   un articolo a qtaInfinita o la qta   disponibile, inseriamo direttamente
 				if ( ord.isQtaInfinita() || ord.getDisponibilita() >= (tmp.getQta() + ord.getQta()) ){
 					// aggiungiamo alla quantita' gia' presente la nuova
@@ -421,7 +421,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 		Object[] dv=carrello.toArray();
 		Ticket t=new Ticket();
 		for(int i=0;i<dv.length;i++){
-			DettaglioOrdine d=(DettaglioOrdine)dv[i];
+			DettaglioScarico d=(DettaglioScarico)dv[i];
 			TicketRow row=new TicketRow();
 			row.setDescrizione(d.getDescrizione());
 			row.setIva(d.getIva());
@@ -487,7 +487,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 				return false;
 			}
 			// salviamo i dettagli della fattura
-			for (DettaglioOrdine dv : carrello) {
+			for (DettaglioScarico dv : carrello) {
 				dv.setIdVendita(scarico.getIdScarico());
 				if (dv.isInsert()) {
 					dv.updatePrezzoVenditaPerArticoliReparto();
@@ -519,7 +519,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 	 * @param c
 	 * @return
 	 */
-	public boolean addAllDettaglioOrdine(Collection<DettaglioOrdine> c) {
+	public boolean addAllDettaglioOrdine(Collection<DettaglioScarico> c) {
 		carrello.clear();
 		boolean ok = carrello.addAll(c);
 		modello.fireTableDataChanged();
@@ -541,7 +541,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 	 * @param o
 	 * @return
 	 */
-	public boolean containsDettaglioOrdine(DettaglioOrdine ord) {
+	public boolean containsDettaglioOrdine(DettaglioScarico ord) {
 		return carrello.contains(ord);
 	}
 
@@ -560,7 +560,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 	 * 
 	 * @return
 	 */
-	public Iterator<DettaglioOrdine> iterator() {
+	public Iterator<DettaglioScarico> iterator() {
 		return carrello.iterator();
 	}
 
@@ -570,7 +570,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 	 * @param o
 	 * @return
 	 */
-	public boolean removeDettaglioOrdine(DettaglioOrdine ord) {
+	public boolean removeDettaglioOrdine(DettaglioScarico ord) {
 		boolean ok = carrello.remove(ord);
 		modello.fireTableRowsDeleted(carrello.size() + 1, carrello.size() + 1);
 		return ok;
@@ -582,7 +582,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 	 * @param c
 	 * @return
 	 */
-	public boolean removeAllDettaglioOrdine(Collection<DettaglioOrdine> c) {
+	public boolean removeAllDettaglioOrdine(Collection<DettaglioScarico> c) {
 		boolean ok = carrello.removeAll(c);
 		modello.fireTableDataChanged();
 		return ok;
@@ -603,13 +603,13 @@ public class JPanelRiepilogoVendita extends JPanel {
 	 * 
 	 * @return
 	 */
-	public DettaglioOrdine[] toArray() {
-		return (DettaglioOrdine[]) carrello.toArray();
+	public DettaglioScarico[] toArray() {
+		return (DettaglioScarico[]) carrello.toArray();
 	}
 
 	// gestire i casi di aggiornamento negativo
 	public void aggiornaQtaSelectedItem(int qta) {
-		for (DettaglioOrdine dv : carrello) {
+		for (DettaglioScarico dv : carrello) {
 			if (dv.getIdArticolo() == idSelectedItem)
 				dv.setQta(qta + dv.getQta());
 		}
@@ -626,14 +626,14 @@ public class JPanelRiepilogoVendita extends JPanel {
 		if (carrello.size() != 0) {
 			int selectedRow = tblVendite.getSelectedRow();
 			if (selectedRow == -1) {
-				DettaglioOrdine ord = carrello.get(carrello.size() - 1);
+				DettaglioScarico ord = carrello.get(carrello.size() - 1);
 				carrello.remove(ord);
 				double tot = ord.getPrezzoVendita() * ord.getQta();
 				totaleCarrello = totaleCarrello
 						- (tot + MathUtility.percentualeDaAggiungere(tot, ord
 								.getIva()));
 			} else {
-				DettaglioOrdine ord = carrello.get(selectedRow);
+				DettaglioScarico ord = carrello.get(selectedRow);
 				carrello.remove(ord);
 				double tot = ord.getPrezzoVendita() * ord.getQta();
 				totaleCarrello = totaleCarrello
@@ -654,7 +654,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 		if (carrello.size() != 0) {
 			int selectedRow = tblVendite.getSelectedRow();
 			if (selectedRow == -1) {
-				DettaglioOrdine ord = carrello.get(carrello.size() - 1);
+				DettaglioScarico ord = carrello.get(carrello.size() - 1);
 				if (ord.getQta() == 1) {
 					carrello.remove(ord);
 					totaleCarrello = totaleCarrello
@@ -673,7 +673,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 					return;
 				}
 			} else {
-				DettaglioOrdine ord = carrello.get(selectedRow);
+				DettaglioScarico ord = carrello.get(selectedRow);
 				if (ord.getQta() == 1) {
 					carrello.remove(ord);
 					totaleCarrello = totaleCarrello

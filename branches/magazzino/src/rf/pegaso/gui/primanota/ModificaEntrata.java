@@ -1,6 +1,6 @@
 package rf.pegaso.gui.primanota;
 
-import it.infolabs.hibernate.ClientiHome;
+import it.infolabs.hibernate.ClienteHome;
 import it.infolabs.hibernate.exception.FindAllEntityException;
 
 import java.awt.BorderLayout;
@@ -105,9 +105,9 @@ public class ModificaEntrata extends JDialog {
 
 	private void caricaClienti(JComboBox cmbFornitori) {
 		try {
-			ClientiHome.getInstance().begin();
+			ClienteHome.getInstance().begin();
 
-			String as[] = (String[]) ClientiHome.getInstance().allClienti().toArray();
+			String as[] = (String[]) ClienteHome.getInstance().allClienti().toArray();
 			// carichiamo tutti i dati in due array
 			// da passre al combobox
 			((IDJComboBox) cmbClienti).caricaNewValueComboBox(as, false);

@@ -13,9 +13,9 @@ public class DocumentoCliente implements java.io.Serializable {
 	private long id;
 	private String descrizione;
 	private String abbreviazione;
-	private Set<Clienti> clientis = new HashSet<Clienti>(0);
-	private Set<Clienti> clientis_1 = new HashSet<Clienti>(0);
-	private Set<Clienti> clientis_2 = new HashSet<Clienti>(0);
+	private Set<Cliente> clientis = new HashSet<Cliente>(0);
+	private Set<Cliente> clientis_1 = new HashSet<Cliente>(0);
+	private Set<Cliente> clientis_2 = new HashSet<Cliente>(0);
 
 	public DocumentoCliente() {
 	}
@@ -26,8 +26,8 @@ public class DocumentoCliente implements java.io.Serializable {
 	}
 
 	public DocumentoCliente(long id, String descrizione, String abbreviazione,
-			Set<Clienti> clientis, Set<Clienti> clientis_1,
-			Set<Clienti> clientis_2) {
+			Set<Cliente> clientis, Set<Cliente> clientis_1,
+			Set<Cliente> clientis_2) {
 		this.id = id;
 		this.descrizione = descrizione;
 		this.abbreviazione = abbreviazione;
@@ -60,27 +60,27 @@ public class DocumentoCliente implements java.io.Serializable {
 		this.abbreviazione = abbreviazione;
 	}
 
-	public Set<Clienti> getClientis() {
+	public Set<Cliente> getClientis() {
 		return this.clientis;
 	}
 
-	public void setClientis(Set<Clienti> clientis) {
+	public void setClientis(Set<Cliente> clientis) {
 		this.clientis = clientis;
 	}
 
-	public Set<Clienti> getClientis_1() {
+	public Set<Cliente> getClientis_1() {
 		return this.clientis_1;
 	}
 
-	public void setClientis_1(Set<Clienti> clientis_1) {
+	public void setClientis_1(Set<Cliente> clientis_1) {
 		this.clientis_1 = clientis_1;
 	}
 
-	public Set<Clienti> getClientis_2() {
+	public Set<Cliente> getClientis_2() {
 		return this.clientis_2;
 	}
 
-	public void setClientis_2(Set<Clienti> clientis_2) {
+	public void setClientis_2(Set<Cliente> clientis_2) {
 		this.clientis_2 = clientis_2;
 	}
 

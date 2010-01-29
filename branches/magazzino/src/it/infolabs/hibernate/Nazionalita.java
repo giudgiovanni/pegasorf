@@ -12,9 +12,9 @@ public class Nazionalita implements java.io.Serializable {
 
 	private long idnazionalita;
 	private String descrizione;
-	private Set<Clienti> clientis = new HashSet<Clienti>(0);
-	private Set<Clienti> clientis_1 = new HashSet<Clienti>(0);
-	private Set<Clienti> clientis_2 = new HashSet<Clienti>(0);
+	private Set<Cliente> clientis = new HashSet<Cliente>(0);
+	private Set<Cliente> clientis_1 = new HashSet<Cliente>(0);
+	private Set<Cliente> clientis_2 = new HashSet<Cliente>(0);
 
 	public Nazionalita() {
 	}
@@ -25,8 +25,8 @@ public class Nazionalita implements java.io.Serializable {
 	}
 
 	public Nazionalita(long idnazionalita, String descrizione,
-			Set<Clienti> clientis, Set<Clienti> clientis_1,
-			Set<Clienti> clientis_2) {
+			Set<Cliente> clientis, Set<Cliente> clientis_1,
+			Set<Cliente> clientis_2) {
 		this.idnazionalita = idnazionalita;
 		this.descrizione = descrizione;
 		this.clientis = clientis;
@@ -50,27 +50,27 @@ public class Nazionalita implements java.io.Serializable {
 		this.descrizione = descrizione;
 	}
 
-	public Set<Clienti> getClientis() {
+	public Set<Cliente> getClientis() {
 		return this.clientis;
 	}
 
-	public void setClientis(Set<Clienti> clientis) {
+	public void setClientis(Set<Cliente> clientis) {
 		this.clientis = clientis;
 	}
 
-	public Set<Clienti> getClientis_1() {
+	public Set<Cliente> getClientis_1() {
 		return this.clientis_1;
 	}
 
-	public void setClientis_1(Set<Clienti> clientis_1) {
+	public void setClientis_1(Set<Cliente> clientis_1) {
 		this.clientis_1 = clientis_1;
 	}
 
-	public Set<Clienti> getClientis_2() {
+	public Set<Cliente> getClientis_2() {
 		return this.clientis_2;
 	}
 
-	public void setClientis_2(Set<Clienti> clientis_2) {
+	public void setClientis_2(Set<Cliente> clientis_2) {
 		this.clientis_2 = clientis_2;
 	}
 

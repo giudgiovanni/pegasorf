@@ -13,10 +13,10 @@ public class TipoDocumento implements java.io.Serializable {
 	private long iddocumento;
 	private String tipo;
 	private String descrizione;
-	private Set<Ordini> ordinis = new HashSet<Ordini>(0);
-	private Set<Ordini> ordinis_1 = new HashSet<Ordini>(0);
+	private Set<Scarico> ordinis = new HashSet<Scarico>(0);
+	private Set<Scarico> ordinis_1 = new HashSet<Scarico>(0);
 	private Set<Carichi> carichis = new HashSet<Carichi>(0);
-	private Set<Ordini> ordinis_2 = new HashSet<Ordini>(0);
+	private Set<Scarico> ordinis_2 = new HashSet<Scarico>(0);
 	private Set<Carichi> carichis_1 = new HashSet<Carichi>(0);
 	private Set<Carichi> carichis_2 = new HashSet<Carichi>(0);
 
@@ -29,8 +29,8 @@ public class TipoDocumento implements java.io.Serializable {
 	}
 
 	public TipoDocumento(long iddocumento, String tipo, String descrizione,
-			Set<Ordini> ordinis, Set<Ordini> ordinis_1, Set<Carichi> carichis,
-			Set<Ordini> ordinis_2, Set<Carichi> carichis_1,
+			Set<Scarico> ordinis, Set<Scarico> ordinis_1, Set<Carichi> carichis,
+			Set<Scarico> ordinis_2, Set<Carichi> carichis_1,
 			Set<Carichi> carichis_2) {
 		this.iddocumento = iddocumento;
 		this.tipo = tipo;
@@ -67,19 +67,19 @@ public class TipoDocumento implements java.io.Serializable {
 		this.descrizione = descrizione;
 	}
 
-	public Set<Ordini> getOrdinis() {
+	public Set<Scarico> getOrdinis() {
 		return this.ordinis;
 	}
 
-	public void setOrdinis(Set<Ordini> ordinis) {
+	public void setOrdinis(Set<Scarico> ordinis) {
 		this.ordinis = ordinis;
 	}
 
-	public Set<Ordini> getOrdinis_1() {
+	public Set<Scarico> getOrdinis_1() {
 		return this.ordinis_1;
 	}
 
-	public void setOrdinis_1(Set<Ordini> ordinis_1) {
+	public void setOrdinis_1(Set<Scarico> ordinis_1) {
 		this.ordinis_1 = ordinis_1;
 	}
 
@@ -91,11 +91,11 @@ public class TipoDocumento implements java.io.Serializable {
 		this.carichis = carichis;
 	}
 
-	public Set<Ordini> getOrdinis_2() {
+	public Set<Scarico> getOrdinis_2() {
 		return this.ordinis_2;
 	}
 
-	public void setOrdinis_2(Set<Ordini> ordinis_2) {
+	public void setOrdinis_2(Set<Scarico> ordinis_2) {
 		this.ordinis_2 = ordinis_2;
 	}
 

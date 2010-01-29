@@ -12,7 +12,7 @@ import java.util.Set;
 public class Carichi implements java.io.Serializable {
 
 	private long idcarico;
-	private Fornitori fornitori;
+	private Fornitore fornitori;
 	private TipoDocumento tipoDocumento;
 	private Date dataCarico;
 	private Date oraCarico;
@@ -40,7 +40,7 @@ public class Carichi implements java.io.Serializable {
 		this.idcarico = idcarico;
 	}
 
-	public Carichi(long idcarico, Fornitori fornitori,
+	public Carichi(long idcarico, Fornitore fornitori,
 			TipoDocumento tipoDocumento, Date dataCarico, Date oraCarico,
 			String note, String numDocumento, Date dataDocumento,
 			Double totaleDocumento, Integer sospeso, Integer rifDoc,
@@ -76,11 +76,11 @@ public class Carichi implements java.io.Serializable {
 		this.idcarico = idcarico;
 	}
 
-	public Fornitori getFornitori() {
+	public Fornitore getFornitori() {
 		return this.fornitori;
 	}
 
-	public void setFornitori(Fornitori fornitori) {
+	public void setFornitori(Fornitore fornitori) {
 		this.fornitori = fornitori;
 	}
 

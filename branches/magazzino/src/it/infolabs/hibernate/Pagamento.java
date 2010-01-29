@@ -12,12 +12,12 @@ public class Pagamento implements java.io.Serializable {
 
 	private long idpagamento;
 	private String nome;
-	private Set<Ordini> ordinisForPagamento = new HashSet<Ordini>(0);
-	private Set<Ordini> ordinisForPagamento_1 = new HashSet<Ordini>(0);
-	private Set<Ordini> ordinisForIdpagamento = new HashSet<Ordini>(0);
-	private Set<Ordini> ordinisForPagamento_2 = new HashSet<Ordini>(0);
-	private Set<Ordini> ordinisForIdpagamento_1 = new HashSet<Ordini>(0);
-	private Set<Ordini> ordinisForIdpagamento_2 = new HashSet<Ordini>(0);
+	private Set<Scarico> ordinisForPagamento = new HashSet<Scarico>(0);
+	private Set<Scarico> ordinisForPagamento_1 = new HashSet<Scarico>(0);
+	private Set<Scarico> ordinisForIdpagamento = new HashSet<Scarico>(0);
+	private Set<Scarico> ordinisForPagamento_2 = new HashSet<Scarico>(0);
+	private Set<Scarico> ordinisForIdpagamento_1 = new HashSet<Scarico>(0);
+	private Set<Scarico> ordinisForIdpagamento_2 = new HashSet<Scarico>(0);
 
 	public Pagamento() {
 	}
@@ -28,11 +28,11 @@ public class Pagamento implements java.io.Serializable {
 	}
 
 	public Pagamento(long idpagamento, String nome,
-			Set<Ordini> ordinisForPagamento, Set<Ordini> ordinisForPagamento_1,
-			Set<Ordini> ordinisForIdpagamento,
-			Set<Ordini> ordinisForPagamento_2,
-			Set<Ordini> ordinisForIdpagamento_1,
-			Set<Ordini> ordinisForIdpagamento_2) {
+			Set<Scarico> ordinisForPagamento, Set<Scarico> ordinisForPagamento_1,
+			Set<Scarico> ordinisForIdpagamento,
+			Set<Scarico> ordinisForPagamento_2,
+			Set<Scarico> ordinisForIdpagamento_1,
+			Set<Scarico> ordinisForIdpagamento_2) {
 		this.idpagamento = idpagamento;
 		this.nome = nome;
 		this.ordinisForPagamento = ordinisForPagamento;
@@ -59,51 +59,51 @@ public class Pagamento implements java.io.Serializable {
 		this.nome = nome;
 	}
 
-	public Set<Ordini> getOrdinisForPagamento() {
+	public Set<Scarico> getOrdinisForPagamento() {
 		return this.ordinisForPagamento;
 	}
 
-	public void setOrdinisForPagamento(Set<Ordini> ordinisForPagamento) {
+	public void setOrdinisForPagamento(Set<Scarico> ordinisForPagamento) {
 		this.ordinisForPagamento = ordinisForPagamento;
 	}
 
-	public Set<Ordini> getOrdinisForPagamento_1() {
+	public Set<Scarico> getOrdinisForPagamento_1() {
 		return this.ordinisForPagamento_1;
 	}
 
-	public void setOrdinisForPagamento_1(Set<Ordini> ordinisForPagamento_1) {
+	public void setOrdinisForPagamento_1(Set<Scarico> ordinisForPagamento_1) {
 		this.ordinisForPagamento_1 = ordinisForPagamento_1;
 	}
 
-	public Set<Ordini> getOrdinisForIdpagamento() {
+	public Set<Scarico> getOrdinisForIdpagamento() {
 		return this.ordinisForIdpagamento;
 	}
 
-	public void setOrdinisForIdpagamento(Set<Ordini> ordinisForIdpagamento) {
+	public void setOrdinisForIdpagamento(Set<Scarico> ordinisForIdpagamento) {
 		this.ordinisForIdpagamento = ordinisForIdpagamento;
 	}
 
-	public Set<Ordini> getOrdinisForPagamento_2() {
+	public Set<Scarico> getOrdinisForPagamento_2() {
 		return this.ordinisForPagamento_2;
 	}
 
-	public void setOrdinisForPagamento_2(Set<Ordini> ordinisForPagamento_2) {
+	public void setOrdinisForPagamento_2(Set<Scarico> ordinisForPagamento_2) {
 		this.ordinisForPagamento_2 = ordinisForPagamento_2;
 	}
 
-	public Set<Ordini> getOrdinisForIdpagamento_1() {
+	public Set<Scarico> getOrdinisForIdpagamento_1() {
 		return this.ordinisForIdpagamento_1;
 	}
 
-	public void setOrdinisForIdpagamento_1(Set<Ordini> ordinisForIdpagamento_1) {
+	public void setOrdinisForIdpagamento_1(Set<Scarico> ordinisForIdpagamento_1) {
 		this.ordinisForIdpagamento_1 = ordinisForIdpagamento_1;
 	}
 
-	public Set<Ordini> getOrdinisForIdpagamento_2() {
+	public Set<Scarico> getOrdinisForIdpagamento_2() {
 		return this.ordinisForIdpagamento_2;
 	}
 
-	public void setOrdinisForIdpagamento_2(Set<Ordini> ordinisForIdpagamento_2) {
+	public void setOrdinisForIdpagamento_2(Set<Scarico> ordinisForIdpagamento_2) {
 		this.ordinisForIdpagamento_2 = ordinisForIdpagamento_2;
 	}
 

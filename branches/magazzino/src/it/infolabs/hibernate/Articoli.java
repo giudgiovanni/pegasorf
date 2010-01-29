@@ -13,7 +13,7 @@ public class Articoli implements java.io.Serializable {
 
 	private long idarticolo;
 	private Um um;
-	private Fornitori fornitori;
+	private Fornitore fornitori;
 	private Reparti reparti;
 	private Pannelli pannelli;
 	private String codfornitore;
@@ -53,7 +53,7 @@ public class Articoli implements java.io.Serializable {
 		this.qtaInfinita = qtaInfinita;
 	}
 
-	public Articoli(long idarticolo, Um um, Fornitori fornitori,
+	public Articoli(long idarticolo, Um um, Fornitore fornitori,
 			Reparti reparti, Pannelli pannelli, String codfornitore,
 			String codbarre, String descrizione, Double prezzoAcquisto,
 			Long iva, Double prezzoDettaglio, Double prezzoIngrosso,
@@ -115,11 +115,11 @@ public class Articoli implements java.io.Serializable {
 		this.um = um;
 	}
 
-	public Fornitori getFornitori() {
+	public Fornitore getFornitori() {
 		return this.fornitori;
 	}
 
-	public void setFornitori(Fornitori fornitori) {
+	public void setFornitori(Fornitore fornitori) {
 		this.fornitori = fornitori;
 	}
 

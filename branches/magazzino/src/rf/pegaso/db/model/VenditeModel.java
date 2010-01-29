@@ -8,7 +8,7 @@ import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
-import rf.pegaso.db.tabelle.DettaglioOrdine;
+import rf.pegaso.db.tabelle.DettaglioScarico;
 import rf.utility.db.DBEvent;
 import rf.utility.db.DBStateChange;
 import rf.utility.db.RowEvent;
@@ -23,10 +23,10 @@ public class VenditeModel extends AbstractTableModel implements DBStateChange {
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	private Vector<DettaglioOrdine> vendita = null;
+	private Vector<DettaglioScarico> vendita = null;
 	private Vector<String> colonne = null;
 
-	public VenditeModel(Vector<DettaglioOrdine> vendita, Vector<String> colonne) throws SQLException {
+	public VenditeModel(Vector<DettaglioScarico> vendita, Vector<String> colonne) throws SQLException {
 		this.vendita = vendita;
 		this.colonne = colonne;
 	}
@@ -51,7 +51,7 @@ public class VenditeModel extends AbstractTableModel implements DBStateChange {
 	public Object getValueAt(int r, int c) {
 		if ( vendita.size() == 0 )
 			return -1;
-		DettaglioOrdine v = vendita.get(r);
+		DettaglioScarico v = vendita.get(r);
 		Vector<Object> v1 = v.trasformaInArray();
 		Object o = null;
 		o = (Object)v1.get(c);
@@ -94,7 +94,7 @@ public class VenditeModel extends AbstractTableModel implements DBStateChange {
 	}
 
 	public void setValueAt(Object o, int r, int c) {
-		DettaglioOrdine v = vendita.get(r);
+		DettaglioScarico v = vendita.get(r);
 		switch(c) {
 			/*case 4 :{
 //				if( o instanceof Long)

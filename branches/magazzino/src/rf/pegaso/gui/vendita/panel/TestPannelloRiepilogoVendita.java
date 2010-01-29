@@ -5,7 +5,7 @@ import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import rf.pegaso.db.tabelle.DettaglioOrdine;
+import rf.pegaso.db.tabelle.DettaglioScarico;
 
 public class TestPannelloRiepilogoVendita {
 
@@ -21,7 +21,7 @@ public class TestPannelloRiepilogoVendita {
 		f.setVisible(true);
 
 		//aggiungiamo qualcosa per esempio
-		DettaglioOrdine o=new DettaglioOrdine();
+		DettaglioScarico o=new DettaglioScarico();
 		o.setDescrizione("prova");
 		o.setPrezzoVendita(10.0);
 		o.setQta(5);

@@ -22,7 +22,7 @@ import javax.swing.WindowConstants;
 
 
 import rf.pegaso.db.tabelle.Articolo;
-import rf.pegaso.db.tabelle.DettaglioOrdine;
+import rf.pegaso.db.tabelle.DettaglioScarico;
 import rf.pegaso.gui.utility.SceltaCassa;
 import rf.pegaso.gui.vendita.panel.JButtonEvent;
 import rf.pegaso.gui.vendita.panel.JButtonEventListener;
@@ -181,7 +181,7 @@ public class VenditaInternalFrameOLD extends JInternalFrame{
 	
 	private void inserisciDaRepo(String repo){
 		try {
-			DettaglioOrdine dv = new DettaglioOrdine();
+			DettaglioScarico dv = new DettaglioScarico();
 			dv.loadRepartoByCB(repo);
 //			dv.setIdArticolo(0);
 //			dv.setDescrizione(repo);
@@ -214,7 +214,7 @@ public class VenditaInternalFrameOLD extends JInternalFrame{
 			messaggioAVideo("Codice inserito non valido!", "INFO");
 		}
 		else{
-			DettaglioOrdine dv = new DettaglioOrdine();
+			DettaglioScarico dv = new DettaglioScarico();
 			int esito = dv.loadByCB(codeBarre);
 			if ( esito == 1 ){
 				if ( pannelloCarrello.addDettaglioOrdine(dv, false) == -1){
@@ -672,7 +672,7 @@ public class VenditaInternalFrameOLD extends JInternalFrame{
 	}
 	
 	private void m_jButtonKeysKeyPerformed(JButtonEvent evt) {
-			 DettaglioOrdine dv = new DettaglioOrdine();
+			 DettaglioScarico dv = new DettaglioScarico();
              dv.loadByID((int)evt.getArticolo().getIdarticolo());
              if ( pannelloCarrello.addDettaglioOrdine(dv, false) == -1){
  				messaggioAVideo("Quantita' richiesta non disponibile.", "INFO");

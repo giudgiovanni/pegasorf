@@ -1,6 +1,6 @@
 package rf.pegaso.gui.internalframe;
 
-import it.infolabs.hibernate.Articoli;
+import it.infolabs.hibernate.Articolo;
 import it.infolabs.hibernate.Pannelli;
 import it.infolabs.hibernate.PannelliHome;
 
@@ -24,7 +24,6 @@ import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 
 import rf.pegaso.db.exception.CodiceBarreInesistente;
-import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.DettaglioScarico;
 import rf.pegaso.db.tabelle.ImmagineArticolo;
 import rf.pegaso.gui.vendita.panel.JButtonEvent;
@@ -152,7 +151,7 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 		for ( Pannelli pan : PannelliHome.getInstance().allPannelli() ){
 			if ( pan.getArticolis().size() > 0 ){
 				JPanelArticoli pnlArticolo = new JPanelArticoli(new Integer((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()) - 650);
-				pnlArticolo.caricaArticoli(new LinkedList<Articoli>(pan.getArticolis()));
+				pnlArticolo.caricaArticoli(new LinkedList<Articolo>(pan.getArticolis()));
 				pnlArticolo.addJButtonEventListener(new JButtonEventListener() {
 					public void keyPerformed(JButtonEvent evt) {
 						inserisciNelCarrello(evt.getArticolo().getCodbarre());

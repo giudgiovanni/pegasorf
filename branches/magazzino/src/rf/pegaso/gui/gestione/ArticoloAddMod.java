@@ -3,8 +3,8 @@
  */
 package rf.pegaso.gui.gestione;
 
-import it.infolabs.hibernate.Articoli;
-import it.infolabs.hibernate.ArticoliHome;
+import it.infolabs.hibernate.Articolo;
+import it.infolabs.hibernate.ArticoloHome;
 import it.infolabs.hibernate.FornitoreHome;
 import it.infolabs.hibernate.ImmagineArticolo;
 import it.infolabs.hibernate.ImmagineArticoloHome;
@@ -54,7 +54,6 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.JTextComponent;
 
-import rf.pegaso.db.tabelle.Articolo;
 import rf.pegaso.db.tabelle.Carico;
 import rf.pegaso.db.tabelle.Fornitore;
 import rf.pegaso.db.tabelle.Reparto;
@@ -639,7 +638,7 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener {
 	private void caricaQtaMagazzino() {
 		int qta = 0;
 		try {
-			qta = Articolo.caricaQtaMagazzino(idArticolo);
+			qta = rf.pegaso.db.tabelle.Articolo.caricaQtaMagazzino(idArticolo);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -1321,7 +1320,7 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener {
 		return txtRicaricoListino;
 	}
 
-	private void impostaCampi(Articoli art) {
+	private void impostaCampi(Articolo art) {
 		this.txtCodBarre.setText(art.getCodbarre());
 		this.txtCodFornitore.setText(art.getCodfornitore());
 		this.txtDescrizione.setText(art.getDescrizione());
@@ -1370,9 +1369,9 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener {
 		// carichiamo i cari dati negli oggetti
 		if (modalita == MOD) {
 			this.setTitle("Modifica Articolo");
-			Articoli art;
+			Articolo art;
 			try {
-				art = ArticoliHome.getInstance().findById(idArticolo);
+				art = ArticoloHome.getInstance().findById(idArticolo);
 			} catch (FindByNotFoundException e) {
 				messaggioErroreCampo("Impossibile Caricare l'Articolo Selezionato.");
 				return;
@@ -1594,16 +1593,16 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener {
 
 	private void inserisci() {
 		try{
-			Articoli a = new Articoli();
+			Articolo a = new Articolo();
 			boolean ok = recuperaDatiCampi(a);
 			if (ok) {
-				ArticoliHome.getInstance().begin();
-				if ( !ArticoliHome.getInstance().codBarreEsistenteForInsert(a.getCodbarre()) ){
+				ArticoloHome.getInstance().begin();
+				if ( !ArticoloHome.getInstance().codBarreEsistenteForInsert(a.getCodbarre()) ){
 					a.setIdarticolo(dbm.getNewID("articoli","idarticolo"));
-					ArticoliHome.getInstance().begin();
-					ArticoliHome.getInstance().persist(a);
-					ArticoliHome.getInstance().begin();
-					ArticoliHome.getInstance().commit();
+					ArticoloHome.getInstance().begin();
+					ArticoloHome.getInstance().persist(a);
+					ArticoloHome.getInstance().begin();
+					ArticoloHome.getInstance().commit();
 					Scarico sc = new Scarico();
 					Carico c = new Carico();
 					try {
@@ -1651,30 +1650,30 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener {
 		if (scelta != JOptionPane.YES_OPTION)
 			return;
 		try{
-			ArticoliHome.getInstance().begin();
-			Articoli a = ArticoliHome.getInstance().findById(idArticolo);
+			ArticoloHome.getInstance().begin();
+			Articolo a = ArticoloHome.getInstance().findById(idArticolo);
 			String oldCodBarre = a.getCodbarre();
 			boolean ok = recuperaDatiCampi(a);
 			if ( ok ){
-				ArticoliHome.getInstance().begin();
+				ArticoloHome.getInstance().begin();
 				// Se il codice a barre e' stato modificato
 				if ( !a.getCodbarre().equals(oldCodBarre) ){
 					// Dobbiamo verificare se quel codice a barre e' utilizzabile
-					if ( ArticoliHome.getInstance().codBarreEsistenteForUpdate(a.getCodbarre(), a.getIdarticolo()) ){
+					if ( ArticoloHome.getInstance().codBarreEsistenteForUpdate(a.getCodbarre(), a.getIdarticolo()) ){
 						// codice a barre non inseribile
 						JOptionPane.showMessageDialog(this, "Codice a Barre gi\u00E0 presente in magazzino.",
 								"ERRORE", JOptionPane.ERROR_MESSAGE);
 					}
 					else {
 						// Possiamo persistere le modifiche
-						ArticoliHome.getInstance().persist(a);
-						ArticoliHome.getInstance().commit();
+						ArticoloHome.getInstance().persist(a);
+						ArticoloHome.getInstance().commit();
 					}
 				}
 				// Il codice a barre non e' stato modificato quindi si puo' salvare
 				else{
-					ArticoliHome.getInstance().persist(a);
-					ArticoliHome.getInstance().commit();
+					ArticoloHome.getInstance().persist(a);
+					ArticoloHome.getInstance().commit();
 				}
 			}
 
@@ -1696,7 +1695,7 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener {
 	 * @throws FindByNotFoundException 
 	 *
 	 */
-	private boolean recuperaDatiCampi(Articoli a) throws FindByNotFoundException {
+	private boolean recuperaDatiCampi(Articolo a) throws FindByNotFoundException {
 
 		if ( txtCodBarre.getText().trim().equals("") || txtCodBarre.getText().length() < 4 ){
 			JOptionPane.showMessageDialog(this, "Codice a Barre non valido.",

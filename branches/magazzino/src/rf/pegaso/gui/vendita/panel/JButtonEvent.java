@@ -1,17 +1,16 @@
 package rf.pegaso.gui.vendita.panel;
 
-import it.infolabs.hibernate.Articoli;
+import it.infolabs.hibernate.Articolo;
 
 import java.util.EventObject;
 
-import rf.pegaso.db.tabelle.Articolo;
 
 public class JButtonEvent extends EventObject{
 
 	private char m_cKey;
-    private Articoli m_articolo;
+    private Articolo m_articolo;
     
-    public JButtonEvent(Object source, char cKey, Articoli articolo) {
+    public JButtonEvent(Object source, char cKey, Articolo articolo) {
         super(source);
         m_cKey = cKey;
         m_articolo = articolo;
@@ -21,7 +20,7 @@ public class JButtonEvent extends EventObject{
         return m_cKey;
     }
     
-    public Articoli getArticolo(){
+    public Articolo getArticolo(){
     	return m_articolo;
     }
     

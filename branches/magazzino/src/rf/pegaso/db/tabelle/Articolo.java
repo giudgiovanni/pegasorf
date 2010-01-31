@@ -5,8 +5,7 @@
 
 package rf.pegaso.db.tabelle;
 
-import it.infolabs.hibernate.Articoli;
-import it.infolabs.hibernate.ArticoliHome;
+import it.infolabs.hibernate.ArticoloHome;
 import it.infolabs.hibernate.FornitoreHome;
 import it.infolabs.hibernate.PannelliHome;
 import it.infolabs.hibernate.RepartiHome;
@@ -14,19 +13,14 @@ import it.infolabs.hibernate.UmHome;
 import it.infolabs.hibernate.exception.FindByNotFoundException;
 import it.infolabs.hibernate.exception.PersistEntityException;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
-import java.util.List;
 
 import rf.pegaso.db.exception.CodiceBarreInesistente;
-import rf.utility.Constant;
-import rf.utility.ControlloDati;
 import rf.utility.db.DBManager;
 import rf.utility.db.eccezzioni.CodiceBarreEsistente;
 import rf.utility.db.eccezzioni.IDNonValido;
@@ -644,11 +638,11 @@ public class Articolo {
 		if (idArticolo <= -1){
 			throw new IDNonValido();
 		}
-		ArticoliHome.getInstance().begin();
-		if ( ArticoliHome.getInstance().codBarreEsistenteForInsert(codBarre) ){
+		ArticoloHome.getInstance().begin();
+		if ( ArticoloHome.getInstance().codBarreEsistenteForInsert(codBarre) ){
 			throw new CodiceBarreEsistente();
 		}
-		Articoli art = new Articoli();
+		it.infolabs.hibernate.Articolo art = new it.infolabs.hibernate.Articolo();
 		art.setIdarticolo(this.idArticolo);
 		art.setCodfornitore(codFornitore);
 		art.setCodbarre(codBarre);
@@ -687,9 +681,9 @@ public class Articolo {
 		art.setCaricoIniziale((long)caricoIniziale);
 		art.setScortaMassima((long)scortaMassima);
 		art.setPannelli(PannelliHome.getInstance().findById(idPannello));
-		ArticoliHome.getInstance().begin();
+		ArticoloHome.getInstance().begin();
 		try {
-			ArticoliHome.getInstance().persist(art);
+			ArticoloHome.getInstance().persist(art);
 		} catch (PersistEntityException e) {
 			return -1;
 		}
@@ -880,14 +874,14 @@ public class Articolo {
 		if (idArticolo <= -1){
 			throw new IDNonValido();
 		}
-		ArticoliHome.getInstance().begin();
-		if ( ArticoliHome.getInstance().codBarreEsistenteForUpdate(codBarre, idArticolo) ){
+		ArticoloHome.getInstance().begin();
+		if ( ArticoloHome.getInstance().codBarreEsistenteForUpdate(codBarre, idArticolo) ){
 			throw new CodiceBarreEsistente();
 		}
-		Articoli art;
+		it.infolabs.hibernate.Articolo art;
 		try {
-			ArticoliHome.getInstance().begin();
-			art = ArticoliHome.getInstance().findById(idArticolo);
+			ArticoloHome.getInstance().begin();
+			art = ArticoloHome.getInstance().findById(idArticolo);
 		} catch (FindByNotFoundException e2) {
 			throw new IDNonValido();
 		}
@@ -929,10 +923,10 @@ public class Articolo {
 		art.setCaricoIniziale((long)caricoIniziale);
 		art.setScortaMassima((long)scortaMassima);
 		art.setPannelli(PannelliHome.getInstance().findById(idPannello));
-		ArticoliHome.getInstance().begin();
+		ArticoloHome.getInstance().begin();
 		try {
-			ArticoliHome.getInstance().persist(art);
-			ArticoliHome.getInstance().commit();
+			ArticoloHome.getInstance().persist(art);
+			ArticoloHome.getInstance().commit();
 		} catch (PersistEntityException e) {
 			return -1;
 		}

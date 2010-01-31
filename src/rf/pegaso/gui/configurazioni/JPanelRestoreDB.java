@@ -1,8 +1,8 @@
 package rf.pegaso.gui.configurazioni;
 
 import org.apache.log4j.Logger;
-
-import it.infolabs.hibernate.ArticoliHome;
+ 
+import it.infolabs.hibernate.ArticoloHome;
 import it.infolabs.hibernate.BusinessObjectHome;
 
 import java.awt.GridBagLayout;
@@ -97,12 +97,12 @@ public class JPanelRestoreDB extends JPanel {
 						logger.error(
 								"actionPerformed(java.awt.event.ActionEvent)",
 								e1);
-						messaggioAVideo("Si è verificato un errore inospettato. Chiudere e riprovare.", "ERRORE");
+						messaggioAVideo("Si  verificato un errore inospettato. Chiudere e riprovare.", "ERRORE");
 					} catch (IOException e1) {
 						logger.error(
 								"actionPerformed(java.awt.event.ActionEvent)",
 								e1);
-						messaggioAVideo("Si è verificato un errore inospettato. Chiudere e riprovare.", "ERRORE");
+						messaggioAVideo("Si  verificato un errore inospettato. Chiudere e riprovare.", "ERRORE");
 					} // TODO Auto-generated Event stub actionPerformed()
 
 					if (logger.isDebugEnabled()) {
@@ -128,10 +128,10 @@ public class JPanelRestoreDB extends JPanel {
 				UtilityDBManager.getSingleInstance().backupDataBase(fileChooser.getSelectedFile().getAbsolutePath());
 			} catch (FileNotFoundException e) {
 				logger.error("backup()", e);
-				messaggioAVideo("Si è verificato un errore inospettato. Chiudere e riprovare.", "ERRORE");
+				messaggioAVideo("Si verificato un errore inospettato. Chiudere e riprovare.", "ERRORE");
 			} catch (IOException e) {
 				logger.error("backup()", e);
-				messaggioAVideo("Si è verificato un errore inospettato. Chiudere e riprovare.", "ERRORE");
+				messaggioAVideo("Si  verificato un errore inospettato. Chiudere e riprovare.", "ERRORE");
 			}
 		}
 		
@@ -156,9 +156,6 @@ public class JPanelRestoreDB extends JPanel {
 			btnRestore.setText("Restore");
 			btnRestore.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					if (logger.isDebugEnabled()) {
-						logger.debug("actionPerformed(java.awt.event.ActionEvent) - start");
-					}
 
 					try {
 						restore();
@@ -168,18 +165,13 @@ public class JPanelRestoreDB extends JPanel {
 						logger.error(
 								"actionPerformed(java.awt.event.ActionEvent)",
 								e1);
-						messaggioAVideo("Si è verificato un errore inospettato. Chiudere e riprovare.", "ERRORE");
+						messaggioAVideo("Si  verificato un errore inospettato. Chiudere e riprovare.", "ERRORE");
 					} catch (IOException e1) {
 						logger.error(
 								"actionPerformed(java.awt.event.ActionEvent)",
 								e1);
-						messaggioAVideo("Si è verificato un errore inospettato. Chiudere e riprovare.", "ERRORE");
+						messaggioAVideo("Si verificato un errore inospettato. Chiudere e riprovare.", "ERRORE");
 					} 
-
-					if (logger.isDebugEnabled()) {
-						logger
-								.debug("actionPerformed(java.awt.event.ActionEvent) - end");
-					}
 				}
 			});
 		}
@@ -201,12 +193,11 @@ public class JPanelRestoreDB extends JPanel {
 			try {
 				DBManager.getIstanceSingleton().getConnessione().close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-				messaggioAVideo("Si è verificato un errore inospettato. Chiudere e riprovare.", "ERRORE");
+				messaggioAVideo("Si  verificato un errore inospettato. Chiudere e riprovare.", "ERRORE");
 			}
 
-			ArticoliHome.getInstance().getSessionFactory().close();
+			ArticoloHome.getInstance().getSessionFactory().close();
 			UtilityDBManager.getSingleInstance().restoreDataBase(fileChooser.getSelectedFile().getAbsolutePath());
 		}
 		

@@ -1,6 +1,6 @@
 package rf.pegaso.gui.vendita.panel;
 
-import it.infolabs.hibernate.Articoli;
+import it.infolabs.hibernate.Articolo;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -14,7 +14,6 @@ import javax.swing.JPanel;
 
 import javax.swing.JScrollPane;
 
-import rf.pegaso.db.tabelle.Articolo;
 
 import java.awt.GridBagLayout;
 
@@ -56,12 +55,12 @@ public class JPanelArticoli extends JPanel{
 		this.add(getJScrollPane(), null);
 	}
 	
-	public void caricaArticoli(LinkedList<Articoli> articoli){
+	public void caricaArticoli(LinkedList<Articolo> articoli){
 		try{
 			pnlPulsanti.removeAll();
 			pnlPulsanti.setLayout(new GridBagLayout());
 			int nRiga = 0, nCol = 0;
-			for (Articoli art : articoli){
+			for (Articolo art : articoli){
 				GridBagConstraints gridBagConstraints = new GridBagConstraints();
 				gridBagConstraints.gridx = nRiga;
 				gridBagConstraints.insets = new Insets(10, 10, 10, 10);
@@ -93,9 +92,9 @@ public class JPanelArticoli extends JPanel{
 	
 	private class MyButtonListener implements java.awt.event.ActionListener {
 
-		private Articoli m_articolo;
+		private Articolo m_articolo;
 
-		public MyButtonListener(Articoli articolo){
+		public MyButtonListener(Articolo articolo){
 			m_articolo = articolo;
 		}
 		public void actionPerformed(java.awt.event.ActionEvent evt) {

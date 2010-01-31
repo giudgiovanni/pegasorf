@@ -1,7 +1,7 @@
 package rf.pegaso.db.tabelle;
 
-import it.infolabs.hibernate.Articoli;
-import it.infolabs.hibernate.ArticoliHome;
+import it.infolabs.hibernate.Articolo;
+import it.infolabs.hibernate.ArticoloHome;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -150,12 +150,12 @@ public class DettaglioScarico implements Comparator<DettaglioScarico>{
 		//carichiamo l'articolo in memoria
 //		Articolo a = new Articolo();
 		try {
-			Object [] obj = ArticoliHome.getInstance().findByCodBarreWithPrezzoAcquisto(codice);
+			Object [] obj = ArticoloHome.getInstance().findByCodBarreWithPrezzoAcquisto(codice);
 			if (obj == null ){
 				return 0;
 			}
 			else{
-				Articoli a = (Articoli)obj[0];
+				Articolo a = (Articolo)obj[0];
 				idArticolo = (int)a.getIdarticolo();
 				descrizione = a.getDescrizione();
 				um = a.getUm().getNome();
@@ -205,7 +205,7 @@ public class DettaglioScarico implements Comparator<DettaglioScarico>{
 		if (codice.trim().equalsIgnoreCase(""))
 			return -1;
 		//carichiamo l'articolo in memoria
-		Articolo a = new Articolo();
+		rf.pegaso.db.tabelle.Articolo a = new rf.pegaso.db.tabelle.Articolo();
 		try {
 			if ( a.findByCodBarre(codice) ) {
 				idArticolo = a.getIdArticolo();
@@ -238,7 +238,7 @@ public class DettaglioScarico implements Comparator<DettaglioScarico>{
 		//viene verificato il codice inserito
 		if ( id == 0 )
 			return -1;
-		Articolo a = new Articolo();
+		rf.pegaso.db.tabelle.Articolo a = new rf.pegaso.db.tabelle.Articolo();
 		try {
 			a.caricaDati(id);
 			if ( a.getGiacenza2() < 1 )
@@ -425,7 +425,7 @@ public class DettaglioScarico implements Comparator<DettaglioScarico>{
 			dv.setPrezzoAcquisto(rs.getDouble(5));
 			dv.setPrezzoVendita(rs.getDouble(6));
 			dv.setIva(rs.getInt(7));
-			Articolo a = new Articolo();
+			rf.pegaso.db.tabelle.Articolo a = new rf.pegaso.db.tabelle.Articolo();
 			a.caricaDati(dv.getIdArticolo());
 			dv.setDescrizione(a.getDescrizione());
 			dv.setCodiceBarre(a.getCodBarre());

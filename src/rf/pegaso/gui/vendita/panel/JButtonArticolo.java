@@ -1,6 +1,6 @@
 package rf.pegaso.gui.vendita.panel;
 
-import it.infolabs.hibernate.Articoli;
+import it.infolabs.hibernate.Articolo;
 import it.infolabs.hibernate.ImmagineArticolo;
 
 import java.awt.Dimension;
@@ -16,10 +16,10 @@ public class JButtonArticolo extends javax.swing.JButton {
 	private static final long serialVersionUID = 1L;
 	
 	private ImmagineArticolo imgArticolo;
-	private Articoli articolo;
+	private Articolo articolo;
 	
 	
-	public JButtonArticolo(Articoli articolo) {
+	public JButtonArticolo(Articolo articolo) {
 		super();
 		this.articolo = articolo;
 		initGUI();
@@ -46,11 +46,11 @@ public class JButtonArticolo extends javax.swing.JButton {
 		}
 	}
 
-	public Articoli getArticolo() {
+	public Articolo getArticolo() {
 		return articolo;
 	}
 
-	public void setArticolo(Articoli articolo) {
+	public void setArticolo(Articolo articolo) {
 		this.articolo = articolo;
 	}
 }

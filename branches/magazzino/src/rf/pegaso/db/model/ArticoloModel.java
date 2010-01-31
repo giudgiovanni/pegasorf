@@ -3,8 +3,8 @@
  */
 package rf.pegaso.db.model;
 
-import it.infolabs.hibernate.Articoli;
-import it.infolabs.hibernate.ArticoliHome;
+import it.infolabs.hibernate.Articolo;
+import it.infolabs.hibernate.ArticoloHome;
 import it.infolabs.hibernate.exception.FindAllEntityException;
 
 import java.text.DecimalFormat;
@@ -30,12 +30,12 @@ public class ArticoloModel extends AbstractTableModel implements DBStateChange {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private List<Articoli> resultList;
+	private List<Articolo> resultList;
 	private List<String> colonne;
 
 	public ArticoloModel() {
 		colonne = creaColonne();
-		resultList = new ArrayList<Articoli>();
+		resultList = new ArrayList<Articolo>();
 		try {
 			recuperaDati();
 		} catch (FindAllEntityException e) {
@@ -73,7 +73,7 @@ public class ArticoloModel extends AbstractTableModel implements DBStateChange {
 	}
 
 	public Object getValueAt(int r, int c) {
-		Articoli tmp = resultList.get(r);
+		Articolo tmp = resultList.get(r);
 		if ( c == 0 ){
 			return tmp.getIdarticolo();
 		}
@@ -129,8 +129,8 @@ public class ArticoloModel extends AbstractTableModel implements DBStateChange {
 	 *
 	 */
 	private void recuperaDati() throws FindAllEntityException {
-		ArticoliHome.getInstance().begin();
-		Criteria crit = ArticoliHome.getInstance().getSessionFactory()
+		ArticoloHome.getInstance().begin();
+		Criteria crit = ArticoloHome.getInstance().getSessionFactory()
 			.getCurrentSession().createCriteria("it.infolabs.hibernate.Articoli").addOrder(Order.asc("descrizione"));
 		resultList = crit.list();
 	}

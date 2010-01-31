@@ -30,9 +30,9 @@ public class Fornitore implements java.io.Serializable {
 	private Set<Carichi> carichis = new HashSet<Carichi>(0);
 	private Set<Carichi> carichis_1 = new HashSet<Carichi>(0);
 	private Set<Carichi> carichis_2 = new HashSet<Carichi>(0);
-	private Set<Articoli> articolis = new HashSet<Articoli>(0);
-	private Set<Articoli> articolis_1 = new HashSet<Articoli>(0);
-	private Set<Articoli> articolis_2 = new HashSet<Articoli>(0);
+	private Set<Articolo> articolis = new HashSet<Articolo>(0);
+	private Set<Articolo> articolis_1 = new HashSet<Articolo>(0);
+	private Set<Articolo> articolis_2 = new HashSet<Articolo>(0);
 
 	public Fornitore() {
 	}
@@ -47,8 +47,8 @@ public class Fornitore implements java.io.Serializable {
 			String via, String cap, String citta, String tel, String cell,
 			String fax, String email, String website, String note,
 			String codbarre, Set<Carichi> carichis, Set<Carichi> carichis_1,
-			Set<Carichi> carichis_2, Set<Articoli> articolis,
-			Set<Articoli> articolis_1, Set<Articoli> articolis_2) {
+			Set<Carichi> carichis_2, Set<Articolo> articolis,
+			Set<Articolo> articolis_1, Set<Articolo> articolis_2) {
 		this.idfornitore = idfornitore;
 		this.provincia = provincia;
 		this.dataInserimento = dataInserimento;
@@ -225,27 +225,27 @@ public class Fornitore implements java.io.Serializable {
 		this.carichis_2 = carichis_2;
 	}
 
-	public Set<Articoli> getArticolis() {
+	public Set<Articolo> getArticolis() {
 		return this.articolis;
 	}
 
-	public void setArticolis(Set<Articoli> articolis) {
+	public void setArticolis(Set<Articolo> articolis) {
 		this.articolis = articolis;
 	}
 
-	public Set<Articoli> getArticolis_1() {
+	public Set<Articolo> getArticolis_1() {
 		return this.articolis_1;
 	}
 
-	public void setArticolis_1(Set<Articoli> articolis_1) {
+	public void setArticolis_1(Set<Articolo> articolis_1) {
 		this.articolis_1 = articolis_1;
 	}
 
-	public Set<Articoli> getArticolis_2() {
+	public Set<Articolo> getArticolis_2() {
 		return this.articolis_2;
 	}
 
-	public void setArticolis_2(Set<Articoli> articolis_2) {
+	public void setArticolis_2(Set<Articolo> articolis_2) {
 		this.articolis_2 = articolis_2;
 	}
 

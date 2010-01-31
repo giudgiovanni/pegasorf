@@ -16,9 +16,9 @@ public class Reparti implements java.io.Serializable {
 	private Date dataCreazione;
 	private String nome;
 	private String descrizione;
-	private Set<Articoli> articolis = new HashSet<Articoli>(0);
-	private Set<Articoli> articolis_1 = new HashSet<Articoli>(0);
-	private Set<Articoli> articolis_2 = new HashSet<Articoli>(0);
+	private Set<Articolo> articolis = new HashSet<Articolo>(0);
+	private Set<Articolo> articolis_1 = new HashSet<Articolo>(0);
+	private Set<Articolo> articolis_2 = new HashSet<Articolo>(0);
 
 	public Reparti() {
 	}
@@ -28,8 +28,8 @@ public class Reparti implements java.io.Serializable {
 	}
 
 	public Reparti(long idreparto, Categoria categoria, Date dataCreazione,
-			String nome, String descrizione, Set<Articoli> articolis,
-			Set<Articoli> articolis_1, Set<Articoli> articolis_2) {
+			String nome, String descrizione, Set<Articolo> articolis,
+			Set<Articolo> articolis_1, Set<Articolo> articolis_2) {
 		this.idreparto = idreparto;
 		this.categoria = categoria;
 		this.dataCreazione = dataCreazione;
@@ -80,27 +80,27 @@ public class Reparti implements java.io.Serializable {
 		this.descrizione = descrizione;
 	}
 
-	public Set<Articoli> getArticolis() {
+	public Set<Articolo> getArticolis() {
 		return this.articolis;
 	}
 
-	public void setArticolis(Set<Articoli> articolis) {
+	public void setArticolis(Set<Articolo> articolis) {
 		this.articolis = articolis;
 	}
 
-	public Set<Articoli> getArticolis_1() {
+	public Set<Articolo> getArticolis_1() {
 		return this.articolis_1;
 	}
 
-	public void setArticolis_1(Set<Articoli> articolis_1) {
+	public void setArticolis_1(Set<Articolo> articolis_1) {
 		this.articolis_1 = articolis_1;
 	}
 
-	public Set<Articoli> getArticolis_2() {
+	public Set<Articolo> getArticolis_2() {
 		return this.articolis_2;
 	}
 
-	public void setArticolis_2(Set<Articoli> articolis_2) {
+	public void setArticolis_2(Set<Articolo> articolis_2) {
 		this.articolis_2 = articolis_2;
 	}
 

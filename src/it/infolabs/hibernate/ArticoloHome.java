@@ -16,34 +16,31 @@ import org.hibernate.Criteria;
 import org.hibernate.LockMode;
 import org.hibernate.criterion.Restrictions;
 
-import rf.pegaso.db.tabelle.Articolo;
 import rf.utility.Constant;
 import static org.hibernate.criterion.Example.create;
 
 /**
  * Home object for domain model class Articoli.
- * @see it.infolabs.hibernate.Articoli
+ * @see it.infolabs.hibernate.Articolo
  * @author Hibernate Tools
  */
-public class ArticoliHome extends BusinessObjectHome{
+public class ArticoloHome extends BusinessObjectHome{
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(ArticoliHome.class);
+	private static final Logger logger = Logger.getLogger(ArticoloHome.class);
 
-	private static final Log log = LogFactory.getLog(ArticoliHome.class);
+	private static final ArticoloHome instance=new ArticoloHome();
 
-	private static final ArticoliHome instance=new ArticoliHome();
-
-	private ArticoliHome() {
+	private ArticoloHome() {
 		super();
 	}
 
-	public static ArticoliHome getInstance() {
+	public static ArticoloHome getInstance() {
 		return instance;
 	}
 
-	public void persist(Articoli transientInstance) throws PersistEntityException{
+	public void persist(Articolo transientInstance) throws PersistEntityException{
 		log.debug("persisting Articoli instance");
 		try {
 			sessionFactory.getCurrentSession().persist(transientInstance);
@@ -54,7 +51,7 @@ public class ArticoliHome extends BusinessObjectHome{
 		}
 	}
 
-	public void attachDirty(Articoli instance) {
+	public void attachDirty(Articolo instance) {
 		log.debug("attaching dirty Articoli instance");
 		try {
 			sessionFactory.getCurrentSession().saveOrUpdate(instance);
@@ -65,7 +62,7 @@ public class ArticoliHome extends BusinessObjectHome{
 		}
 	}
 
-	public void attachClean(Articoli instance) {
+	public void attachClean(Articolo instance) {
 		log.debug("attaching clean Articoli instance");
 		try {
 			sessionFactory.getCurrentSession().lock(instance, LockMode.NONE);
@@ -76,7 +73,7 @@ public class ArticoliHome extends BusinessObjectHome{
 		}
 	}
 
-	public void delete(Articoli persistentInstance) {
+	public void delete(Articolo persistentInstance) {
 		log.debug("deleting Articoli instance");
 		try {
 			sessionFactory.getCurrentSession().delete(persistentInstance);
@@ -87,10 +84,10 @@ public class ArticoliHome extends BusinessObjectHome{
 		}
 	}
 
-	public Articoli merge(Articoli detachedInstance) {
+	public Articolo merge(Articolo detachedInstance) {
 		log.debug("merging Articoli instance");
 		try {
-			Articoli result = (Articoli) sessionFactory.getCurrentSession()
+			Articolo result = (Articolo) sessionFactory.getCurrentSession()
 					.merge(detachedInstance);
 			log.debug("merge successful");
 			return result;
@@ -100,10 +97,10 @@ public class ArticoliHome extends BusinessObjectHome{
 		}
 	}
 
-	public Articoli findById(long id) throws FindByNotFoundException{
+	public Articolo findById(long id) throws FindByNotFoundException{
 		log.debug("getting Articoli instance with id: " + id);
 		try {
-			Articoli instance = (Articoli) sessionFactory.getCurrentSession()
+			Articolo instance = (Articolo) sessionFactory.getCurrentSession()
 					.get("it.infolabs.hibernate.Articoli", id);
 			if (instance == null) {
 				log.debug("get successful, no instance found");
@@ -117,10 +114,10 @@ public class ArticoliHome extends BusinessObjectHome{
 		}
 	}
 
-	public List<Articoli> findByExample(Articoli instance) {
+	public List<Articolo> findByExample(Articolo instance) {
 		log.debug("finding Articoli instance by example");
 		try {
-			List<Articoli> results = (List<Articoli>) sessionFactory
+			List<Articolo> results = (List<Articolo>) sessionFactory
 					.getCurrentSession().createCriteria(
 							"it.infolabs.hibernate.Articoli").add(
 							create(instance)).list();
@@ -139,7 +136,7 @@ public class ArticoliHome extends BusinessObjectHome{
 			logger.debug("getGiacenza(long) - start");
 		}
 
-		Articolo a=new Articolo();
+		rf.pegaso.db.tabelle.Articolo a=new rf.pegaso.db.tabelle.Articolo();
 		double giacenza=0.0;
 		try {
 			a.caricaDati(new Long(articolo).intValue());
@@ -156,9 +153,9 @@ public class ArticoliHome extends BusinessObjectHome{
 	
 	
 	public Double getQtaRiordino(long articolo, double qtaOrdinare){
-		Articoli a;
+		Articolo a;
 		try {
-			a = ArticoliHome.getInstance().findById(articolo);
+			a = ArticoloHome.getInstance().findById(articolo);
 		} catch (FindByNotFoundException e) {
 			return 0.0;
 		}
@@ -234,7 +231,7 @@ public class ArticoliHome extends BusinessObjectHome{
 	public Object[] findByCodBarreWithPrezzoAcquisto(String codBarre){
 		log.debug("finding Articoli instance by codiceBarreWithPrezzoAcquisto");
 		try {
-			Articoli art = null;
+			Articolo art = null;
 			Object[] obj = new Object[2];
 			List<Object[]> results = null;
 			StringBuilder query = new StringBuilder();
@@ -254,7 +251,7 @@ public class ArticoliHome extends BusinessObjectHome{
 				return null;
 			}
 			else{
-				art = (Articoli)results.get(0)[0];
+				art = (Articolo)results.get(0)[0];
 				obj[0] = art;
 				obj[1] = results.get(0)[5];
 				if ( art.isQtaInfinita() ){					
@@ -267,7 +264,7 @@ public class ArticoliHome extends BusinessObjectHome{
 					int qtaC = 0;
 					for (int i = 0; i < results.size(); i++ ){
 						if ( (Double)results.get(i)[5] <= ((Double)results.get(i)[1] + qtaC) ){
-							obj[0] = (Articoli)results.get(i)[0];
+							obj[0] = (Articolo)results.get(i)[0];
 							obj[1] = results.get(i)[5];
 							return obj;
 						}

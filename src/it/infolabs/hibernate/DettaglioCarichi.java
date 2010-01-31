@@ -9,7 +9,7 @@ public class DettaglioCarichi implements java.io.Serializable {
 
 	private DettaglioCarichiId id;
 	private Carichi carichi;
-	private Articoli articoli;
+	private Articolo articoli;
 	private double qta;
 	private Double prezzoAcquisto;
 	private Integer sconto;
@@ -18,7 +18,7 @@ public class DettaglioCarichi implements java.io.Serializable {
 	}
 
 	public DettaglioCarichi(DettaglioCarichiId id, Carichi carichi,
-			Articoli articoli, double qta) {
+			Articolo articoli, double qta) {
 		this.id = id;
 		this.carichi = carichi;
 		this.articoli = articoli;
@@ -26,7 +26,7 @@ public class DettaglioCarichi implements java.io.Serializable {
 	}
 
 	public DettaglioCarichi(DettaglioCarichiId id, Carichi carichi,
-			Articoli articoli, double qta, Double prezzoAcquisto, Integer sconto) {
+			Articolo articoli, double qta, Double prezzoAcquisto, Integer sconto) {
 		this.id = id;
 		this.carichi = carichi;
 		this.articoli = articoli;
@@ -51,11 +51,11 @@ public class DettaglioCarichi implements java.io.Serializable {
 		this.carichi = carichi;
 	}
 
-	public Articoli getArticoli() {
+	public Articolo getArticoli() {
 		return this.articoli;
 	}
 
-	public void setArticoli(Articoli articoli) {
+	public void setArticoli(Articolo articoli) {
 		this.articoli = articoli;
 	}
 

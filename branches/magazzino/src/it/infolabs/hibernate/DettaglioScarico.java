@@ -9,7 +9,7 @@ public class DettaglioScarico implements java.io.Serializable {
 
 	private DettaglioScaricoId id;
 	private Scarico ordini;
-	private Articoli articoli;
+	private Articolo articoli;
 	private double qta;
 	private Long sconto;
 	private Double prezzoAcquisto;
@@ -20,7 +20,7 @@ public class DettaglioScarico implements java.io.Serializable {
 	}
 
 	public DettaglioScarico(DettaglioScaricoId id, Scarico ordini,
-			Articoli articoli, double qta) {
+			Articolo articoli, double qta) {
 		this.id = id;
 		this.ordini = ordini;
 		this.articoli = articoli;
@@ -28,7 +28,7 @@ public class DettaglioScarico implements java.io.Serializable {
 	}
 
 	public DettaglioScarico(DettaglioScaricoId id, Scarico ordini,
-			Articoli articoli, double qta, Long sconto, Double prezzoAcquisto,
+			Articolo articoli, double qta, Long sconto, Double prezzoAcquisto,
 			Double prezzoVendita, Integer iva) {
 		this.id = id;
 		this.ordini = ordini;
@@ -56,11 +56,11 @@ public class DettaglioScarico implements java.io.Serializable {
 		this.ordini = ordini;
 	}
 
-	public Articoli getArticoli() {
+	public Articolo getArticoli() {
 		return this.articoli;
 	}
 
-	public void setArticoli(Articoli articoli) {
+	public void setArticoli(Articolo articoli) {
 		this.articoli = articoli;
 	}
 

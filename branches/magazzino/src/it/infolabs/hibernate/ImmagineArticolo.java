@@ -8,7 +8,7 @@ package it.infolabs.hibernate;
 public class ImmagineArticolo implements java.io.Serializable {
 
 	private long id;
-	private Articoli articoli;
+	private Articolo articoli;
 	private String nome;
 	private String estensione;
 	private byte[] file;
@@ -21,7 +21,7 @@ public class ImmagineArticolo implements java.io.Serializable {
 		this.nome = nome;
 	}
 
-	public ImmagineArticolo(long id, Articoli articoli, String nome,
+	public ImmagineArticolo(long id, Articolo articoli, String nome,
 			String estensione, byte[] file) {
 		this.id = id;
 		this.articoli = articoli;
@@ -38,11 +38,11 @@ public class ImmagineArticolo implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public Articoli getArticoli() {
+	public Articolo getArticoli() {
 		return this.articoli;
 	}
 
-	public void setArticoli(Articoli articoli) {
+	public void setArticoli(Articolo articoli) {
 		this.articoli = articoli;
 	}
 

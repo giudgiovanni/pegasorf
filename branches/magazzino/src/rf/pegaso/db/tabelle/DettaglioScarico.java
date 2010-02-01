@@ -25,7 +25,7 @@ public class DettaglioScarico implements Comparator<DettaglioScarico>{
 	private double disponibilita;
 	private double prezzoAcquisto;
 	private double prezzoVendita;
-	private int iva;
+	private long iva;
 	private int sconto;
 	private boolean qtaInfinita;
 
@@ -96,7 +96,7 @@ public class DettaglioScarico implements Comparator<DettaglioScarico>{
 		this.sconto = sconto;
 	}
 
-	public int getIva() {
+	public long getIva() {
 		return iva;
 	}
 
@@ -162,7 +162,7 @@ public class DettaglioScarico implements Comparator<DettaglioScarico>{
 				prezzoAcquisto = a.getPrezzoAcquisto();
 				prezzoVendita = a.getPrezzoDettaglio();
 				codiceBarre = a.getCodbarre();
-				iva = (int)a.getIva();
+				iva =a.getIva();
 				qta = 1.0;
 				qtaInfinita = a.isQtaInfinita();
 				disponibilita = (Double)obj[1];
@@ -308,7 +308,7 @@ public class DettaglioScarico implements Comparator<DettaglioScarico>{
 			pst.setInt(4, sconto);
 			pst.setDouble(5, prezzoAcquisto);
 			pst.setDouble(6, prezzoVendita);
-			pst.setInt(7, iva);
+			pst.setLong(7, iva);
 			pst.executeUpdate();
 
 		} catch (SQLException e) {

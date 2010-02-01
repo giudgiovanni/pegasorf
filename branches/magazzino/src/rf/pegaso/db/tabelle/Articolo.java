@@ -8,7 +8,7 @@ package rf.pegaso.db.tabelle;
 import it.infolabs.hibernate.ArticoloHome;
 import it.infolabs.hibernate.FornitoreHome;
 import it.infolabs.hibernate.PannelliHome;
-import it.infolabs.hibernate.RepartiHome;
+import it.infolabs.hibernate.RepartoHome;
 import it.infolabs.hibernate.UmHome;
 import it.infolabs.hibernate.exception.FindByNotFoundException;
 import it.infolabs.hibernate.exception.PersistEntityException;
@@ -648,7 +648,7 @@ public class Articolo {
 		art.setCodbarre(codBarre);
 		art.setDescrizione(this.descrizione);
 		art.setPrezzoAcquisto(this.prezzoAcquisto);
-		art.setIva(this.iva);
+		art.setIva(new Long(this.iva));
 		try {
 			UmHome.getInstance().begin();
 			art.setUm(UmHome.getInstance().findById(this.um));
@@ -661,32 +661,18 @@ public class Articolo {
 		art.setPeso(peso);
 		art.setSconto((long)sconto);
 		if ( idReparto > 0 ){
-			try {
-				RepartiHome.getInstance().begin();
-				art.setReparti(RepartiHome.getInstance().findById(idReparto));
-			} catch (FindByNotFoundException e) {
-			}
+			RepartoHome.getInstance().begin();
+			art.setReparto(RepartoHome.getInstance().findById(idReparto));
 		}
 		art.setColore(colore);
 		art.setScortaMinima((long)scortaMinima);
 		art.setNote(note);
 		art.setDataInserimento(dataInserimento);
-		if ( idFornitore > 0 ){
-			try {
-				FornitoreHome.getInstance().begin();
-				art.setFornitori(FornitoreHome.getInstance().findById(idFornitore));
-			} catch (FindByNotFoundException e) {
-			}
-		}
 		art.setCaricoIniziale((long)caricoIniziale);
 		art.setScortaMassima((long)scortaMassima);
 		art.setPannelli(PannelliHome.getInstance().findById(idPannello));
 		ArticoloHome.getInstance().begin();
-		try {
-			ArticoloHome.getInstance().persist(art);
-		} catch (PersistEntityException e) {
-			return -1;
-		}
+		ArticoloHome.getInstance().persist(art);
 		dbm.notifyDBStateChange();
 		Scarico.insertScaricoInizialeZero(idArticolo);
 		return 1;
@@ -879,18 +865,14 @@ public class Articolo {
 			throw new CodiceBarreEsistente();
 		}
 		it.infolabs.hibernate.Articolo art;
-		try {
-			ArticoloHome.getInstance().begin();
-			art = ArticoloHome.getInstance().findById(idArticolo);
-		} catch (FindByNotFoundException e2) {
-			throw new IDNonValido();
-		}
+		ArticoloHome.getInstance().begin();
+		art = ArticoloHome.getInstance().findById(idArticolo);
 		art.setIdarticolo(this.idArticolo);
 		art.setCodfornitore(codFornitore);
 		art.setCodbarre(codBarre);
 		art.setDescrizione(this.descrizione);
 		art.setPrezzoAcquisto(this.prezzoAcquisto);
-		art.setIva(this.iva);
+		art.setIva(new Long(iva));
 		try {
 			UmHome.getInstance().begin();
 			art.setUm(UmHome.getInstance().findById(this.um));
@@ -903,33 +885,19 @@ public class Articolo {
 		art.setPeso(peso);
 		art.setSconto((long)sconto);
 		if ( idReparto > 0 ){
-			try {
-				RepartiHome.getInstance().begin();
-				art.setReparti(RepartiHome.getInstance().findById(idReparto));
-			} catch (FindByNotFoundException e) {
-			}
+			RepartoHome.getInstance().begin();
+			art.setReparto(RepartoHome.getInstance().findById(idReparto));
 		}
 		art.setColore(colore);
 		art.setScortaMinima((long)scortaMinima);
 		art.setNote(note);
 		art.setDataInserimento(dataInserimento);
-		if ( idFornitore > 0 ){
-			try {
-				FornitoreHome.getInstance().begin();
-				art.setFornitori(FornitoreHome.getInstance().findById(idFornitore));
-			} catch (FindByNotFoundException e) {
-			}
-		}
 		art.setCaricoIniziale((long)caricoIniziale);
 		art.setScortaMassima((long)scortaMassima);
 		art.setPannelli(PannelliHome.getInstance().findById(idPannello));
 		ArticoloHome.getInstance().begin();
-		try {
-			ArticoloHome.getInstance().persist(art);
-			ArticoloHome.getInstance().commit();
-		} catch (PersistEntityException e) {
-			return -1;
-		}
+		ArticoloHome.getInstance().persist(art);
+		ArticoloHome.getInstance().commit();
 		dbm.notifyDBStateChange();
 		if(!Scarico.codiceBarrePresenteInScarico(art.getCodbarre(), 0)){
 			Scarico.insertScaricoInizialeZero(idArticolo);

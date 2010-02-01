@@ -220,7 +220,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 				break;
 			}
 			case 3: {
-				o = new Integer(riga.getIva());
+				o = new Long(riga.getIva());
 				break;
 			}
 			case 4: {
@@ -424,7 +424,7 @@ public class JPanelRiepilogoVendita extends JPanel {
 			DettaglioScarico d=(DettaglioScarico)dv[i];
 			TicketRow row=new TicketRow();
 			row.setDescrizione(d.getDescrizione());
-			row.setIva(d.getIva());
+			row.setIva(new Long(d.getIva()));
 			row.setPrezzo(((Number)d.getPrezzoVendita()).floatValue());
 			row.setQta(((Number)d.getQta()).floatValue());
 			row.setReparto(1);

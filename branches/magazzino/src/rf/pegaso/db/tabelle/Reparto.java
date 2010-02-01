@@ -44,7 +44,7 @@ public class Reparto {
 		String[] o = null;
 		ResultSet rs = null;
 		Statement pst = null;
-		String query = "select idreparto || ' - ' || nome from reparti";
+		String query = "select idreparto || ' - ' || nome from reparto";
 		pst = dbm.getNewStatement();
 		rs = pst.executeQuery(query);
 		rs.last();

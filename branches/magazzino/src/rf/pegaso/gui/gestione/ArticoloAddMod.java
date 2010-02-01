@@ -10,7 +10,7 @@ import it.infolabs.hibernate.ImmagineArticolo;
 import it.infolabs.hibernate.ImmagineArticoloHome;
 import it.infolabs.hibernate.Pannelli;
 import it.infolabs.hibernate.PannelliHome;
-import it.infolabs.hibernate.RepartiHome;
+import it.infolabs.hibernate.RepartoHome;
 import it.infolabs.hibernate.UmHome;
 import it.infolabs.hibernate.exception.FindByNotFoundException;
 import it.infolabs.hibernate.exception.PersistEntityException;
@@ -614,23 +614,23 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener {
 	/**
 	 * @param cmbFornitori2
 	 */
-	private void caricaFornitori(JComboBox cmbFornitori) {
-		Fornitore f = new Fornitore();
-		try {
-			// cmbFornitori=new JComboBox(f.allFornitori());
-			cmbFornitori.removeAllItems();
-			cmbFornitori.addItem("");
-			for (String fornitore : (String[]) f.allFornitori()) {
-				cmbFornitori.addItem(fornitore);
-			}
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(this,
-					"Errore caricamento fornitori nel combobox", "ERRORE",
-					JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}
-
-	}
+//	private void caricaFornitori(JComboBox cmbFornitori) {
+//		Fornitore f = new Fornitore();
+//		try {
+//			// cmbFornitori=new JComboBox(f.allFornitori());
+//			cmbFornitori.removeAllItems();
+//			cmbFornitori.addItem("");
+//			for (String fornitore : (String[]) f.allFornitori()) {
+//				cmbFornitori.addItem(fornitore);
+//			}
+//		} catch (SQLException e) {
+//			JOptionPane.showMessageDialog(this,
+//					"Errore caricamento fornitori nel combobox", "ERRORE",
+//					JOptionPane.ERROR_MESSAGE);
+//			e.printStackTrace();
+//		}
+//
+//	}
 
 	/**
 	 *
@@ -1338,7 +1338,7 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener {
 		pos = Arrays.ricercaLineare(codUnitaDiMisura, new Long(art.getUm().getIdum()).toString());
 		this.cmbMisura.setSelectedIndex(pos+1);
 		// cerchiamo la pos del codice nell'array reparti
-		pos = Arrays.ricercaLineare(codReparti, new Long(art.getReparti().getIdreparto()).toString());
+		pos = Arrays.ricercaLineare(codReparti, new Long(art.getReparto().getIdreparto()).toString());
 		this.cmbReparto.setSelectedIndex(pos+1);
 		// cerchiamo la pos del codice nell'array pannelli
 		if ( art.getPannelli() != null ){
@@ -1370,12 +1370,7 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener {
 		if (modalita == MOD) {
 			this.setTitle("Modifica Articolo");
 			Articolo art;
-			try {
-				art = ArticoloHome.getInstance().findById(idArticolo);
-			} catch (FindByNotFoundException e) {
-				messaggioErroreCampo("Impossibile Caricare l'Articolo Selezionato.");
-				return;
-			}
+			art = ArticoloHome.getInstance().findById(idArticolo);
 			ultimoArticolo[0]=art.getCodbarre();
 			impostaCampi(art);
 //			calcoloPercentualeRicarico();
@@ -1633,9 +1628,6 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener {
 			JOptionPane.showMessageDialog(this, fe.toString(),
 					"ERRORE", JOptionPane.ERROR_MESSAGE);
 			fe.printStackTrace();
-		} catch (PersistEntityException pe) {
-			JOptionPane.showMessageDialog(this, pe.toString(),
-					"ERRORE", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
@@ -1684,9 +1676,6 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener {
 			JOptionPane.showMessageDialog(this, fe.toString(),
 					"ERRORE", JOptionPane.ERROR_MESSAGE);
 			fe.printStackTrace();
-		} catch (PersistEntityException pe) {
-			JOptionPane.showMessageDialog(this, pe.toString(),
-					"ERRORE", JOptionPane.ERROR_MESSAGE);
 		}
 
 	}
@@ -1753,7 +1742,7 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener {
 		// anche un oggetto vuoto
 		pos--;
 		cod = new Integer(codReparti[pos]);
-		a.setReparti(RepartiHome.getInstance().findById(cod));
+		a.setReparto(RepartoHome.getInstance().findById(cod));
 		
 		// Preleviamo il codice del pannello
 		if ( cmbPannelli.getSelectedIndex() > 0 ){

@@ -690,12 +690,8 @@ public class ClientiAdd extends JDialog {
 		c.setWebsite(txtWebSite.getText());
 		c.setNote(txtNote.getText());
 		ClienteHome.getInstance().begin();
-		try {
-			ClienteHome.getInstance().persist(c);
-			ClienteHome.getInstance().commit();
-		} catch (PersistEntityException e) {
-			e.printStackTrace();
-		}
+		ClienteHome.getInstance().persist(c);
+		ClienteHome.getInstance().commit();
 		dispose();
 
 	}

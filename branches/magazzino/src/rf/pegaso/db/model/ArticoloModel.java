@@ -101,12 +101,9 @@ public class ArticoloModel extends AbstractTableModel implements DBStateChange {
 			return tmp.getIva();
 		}
 		else{
-			if ( tmp.getFornitori() != null ){
-				return tmp.getFornitori().getNome();
-			}
-			else{
+			
 				return "";
-			}
+			
 		}
 	}
 
@@ -131,7 +128,7 @@ public class ArticoloModel extends AbstractTableModel implements DBStateChange {
 	private void recuperaDati() throws FindAllEntityException {
 		ArticoloHome.getInstance().begin();
 		Criteria crit = ArticoloHome.getInstance().getSessionFactory()
-			.getCurrentSession().createCriteria("it.infolabs.hibernate.Articoli").addOrder(Order.asc("descrizione"));
+			.getCurrentSession().createCriteria("it.infolabs.hibernate.Articolo").addOrder(Order.asc("descrizione"));
 		resultList = crit.list();
 	}
 

@@ -132,13 +132,7 @@ public class ClientiGestione extends JDialog {
 		int riga = tblClienti.getSelectedRow();
 		int idCliente = ((Number) tblClienti.getValueAt(riga, 0)).intValue();
 		ClienteHome.getInstance().begin();
-		try {
-			ClienteHome.getInstance().delete(ClienteHome.getInstance().findById(idCliente));
-		} catch (DeleteEntityException e) {
-			e.printStackTrace();
-		} catch (FindByNotFoundException e) {
-			e.printStackTrace();
-		}
+		ClienteHome.getInstance().delete(ClienteHome.getInstance().findById(idCliente));
 	}
 
 	/**

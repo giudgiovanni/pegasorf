@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 1-feb-2010 2.09.21 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
-    <class name="it.infolabs.hibernate.Ordini" table="ordini" schema="public">
-        <id name="idordine" type="long">
+    <class name="it.infolabs.hibernate.Scarico" table="scarico" schema="public">
+        <id name="idordine" type="long" unsaved-value="0">
             <column name="idordine" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <many-to-one name="tipoDocumento" class="it.infolabs.hibernate.TipoDocumento" fetch="select">
             <column name="tipo_documento" />
@@ -23,7 +23,7 @@
         <many-to-one name="pagamentoByIdpagamento" class="it.infolabs.hibernate.Pagamento" fetch="select">
             <column name="idpagamento" />
         </many-to-one>
-        <many-to-one name="clienti" class="it.infolabs.hibernate.Clienti" fetch="select">
+        <many-to-one name="cliente" class="it.infolabs.hibernate.Cliente" fetch="select">
             <column name="idcliente" />
         </many-to-one>
         <property name="dataOrdine" type="date">
@@ -101,41 +101,41 @@
         <property name="riferimentoOrdine" type="java.lang.Long">
             <column name="riferimento_ordine" />
         </property>
-        <set name="dettaglioOrdinis" inverse="true" lazy="true" table="dettaglio_ordini" fetch="select">
+        <set name="dettaglioScaricos" inverse="true" lazy="true" table="dettaglio_scarico" fetch="select">
             <key>
                 <column name="idordine" not-null="true" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.DettaglioOrdini" />
+            <one-to-many class="it.infolabs.hibernate.DettaglioScarico" />
         </set>
-        <set name="dettaglioOrdinis_1" inverse="true" lazy="true" table="dettaglio_ordini" fetch="select">
+        <set name="dettaglioScaricos_1" inverse="true" lazy="true" table="dettaglio_scarico" fetch="select">
             <key>
                 <column name="idordine" not-null="true" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.DettaglioOrdini" />
+            <one-to-many class="it.infolabs.hibernate.DettaglioScarico" />
         </set>
-        <set name="dettaglioOrdinis_2" inverse="true" lazy="true" table="dettaglio_ordini" fetch="select">
+        <set name="dettaglioScaricos_2" inverse="true" lazy="true" table="dettaglio_scarico" fetch="select">
             <key>
                 <column name="idordine" not-null="true" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.DettaglioOrdini" />
+            <one-to-many class="it.infolabs.hibernate.DettaglioScarico" />
         </set>
-        <set name="dettaglioOrdineManuales" inverse="true" lazy="true" table="dettaglio_ordine_manuale" fetch="select">
+        <set name="dettaglioScaricoManuales" inverse="true" lazy="true" table="dettaglio_scarico_manuale" fetch="select">
             <key>
                 <column name="ordine" not-null="true" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.DettaglioOrdineManuale" />
+            <one-to-many class="it.infolabs.hibernate.DettaglioScaricoManuale" />
         </set>
-        <set name="dettaglioOrdineManuales_1" inverse="true" lazy="true" table="dettaglio_ordine_manuale" fetch="select">
+        <set name="dettaglioScaricoManuales_1" inverse="true" lazy="true" table="dettaglio_scarico_manuale" fetch="select">
             <key>
                 <column name="ordine" not-null="true" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.DettaglioOrdineManuale" />
+            <one-to-many class="it.infolabs.hibernate.DettaglioScaricoManuale" />
         </set>
-        <set name="dettaglioOrdineManuales_2" inverse="true" lazy="true" table="dettaglio_ordine_manuale" fetch="select">
+        <set name="dettaglioScaricoManuales_2" inverse="true" lazy="true" table="dettaglio_scarico_manuale" fetch="select">
             <key>
                 <column name="ordine" not-null="true" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.DettaglioOrdineManuale" />
+            <one-to-many class="it.infolabs.hibernate.DettaglioScaricoManuale" />
         </set>
     </class>
 </hibernate-mapping>

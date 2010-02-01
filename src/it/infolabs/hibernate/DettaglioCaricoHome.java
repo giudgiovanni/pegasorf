@@ -1,41 +1,39 @@
 package it.infolabs.hibernate;
 
-// Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA
+// Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA
 
 import java.util.List;
 import javax.naming.InitialContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.Logger;
 import org.hibernate.LockMode;
 import org.hibernate.SessionFactory;
 import static org.hibernate.criterion.Example.create;
 
 /**
- * Home object for domain model class Carichi.
- * @see it.infolabs.hibernate.Carichi
+ * Home object for domain model class DettaglioCarico.
+ * @see it.infolabs.hibernate.DettaglioCarico
  * @author Hibernate Tools
  */
-public class CarichiHome extends BusinessObjectHome{
-	/**
-	 * Logger for this class
-	 */
-	private static final Logger logger = Logger.getLogger(CarichiHome.class);
+public class DettaglioCaricoHome {
 
-	private static final Log log = LogFactory.getLog(CarichiHome.class);
+	private static final Log log = LogFactory.getLog(DettaglioCaricoHome.class);
 
-	private static final CarichiHome instance=new CarichiHome();
+	private final SessionFactory sessionFactory = getSessionFactory();
 
-	private CarichiHome() {
-		super();
+	protected SessionFactory getSessionFactory() {
+		try {
+			return (SessionFactory) new InitialContext()
+					.lookup("SessionFactory");
+		} catch (Exception e) {
+			log.error("Could not locate SessionFactory in JNDI", e);
+			throw new IllegalStateException(
+					"Could not locate SessionFactory in JNDI");
+		}
 	}
 
-	public static CarichiHome getInstance() {
-		return instance;
-	}
-
-	public void persist(Carichi transientInstance) {
-		log.debug("persisting Carichi instance");
+	public void persist(DettaglioCarico transientInstance) {
+		log.debug("persisting DettaglioCarico instance");
 		try {
 			sessionFactory.getCurrentSession().persist(transientInstance);
 			log.debug("persist successful");
@@ -45,8 +43,8 @@ public class CarichiHome extends BusinessObjectHome{
 		}
 	}
 
-	public void attachDirty(Carichi instance) {
-		log.debug("attaching dirty Carichi instance");
+	public void attachDirty(DettaglioCarico instance) {
+		log.debug("attaching dirty DettaglioCarico instance");
 		try {
 			sessionFactory.getCurrentSession().saveOrUpdate(instance);
 			log.debug("attach successful");
@@ -56,8 +54,8 @@ public class CarichiHome extends BusinessObjectHome{
 		}
 	}
 
-	public void attachClean(Carichi instance) {
-		log.debug("attaching clean Carichi instance");
+	public void attachClean(DettaglioCarico instance) {
+		log.debug("attaching clean DettaglioCarico instance");
 		try {
 			sessionFactory.getCurrentSession().lock(instance, LockMode.NONE);
 			log.debug("attach successful");
@@ -67,8 +65,8 @@ public class CarichiHome extends BusinessObjectHome{
 		}
 	}
 
-	public void delete(Carichi persistentInstance) {
-		log.debug("deleting Carichi instance");
+	public void delete(DettaglioCarico persistentInstance) {
+		log.debug("deleting DettaglioCarico instance");
 		try {
 			sessionFactory.getCurrentSession().delete(persistentInstance);
 			log.debug("delete successful");
@@ -78,11 +76,11 @@ public class CarichiHome extends BusinessObjectHome{
 		}
 	}
 
-	public Carichi merge(Carichi detachedInstance) {
-		log.debug("merging Carichi instance");
+	public DettaglioCarico merge(DettaglioCarico detachedInstance) {
+		log.debug("merging DettaglioCarico instance");
 		try {
-			Carichi result = (Carichi) sessionFactory.getCurrentSession()
-					.merge(detachedInstance);
+			DettaglioCarico result = (DettaglioCarico) sessionFactory
+					.getCurrentSession().merge(detachedInstance);
 			log.debug("merge successful");
 			return result;
 		} catch (RuntimeException re) {
@@ -91,11 +89,12 @@ public class CarichiHome extends BusinessObjectHome{
 		}
 	}
 
-	public Carichi findById(long id) {
-		log.debug("getting Carichi instance with id: " + id);
+	public DettaglioCarico findById(it.infolabs.hibernate.DettaglioCaricoId id) {
+		log.debug("getting DettaglioCarico instance with id: " + id);
 		try {
-			Carichi instance = (Carichi) sessionFactory.getCurrentSession()
-					.get("it.infolabs.hibernate.Carichi", id);
+			DettaglioCarico instance = (DettaglioCarico) sessionFactory
+					.getCurrentSession().get(
+							"it.infolabs.hibernate.DettaglioCarico", id);
 			if (instance == null) {
 				log.debug("get successful, no instance found");
 			} else {
@@ -108,12 +107,12 @@ public class CarichiHome extends BusinessObjectHome{
 		}
 	}
 
-	public List<Carichi> findByExample(Carichi instance) {
-		log.debug("finding Carichi instance by example");
+	public List<DettaglioCarico> findByExample(DettaglioCarico instance) {
+		log.debug("finding DettaglioCarico instance by example");
 		try {
-			List<Carichi> results = (List<Carichi>) sessionFactory
+			List<DettaglioCarico> results = (List<DettaglioCarico>) sessionFactory
 					.getCurrentSession().createCriteria(
-							"it.infolabs.hibernate.Carichi").add(
+							"it.infolabs.hibernate.DettaglioCarico").add(
 							create(instance)).list();
 			log.debug("find by example successful, result size: "
 					+ results.size());

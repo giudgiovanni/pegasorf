@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
-    <class name="it.infolabs.hibernate.DettaglioOrdineManuale" table="dettaglio_ordine_manuale" schema="public">
-        <composite-id name="id" class="it.infolabs.hibernate.DettaglioOrdineManualeId">
+    <class name="it.infolabs.hibernate.DettaglioScaricoManuale" table="dettaglio_scarico_manuale" schema="public">
+        <composite-id name="id" class="it.infolabs.hibernate.DettaglioScaricoManualeId">
             <key-property name="id" type="long">
                 <column name="id" />
             </key-property>
@@ -12,7 +12,7 @@
                 <column name="ordine" />
             </key-property>
         </composite-id>
-        <many-to-one name="ordini" class="it.infolabs.hibernate.Ordini" update="false" insert="false" fetch="select">
+        <many-to-one name="scarico" class="it.infolabs.hibernate.Scarico" update="false" insert="false" fetch="select">
             <column name="ordine" not-null="true" />
         </many-to-one>
         <property name="descrizione" type="string">

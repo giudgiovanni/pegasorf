@@ -1,6 +1,6 @@
 package it.infolabs.hibernate;
 
-// Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA
+// Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA
 
 import java.util.List;
 import javax.naming.InitialContext;
@@ -11,7 +11,7 @@ import org.hibernate.SessionFactory;
 import static org.hibernate.criterion.Example.create;
 
 /**
- * Home object for domain model class DettaglioOrdineManuale.
+ * Home object for domain model class DettaglioScaricoManuale.
  * @see it.infolabs.hibernate.DettaglioScaricoManuale
  * @author Hibernate Tools
  */
@@ -34,7 +34,7 @@ public class DettaglioScaricoManualeHome {
 	}
 
 	public void persist(DettaglioScaricoManuale transientInstance) {
-		log.debug("persisting DettaglioOrdineManuale instance");
+		log.debug("persisting DettaglioScaricoManuale instance");
 		try {
 			sessionFactory.getCurrentSession().persist(transientInstance);
 			log.debug("persist successful");
@@ -45,7 +45,7 @@ public class DettaglioScaricoManualeHome {
 	}
 
 	public void attachDirty(DettaglioScaricoManuale instance) {
-		log.debug("attaching dirty DettaglioOrdineManuale instance");
+		log.debug("attaching dirty DettaglioScaricoManuale instance");
 		try {
 			sessionFactory.getCurrentSession().saveOrUpdate(instance);
 			log.debug("attach successful");
@@ -56,7 +56,7 @@ public class DettaglioScaricoManualeHome {
 	}
 
 	public void attachClean(DettaglioScaricoManuale instance) {
-		log.debug("attaching clean DettaglioOrdineManuale instance");
+		log.debug("attaching clean DettaglioScaricoManuale instance");
 		try {
 			sessionFactory.getCurrentSession().lock(instance, LockMode.NONE);
 			log.debug("attach successful");
@@ -67,7 +67,7 @@ public class DettaglioScaricoManualeHome {
 	}
 
 	public void delete(DettaglioScaricoManuale persistentInstance) {
-		log.debug("deleting DettaglioOrdineManuale instance");
+		log.debug("deleting DettaglioScaricoManuale instance");
 		try {
 			sessionFactory.getCurrentSession().delete(persistentInstance);
 			log.debug("delete successful");
@@ -77,8 +77,9 @@ public class DettaglioScaricoManualeHome {
 		}
 	}
 
-	public DettaglioScaricoManuale merge(DettaglioScaricoManuale detachedInstance) {
-		log.debug("merging DettaglioOrdineManuale instance");
+	public DettaglioScaricoManuale merge(
+			DettaglioScaricoManuale detachedInstance) {
+		log.debug("merging DettaglioScaricoManuale instance");
 		try {
 			DettaglioScaricoManuale result = (DettaglioScaricoManuale) sessionFactory
 					.getCurrentSession().merge(detachedInstance);
@@ -92,11 +93,11 @@ public class DettaglioScaricoManualeHome {
 
 	public DettaglioScaricoManuale findById(
 			it.infolabs.hibernate.DettaglioScaricoManualeId id) {
-		log.debug("getting DettaglioOrdineManuale instance with id: " + id);
+		log.debug("getting DettaglioScaricoManuale instance with id: " + id);
 		try {
 			DettaglioScaricoManuale instance = (DettaglioScaricoManuale) sessionFactory
-					.getCurrentSession().get(
-							"it.infolabs.hibernate.DettaglioOrdineManuale", id);
+					.getCurrentSession()
+					.get("it.infolabs.hibernate.DettaglioScaricoManuale", id);
 			if (instance == null) {
 				log.debug("get successful, no instance found");
 			} else {
@@ -111,11 +112,11 @@ public class DettaglioScaricoManualeHome {
 
 	public List<DettaglioScaricoManuale> findByExample(
 			DettaglioScaricoManuale instance) {
-		log.debug("finding DettaglioOrdineManuale instance by example");
+		log.debug("finding DettaglioScaricoManuale instance by example");
 		try {
 			List<DettaglioScaricoManuale> results = (List<DettaglioScaricoManuale>) sessionFactory
 					.getCurrentSession().createCriteria(
-							"it.infolabs.hibernate.DettaglioOrdineManuale")
+							"it.infolabs.hibernate.DettaglioScaricoManuale")
 					.add(create(instance)).list();
 			log.debug("find by example successful, result size: "
 					+ results.size());

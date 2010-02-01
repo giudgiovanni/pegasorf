@@ -1,6 +1,6 @@
 package it.infolabs.hibernate;
 
-// Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA
+// Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,9 +12,9 @@ public class Causale implements java.io.Serializable {
 
 	private long idcausale;
 	private String nome;
-	private Set<Scarico> ordinis = new HashSet<Scarico>(0);
-	private Set<Scarico> ordinis_1 = new HashSet<Scarico>(0);
-	private Set<Scarico> ordinis_2 = new HashSet<Scarico>(0);
+	private Set<Scarico> scaricos = new HashSet<Scarico>(0);
+	private Set<Scarico> scaricos_1 = new HashSet<Scarico>(0);
+	private Set<Scarico> scaricos_2 = new HashSet<Scarico>(0);
 
 	public Causale() {
 	}
@@ -24,13 +24,13 @@ public class Causale implements java.io.Serializable {
 		this.nome = nome;
 	}
 
-	public Causale(long idcausale, String nome, Set<Scarico> ordinis,
-			Set<Scarico> ordinis_1, Set<Scarico> ordinis_2) {
+	public Causale(long idcausale, String nome, Set<Scarico> scaricos,
+			Set<Scarico> scaricos_1, Set<Scarico> scaricos_2) {
 		this.idcausale = idcausale;
 		this.nome = nome;
-		this.ordinis = ordinis;
-		this.ordinis_1 = ordinis_1;
-		this.ordinis_2 = ordinis_2;
+		this.scaricos = scaricos;
+		this.scaricos_1 = scaricos_1;
+		this.scaricos_2 = scaricos_2;
 	}
 
 	public long getIdcausale() {
@@ -49,28 +49,28 @@ public class Causale implements java.io.Serializable {
 		this.nome = nome;
 	}
 
-	public Set<Scarico> getOrdinis() {
-		return this.ordinis;
+	public Set<Scarico> getScaricos() {
+		return this.scaricos;
 	}
 
-	public void setOrdinis(Set<Scarico> ordinis) {
-		this.ordinis = ordinis;
+	public void setScaricos(Set<Scarico> scaricos) {
+		this.scaricos = scaricos;
 	}
 
-	public Set<Scarico> getOrdinis_1() {
-		return this.ordinis_1;
+	public Set<Scarico> getScaricos_1() {
+		return this.scaricos_1;
 	}
 
-	public void setOrdinis_1(Set<Scarico> ordinis_1) {
-		this.ordinis_1 = ordinis_1;
+	public void setScaricos_1(Set<Scarico> scaricos_1) {
+		this.scaricos_1 = scaricos_1;
 	}
 
-	public Set<Scarico> getOrdinis_2() {
-		return this.ordinis_2;
+	public Set<Scarico> getScaricos_2() {
+		return this.scaricos_2;
 	}
 
-	public void setOrdinis_2(Set<Scarico> ordinis_2) {
-		this.ordinis_2 = ordinis_2;
+	public void setScaricos_2(Set<Scarico> scaricos_2) {
+		this.scaricos_2 = scaricos_2;
 	}
 
 }

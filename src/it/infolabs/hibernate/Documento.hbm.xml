@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="it.infolabs.hibernate.Documento" table="documento" schema="doc">
+        <composite-id name="id" class="it.infolabs.hibernate.DocumentoId">
+            <key-property name="id" type="java.lang.Long">
+                <column name="id" />
+            </key-property>
+            <key-property name="dataEmissione" type="date">
+                <column name="data_emissione" length="13" />
+            </key-property>
+            <key-property name="tipoDocumento" type="java.lang.Short">
+                <column name="tipo_documento" />
+            </key-property>
+            <key-property name="cliente" type="java.lang.Long">
+                <column name="cliente" />
+            </key-property>
+            <key-property name="note" type="string">
+                <column name="note" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

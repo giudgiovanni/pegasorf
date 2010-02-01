@@ -1,6 +1,6 @@
 package it.infolabs.hibernate;
 
-// Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA
+// Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA
 
 import java.util.List;
 import javax.naming.InitialContext;
@@ -11,14 +11,13 @@ import org.hibernate.SessionFactory;
 import static org.hibernate.criterion.Example.create;
 
 /**
- * Home object for domain model class DettagliDocumenti.
- * @see it.infolabs.hibernate.DettagliDocumenti
+ * Home object for domain model class Carico.
+ * @see it.infolabs.hibernate.Carico
  * @author Hibernate Tools
  */
-public class DettagliDocumentiHome {
+public class CaricoHome {
 
-	private static final Log log = LogFactory
-			.getLog(DettagliDocumentiHome.class);
+	private static final Log log = LogFactory.getLog(CaricoHome.class);
 
 	private final SessionFactory sessionFactory = getSessionFactory();
 
@@ -33,8 +32,8 @@ public class DettagliDocumentiHome {
 		}
 	}
 
-	public void persist(DettagliDocumenti transientInstance) {
-		log.debug("persisting DettagliDocumenti instance");
+	public void persist(Carico transientInstance) {
+		log.debug("persisting Carico instance");
 		try {
 			sessionFactory.getCurrentSession().persist(transientInstance);
 			log.debug("persist successful");
@@ -44,8 +43,8 @@ public class DettagliDocumentiHome {
 		}
 	}
 
-	public void attachDirty(DettagliDocumenti instance) {
-		log.debug("attaching dirty DettagliDocumenti instance");
+	public void attachDirty(Carico instance) {
+		log.debug("attaching dirty Carico instance");
 		try {
 			sessionFactory.getCurrentSession().saveOrUpdate(instance);
 			log.debug("attach successful");
@@ -55,8 +54,8 @@ public class DettagliDocumentiHome {
 		}
 	}
 
-	public void attachClean(DettagliDocumenti instance) {
-		log.debug("attaching clean DettagliDocumenti instance");
+	public void attachClean(Carico instance) {
+		log.debug("attaching clean Carico instance");
 		try {
 			sessionFactory.getCurrentSession().lock(instance, LockMode.NONE);
 			log.debug("attach successful");
@@ -66,8 +65,8 @@ public class DettagliDocumentiHome {
 		}
 	}
 
-	public void delete(DettagliDocumenti persistentInstance) {
-		log.debug("deleting DettagliDocumenti instance");
+	public void delete(Carico persistentInstance) {
+		log.debug("deleting Carico instance");
 		try {
 			sessionFactory.getCurrentSession().delete(persistentInstance);
 			log.debug("delete successful");
@@ -77,11 +76,11 @@ public class DettagliDocumentiHome {
 		}
 	}
 
-	public DettagliDocumenti merge(DettagliDocumenti detachedInstance) {
-		log.debug("merging DettagliDocumenti instance");
+	public Carico merge(Carico detachedInstance) {
+		log.debug("merging Carico instance");
 		try {
-			DettagliDocumenti result = (DettagliDocumenti) sessionFactory
-					.getCurrentSession().merge(detachedInstance);
+			Carico result = (Carico) sessionFactory.getCurrentSession().merge(
+					detachedInstance);
 			log.debug("merge successful");
 			return result;
 		} catch (RuntimeException re) {
@@ -90,12 +89,11 @@ public class DettagliDocumentiHome {
 		}
 	}
 
-	public DettagliDocumenti findById(int id) {
-		log.debug("getting DettagliDocumenti instance with id: " + id);
+	public Carico findById(long id) {
+		log.debug("getting Carico instance with id: " + id);
 		try {
-			DettagliDocumenti instance = (DettagliDocumenti) sessionFactory
-					.getCurrentSession().get(
-							"it.infolabs.hibernate.DettagliDocumenti", id);
+			Carico instance = (Carico) sessionFactory.getCurrentSession().get(
+					"it.infolabs.hibernate.Carico", id);
 			if (instance == null) {
 				log.debug("get successful, no instance found");
 			} else {
@@ -108,12 +106,12 @@ public class DettagliDocumentiHome {
 		}
 	}
 
-	public List<DettagliDocumenti> findByExample(DettagliDocumenti instance) {
-		log.debug("finding DettagliDocumenti instance by example");
+	public List<Carico> findByExample(Carico instance) {
+		log.debug("finding Carico instance by example");
 		try {
-			List<DettagliDocumenti> results = (List<DettagliDocumenti>) sessionFactory
+			List<Carico> results = (List<Carico>) sessionFactory
 					.getCurrentSession().createCriteria(
-							"it.infolabs.hibernate.DettagliDocumenti").add(
+							"it.infolabs.hibernate.Carico").add(
 							create(instance)).list();
 			log.debug("find by example successful, result size: "
 					+ results.size());

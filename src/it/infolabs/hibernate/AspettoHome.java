@@ -1,11 +1,6 @@
 package it.infolabs.hibernate;
 
-// Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA
-
-import it.infolabs.hibernate.exception.DeleteEntityException;
-import it.infolabs.hibernate.exception.FindByNotFoundException;
-import it.infolabs.hibernate.exception.MergeEntityException;
-import it.infolabs.hibernate.exception.PersistEntityException;
+// Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA
 
 import java.util.List;
 import javax.naming.InitialContext;
@@ -22,10 +17,12 @@ import static org.hibernate.criterion.Example.create;
  * @author Hibernate Tools
  */
 public class AspettoHome extends BusinessObjectHome{
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger.getLogger(AspettoHome.class);
 
-	private static final Log log = LogFactory.getLog(AspettoHome.class);
-
-	private static final AspettoHome instance = new AspettoHome();
+	private static final AspettoHome instance=new AspettoHome();
 
 	private AspettoHome() {
 		super();
@@ -35,14 +32,14 @@ public class AspettoHome extends BusinessObjectHome{
 		return instance;
 	}
 
-	public void persist(Aspetto transientInstance) throws PersistEntityException{
+	public void persist(Aspetto transientInstance) {
 		log.debug("persisting Aspetto instance");
 		try {
 			sessionFactory.getCurrentSession().persist(transientInstance);
 			log.debug("persist successful");
 		} catch (RuntimeException re) {
 			log.error("persist failed", re);
-			throw new PersistEntityException();
+			throw re;
 		}
 	}
 
@@ -68,18 +65,18 @@ public class AspettoHome extends BusinessObjectHome{
 		}
 	}
 
-	public void delete(Aspetto persistentInstance) throws DeleteEntityException{
+	public void delete(Aspetto persistentInstance) {
 		log.debug("deleting Aspetto instance");
 		try {
 			sessionFactory.getCurrentSession().delete(persistentInstance);
 			log.debug("delete successful");
 		} catch (RuntimeException re) {
 			log.error("delete failed", re);
-			throw new DeleteEntityException();
+			throw re;
 		}
 	}
 
-	public Aspetto merge(Aspetto detachedInstance) throws MergeEntityException{
+	public Aspetto merge(Aspetto detachedInstance) {
 		log.debug("merging Aspetto instance");
 		try {
 			Aspetto result = (Aspetto) sessionFactory.getCurrentSession()
@@ -88,11 +85,11 @@ public class AspettoHome extends BusinessObjectHome{
 			return result;
 		} catch (RuntimeException re) {
 			log.error("merge failed", re);
-			throw new MergeEntityException();
+			throw re;
 		}
 	}
 
-	public Aspetto findById(long id) throws FindByNotFoundException{
+	public Aspetto findById(long id) {
 		log.debug("getting Aspetto instance with id: " + id);
 		try {
 			Aspetto instance = (Aspetto) sessionFactory.getCurrentSession()
@@ -105,11 +102,11 @@ public class AspettoHome extends BusinessObjectHome{
 			return instance;
 		} catch (RuntimeException re) {
 			log.error("get failed", re);
-			throw new FindByNotFoundException();
+			throw re;
 		}
 	}
 
-	public List<Aspetto> findByExample(Aspetto instance) throws FindByNotFoundException{
+	public List<Aspetto> findByExample(Aspetto instance) {
 		log.debug("finding Aspetto instance by example");
 		try {
 			List<Aspetto> results = (List<Aspetto>) sessionFactory
@@ -121,7 +118,7 @@ public class AspettoHome extends BusinessObjectHome{
 			return results;
 		} catch (RuntimeException re) {
 			log.error("find by example failed", re);
-			throw new FindByNotFoundException();
+			throw re;
 		}
 	}
 }

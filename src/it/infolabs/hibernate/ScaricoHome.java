@@ -96,7 +96,7 @@ public class ScaricoHome extends BusinessObjectHome{
 		log.debug("getting Ordini instance with id: " + id);
 		try {
 			Scarico instance = (Scarico) sessionFactory.getCurrentSession().get(
-					"it.infolabs.hibernate.Ordini", id);
+					"it.infolabs.hibernate.Scarico", id);
 			if (instance == null) {
 				log.debug("get successful, no instance found");
 			} else {
@@ -114,7 +114,7 @@ public class ScaricoHome extends BusinessObjectHome{
 		try {
 			List<Scarico> results = (List<Scarico>) sessionFactory
 					.getCurrentSession().createCriteria(
-							"it.infolabs.hibernate.Ordini").add(
+							"it.infolabs.hibernate.Scarico").add(
 							create(instance)).list();
 			log.debug("find by example successful, result size: "
 					+ results.size());

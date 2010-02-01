@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
-    <class name="it.infolabs.hibernate.Fornitori" table="fornitori" schema="public">
+    <class name="it.infolabs.hibernate.Fornitore" table="fornitore" schema="public">
         <id name="idfornitore" type="long">
             <column name="idfornitore" />
             <generator class="assigned" />
@@ -53,41 +53,23 @@
         <property name="codbarre" type="string">
             <column name="codbarre" />
         </property>
-        <set name="carichis" inverse="true" lazy="true" table="carichi" fetch="select">
+        <set name="caricos" inverse="true" lazy="true" table="carico" fetch="select">
             <key>
                 <column name="idfornitore" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Carichi" />
+            <one-to-many class="it.infolabs.hibernate.Carico" />
         </set>
-        <set name="carichis_1" inverse="true" lazy="true" table="carichi" fetch="select">
+        <set name="caricos_1" inverse="true" lazy="true" table="carico" fetch="select">
             <key>
                 <column name="idfornitore" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Carichi" />
+            <one-to-many class="it.infolabs.hibernate.Carico" />
         </set>
-        <set name="carichis_2" inverse="true" lazy="true" table="carichi" fetch="select">
+        <set name="caricos_2" inverse="true" lazy="true" table="carico" fetch="select">
             <key>
                 <column name="idfornitore" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Carichi" />
-        </set>
-        <set name="articolis" inverse="true" lazy="true" table="articoli" fetch="select">
-            <key>
-                <column name="idfornitore" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.Articoli" />
-        </set>
-        <set name="articolis_1" inverse="true" lazy="true" table="articoli" fetch="select">
-            <key>
-                <column name="idfornitore" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.Articoli" />
-        </set>
-        <set name="articolis_2" inverse="true" lazy="true" table="articoli" fetch="select">
-            <key>
-                <column name="idfornitore" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.Articoli" />
+            <one-to-many class="it.infolabs.hibernate.Carico" />
         </set>
     </class>
 </hibernate-mapping>

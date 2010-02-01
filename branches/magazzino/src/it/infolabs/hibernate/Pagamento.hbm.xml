@@ -15,37 +15,37 @@
             <key>
                 <column name="pagamento" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Ordini" />
+            <one-to-many class="it.infolabs.hibernate.Scarico" />
         </set>
         <set name="ordinisForPagamento_1" inverse="true" lazy="true" table="ordini" fetch="select">
             <key>
                 <column name="pagamento" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Ordini" />
+            <one-to-many class="it.infolabs.hibernate.Scarico" />
         </set>
         <set name="ordinisForIdpagamento" inverse="true" lazy="true" table="ordini" fetch="select">
             <key>
                 <column name="idpagamento" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Ordini" />
+            <one-to-many class="it.infolabs.hibernate.Scarico" />
         </set>
         <set name="ordinisForPagamento_2" inverse="true" lazy="true" table="ordini" fetch="select">
             <key>
                 <column name="pagamento" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Ordini" />
+            <one-to-many class="it.infolabs.hibernate.Scarico" />
         </set>
         <set name="ordinisForIdpagamento_1" inverse="true" lazy="true" table="ordini" fetch="select">
             <key>
                 <column name="idpagamento" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Ordini" />
+            <one-to-many class="it.infolabs.hibernate.Scarico" />
         </set>
         <set name="ordinisForIdpagamento_2" inverse="true" lazy="true" table="ordini" fetch="select">
             <key>
                 <column name="idpagamento" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Ordini" />
+            <one-to-many class="it.infolabs.hibernate.Scarico" />
         </set>
     </class>
 </hibernate-mapping>

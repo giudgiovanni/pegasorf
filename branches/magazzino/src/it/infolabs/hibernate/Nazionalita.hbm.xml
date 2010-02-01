@@ -15,19 +15,19 @@
             <key>
                 <column name="nazionalita" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Clienti" />
+            <one-to-many class="it.infolabs.hibernate.Cliente" />
         </set>
         <set name="clientis_1" inverse="true" lazy="true" table="clienti" fetch="select">
             <key>
                 <column name="nazionalita" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Clienti" />
+            <one-to-many class="it.infolabs.hibernate.Cliente" />
         </set>
         <set name="clientis_2" inverse="true" lazy="true" table="clienti" fetch="select">
             <key>
                 <column name="nazionalita" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Clienti" />
+            <one-to-many class="it.infolabs.hibernate.Cliente" />
         </set>
     </class>
 </hibernate-mapping>

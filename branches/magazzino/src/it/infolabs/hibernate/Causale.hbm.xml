@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="it.infolabs.hibernate.Causale" table="causale" schema="public">
         <id name="idcausale" type="long">
@@ -11,23 +11,23 @@
         <property name="nome" type="string">
             <column name="nome" length="40" not-null="true" />
         </property>
-        <set name="ordinis" inverse="true" lazy="true" table="ordini" fetch="select">
+        <set name="scaricos" inverse="true" lazy="true" table="scarico" fetch="select">
             <key>
                 <column name="idcausale" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Ordini" />
+            <one-to-many class="it.infolabs.hibernate.Scarico" />
         </set>
-        <set name="ordinis_1" inverse="true" lazy="true" table="ordini" fetch="select">
+        <set name="scaricos_1" inverse="true" lazy="true" table="scarico" fetch="select">
             <key>
                 <column name="idcausale" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Ordini" />
+            <one-to-many class="it.infolabs.hibernate.Scarico" />
         </set>
-        <set name="ordinis_2" inverse="true" lazy="true" table="ordini" fetch="select">
+        <set name="scaricos_2" inverse="true" lazy="true" table="scarico" fetch="select">
             <key>
                 <column name="idcausale" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Ordini" />
+            <one-to-many class="it.infolabs.hibernate.Scarico" />
         </set>
     </class>
 </hibernate-mapping>

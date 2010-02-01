@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
-    <class name="it.infolabs.hibernate.Carichi" table="carichi" schema="public">
+    <class name="it.infolabs.hibernate.Carico" table="carico" schema="public">
         <id name="idcarico" type="long">
             <column name="idcarico" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="fornitori" class="it.infolabs.hibernate.Fornitori" fetch="select">
+        <many-to-one name="fornitore" class="it.infolabs.hibernate.Fornitore" fetch="select">
             <column name="idfornitore" />
         </many-to-one>
         <many-to-one name="tipoDocumento" class="it.infolabs.hibernate.TipoDocumento" fetch="select">
@@ -50,23 +50,23 @@
         <property name="riferimentoOrdine" type="java.lang.Long">
             <column name="riferimento_ordine" />
         </property>
-        <set name="dettaglioCarichis" inverse="true" lazy="true" table="dettaglio_carichi" fetch="select">
+        <set name="dettaglioCaricos" inverse="true" lazy="true" table="dettaglio_carico" fetch="select">
             <key>
                 <column name="idcarico" not-null="true" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.DettaglioCarichi" />
+            <one-to-many class="it.infolabs.hibernate.DettaglioCarico" />
         </set>
-        <set name="dettaglioCarichis_1" inverse="true" lazy="true" table="dettaglio_carichi" fetch="select">
+        <set name="dettaglioCaricos_1" inverse="true" lazy="true" table="dettaglio_carico" fetch="select">
             <key>
                 <column name="idcarico" not-null="true" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.DettaglioCarichi" />
+            <one-to-many class="it.infolabs.hibernate.DettaglioCarico" />
         </set>
-        <set name="dettaglioCarichis_2" inverse="true" lazy="true" table="dettaglio_carichi" fetch="select">
+        <set name="dettaglioCaricos_2" inverse="true" lazy="true" table="dettaglio_carico" fetch="select">
             <key>
                 <column name="idcarico" not-null="true" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.DettaglioCarichi" />
+            <one-to-many class="it.infolabs.hibernate.DettaglioCarico" />
         </set>
     </class>
 </hibernate-mapping>

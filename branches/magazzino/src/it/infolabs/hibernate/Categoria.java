@@ -1,6 +1,6 @@
 package it.infolabs.hibernate;
 
-// Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA
+// Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA
 
 import java.util.Date;
 import java.util.HashSet;
@@ -15,8 +15,8 @@ public class Categoria implements java.io.Serializable {
 	private Date dataCreazione;
 	private String descrizione;
 	private String note;
-	private Set<Reparti> repartis = new HashSet<Reparti>(0);
-	private Set<Reparti> repartis_1 = new HashSet<Reparti>(0);
+	private Set<Reparto> repartos = new HashSet<Reparto>(0);
+	private Set<Reparto> repartos_1 = new HashSet<Reparto>(0);
 
 	public Categoria() {
 	}
@@ -27,13 +27,13 @@ public class Categoria implements java.io.Serializable {
 	}
 
 	public Categoria(long id, Date dataCreazione, String descrizione,
-			String note, Set<Reparti> repartis, Set<Reparti> repartis_1) {
+			String note, Set<Reparto> repartos, Set<Reparto> repartos_1) {
 		this.id = id;
 		this.dataCreazione = dataCreazione;
 		this.descrizione = descrizione;
 		this.note = note;
-		this.repartis = repartis;
-		this.repartis_1 = repartis_1;
+		this.repartos = repartos;
+		this.repartos_1 = repartos_1;
 	}
 
 	public long getId() {
@@ -68,20 +68,20 @@ public class Categoria implements java.io.Serializable {
 		this.note = note;
 	}
 
-	public Set<Reparti> getRepartis() {
-		return this.repartis;
+	public Set<Reparto> getRepartos() {
+		return this.repartos;
 	}
 
-	public void setRepartis(Set<Reparti> repartis) {
-		this.repartis = repartis;
+	public void setRepartos(Set<Reparto> repartos) {
+		this.repartos = repartos;
 	}
 
-	public Set<Reparti> getRepartis_1() {
-		return this.repartis_1;
+	public Set<Reparto> getRepartos_1() {
+		return this.repartos_1;
 	}
 
-	public void setRepartis_1(Set<Reparti> repartis_1) {
-		this.repartis_1 = repartis_1;
+	public void setRepartos_1(Set<Reparto> repartos_1) {
+		this.repartos_1 = repartos_1;
 	}
 
 }

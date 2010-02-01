@@ -1,8 +1,6 @@
 package it.infolabs.hibernate;
 
-// Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA
-
-import it.infolabs.hibernate.exception.FindByNotFoundException;
+// Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA
 
 import java.util.List;
 import javax.naming.InitialContext;
@@ -14,31 +12,28 @@ import org.hibernate.SessionFactory;
 import static org.hibernate.criterion.Example.create;
 
 /**
- * Home object for domain model class Reparti.
- * @see it.infolabs.hibernate.Reparti
+ * Home object for domain model class Reparto.
+ * @see it.infolabs.hibernate.Reparto
  * @author Hibernate Tools
  */
-public class RepartiHome extends BusinessObjectHome {
-
+public class RepartoHome extends BusinessObjectHome{
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(RepartiHome.class);
+	private static final Logger logger = Logger.getLogger(RepartoHome.class);
 
-	private static final Log log = LogFactory.getLog(RepartiHome.class);
+	private static final RepartoHome instance=new RepartoHome();
 
-	private static final RepartiHome instance = new RepartiHome();
-
-	private RepartiHome() {
+	private RepartoHome() {
 		super();
 	}
 
-	public static RepartiHome getInstance() {
+	public static RepartoHome getInstance() {
 		return instance;
 	}
 
-	public void persist(Reparti transientInstance) {
-		log.debug("persisting Reparti instance");
+	public void persist(Reparto transientInstance) {
+		log.debug("persisting Reparto instance");
 		try {
 			sessionFactory.getCurrentSession().persist(transientInstance);
 			log.debug("persist successful");
@@ -48,8 +43,8 @@ public class RepartiHome extends BusinessObjectHome {
 		}
 	}
 
-	public void attachDirty(Reparti instance) {
-		log.debug("attaching dirty Reparti instance");
+	public void attachDirty(Reparto instance) {
+		log.debug("attaching dirty Reparto instance");
 		try {
 			sessionFactory.getCurrentSession().saveOrUpdate(instance);
 			log.debug("attach successful");
@@ -59,8 +54,8 @@ public class RepartiHome extends BusinessObjectHome {
 		}
 	}
 
-	public void attachClean(Reparti instance) {
-		log.debug("attaching clean Reparti instance");
+	public void attachClean(Reparto instance) {
+		log.debug("attaching clean Reparto instance");
 		try {
 			sessionFactory.getCurrentSession().lock(instance, LockMode.NONE);
 			log.debug("attach successful");
@@ -70,8 +65,8 @@ public class RepartiHome extends BusinessObjectHome {
 		}
 	}
 
-	public void delete(Reparti persistentInstance) {
-		log.debug("deleting Reparti instance");
+	public void delete(Reparto persistentInstance) {
+		log.debug("deleting Reparto instance");
 		try {
 			sessionFactory.getCurrentSession().delete(persistentInstance);
 			log.debug("delete successful");
@@ -81,10 +76,10 @@ public class RepartiHome extends BusinessObjectHome {
 		}
 	}
 
-	public Reparti merge(Reparti detachedInstance) {
-		log.debug("merging Reparti instance");
+	public Reparto merge(Reparto detachedInstance) {
+		log.debug("merging Reparto instance");
 		try {
-			Reparti result = (Reparti) sessionFactory.getCurrentSession()
+			Reparto result = (Reparto) sessionFactory.getCurrentSession()
 					.merge(detachedInstance);
 			log.debug("merge successful");
 			return result;
@@ -94,11 +89,11 @@ public class RepartiHome extends BusinessObjectHome {
 		}
 	}
 
-	public Reparti findById(long id) throws FindByNotFoundException{
-		log.debug("getting Reparti instance with id: " + id);
+	public Reparto findById(long id) {
+		log.debug("getting Reparto instance with id: " + id);
 		try {
-			Reparti instance = (Reparti) sessionFactory.getCurrentSession()
-					.get("it.infolabs.hibernate.Reparti", id);
+			Reparto instance = (Reparto) sessionFactory.getCurrentSession()
+					.get("it.infolabs.hibernate.Reparto", id);
 			if (instance == null) {
 				log.debug("get successful, no instance found");
 			} else {
@@ -107,16 +102,16 @@ public class RepartiHome extends BusinessObjectHome {
 			return instance;
 		} catch (RuntimeException re) {
 			log.error("get failed", re);
-			throw new FindByNotFoundException();
+			throw re;
 		}
 	}
 
-	public List<Reparti> findByExample(Reparti instance) {
-		log.debug("finding Reparti instance by example");
+	public List<Reparto> findByExample(Reparto instance) {
+		log.debug("finding Reparto instance by example");
 		try {
-			List<Reparti> results = (List<Reparti>) sessionFactory
+			List<Reparto> results = (List<Reparto>) sessionFactory
 					.getCurrentSession().createCriteria(
-							"it.infolabs.hibernate.Reparti").add(
+							"it.infolabs.hibernate.Reparto").add(
 							create(instance)).list();
 			log.debug("find by example successful, result size: "
 					+ results.size());

@@ -18,37 +18,37 @@
             <key>
                 <column name="tipo_documento" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Ordini" />
+            <one-to-many class="it.infolabs.hibernate.Scarico" />
         </set>
         <set name="ordinis_1" inverse="true" lazy="true" table="ordini" fetch="select">
             <key>
                 <column name="tipo_documento" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Ordini" />
+            <one-to-many class="it.infolabs.hibernate.Scarico" />
         </set>
         <set name="carichis" inverse="true" lazy="true" table="carichi" fetch="select">
             <key>
                 <column name="iddocumento" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Carichi" />
+            <one-to-many class="it.infolabs.hibernate.Carico" />
         </set>
         <set name="ordinis_2" inverse="true" lazy="true" table="ordini" fetch="select">
             <key>
                 <column name="tipo_documento" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Ordini" />
+            <one-to-many class="it.infolabs.hibernate.Scarico" />
         </set>
         <set name="carichis_1" inverse="true" lazy="true" table="carichi" fetch="select">
             <key>
                 <column name="iddocumento" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Carichi" />
+            <one-to-many class="it.infolabs.hibernate.Carico" />
         </set>
         <set name="carichis_2" inverse="true" lazy="true" table="carichi" fetch="select">
             <key>
                 <column name="iddocumento" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Carichi" />
+            <one-to-many class="it.infolabs.hibernate.Carico" />
         </set>
     </class>
 </hibernate-mapping>

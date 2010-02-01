@@ -15,10 +15,10 @@ public class TipoDocumento implements java.io.Serializable {
 	private String descrizione;
 	private Set<Scarico> ordinis = new HashSet<Scarico>(0);
 	private Set<Scarico> ordinis_1 = new HashSet<Scarico>(0);
-	private Set<Carichi> carichis = new HashSet<Carichi>(0);
+	private Set<Carico> carichis = new HashSet<Carico>(0);
 	private Set<Scarico> ordinis_2 = new HashSet<Scarico>(0);
-	private Set<Carichi> carichis_1 = new HashSet<Carichi>(0);
-	private Set<Carichi> carichis_2 = new HashSet<Carichi>(0);
+	private Set<Carico> carichis_1 = new HashSet<Carico>(0);
+	private Set<Carico> carichis_2 = new HashSet<Carico>(0);
 
 	public TipoDocumento() {
 	}
@@ -29,9 +29,9 @@ public class TipoDocumento implements java.io.Serializable {
 	}
 
 	public TipoDocumento(long iddocumento, String tipo, String descrizione,
-			Set<Scarico> ordinis, Set<Scarico> ordinis_1, Set<Carichi> carichis,
-			Set<Scarico> ordinis_2, Set<Carichi> carichis_1,
-			Set<Carichi> carichis_2) {
+			Set<Scarico> ordinis, Set<Scarico> ordinis_1, Set<Carico> carichis,
+			Set<Scarico> ordinis_2, Set<Carico> carichis_1,
+			Set<Carico> carichis_2) {
 		this.iddocumento = iddocumento;
 		this.tipo = tipo;
 		this.descrizione = descrizione;
@@ -83,11 +83,11 @@ public class TipoDocumento implements java.io.Serializable {
 		this.ordinis_1 = ordinis_1;
 	}
 
-	public Set<Carichi> getCarichis() {
+	public Set<Carico> getCarichis() {
 		return this.carichis;
 	}
 
-	public void setCarichis(Set<Carichi> carichis) {
+	public void setCarichis(Set<Carico> carichis) {
 		this.carichis = carichis;
 	}
 
@@ -99,19 +99,19 @@ public class TipoDocumento implements java.io.Serializable {
 		this.ordinis_2 = ordinis_2;
 	}
 
-	public Set<Carichi> getCarichis_1() {
+	public Set<Carico> getCarichis_1() {
 		return this.carichis_1;
 	}
 
-	public void setCarichis_1(Set<Carichi> carichis_1) {
+	public void setCarichis_1(Set<Carico> carichis_1) {
 		this.carichis_1 = carichis_1;
 	}
 
-	public Set<Carichi> getCarichis_2() {
+	public Set<Carico> getCarichis_2() {
 		return this.carichis_2;
 	}
 
-	public void setCarichis_2(Set<Carichi> carichis_2) {
+	public void setCarichis_2(Set<Carico> carichis_2) {
 		this.carichis_2 = carichis_2;
 	}
 

@@ -18,37 +18,37 @@
             <key>
                 <column name="provincia" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Fornitori" />
+            <one-to-many class="it.infolabs.hibernate.Fornitore" />
         </set>
         <set name="fornitoris_1" inverse="true" lazy="true" table="fornitori" fetch="select">
             <key>
                 <column name="provincia" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Fornitori" />
+            <one-to-many class="it.infolabs.hibernate.Fornitore" />
         </set>
         <set name="fornitoris_2" inverse="true" lazy="true" table="fornitori" fetch="select">
             <key>
                 <column name="provincia" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Fornitori" />
+            <one-to-many class="it.infolabs.hibernate.Fornitore" />
         </set>
         <set name="clientis" inverse="true" lazy="true" table="clienti" fetch="select">
             <key>
                 <column name="provincia" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Clienti" />
+            <one-to-many class="it.infolabs.hibernate.Cliente" />
         </set>
         <set name="clientis_1" inverse="true" lazy="true" table="clienti" fetch="select">
             <key>
                 <column name="provincia" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Clienti" />
+            <one-to-many class="it.infolabs.hibernate.Cliente" />
         </set>
         <set name="clientis_2" inverse="true" lazy="true" table="clienti" fetch="select">
             <key>
                 <column name="provincia" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Clienti" />
+            <one-to-many class="it.infolabs.hibernate.Cliente" />
         </set>
     </class>
 </hibernate-mapping>

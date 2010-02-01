@@ -2,7 +2,7 @@ package it.infolabs.pos;
 
 public class TicketRow {
 	
-	private int iva=0;
+	private long iva=0;
 	
 	private String descrizione;
 	
@@ -33,11 +33,11 @@ public class TicketRow {
 		this.prezzo = prezzo;
 	}
 
-	public int getIva() {
+	public long getIva() {
 		return iva;
 	}
 
-	public void setIva(int iva) {
+	public void setIva(long iva) {
 		this.iva = iva;
 	}
 

@@ -206,11 +206,7 @@ public class AspettoAdd extends JDialog {
 		Aspetto a = new Aspetto();
 		a.setNome(txtNome.getText());
 		AspettoHome.getInstance().begin();
-		try {
-			AspettoHome.getInstance().persist(a);
-		} catch (PersistEntityException e) {
-			e.printStackTrace();
-		}
+		AspettoHome.getInstance().persist(a);
 		dispose();
 
 	}

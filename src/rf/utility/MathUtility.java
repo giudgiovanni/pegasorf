@@ -9,11 +9,11 @@ public class MathUtility {
 	 * @param percentuale e la quantità di percentuale che dobbiamo applicare
 	 * @return il valore di sconto che dobbiamo applicar
 	 */
-	public static double scontoPercentuale(double valore, int percentuale) {
+	public static double scontoPercentuale(double valore, long percentuale) {
 		return (valore/100)*percentuale;
 	}
 
-	public static double percentualeDaAggiungere(double valore, int percentuale){
+	public static double percentualeDaAggiungere(double valore, long percentuale){
 		return scontoPercentuale(valore, percentuale);
 	}
 

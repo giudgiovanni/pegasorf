@@ -681,13 +681,9 @@ public class ClientiMod extends JDialog {
 		UtilGUI.centraDialog(this);
 		ClienteHome.getInstance().begin();
 		Cliente c;
-		try {
-			c = ClienteHome.getInstance().findById(idCliente);
-			caricaProvince(cmbProvincia);
-			impostaCampi(c);
-		} catch (FindByNotFoundException e) {
-			e.printStackTrace();
-		}
+		c = ClienteHome.getInstance().findById(idCliente);
+		caricaProvince(cmbProvincia);
+		impostaCampi(c);
 	}
 
 	private void caricaProvince(JComboBox cmbProvince) {
@@ -741,11 +737,7 @@ public class ClientiMod extends JDialog {
 		c.setWebsite(txtWebSite.getText());
 		c.setNote(txtNote.getText());
 		ClienteHome.getInstance().begin();
-		try {
-			ClienteHome.getInstance().persist(c);
-		} catch (PersistEntityException e) {
-			e.printStackTrace();
-		}
+		ClienteHome.getInstance().persist(c);
 		dispose();
 
 	}

@@ -1039,18 +1039,18 @@ public class PrimaNotaGUI extends JFrame {
 
 	private void caricaClienti(JComboBox cmbFornitori) {
 		cmbFornitori.removeAllItems();
-		try {
-			ClienteHome.getInstance().begin();
-			String as[] = (String[]) ClienteHome.getInstance().allClienti().toArray();
-			// carichiamo tutti i dati in due array
-			// da passre al combobox
-			((IDJComboBox) cmbClienti).caricaNewValueComboBox(as, false);
-		} catch (FindAllEntityException e) {
-			messaggioCampoMancante("Errore caricamento clienti nel combobox",
-			"ERRORE");
-
-			e.printStackTrace();
-		}
+//		try {
+//			ClienteHome.getInstance().begin();
+//			String as[] = (String[]) ClienteHome.getInstance().allClienti().toArray();
+//			// carichiamo tutti i dati in due array
+//			// da passre al combobox
+//			((IDJComboBox) cmbClienti).caricaNewValueComboBox(as, false);
+//		} catch (FindAllEntityException e) {
+//			messaggioCampoMancante("Errore caricamento clienti nel combobox",
+//			"ERRORE");
+//
+//			e.printStackTrace();
+//		}
 		AutoCompletion.enable(cmbClienti);
 	}
 

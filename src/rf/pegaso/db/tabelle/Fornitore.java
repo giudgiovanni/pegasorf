@@ -27,7 +27,7 @@ public class Fornitore {
 			throws SQLException {
 		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
-		String query = "select idfornitore from fornitori where codbarre=?";
+		String query = "select idfornitore from fornitore where codbarre=?";
 		PreparedStatement st = dbm.getNewPreparedStatement(query);
 		st.setString(1, codbarreF);
 		rs = st.executeQuery();
@@ -98,7 +98,7 @@ public class Fornitore {
 		String[] o = null;
 		ResultSet rs = null;
 		Statement pst = null;
-		String query = "select idFornitore || ' - ' || nome from fornitori order by nome";
+		String query = "select idFornitore || ' - ' || nome from fornitore order by nome";
 		pst = dbm.getNewStatement();
 		rs = pst.executeQuery(query);
 		rs.last();
@@ -125,7 +125,7 @@ public class Fornitore {
 			return;
 		Statement st = null;
 		ResultSet rs = null;
-		String query = "select * from fornitori where idFornitore="
+		String query = "select * from fornitore where idFornitore="
 				+ idFornitore;
 		st = dbm.getNewStatement();
 		rs = st.executeQuery(query);
@@ -171,7 +171,7 @@ public class Fornitore {
 		int cancellati = 0;
 		if (idFornitore <= -1)
 			throw new IDNonValido();
-		delete = "DELETE FROM fornitori WHERE idfornitore=" + idFornitore;
+		delete = "DELETE FROM fornitore WHERE idfornitore=" + idFornitore;
 
 		cancellati = st.executeUpdate(delete);
 		dbm.notifyDBStateChange();
@@ -235,7 +235,7 @@ public class Fornitore {
 	public String getProvinciaToString() throws SQLException {
 		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
-		String query = "select p.provincia from provincia,fornitori where f.provincia=p.idprovincia and idfornitore=?";
+		String query = "select p.provincia from provincia,fornitore where f.provincia=p.idprovincia and idfornitore=?";
 		PreparedStatement st = dbm.getNewPreparedStatement(query);
 		st.setInt(1, idFornitore);
 		rs = st.executeQuery();
@@ -274,12 +274,12 @@ public class Fornitore {
 	 */
 	public int insertFornitore() throws IDNonValido {
 
-		idFornitore = dbm.getNewID("fornitori", "idFornitore");
+		idFornitore = dbm.getNewID("fornitore", "idFornitore");
 		if (idFornitore <= -1)
 			throw new IDNonValido();
 		int ok = 0;
 		PreparedStatement pst = null;
-		String update = "insert into fornitori values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String update = "insert into fornitore values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 		pst = dbm.getNewPreparedStatement(update);
 		try {
@@ -402,7 +402,7 @@ public class Fornitore {
 			throw new IDNonValido();
 		int ok = 0;
 		PreparedStatement pst = null;
-		String update = "UPDATE fornitori SET idFornitore=?,"
+		String update = "UPDATE fornitore SET idFornitore=?,"
 				+ "data_inserimento=?,nome=?,piva=?,codfisc=?,via=?,cap=?,citta=?,tel=?,cell=?,fax=?,email=?,website=?,note=?,codbarre=?,provincia=? WHERE idFornitore=?";
 
 		pst = dbm.getNewPreparedStatement(update);

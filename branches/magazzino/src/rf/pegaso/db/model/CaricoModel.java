@@ -87,10 +87,10 @@ public class CaricoModel extends AbstractTableModel implements DBStateChange {
 //		else if (c == 3)
 //			query = "update articoli set iva=? where idarticolo=?";
 		if (c == 4)
-			query = "update dettaglio_carichi set qta=? where idcarico=? and idarticolo=?";
+			query = "update dettaglio_carico set qta=? where idcarico=? and idarticolo=?";
 		else if (c == 6) {
 //			query = "update articoli set prezzo_acquisto=? where idarticolo=?";
-			query = "update dettaglio_carichi set prezzo_acquisto=? where idcarico=? and idarticolo=?";
+			query = "update dettaglio_carico set prezzo_acquisto=? where idcarico=? and idarticolo=?";
 		}//else if(c==7)
 //			query = "update dettaglio_carichi set sconto=? where idcarico=? and idarticolo=?";
 

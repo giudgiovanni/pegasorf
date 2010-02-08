@@ -110,7 +110,7 @@ public class Carico {
 	public void caricaDati(int idCarico) throws SQLException {
 		Statement st = null;
 		ResultSet rs = null;
-		String query = "select * from carichi where idcarico=" + idCarico;
+		String query = "select * from carico where idcarico=" + idCarico;
 		st = dbm.getNewStatement();
 		rs = st.executeQuery(query);
 		if(rs.next()){
@@ -139,7 +139,7 @@ public class Carico {
 		Object [] obj = new Object[2];
 		Statement st = null;
 		ResultSet rs = null;
-		String query = "select qta, prezzo_acquisto from dettaglio_carichi where idcarico = " + idCarico +" and idarticolo = "+idarticolo;
+		String query = "select qta, prezzo_acquisto from dettaglio_carico where idcarico = " + idCarico +" and idarticolo = "+idarticolo;
 		st = dbm.getNewStatement();
 		rs = st.executeQuery(query);
 		if(rs.next()){
@@ -161,7 +161,7 @@ public class Carico {
 	}
 
 	public void deleteAllArticoliCaricati() throws SQLException {
-		String query = "delete from dettaglio_carichi where idcarico="
+		String query = "delete from dettaglio_carico where idcarico="
 				+ idCarico;
 		Statement st = dbm.getNewStatement();
 		st.executeUpdate(query);
@@ -171,7 +171,7 @@ public class Carico {
 	}
 
 	public void deleteArticolo(int idArticolo) throws SQLException {
-		String query = "delete from dettaglio_carichi where idArticolo=? and idCarico=?";
+		String query = "delete from dettaglio_carico where idArticolo=? and idCarico=?";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 		pst.setInt(1, idArticolo);
 		pst.setInt(2, idCarico);
@@ -193,7 +193,7 @@ public class Carico {
 		int cancellati = 0;
 		if (idCarico <= -1)
 			throw new IDNonValido();
-		delete = "DELETE FROM carichi WHERE idcarico=" + idCarico;
+		delete = "DELETE FROM carico WHERE idcarico=" + idCarico;
 
 		try {
 			cancellati = st.executeUpdate(delete);
@@ -213,7 +213,7 @@ public class Carico {
 
 	public Object[][] getAllArticoliCaricati() throws SQLException {
 		String query = "SELECT A.codBarre, A.descrizione, A.iva, A.um, D.qta, D.prezzo_Acquisto "
-				+ "FROM Articoli AS A, Carichi AS C, Dettaglio_Carichi AS D, Fornitori AS F "
+				+ "FROM Articoli AS A, carico AS C, Dettaglio_carico AS D, Fornitori AS F "
 				+ "WHERE A.idArticolo=D.idArticolo AND C.idCarico=D.idCarico AND C.idFornitore=F.idFornitore";
 
 		Statement pst = dbm.getNewStatement();
@@ -229,7 +229,7 @@ public class Carico {
 	
 	public Object[][] getAllArticoliCaricatiByIdDocumento(long id) throws SQLException {
 		String query = "SELECT A.idarticolo, a.codFornitore, A.codBarre, A.descrizione, A.iva, A.um, D.qta, D.prezzo_Acquisto "
-				+ "FROM Articoli AS A, Carichi AS C, Dettaglio_Carichi AS D, Fornitori AS F "
+				+ "FROM Articoli AS A, carico AS C, Dettaglio_carico AS D, Fornitori AS F "
 				+ "WHERE A.idArticolo=D.idArticolo AND C.idCarico=D.idCarico AND C.idFornitore=F.idFornitore and C.idcarico="+id;
 
 		Statement pst = dbm.getNewStatement();
@@ -278,7 +278,7 @@ public class Carico {
 	 *
 	 */
 	public int getNewID() {
-		return dbm.getNewID("carichi", "idCarico");
+		return dbm.getNewID("carico", "idCarico");
 
 	}
 
@@ -309,7 +309,7 @@ public class Carico {
 		DBManager dbm = DBManager.getIstanceSingleton();
 		Statement st = dbm.getNewStatement();
 		ResultSet rs = null;
-		String query = "select num_documento from carichi where num_documento='" + numDocumento+"'";
+		String query = "select num_documento from carico where num_documento='" + numDocumento+"'";
 		rs = st.executeQuery(query);
 		rs.last();
 		int nRow = rs.getRow();
@@ -368,7 +368,7 @@ public class Carico {
 			IDNonValido, ResultSetVuoto {
 		if (this.idCarico <= 0)
 			throw new IDNonValido();
-		String query = "select qta from dettaglio_carichi where idarticolo=? and idcarico=?";
+		String query = "select qta from dettaglio_carico where idarticolo=? and idcarico=?";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 		pst.setInt(1, idArticolo);
 		pst.setInt(2, this.idCarico);
@@ -388,7 +388,7 @@ public class Carico {
 			IDNonValido, ResultSetVuoto {
 		if (this.idCarico < 0)
 			throw new IDNonValido();
-		String query = "select * from dettaglio_carichi where idcarico=?";
+		String query = "select * from dettaglio_carico where idcarico=?";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 		pst.setInt(1, this.idCarico);
 		ResultSet rs = pst.executeQuery();
@@ -404,7 +404,7 @@ public class Carico {
 	public void insertArticolo(int idArticolo, double qta, double prezzoAcquisto)
 			throws SQLException {
 
-		String query = "insert into dettaglio_carichi values(?,?,?,?)";
+		String query = "insert into dettaglio_carico values(?,?,?,?)";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 		pst.setInt(1, idArticolo);
 		pst.setInt(2, idCarico);
@@ -420,7 +420,7 @@ public class Carico {
 	}
 
 	public void updateTotDocumentoIvato(int id) throws SQLException {
-		String query = "update carichi set totale_documento=? where idcarico=?";
+		String query = "update carico set totale_documento=? where idcarico=?";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 		double tot=Carico.getTotIngrossoImponibile(id)+ Carico.getTotIngrossoImposta(id);
 		Carico c=new Carico();
@@ -442,10 +442,10 @@ public class Carico {
 
 	public int insertCarico() {
 
-		idCarico = dbm.getNewID("carichi", "idCarico");
+		idCarico = dbm.getNewID("carico", "idCarico");
 		int ok = 0;
 		PreparedStatement pst = null;
-		String update = "insert into carichi values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String update = "insert into carico values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		// preleviamo la data di inserimento
 		// e la impostiamo nelle proprietà
 		java.util.Date data = new java.util.Date();
@@ -493,7 +493,7 @@ public class Carico {
 	public boolean isInsert(int idcarico) throws SQLException {
 		Statement st = dbm.getNewStatement();
 		ResultSet rs = null;
-		String query = "select * from carichi where idcarico=" + idcarico;
+		String query = "select * from carico where idcarico=" + idcarico;
 		rs = st.executeQuery(query);
 		rs.last();
 		int nRow = rs.getRow();
@@ -557,7 +557,7 @@ public class Carico {
 	public void updateArticolo(int idArticolo, double qta, double prezzoAcquisto)
 			throws SQLException {
 
-		String query = "update dettaglio_carichi set qta=?,prezzo_acquisto=? where idcarico=? and idarticolo=?";
+		String query = "update dettaglio_carico set qta=?,prezzo_acquisto=? where idcarico=? and idarticolo=?";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 
 		pst.setDouble(1, qta);
@@ -579,7 +579,7 @@ public class Carico {
 			throw new IDNonValido();
 		int ok = 0;
 		PreparedStatement pst = null;
-		String update = "UPDATE carichi SET idcarico=?,"
+		String update = "UPDATE carico SET idcarico=?,"
 				+ "idfornitore=?,data_carico=?,ora_carico=?,note=?,iddocumento=?,num_documento=?,data_documento=?,totale_documento=?,sospeso=?,rif_doc=?,sconto=?,iva_documento=?,ins_pn=?,riferimento_ordine=? WHERE idcarico=?";
 		 dataCarico = new Date(new java.util.Date().getTime());
 		 oraCarico = new Time(new java.util.Date().getTime());
@@ -684,7 +684,7 @@ public class Carico {
 	public void moveCaricoToRiferimentoDoc() throws SQLException {
 		if (rifDoc == -1)
 			return;
-		String query = "update dettaglio_carichi set idcarico=? where idcarico=?";
+		String query = "update dettaglio_carico set idcarico=? where idcarico=?";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 		pst.setInt(1, this.rifDoc);
 		pst.setInt(2, idCarico);
@@ -701,7 +701,7 @@ public class Carico {
 			return;
 		if(haArticoli())
 			return;
-		String query = "update dettaglio_carichi set idcarico=? where idcarico=?";
+		String query = "update dettaglio_carico set idcarico=? where idcarico=?";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 		pst.setInt(1, this.idCarico);
 		pst.setInt(2, rifDoc);
@@ -727,7 +727,7 @@ public class Carico {
 		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
-		String queryID="select idcarico from carichi where iddocumento=1 or iddocumento=3 or iddocumento=4";
+		String queryID="select idcarico from carico where iddocumento=1 or iddocumento=3 or iddocumento=4";
 		//String query = "select sum(totale_documento-(totale_documento/100*iva_documento)) from ordini where tipo_documento=1 or tipo_documento=3 or tipo_documento=4";
 		rs = st.executeQuery(queryID);
 		while(rs.next()){
@@ -755,7 +755,7 @@ public class Carico {
 		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
-		String queryID="select idcarico from carichi where iddocumento=1 or iddocumento=3 or iddocumento=4";
+		String queryID="select idcarico from carico where iddocumento=1 or iddocumento=3 or iddocumento=4";
 		//String query = "select sum(totale_documento-(totale_documento/100*iva_documento)) from ordini where tipo_documento=1 or tipo_documento=3 or tipo_documento=4";
 		rs = st.executeQuery(queryID);
 		while(rs.next()){

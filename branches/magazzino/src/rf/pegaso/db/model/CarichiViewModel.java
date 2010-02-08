@@ -143,9 +143,9 @@ public class CarichiViewModel extends AbstractTableModel implements
 		sb.append("c.note, ");
 		sb.append("c.totale_documento as totale, ");
 		sb.append("c.sospeso ");
-		sb.append("from carichi as c, ");
+		sb.append("from carico as c, ");
 		sb.append("tipo_documento as d, ");  
-		sb.append("fornitori as f ");
+		sb.append("fornitore as f ");
 //		sb.append("dettaglio_carichi as dc, "); 
 //		sb.append("articoli a ");
 		sb.append("where c.idcarico=c.idcarico ");

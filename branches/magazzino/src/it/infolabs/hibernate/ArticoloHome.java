@@ -95,11 +95,14 @@ public class ArticoloHome extends BusinessObjectHome{
 	
 	
 	public boolean codBarreEsistenteForInsert(String codBarre) {
+		if(codBarre==null){
+			return false;
+		}
 		Criteria crit = sessionFactory.getCurrentSession().createCriteria("it.infolabs.hibernate.Articolo");
 		crit.add(Restrictions.or(
 				Restrictions.and(
 						Restrictions.ilike("codbarre", codBarre.substring(0, 4)+"%"), 
-						Restrictions.eq("reparti.idreparto", ((long)Constant.REPARTO_GRATTA_E_VINCI))), 
+						Restrictions.eq("reparto.idreparto", ((long)Constant.REPARTO_GRATTA_E_VINCI))), 
 						Restrictions.eq("codbarre", codBarre)));
 		if ( crit.list().size() > 0)
 			return true;

@@ -431,7 +431,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		txtQta.setValue(0.0);
 		txtPrezzo.setValue(0.0);
 		cmbProdotti.setSelectedIndex(0);
-		cmbFornitori.setSelectedIndex(0);
+//		cmbFornitori.setSelectedIndex(0);
 		txtNote.setText("");
 
 	}
@@ -452,6 +452,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 		txtNumDocumento.setText("");
 		cmbTipoDocumento.setSelectedIndex(0);
 		ricaricaTableCarico(idcarico);
+		cmbFornitori.setSelectedIndex(0);
 		azzeraCampi();
 	}
 
@@ -466,7 +467,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(this,
-					"Errore caricamento articoli nel combobox", "ERRORE", 0);
+					"Errore caricamento articolo nel combobox", "ERRORE", 0);
 			e.printStackTrace();
 		}
 		// per abilitare autocompletamento
@@ -527,7 +528,10 @@ public class CaricoGui extends JFrame implements TableModelListener {
 			if (a.findByCodBarre(codBarre)) {
 				Fornitore f = new Fornitore();
 				f.caricaDati(a.getIdFornitore());
-				cmbFornitori.setSelectedItem(f.getNome());
+				// non avviene più la selezione del fornitore
+				// in quanto non più in relazione diretta con
+				// l'articolo ma solo attraverso il carico.
+//				cmbFornitori.setSelectedItem(f.getNome());
 				cmbProdotti.setSelectedItem(a.getDescrizione());
 				cmbMisura.setSelectedIndex(a.getUm());
 				txtQta.setValue((new Double(1.0)));
@@ -967,7 +971,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 			a.caricaDati(id);
 			Fornitore f = new Fornitore();
 			f.caricaDati(a.getIdFornitore());
-			cmbFornitori.setSelectedItem(f.getNome());
+//			cmbFornitori.setSelectedItem(f.getNome());
 			cmbMisura.setSelectedIndex(a.getUm());
 			txtQta.setValue((new Double(1.0)));
 			txtPrezzo.setValue(new Double(a.getPrezzoAcquisto()));
@@ -1300,7 +1304,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 			try {
 				txtCodBarre = new JTextField();
 				AutoCompleteTextComponent complete = new AutoCompleteTextComponent(
-						txtCodBarre, dbm, "articoli", "codbarre");
+						txtCodBarre, dbm, "articolo", "codbarre");
 				dbm.addDBStateChange(complete);
 				txtCodBarre.setDocument(new UpperAutoCompleteDocument(complete,
 						true));
@@ -1364,7 +1368,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 				txtNumDocumento = new JTextField();
 				txtNumDocumento.setBounds(new Rectangle(96, 80, 101, 25));
 				AutoCompleteTextComponent complete = new AutoCompleteTextComponent(
-						txtNumDocumento, dbm, "carichi", "num_documento", "");
+						txtNumDocumento, dbm, "carico", "num_documento", "");
 				dbm.addDBStateChange(complete);
 				txtNumDocumento.setDocument(new UpperAutoCompleteDocument(complete,
 						false));
@@ -1380,7 +1384,7 @@ public class CaricoGui extends JFrame implements TableModelListener {
 				txtNumeroCarico.setBounds(new Rectangle(69, 20, 65, 25));
 				txtNumeroCarico.setEditable(false);
 				AutoCompleteTextComponent complete = new AutoCompleteTextComponent(
-						txtNumeroCarico, dbm, "carichi", "idcarico", "");
+						txtNumeroCarico, dbm, "carico", "idcarico", "");
 				dbm.addDBStateChange(complete);
 				txtNumeroCarico.setDocument(new UpperAutoCompleteDocument(
 						complete, false));

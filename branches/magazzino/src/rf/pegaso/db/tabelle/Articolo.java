@@ -38,9 +38,9 @@ public class Articolo {
 		ResultSet rs = null;
 //		String query = "select deposito from giacenza_articoli_view where idarticolo=?";
 		String query="SELECT c.sum - o.sum AS deposito " +
-				"FROM articoli a JOIN ( (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum FROM articoli a, carichi c, dettaglio_carichi d " +
+				"FROM articolo a JOIN ( (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum FROM articolo a, carico c, dettaglio_carico d " +
 				"WHERE d.idcarico = c.idcarico AND a.idarticolo = d.idarticolo and c.data_carico<=? and c.iddocumento<>0 GROUP BY a.idarticolo, a.codbarre) c LEFT JOIN (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum " +
-				"FROM articoli a, ordini c, dettaglio_ordini d WHERE d.idordine = c.idordine AND a.idarticolo = d.idarticolo and c.data_ordine<=? GROUP BY a.idarticolo, a.codbarre) o ON c.idarticolo = o.idarticolo) ON a.idarticolo = c.idarticolo and c.idarticolo=? JOIN um ON a.um = um.idum WHERE (c.sum - o.sum) > 0::numeric; ";
+				"FROM articolo a, scarico c, dettaglio_scarico d WHERE d.idordine = c.idordine AND a.idarticolo = d.idarticolo and c.data_ordine<=? GROUP BY a.idarticolo, a.codbarre) o ON c.idarticolo = o.idarticolo) ON a.idarticolo = c.idarticolo and c.idarticolo=? JOIN um ON a.um = um.idum WHERE (c.sum - o.sum) > 0::numeric; ";
 		PreparedStatement st = dbm.getNewPreparedStatement(query);
 		st.setInt(3, idArticolo);
 		Date data=new Date(new java.util.Date().getTime());
@@ -135,7 +135,7 @@ public class Articolo {
 		String[] o = null;
 		ResultSet rs = null;
 		Statement pst = null;
-		String query = "select idarticolo || ' - ' || descrizione from articoli order by descrizione";
+		String query = "select idarticolo || ' - ' || descrizione from articolo order by descrizione";
 		pst = dbm.getNewStatement();
 		rs = pst.executeQuery(query);
 		rs.last();
@@ -162,7 +162,7 @@ public class Articolo {
 		LinkedList<Integer> list = new LinkedList<Integer>();
 		ResultSet rs = null;
 		Statement pst = null;
-		String query = "select a.idarticolo from articoli as a, giacenza_articoli_all_view as g where a.idarticolo=g.idarticolo and a.idreparto="+categoria+" group by g.scarico, a.idarticolo order by g.scarico DESC";
+		String query = "select a.idarticolo from articolo as a, giacenza_articoli_all_view as g where a.idarticolo=g.idarticolo and a.idreparto="+categoria+" group by g.scarico, a.idarticolo order by g.scarico DESC";
 		pst = dbm.getNewStatement();
 		rs = pst.executeQuery(query);
 		while (rs.next()) {
@@ -179,7 +179,7 @@ public class Articolo {
 		String[] o = null;
 		ResultSet rs = null;
 		Statement pst = null;
-		String query = "select codbarre from articoli order by codbarre";
+		String query = "select codbarre from articolo order by codbarre";
 		pst = dbm.getNewStatement();
 		rs = pst.executeQuery(query);
 		rs.last();
@@ -206,7 +206,7 @@ public class Articolo {
 		String[] o = null;
 		ResultSet rs = null;
 		Statement pst = null;
-		String query = "select idarticolo || ' - ' || descrizione from articoli where idfornitore="
+		String query = "select idarticolo || ' - ' || descrizione from articolo where idfornitore="
 				+ idfornitore + " order by descrizione";
 		pst = dbm.getNewStatement();
 		rs = pst.executeQuery(query);
@@ -234,7 +234,7 @@ public class Articolo {
 		LinkedList<Object[]> list = new LinkedList<Object[]>();
 		ResultSet rs = null;
 		Statement pst = null;
-		String query = "select a.idarticolo, (v.carico-v.scarico) from giacenza_articoli_all_view v, articoli a where v.idarticolo=a.idarticolo and (v.carico-v.scarico) < a.scorta_minima";
+		String query = "select a.idarticolo, (v.carico-v.scarico) from giacenza_articoli_all_view v, articolo a where v.idarticolo=a.idarticolo and (v.carico-v.scarico) < a.scorta_minima";
 //		String query = "select * from articoli_sotto_soglia_minima";
 		pst = dbm.getNewStatement();
 		rs = pst.executeQuery(query);
@@ -261,7 +261,7 @@ public class Articolo {
 			return;
 		Statement st = null;
 		ResultSet rs = null;
-		String query = "select * from articoli where idArticolo=" + idArticolo;
+		String query = "select * from articolo where idArticolo=" + idArticolo;
 		st = dbm.getNewStatement();
 		rs = st.executeQuery(query);
 		//if ( rs.next() ){
@@ -273,7 +273,7 @@ public class Articolo {
 			this.dataInserimento = rs.getDate("data_Inserimento");
 			this.descrizione = rs.getString("descrizione");
 			this.idArticolo = rs.getInt("idArticolo");
-			this.idFornitore = rs.getInt("idFornitore");
+//			this.idFornitore = rs.getInt("idFornitore");
 			this.idReparto = rs.getInt("idReparto");
 			this.idPannello = rs.getInt("idPannello");
 			this.imballo = rs.getString("imballo");
@@ -308,7 +308,7 @@ public class Articolo {
 	public boolean codBarreEsistente(String codBarre) throws SQLException,
 			CodiceBarreInesistente {
 
-		String query = "select codbarre from articoli where codbarre="
+		String query = "select codbarre from articolo where codbarre="
 				+ codBarre;
 		Statement st = dbm.getNewStatement();
 		ResultSet rs = st.executeQuery(query);
@@ -325,7 +325,7 @@ public class Articolo {
 //	CodiceBarreInesistente {
 //
 //		String query = "SELECT a.idarticolo " +
-//				"FROM articoli a " +
+//				"FROM articolo a " +
 //				"where a.codbarre = '"+codBarre+"' " +
 //				"and a.idarticolo = "+idArticolo;
 //		Statement st = dbm.getNewStatement();
@@ -347,7 +347,7 @@ public class Articolo {
 	 * @throws SQLException
 	 */
 	public boolean tabacchiEsistente()  throws SQLException{
-		String query = "select * from articoli a where a.codfornitore = '"+codFornitore+"' and a.descrizione = '"+descrizione+"'";
+		String query = "select * from articolo a where a.codfornitore = '"+codFornitore+"' and a.descrizione = '"+descrizione+"'";
 		Statement st = dbm.getNewStatement();
 		ResultSet rs = st.executeQuery(query);
 		if ( rs.next() ){
@@ -398,7 +398,7 @@ public class Articolo {
 		int cancellati = 0;
 		if (idArticolo <= -1)
 			throw new IDNonValido();
-		delete = "DELETE FROM articoli WHERE idArticolo=" + idArticolo;
+		delete = "DELETE FROM articolo WHERE idArticolo=" + idArticolo;
 
 		try {
 			cancellati = st.executeUpdate(delete);
@@ -419,7 +419,7 @@ public class Articolo {
 	public boolean findByCodBarre(String codBarre) throws SQLException,
 			CodiceBarreInesistente {
 
-		String query = "select idArticolo from articoli where codbarre=?";
+		String query = "select idArticolo from articolo where codbarre=?";
 		PreparedStatement st = dbm.getNewPreparedStatement(query);
 		st.setString(1, codBarre);
 		ResultSet rs = st.executeQuery();
@@ -440,7 +440,7 @@ public class Articolo {
 	public boolean findByCodFornitore(String codFornitore) throws SQLException,
 	CodiceBarreInesistente {
 
-		String query = "select idArticolo from articoli where codfornitore=?";
+		String query = "select idArticolo from articolo where codfornitore=?";
 		PreparedStatement st = dbm.getNewPreparedStatement(query);
 		st.setString(1, codFornitore);
 		ResultSet rs = st.executeQuery();
@@ -578,11 +578,11 @@ public class Articolo {
 	 */
 //	public int insertArticolo2() throws IDNonValido, CodiceBarreEsistente, SQLException, CodiceBarreInesistente {
 //
-//		idArticolo = dbm.getNewID("articoli", "idArticolo");
+//		idArticolo = dbm.getNewID("articolo", "idArticolo");
 //		if (idArticolo <= -1)
 //			throw new IDNonValido();
-//		ArticoliHome.getInstance().begin();
-//		if ( ArticoliHome.getInstance().codBarreEsistenteForInsert(codBarre) ){
+//		articoloHome.getInstance().begin();
+//		if ( articoloHome.getInstance().codBarreEsistenteForInsert(codBarre) ){
 //			throw new CodiceBarreEsistente();
 //		}
 //		int ok = 0;
@@ -634,7 +634,7 @@ public class Articolo {
 //	}
 	
 	public int insertArticolo() throws IDNonValido, CodiceBarreEsistente{
-		idArticolo = dbm.getNewID("articoli", "idArticolo");
+		idArticolo = dbm.getNewID("articolo", "idArticolo");
 		if (idArticolo <= -1){
 			throw new IDNonValido();
 		}
@@ -911,7 +911,7 @@ public class Articolo {
 	 * @throws SQLException
 	 */
 	private int getIdArticoloByCodBarre(String codBarre) throws SQLException {
-		String query = "select idArticolo from articoli where codbarre=?";
+		String query = "select idArticolo from articolo where codbarre=?";
 		PreparedStatement st = dbm.getNewPreparedStatement(query);
 		st.setString(1, codBarre);
 
@@ -981,7 +981,7 @@ public class Articolo {
 	public static int idByCodiceBarre(String codbarre) throws SQLException {
 		DBManager dbm=DBManager.getIstanceSingleton();
 		ResultSet rs = null;
-		String query = "select idarticolo from articoli where codbarre=?";
+		String query = "select idarticolo from articolo where codbarre=?";
 		PreparedStatement st = dbm.getNewPreparedStatement(query);
 		st.setString(1, codbarre);
 		rs = st.executeQuery();
@@ -1005,7 +1005,7 @@ public class Articolo {
 	public static double prezzoAcquistoByID(int id) throws SQLException {
 		DBManager dbm=DBManager.getIstanceSingleton();
 		ResultSet rs = null;
-		String query = "select prezzo_acquisto from articoli where idarticolo=?";
+		String query = "select prezzo_acquisto from articolo where idarticolo=?";
 		PreparedStatement st = dbm.getNewPreparedStatement(query);
 		st.setDouble(1, id);
 		rs = st.executeQuery();

@@ -2,6 +2,8 @@ package it.infolabs.hibernate;
 
 // Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA
 
+import it.infolabs.hibernate.exception.FindAllEntityException;
+
 import java.util.List;
 import javax.naming.InitialContext;
 import org.apache.commons.logging.Log;
@@ -10,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.LockMode;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import rf.utility.Constant;
@@ -46,12 +49,14 @@ public class ArticoloHome extends BusinessObjectHome{
 			StringBuilder query = new StringBuilder();
 			query.append("select a, d.qta, d.prezzoAcquisto, c.dataCarico, c.oraCarico, (carico - scarico) as giacenza ");
 			query.append("from it.infolabs.hibernate.Carico c ");
-			query.append("inner join c.dettaglioCarichis d ");
-			query.append("inner join d.articoli a, ");
+			query.append("inner join c.dettaglioCaricos d ");
+			query.append("inner join d.articolo a, ");
 			query.append("it.infolabs.hibernate.GiacenzaArticoliAllView v ");
 			query.append("where v.id.idarticolo = a.idarticolo ");
 			query.append("and ((a.codbarre = '"+codBarre.substring(0, 4)+"' ");
-			query.append("and a.reparti.idreparto = "+Constant.REPARTO_GRATTA_E_VINCI+") ");
+			query.append("and a.reparto" +
+					"" +
+					".idreparto = "+Constant.REPARTO_GRATTA_E_VINCI+") ");
 			query.append("or a.codbarre = '"+codBarre+"') ");
 			query.append("order by c.dataCarico desc, c.oraCarico desc");
 			
@@ -208,6 +213,21 @@ public class ArticoloHome extends BusinessObjectHome{
 			return results;
 		} catch (RuntimeException re) {
 			log.error("find by example failed", re);
+			throw re;
+		}
+	}
+	
+	public List<Articolo> findAll() throws FindAllEntityException {
+		log.debug("finding All Articoli instance");
+		try {
+			List<Articolo> results = (List<Articolo>) sessionFactory
+					.getCurrentSession().createCriteria(
+							"it.infolabs.hibernate.Articolo").addOrder(Order.asc("descrizione")).list();
+			log.debug("find All Articoli successful, result size: "
+					+ results.size());
+			return results;
+		} catch (RuntimeException re) {
+			log.error("find All Articoli failed", re);
 			throw re;
 		}
 	}

@@ -2,6 +2,8 @@ package it.infolabs.hibernate;
 
 // Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA
 
+import it.infolabs.hibernate.exception.FindAllEntityException;
+
 import java.util.List;
 import javax.naming.InitialContext;
 import org.apache.commons.logging.Log;
@@ -9,6 +11,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
 import org.hibernate.LockMode;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+
 import static org.hibernate.criterion.Example.create;
 
 /**
@@ -119,6 +123,21 @@ public class RepartoHome extends BusinessObjectHome{
 		} catch (RuntimeException re) {
 			log.error("find by example failed", re);
 			throw re;
+		}
+	}
+	
+	public List<Reparto> AllReparti() throws FindAllEntityException{
+		log.debug("finding All Reparti instance");
+		try {
+			List<Reparto> results = (List<Reparto>) sessionFactory
+					.getCurrentSession().createCriteria(
+							"it.infolabs.hibernate.Reparto").addOrder(Order.asc("descrizione")).list();
+			log.debug("find All Reparti successful, result size: "
+					+ results.size());
+			return results;
+		} catch (RuntimeException re) {
+			log.error("find All Reparti failed", re);
+			throw new FindAllEntityException();
 		}
 	}
 }

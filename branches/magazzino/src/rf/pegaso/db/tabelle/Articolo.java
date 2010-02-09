@@ -273,7 +273,7 @@ public class Articolo {
 			this.dataInserimento = rs.getDate("data_Inserimento");
 			this.descrizione = rs.getString("descrizione");
 			this.idArticolo = rs.getInt("idArticolo");
-//			this.idFornitore = rs.getInt("idFornitore");
+//			this.idFornitore = rs.getInt("idfornitore");
 			this.idReparto = rs.getInt("idReparto");
 			this.idPannello = rs.getInt("idPannello");
 			this.imballo = rs.getString("imballo");

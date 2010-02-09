@@ -117,14 +117,14 @@ public class JPanelRiepilogoVendita extends JPanel {
 	class IntegerCellRenderer extends DefaultTableCellRenderer {
 		private static final long serialVersionUID = 1L;
 		private NumberFormat numberFormatter;
-		private Integer d;
+		private Long d;
 
 		public void setValue(Object value) {
 			if (numberFormatter == null) {
 				numberFormatter = NumberFormat.getIntegerInstance();
 			}
 			setHorizontalAlignment(JLabel.CENTER);
-			d = (Integer) value;
+			d = (Long) value;
 			setText((value == null) ? "" : numberFormatter.format(d));
 		}
 	}

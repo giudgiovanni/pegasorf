@@ -3,6 +3,8 @@
  */
 package rf.pegaso.gui.gestione;
 
+import it.infolabs.hibernate.Reparto;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -36,6 +38,7 @@ import net.sf.jasperreports.view.JasperViewer;
 import rf.pegaso.db.exception.CodiceBarreInesistente;
 import rf.pegaso.db.model.ArticoloModel;
 import rf.pegaso.db.tabelle.Articolo;
+import rf.pegaso.gui.internalframe.VenditaInternalFrame;
 import rf.utility.db.DBManager;
 import rf.utility.db.eccezzioni.CodiceBarreEsistente;
 import rf.utility.db.eccezzioni.IDNonValido;
@@ -82,13 +85,20 @@ public class ArticoliGestione extends JFrame {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			if(e.getSource()==tblArticoli && e.getClickCount()==2){
-				modificaArticolo();
+				if ( modalita == RICERCA ){
+					int riga = tblArticoli.getSelectedRow();
+					padre.inserisciNelCarrello((String)tblArticoli.getValueAt(riga, 1));
+					dispose();
+				}
+				else{
+					modificaArticolo();
+				}
 			}
 		}
 		
 	}
 	
-	private MyMouseAdapter myMouseadapter;
+	private MyMouseAdapter myMouseadapter;  //  @jve:decl-index=0:
 
 	private static final long serialVersionUID = 1L;
 
@@ -133,6 +143,16 @@ public class ArticoliGestione extends JFrame {
 	private JTextField txtFiltroDescrizione = null;
 
 	private TableRowSorter<ArticoloModel> sorter;
+	
+	private final static int RICERCA = 1;
+	
+	private final static int NORMALE = 0;
+	
+	private int modalita;
+	
+	private Reparto reparto;
+	
+	private VenditaInternalFrame padre;
 
 	/**
 	 * @param owner
@@ -141,6 +161,15 @@ public class ArticoliGestione extends JFrame {
 		//this.padre = padre;
 		//this.padre.setEnabled(false);
 		this.dbm = DBManager.getIstanceSingleton();
+		this.modalita = NORMALE;
+		initialize();
+	}
+	
+	public ArticoliGestione(VenditaInternalFrame padre, Reparto rep){
+		this.dbm = DBManager.getIstanceSingleton();
+		this.padre = padre;
+		this.modalita = RICERCA;
+		this.reparto = rep;
 		initialize();
 	}
 
@@ -269,6 +298,9 @@ public class ArticoliGestione extends JFrame {
 				btnChiudi.setBounds(new Rectangle(471, 5, 77, 25)); // Generated
 				btnChiudi.setText("Chiudi");
 				btnChiudi.addActionListener(new MyActionListener());
+				if ( this.modalita == RICERCA ){
+					btnChiudi.setBounds(new Rectangle(9, 5, 82, 26));
+				}
 			} catch (java.lang.Throwable e) {
 				e.printStackTrace();
 			}
@@ -289,6 +321,9 @@ public class ArticoliGestione extends JFrame {
 				btnElimina.setBounds(new Rectangle(378, 5, 82, 26)); // Generated
 				btnElimina.setPreferredSize(new Dimension(82, 26)); // Generated
 				btnElimina.addActionListener(new MyActionListener());
+				if ( this.modalita == RICERCA ){
+					btnElimina.setVisible(false);
+				}
 			} catch (java.lang.Throwable e) {
 				e.printStackTrace();
 			}
@@ -308,6 +343,9 @@ public class ArticoliGestione extends JFrame {
 				btnModifica.setText("Modifica"); // Generated
 				btnModifica.setBounds(new Rectangle(102, 5, 82, 26)); // Generated
 				btnModifica.addActionListener(new MyActionListener());
+				if ( this.modalita == RICERCA ){
+					btnModifica.setVisible(false);
+				}
 			} catch (java.lang.Throwable e) {
 				e.printStackTrace();
 			}
@@ -329,6 +367,9 @@ public class ArticoliGestione extends JFrame {
 				btnNuovo.setText("Nuovo"); // Generated
 				btnNuovo.setPreferredSize(new Dimension(82, 26)); // Generated
 				btnNuovo.addActionListener(new MyActionListener());
+				if ( this.modalita == RICERCA ){
+					btnNuovo.setVisible(false);
+				}
 			} catch (java.lang.Throwable e) {
 				e.printStackTrace();
 			}
@@ -438,7 +479,13 @@ public class ArticoliGestione extends JFrame {
 	private JTable getTblArticoli() {
 		if (tblArticoli == null) {
 			try {
-				ArticoloModel modello = new ArticoloModel();
+				ArticoloModel modello;
+				if ( modalita == RICERCA ){
+					modello = new ArticoloModel(reparto);
+				}
+				else{
+					modello = new ArticoloModel();
+				}
 				dbm.addDBStateChange(modello);
 				sorter=new TableRowSorter<ArticoloModel>(modello);
 				tblArticoli = new JTable(modello);
@@ -448,7 +495,6 @@ public class ArticoliGestione extends JFrame {
 				tblArticoli.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 				//tblArticoli.packAll();
 				tblArticoli.getTableHeader().setReorderingAllowed(false);
-
 
 //				 impostiamo le varie colonne
 				TableColumn col = tblArticoli.getColumnModel().getColumn(0);
@@ -576,6 +622,9 @@ public class ArticoliGestione extends JFrame {
 				btnDuplica.setBounds(new Rectangle(195, 5, 80, 26)); // Generated
 				btnDuplica.setText("Duplica");
 				btnDuplica.addActionListener(new MyActionListener());
+				if ( this.modalita == RICERCA ){
+					btnDuplica.setVisible(false);
+				}
 			} catch (java.lang.Throwable e) {
 				e.printStackTrace();
 			}
@@ -595,6 +644,9 @@ public class ArticoliGestione extends JFrame {
 				btnStampa.setBounds(new Rectangle(286, 5, 81, 25)); // Generated
 				btnStampa.setText("Stampa");
 				btnStampa.addActionListener(new MyActionListener());
+				if ( this.modalita == RICERCA ){
+					btnStampa.setVisible(false);
+				}
 			} catch (java.lang.Throwable e) {
 				e.printStackTrace();
 			}

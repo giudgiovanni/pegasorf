@@ -1,15 +1,18 @@
 package rf.pegaso.gui.vendita.panel;
 
 import it.infolabs.hibernate.Articolo;
+import it.infolabs.hibernate.Reparto;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.FontMetrics;
 import java.awt.GridBagConstraints;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.Vector;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import javax.swing.JScrollPane;
@@ -26,6 +29,7 @@ public class JPanelArticoli extends JPanel{
 	private JPanel pnlPulsanti = null;
 	private int width;
 	private int ncolonne;
+	private long idPannello = -1;
 
 	/**
 	 * This is the default constructor
@@ -58,25 +62,45 @@ public class JPanelArticoli extends JPanel{
 	public void caricaArticoli(LinkedList<Articolo> articoli){
 		try{
 			pnlPulsanti.removeAll();
-			pnlPulsanti.setLayout(new GridBagLayout());
-			int nRiga = 0, nCol = 0;
+			pnlPulsanti.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+			int countWidth = 0, row = 3;
 			for (Articolo art : articoli){
-				GridBagConstraints gridBagConstraints = new GridBagConstraints();
-				gridBagConstraints.gridx = nRiga;
-				gridBagConstraints.insets = new Insets(10, 10, 10, 10);
-				gridBagConstraints.gridy = nCol;
+				idPannello = art.getPannelli().getIdpannelli();
 				JButtonArticolo btnArticolo = new JButtonArticolo(art);
-				btnArticolo.addActionListener(new MyButtonListener(art));
-				btnArticolo.setPreferredSize(new Dimension(100, 100));
-				pnlPulsanti.add(btnArticolo, gridBagConstraints);
-				if ( nRiga == ncolonne ){
-					nRiga = 0;
-					nCol++;
-				}
-				else{
-					nRiga++;
+				MyButtonListener btnListener = new MyButtonListener(art);
+				btnArticolo.addActionListener(btnListener);
+				pnlPulsanti.add(btnArticolo);
+				countWidth += btnArticolo.getPreferredSize().width;
+				if( countWidth >= (width - 20) ){
+					countWidth = 0; row ++;
 				}
 			}
+			int height = (row*100)+(row*10);
+			pnlPulsanti.setPreferredSize(new Dimension(width-20, height));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void caricaReparti(LinkedList<Reparto> reparti){
+		try{
+			pnlPulsanti.removeAll();
+			pnlPulsanti.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+			int countWidth = 0, row = 3;
+			for (Reparto rep : reparti){
+//				idPannello = art.getPannelli().getIdpannelli();
+				JButtonArticolo btnReparto = new JButtonArticolo(rep);
+				MyButtonListener btnListener = new MyButtonListener(rep);
+				btnReparto.addActionListener(btnListener);
+				pnlPulsanti.add(btnReparto);
+				countWidth += btnReparto.getPreferredSize().width;
+				if( countWidth >= (width - 20) ){
+					countWidth = 0; row ++;
+				}
+			}
+			int height = (row*100)+(row*10);
+			pnlPulsanti.setPreferredSize(new Dimension(width-20, height));
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -93,13 +117,26 @@ public class JPanelArticoli extends JPanel{
 	private class MyButtonListener implements java.awt.event.ActionListener {
 
 		private Articolo m_articolo;
+		
+		private Reparto m_reparto;
 
 		public MyButtonListener(Articolo articolo){
 			m_articolo = articolo;
 		}
+		
+		public MyButtonListener(Reparto reparto){
+			m_reparto = reparto;
+		}
+		
 		public void actionPerformed(java.awt.event.ActionEvent evt) {
 	           
-            JButtonEvent oEv = new JButtonEvent(JPanelArticoli.this, '\0', m_articolo);            
+            JButtonEvent oEv;
+            if(m_articolo != null){
+            	oEv = new JButtonEvent(JPanelArticoli.this, '\0', m_articolo);
+            }
+            else{
+            	oEv = new JButtonEvent(JPanelArticoli.this, '\0', m_reparto);
+            }
             JButtonEventListener oListener;
             
             for (Enumeration<JButtonEventListener> e = m_Listeners.elements(); e.hasMoreElements();) {

@@ -1,6 +1,7 @@
 package rf.pegaso.gui;
 
 import it.infolabs.hibernate.ArticoloHome;
+import it.infolabs.hibernate.exception.FindAllEntityException;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -458,6 +459,11 @@ public class InitialGUI extends JFrame {
 	private void initialize() {
 
 		ArticoloHome.getInstance().begin();
+		try {
+			ArticoloHome.getInstance().findAll();
+		} catch (FindAllEntityException e2) {
+			e2.printStackTrace();
+		}
 		this.padre = this;
 		padre.setSize(new Dimension(513, 115));
 		System.out

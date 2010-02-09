@@ -5,6 +5,7 @@ package rf.pegaso.db.model;
 
 import it.infolabs.hibernate.Articolo;
 import it.infolabs.hibernate.ArticoloHome;
+import it.infolabs.hibernate.Reparto;
 import it.infolabs.hibernate.exception.FindAllEntityException;
 
 import java.text.DecimalFormat;
@@ -41,6 +42,11 @@ public class ArticoloModel extends AbstractTableModel implements DBStateChange {
 		} catch (FindAllEntityException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public ArticoloModel(Reparto rep){
+		colonne = creaColonne();
+		resultList = new ArrayList<Articolo>(rep.getArticolos());
 	}
 	
 	private ArrayList<String> creaColonne(){
@@ -127,9 +133,9 @@ public class ArticoloModel extends AbstractTableModel implements DBStateChange {
 	 */
 	private void recuperaDati() throws FindAllEntityException {
 		ArticoloHome.getInstance().begin();
-		Criteria crit = ArticoloHome.getInstance().getSessionFactory()
-			.getCurrentSession().createCriteria("it.infolabs.hibernate.Articolo").addOrder(Order.asc("descrizione"));
-		resultList = crit.list();
+//		Criteria crit = ArticoloHome.getInstance().getSessionFactory()
+//			.getCurrentSession().createCriteria("it.infolabs.hibernate.Articolo").addOrder(Order.asc("descrizione"));
+		resultList = ArticoloHome.getInstance().findAll();
 	}
 
 	public String getNomeTabella() {

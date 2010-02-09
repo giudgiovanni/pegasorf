@@ -45,7 +45,7 @@ public class Scarico {
 
 	public static int getMaxID() {
 		DBManager dbm = DBManager.getIstanceSingleton();
-		return dbm.getNewID("ordini", "idordine") - 1;
+		return dbm.getNewID("scarico", "idordine") - 1;
 	}
 
 	public static double getTotDettaglioImponibile(int idScarico2)
@@ -126,7 +126,7 @@ public class Scarico {
 		if ( start != null && idReparto != -1 ){
 //			query = "select sum(prezzo_vendita*qta) from articoli_scaricati_view where data_ordine >=? and data_ordine <= ?";
 			query = "select sum(d.prezzo_vendita * d.qta) " +
-					"from ordini o, dettaglio_ordini d, articoli a " +
+					"from scarico o, dettaglio_scarico d, articolo a " +
 					"where o.idordine = d.idordine " +
 					"and a.idarticolo = d.idarticolo " +
 					"and o.ora_ordine >= '"+dalle+"' and o.ora_ordine<='"+alle+"' " +
@@ -134,7 +134,7 @@ public class Scarico {
 		}
 		else if ( start != null ){
 			query = "select sum(d.prezzo_vendita * d.qta) " +
-			"from ordini o, dettaglio_ordini d, articoli a " +
+			"from scarico o, dettaglio_scarico d, articolo a " +
 			"where o.idordine = d.idordine " +
 			"and a.idarticolo = d.idarticolo " +
 			"and o.ora_ordine >= '"+dalle+"' and o.ora_ordine<='"+alle+"' " +
@@ -169,7 +169,7 @@ public class Scarico {
 		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
-		String query = "select sum(totale_documento-(totale_documento*iva_documento/(100.0+iva_documento))) from ordini where tipo_documento=1 or tipo_documento=3 or tipo_documento=4";
+		String query = "select sum(totale_documento-(totale_documento*iva_documento/(100.0+iva_documento))) from scarico where tipo_documento=1 or tipo_documento=3 or tipo_documento=4";
 		rs = st.executeQuery(query);
 		rs.next();
 		double tot = rs.getDouble(1);
@@ -185,7 +185,7 @@ public class Scarico {
 		DBManager dbm = DBManager.getIstanceSingleton();
 		ResultSet rs = null;
 		Statement st = dbm.getNewStatement();
-		String query = "select sum(totale_documento*iva_documento/(100.0+iva_documento)) from ordini where tipo_documento=1 or tipo_documento=3 or tipo_documento=4";
+		String query = "select sum(totale_documento*iva_documento/(100.0+iva_documento)) from scarico where tipo_documento=1 or tipo_documento=3 or tipo_documento=4";
 		rs = st.executeQuery(query);
 		rs.next();
 		double tot = rs.getDouble(1);
@@ -238,7 +238,7 @@ public class Scarico {
 		if ( start != null && idReparto != -1 ){
 			//	query = "select sum(prezzo_vendita*qta) from articoli_scaricati_view where data_ordine >=? and data_ordine <= ?";
 			query = "select sum((d.prezzo_acquisto/100*d.iva)*d.qta) " +
-			"from ordini o, dettaglio_ordini d, articoli a " +
+			"from scarico o, dettaglio_scarico d, articolo a " +
 			"where o.idordine = d.idordine " +
 			"and a.idarticolo = d.idarticolo " +
 			"and o.ora_ordine >= '"+dalle+"' and o.ora_ordine<='"+alle+"' " +
@@ -246,7 +246,7 @@ public class Scarico {
 		}
 		else if ( start != null ){
 			query = "select sum((d.prezzo_acquisto/100*d.iva)*d.qta) " +
-			"from ordini o, dettaglio_ordini d, articoli a " +
+			"from scarico o, dettaglio_scarico d, articolo a " +
 			"where o.idordine = d.idordine " +
 			"and a.idarticolo = d.idarticolo " +
 			"and o.ora_ordine >= '"+dalle+"' and o.ora_ordine<='"+alle+"' " +
@@ -286,7 +286,7 @@ public class Scarico {
 		if ( start != null && idReparto != -1 ){
 			//	query = "select sum(prezzo_vendita*qta) from articoli_scaricati_view where data_ordine >=? and data_ordine <= ?";
 			query = "select sum((d.prezzo_vendita - d.prezzo_acquisto)*d.qta) " +
-			"from ordini o, dettaglio_ordini d, articoli a " +
+			"from scarico o, dettaglio_scarico d, articolo a " +
 			"where o.idordine = d.idordine " +
 			"and a.idarticolo = d.idarticolo " +
 			"and o.ora_ordine >= '"+dalle+"' and o.ora_ordine<='"+alle+"' " +
@@ -294,7 +294,7 @@ public class Scarico {
 		}
 		else if ( start != null ){
 			query = "select sum((d.prezzo_vendita - d.prezzo_acquisto)*d.qta) " +
-			"from ordini o, dettaglio_ordini d, articoli a " +
+			"from scarico o, dettaglio_scarico d, articolo a " +
 			"where o.idordine = d.idordine " +
 			"and a.idarticolo = d.idarticolo " +
 			"and o.ora_ordine >= '"+dalle+"' and o.ora_ordine<='"+alle+"' " +
@@ -352,7 +352,7 @@ public class Scarico {
 		try {
 			if (!Scarico.isOrderExsist(idScarico)) {
 
-				String update = "insert into ordini values (?,?,?,?,?)";
+				String update = "insert into scarico values (?,?,?,?,?)";
 				// preleviamo la data di inserimento
 				// e la impostiamo nelle proprietà
 				java.util.Date data = new java.util.Date();
@@ -387,7 +387,7 @@ public class Scarico {
 		// giacenza
 		double qta = 0;
 		int sconto = 0;
-		String query = "insert into dettaglio_ordini values(?,?,?,?)";
+		String query = "insert into dettaglio_scarico values(?,?,?,?)";
 		pst = dbm.getNewPreparedStatement(query);
 		try {
 			pst.setInt(1, idScarico);
@@ -421,7 +421,7 @@ public class Scarico {
 		DBManager dbm = DBManager.getIstanceSingleton();
 		Statement st = dbm.getNewStatement();
 		ResultSet rs = null;
-		String query = "select * from ordini where idordine=" + idordine;
+		String query = "select * from scarico where idordine=" + idordine;
 		rs = st.executeQuery(query);
 		rs.last();
 		int nRow = rs.getRow();
@@ -443,7 +443,7 @@ public class Scarico {
 		DBManager dbm = DBManager.getIstanceSingleton();
 		Statement st = dbm.getNewStatement();
 		ResultSet rs = null;
-		String query = "select num_documento from ordini where num_documento=" + numDocumento;
+		String query = "select num_documento from scarico where num_documento=" + numDocumento;
 		rs = st.executeQuery(query);
 		rs.last();
 		int nRow = rs.getRow();
@@ -511,7 +511,7 @@ public class Scarico {
 	public void caricaDati(int id) throws SQLException {
 		Statement st = null;
 		ResultSet rs = null;
-		String query = "select * from ordini where idordine=" + id;
+		String query = "select * from scarico where idordine=" + id;
 		st = dbm.getNewStatement();
 		rs = st.executeQuery(query);
 		rs.next();
@@ -547,7 +547,7 @@ public class Scarico {
 	}
 
 	public void deleteArticolo(int idArticolo) throws SQLException {
-		String query = "delete from dettaglio_ordini where idArticolo=? and idordine=?";
+		String query = "delete from dettaglio_scarico where idArticolo=? and idordine=?";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 		pst.setInt(1, idArticolo);
 		pst.setInt(2, idScarico);
@@ -565,7 +565,7 @@ public class Scarico {
 		int cancellati = 0;
 		if (idScarico <= -1)
 			throw new IDNonValido();
-		delete = "DELETE FROM ordini WHERE idordine=" + idScarico;
+		delete = "DELETE FROM scarico WHERE idordine=" + idScarico;
 
 		try {
 			cancellati = st.executeUpdate(delete);
@@ -608,7 +608,7 @@ public class Scarico {
 	 *
 	 */
 	public int getNewID() {
-		return dbm.getNewID("ordini", "idordine");
+		return dbm.getNewID("scarico", "idordine");
 
 	}
 
@@ -630,7 +630,7 @@ public class Scarico {
 			SQLException, ResultSetVuoto {
 		if (this.idScarico <= 0)
 			throw new IDNonValido();
-		String query = "select qta from dettaglio_ordini where idarticolo=? and idordine=?";
+		String query = "select qta from dettaglio_scarico where idarticolo=? and idordine=?";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 		pst.setInt(1, idArticolo);
 		pst.setInt(2, this.idScarico);
@@ -649,7 +649,7 @@ public class Scarico {
 	public void insertArticolo(int idArticolo, double qta, int sconto,double prezzoAcquisto,double prezzoVendita,int iva)
 			throws SQLException {
 
-		String query = "insert into dettaglio_ordini values(?,?,?,?,?,?,?)";
+		String query = "insert into dettaglio_scarico values(?,?,?,?,?,?,?)";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 		pst.setInt(1, idScarico);
 		pst.setInt(2, idArticolo);
@@ -704,10 +704,10 @@ public class Scarico {
 
 	public int insertScarico() {
 
-		idScarico = dbm.getNewID("ordini", "idordine");
+		idScarico = dbm.getNewID("scarico", "idordine");
 		int ok = 0;
 		PreparedStatement pst = null;
-		String update = "insert into ordini values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String update = "insert into scarico values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		// preleviamo la data di inserimento
 		// e la impostiamo nelle proprietà
 		java.util.Date data = new java.util.Date();
@@ -760,7 +760,7 @@ public class Scarico {
 	}
 
 	public void updateTotDocumentoIvato(int idScarico2) throws SQLException {
-		String query = "update ordini set totale_documento=? where idordine=?";
+		String query = "update scarico set totale_documento=? where idordine=?";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 
 		pst.setDouble(1, Scarico.getTotIngrossoImponibile(idScarico2)
@@ -783,7 +783,7 @@ public class Scarico {
 	public boolean isInsert(int idordine) throws SQLException {
 		Statement st = dbm.getNewStatement();
 		ResultSet rs = null;
-		String query = "select * from ordini where idordine=" + idordine;
+		String query = "select * from scarico where idordine=" + idordine;
 		rs = st.executeQuery(query);
 		rs.last();
 		int nRow = rs.getRow();
@@ -835,7 +835,7 @@ public class Scarico {
 	public void updateArticolo(int idArticolo, double qta, int sconto,double prezzoAcquisto,double prezzoVendita,int iva)
 			throws SQLException {
 
-		String query = "update dettaglio_ordini set qta=?,sconto=?,prezzo_acquisto=?,prezzo_vendita=?,iva=? where idordine=? and idarticolo=?";
+		String query = "update dettaglio_scarico set qta=?,sconto=?,prezzo_acquisto=?,prezzo_vendita=?,iva=? where idordine=? and idarticolo=?";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 
 		pst.setDouble(1, qta);
@@ -860,7 +860,7 @@ public class Scarico {
 			throw new IDNonValido();
 		int ok = 0;
 		PreparedStatement pst = null;
-		String update = "UPDATE ordini SET idordine=?,"
+		String update = "UPDATE scarico SET idordine=?,"
 				+ "idcliente=?,data_ordine=?,ora_ordine=?,note=?, tipo_documento=?,num_documento=?," +
 						"data_documento=?,totale_documento=?,iva_documento=?,doc_emesso=?,doc_fiscale=?," +
 						"ins_pn=?,idpagamento=?,idcausale=?,spese_incasso=?,spese_trasporto=?," +
@@ -936,7 +936,7 @@ public class Scarico {
 	}
 
 	public void deleteAllArticoliScaricati() throws SQLException {
-		String query = "delete from dettaglio_ordini where idordine="
+		String query = "delete from dettaglio_scarico where idordine="
 				+ idScarico;
 		Statement st = dbm.getNewStatement();
 		st.executeUpdate(query);

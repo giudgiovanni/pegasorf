@@ -103,7 +103,7 @@ public class ArticoliScaricatiByDataViewModel extends AbstractTableModel impleme
 	}
 
 	public String getTableName() {
-		return "carichi";
+		return "carico";
 	}
 
 	public Object getValueAt(int r, int c) {
@@ -163,10 +163,10 @@ public class ArticoliScaricatiByDataViewModel extends AbstractTableModel impleme
 	private void recuperaDati() throws SQLException {
 //		this.query = "select a.codbarre as codice,a.descrizione,a.qta as qta, a.prezzo_dettaglio as prezzo_pubblico,(articoli.prezzo_acquisto* a.qta) as totale, o.data_documento as data, a.idordine as n_vendita from articoli_scaricati_view as a, articoli,giacenza_articoli_all_view as g, ordini as o where articoli.idarticolo=a.idarticolo and o.idordine=a.idordine and g.codice=a.codbarre and a.qta>0  order by a.codbarre";
 		if ( idReparto == -1 ){
-			this.query = "select a.codbarre as codice,a.descrizione,a.qta as qta, a.prezzo_vendita as prezzo_pubblico, (a.prezzo_vendita * a.qta) as totale, o.data_documento as data, a.idordine as n_vendita from articoli_scaricati_view as a, articoli, ordini as o where articoli.idarticolo=a.idarticolo and o.idordine=a.idordine and a.qta>0 and o.data_documento>=? and o.data_documento<=? and o.ora_ordine >= '"+oraStart+"' and o.ora_ordine <= '"+oraEnd+"' order by a.codbarre";
+			this.query = "select a.codbarre as codice,a.descrizione,a.qta as qta, a.prezzo_vendita as prezzo_pubblico, (a.prezzo_vendita * a.qta) as totale, o.data_documento as data, a.idordine as n_vendita from articoli_scaricati_view as a, articolo, scarico as o where articolo.idarticolo=a.idarticolo and o.idordine=a.idordine and a.qta>0 and o.data_documento>=? and o.data_documento<=? and o.ora_ordine >= '"+oraStart+"' and o.ora_ordine <= '"+oraEnd+"' order by a.codbarre";
 		}
 		else{
-			this.query = "select a.codbarre as codice,a.descrizione,a.qta as qta, a.prezzo_vendita as prezzo_pubblico, (a.prezzo_vendita * a.qta) as totale, o.data_documento as data, a.idordine as n_vendita from articoli_scaricati_view as a, articoli, ordini as o where articoli.idarticolo=a.idarticolo and o.idordine=a.idordine and a.qta>0 and o.data_documento>=? and o.data_documento<=? and idreparto=? and o.ora_ordine >= '"+oraStart+"' and o.ora_ordine <= '"+oraEnd+"' order by a.codbarre";
+			this.query = "select a.codbarre as codice,a.descrizione,a.qta as qta, a.prezzo_vendita as prezzo_pubblico, (a.prezzo_vendita * a.qta) as totale, o.data_documento as data, a.idordine as n_vendita from articoli_scaricati_view as a, articolo, scarico as o where articolo.idarticolo=a.idarticolo and o.idordine=a.idordine and a.qta>0 and o.data_documento>=? and o.data_documento<=? and idreparto=? and o.ora_ordine >= '"+oraStart+"' and o.ora_ordine <= '"+oraEnd+"' order by a.codbarre";
 		}
 		pst = dbm.getNewPreparedStatement(query);
 		if ( idReparto == -1 ){

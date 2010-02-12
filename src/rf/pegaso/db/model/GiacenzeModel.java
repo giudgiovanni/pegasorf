@@ -148,8 +148,8 @@ public class GiacenzeModel extends AbstractTableModel
     	//ad un dato periodo.
         //query = "select * from giacenza_articoli_view order by codice";
     	query="SELECT c.idarticolo, a.codbarre AS codice, a.descrizione, um.nome AS um, c.sum AS carico, o.sum AS scarico, c.sum - o.sum AS deposito, c.prezzo_acquisto, c.prezzo_acquisto * (c.sum - o.sum)::double precision AS prezzo_tot "+
-    	"FROM articoli a JOIN ( (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum, d.prezzo_acquisto FROM articoli a, carichi c, dettaglio_carichi d WHERE d.idcarico = c.idcarico AND a.idarticolo = d.idarticolo and c.data_carico<=? and c.iddocumento <> 0 GROUP BY a.idarticolo, a.codbarre,d.prezzo_acquisto) c "+
-    	"LEFT JOIN (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum FROM articoli a, ordini c, dettaglio_ordini d WHERE d.idordine = c.idordine AND a.idarticolo = d.idarticolo and c.data_ordine<=? GROUP BY a.idarticolo, a.codbarre) o ON c.idarticolo = o.idarticolo) "+
+    	"FROM articolo a JOIN ( (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum, d.prezzo_acquisto FROM articolo a, carico c, dettaglio_carico d WHERE d.idcarico = c.idcarico AND a.idarticolo = d.idarticolo and c.data_carico<=? and c.iddocumento <> 0 GROUP BY a.idarticolo, a.codbarre,d.prezzo_acquisto) c "+
+    	"LEFT JOIN (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum FROM articolo a, scarico c, dettaglio_scarico d WHERE d.idordine = c.idordine AND a.idarticolo = d.idarticolo and c.data_ordine<=? GROUP BY a.idarticolo, a.codbarre) o ON c.idarticolo = o.idarticolo) "+
     	"ON a.idarticolo = c.idarticolo JOIN um ON a.um = um.idum WHERE (c.sum - o.sum) > 0::numeric order by codice;";
         pst = dbm.getNewPreparedStatement(query);
         pst.setDate(1, data);

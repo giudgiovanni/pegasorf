@@ -42,12 +42,12 @@ public class Giacenze
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		String query = "SELECT sum(c.prezzo_acquisto * (c.sum - o.sum)) as prezzo_tot " +
-				"FROM articoli a JOIN ( (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum, d.prezzo_acquisto " +
-				"FROM articoli a, carichi c, dettaglio_carichi d WHERE d.idcarico = c.idcarico " +
+				"FROM articolo a JOIN ( (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum, d.prezzo_acquisto " +
+				"FROM articolo a, carico c, dettaglio_carico d WHERE d.idcarico = c.idcarico " +
 				"AND a.idarticolo = d.idarticolo and c.data_carico<=? and c.iddocumento <> 0 " +
 				"GROUP BY a.idarticolo, a.codbarre,d.prezzo_acquisto) c " +
 				"LEFT JOIN (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum " +
-				"FROM articoli a, ordini c, dettaglio_ordini d WHERE d.idordine = c.idordine AND a.idarticolo = d.idarticolo and c.data_ordine<=? " +
+				"FROM articolo a, scarico c, dettaglio_scarico d WHERE d.idordine = c.idordine AND a.idarticolo = d.idarticolo and c.data_ordine<=? " +
 				"GROUP BY a.idarticolo, a.codbarre) o ON c.idarticolo = o.idarticolo) ON a.idarticolo = c.idarticolo JOIN um ON a.um = um.idum WHERE (c.sum - o.sum) > 0::numeric;"; 
 		st = dbm.getNewPreparedStatement(query);
 		st.setDate(1,data);
@@ -68,7 +68,7 @@ public class Giacenze
         DBManager dbm = DBManager.getIstanceSingleton();
         ResultSet rs = null;
         Statement st = dbm.getNewStatement();
-        String query = "select sum((a.prezzo_acquisto / 100 * a.iva)* g.deposito) from giacenza_articoli_view g,articoli a where g.idarticolo=a.idarticolo";
+        String query = "select sum((a.prezzo_acquisto / 100 * a.iva)* g.deposito) from giacenza_articoli_view g,articolo a where g.idarticolo=a.idarticolo";
         rs = st.executeQuery(query);
         rs.next();
         double tot = rs.getDouble(1);
@@ -84,7 +84,7 @@ public class Giacenze
 		ResultSet rs = null;
 		PreparedStatement st = null;
 		String query = "SELECT  sum((c.prezzo_acquisto/100*a.iva)*(c.sum - o.sum)) as imposta " +
-				"FROM articoli a JOIN ( (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum, d.prezzo_acquisto FROM articoli a, carichi c, dettaglio_carichi d WHERE d.idcarico = c.idcarico AND a.idarticolo = d.idarticolo and c.data_carico<=? and c.iddocumento <> 0 GROUP BY a.idarticolo, a.codbarre,d.prezzo_acquisto) c LEFT JOIN (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum FROM articoli a, ordini c, dettaglio_ordini d WHERE d.idordine = c.idordine AND a.idarticolo = d.idarticolo and c.data_ordine<=? GROUP BY a.idarticolo, a.codbarre) o ON c.idarticolo = o.idarticolo) ON a.idarticolo = c.idarticolo JOIN um ON a.um = um.idum WHERE (c.sum - o.sum) > 0::numeric;";
+				"FROM articolo a JOIN ( (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum, d.prezzo_acquisto FROM articolo a, carico c, dettaglio_carico d WHERE d.idcarico = c.idcarico AND a.idarticolo = d.idarticolo and c.data_carico<=? and c.iddocumento <> 0 GROUP BY a.idarticolo, a.codbarre,d.prezzo_acquisto) c LEFT JOIN (SELECT a.idarticolo, a.codbarre, sum(d.qta) AS sum FROM articolo a, scarico c, dettaglio_scarico d WHERE d.idordine = c.idordine AND a.idarticolo = d.idarticolo and c.data_ordine<=? GROUP BY a.idarticolo, a.codbarre) o ON c.idarticolo = o.idarticolo) ON a.idarticolo = c.idarticolo JOIN um ON a.um = um.idum WHERE (c.sum - o.sum) > 0::numeric;";
 		st=dbm.getNewPreparedStatement(query);
 		st.setDate(1,data);
 		st.setDate(2, data);

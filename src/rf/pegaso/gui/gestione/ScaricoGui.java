@@ -4,6 +4,10 @@
 package rf.pegaso.gui.gestione;
 
 
+import it.infolabs.hibernate.Um;
+import it.infolabs.hibernate.UmHome;
+import it.infolabs.hibernate.exception.FindByNotFoundException;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -527,9 +531,9 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 			if (a.findByCodBarre(codBarre)) {
 				Fornitore f = new Fornitore();
 				f.caricaDati(a.getIdFornitore());
-
 				cmbProdotti.setSelectedItem(a.getDescrizione());
-				txtUm.setText(new Integer(a.getUm()).toString());
+				Um um=UmHome.getInstance().findById(new Integer(a.getUm()));
+				txtUm.setText(um.getNome());
 				txtQta.setValue(1.0);
 				txtCodBarre.setText(codBarre);
 			}
@@ -539,6 +543,9 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 		} catch (CodiceBarreInesistente e1) {
 			avvisoCodBarreInesistente();
 			e1.printStackTrace();
+		} catch (FindByNotFoundException e) {
+			JOptionPane.showMessageDialog(this, "Oggetto non trovato", "ERRORE", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
 		}
 
 	}
@@ -1003,7 +1010,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 			try {
 				txtCodBarre = new JTextField();
 				AutoCompleteTextComponent complete = new AutoCompleteTextComponent(
-						txtCodBarre, dbm, "articoli", "codbarre");
+						txtCodBarre, dbm, "articolo", "codbarre");
 				dbm.addDBStateChange(complete);
 
 				txtCodBarre.setDocument(new UpperAutoCompleteDocument(complete,
@@ -1794,7 +1801,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 				txtNumDocumento = new JTextField();
 				txtNumDocumento.setBounds(new Rectangle(100, 60, 125, 21));
 				AutoCompleteTextComponent complete = new AutoCompleteTextComponent(
-						txtNumDocumento, dbm, "ordini", "num_documento");
+						txtNumDocumento, dbm, "scarico", "num_documento");
 				dbm.addDBStateChange(complete);
 				txtNumDocumento.setDocument(new UpperAutoCompleteDocument(complete,
 						false));

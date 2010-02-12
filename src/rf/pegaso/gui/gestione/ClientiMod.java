@@ -658,7 +658,10 @@ public class ClientiMod extends JDialog {
 		txtVia.setText(c.getVia());
 		txtCap.setText(c.getCap());
 		txtCitta.setText(c.getCitta());
-		cmbProvincia.setSelectedItemByID(c.getProvincia().getIdprovincia());
+		if(c.getProvincia()!=null){
+			cmbProvincia.setSelectedItemByID(c.getProvincia().getIdprovincia());
+		}
+		
 		txtTel.setText(c.getTel());
 		txtCell.setText(c.getCell());
 		txtFax.setText(c.getFax());
@@ -713,8 +716,8 @@ public class ClientiMod extends JDialog {
 				JOptionPane.INFORMATION_MESSAGE);
 		if (scelta != JOptionPane.YES_OPTION)
 			return;
-		Cliente c = new Cliente();
-		c.setIdcliente(this.idCliente);
+		ProvinciaHome.getInstance().begin();
+		Cliente c = ClienteHome.getInstance().findById(idCliente);
 		c.setNome(txtNome.getText());
 		c.setCognome(txtCognome.getText());
 		c.setPiva(txtPiva.getText());
@@ -722,7 +725,6 @@ public class ClientiMod extends JDialog {
 		c.setVia(txtVia.getText());
 		c.setCap(txtCap.getText());
 		c.setCitta(txtCitta.getText());
-		ProvinciaHome.getInstance().begin();
 		try {
 			c.setProvincia(ProvinciaHome.getInstance().findById(new Long(cmbProvincia.getIDSelectedItem())));
 		} catch (NumberFormatException e) {
@@ -736,8 +738,8 @@ public class ClientiMod extends JDialog {
 		c.setEmail(txtEmail.getText());
 		c.setWebsite(txtWebSite.getText());
 		c.setNote(txtNote.getText());
-		ClienteHome.getInstance().begin();
-		ClienteHome.getInstance().persist(c);
+		ClienteHome.getInstance().attachDirty(c);
+		ClienteHome.getInstance().commitAndClose();
 		dispose();
 
 	}

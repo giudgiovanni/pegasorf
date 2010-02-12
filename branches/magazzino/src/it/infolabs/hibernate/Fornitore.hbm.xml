@@ -4,9 +4,9 @@
 <!-- Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="it.infolabs.hibernate.Fornitore" table="fornitore" schema="public">
-        <id name="idfornitore" type="long">
+        <id name="idfornitore" type="long" unsaved-value="0">
             <column name="idfornitore" />
-            <generator class="assigned" />
+            <generator class="increment" />
         </id>
         <many-to-one name="provincia" class="it.infolabs.hibernate.Provincia" fetch="select">
             <column name="provincia" />

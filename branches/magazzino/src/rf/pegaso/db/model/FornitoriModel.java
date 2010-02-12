@@ -109,7 +109,7 @@ public class FornitoriModel extends AbstractTableModel implements DBStateChange 
 	 *
 	 */
 	private void recuperaDati() throws SQLException {
-		this.query = "select idFornitore,nome,tel,cell,fax from fornitori order by nome";
+		this.query = "select idFornitore,nome,tel,cell,fax from fornitore order by nome";
 		pst = dbm.getNewPreparedStatement(query);
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();

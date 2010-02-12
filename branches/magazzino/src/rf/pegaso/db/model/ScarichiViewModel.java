@@ -117,7 +117,7 @@ public class ScarichiViewModel extends AbstractTableModel implements
 	 *
 	 */
 	private void recuperaDati() throws SQLException {
-		this.query = "select o.idordine as id,o.data_documento,o.num_documento, d.descrizione,c.nome,c.cognome,o.note from ordini as o,tipo_documento as d,  clienti as c  where o.idordine>0 and o.idcliente=c.idcliente and o.tipo_documento=d.iddocumento order by o.data_documento desc";
+		this.query = "select o.idordine as id,o.data_documento,o.num_documento, d.descrizione,c.nome,c.cognome,o.note from scarico as o,tipo_documento as d,  cliente as c  where o.idordine>0 and o.idcliente=c.idcliente and o.tipo_documento=d.iddocumento order by o.data_documento desc";
 		pst = dbm.getNewPreparedStatement(query);
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();

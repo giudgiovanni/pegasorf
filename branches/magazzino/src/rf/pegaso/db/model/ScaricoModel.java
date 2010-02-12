@@ -84,7 +84,7 @@ public class ScaricoModel extends AbstractTableModel implements DBStateChange {
 		// carichiamo l'articolo in base al codice a barre
 		int idArticolo = ((Long)(getValueAt(r, 0))).intValue();
 		int idOrdine=this.idordine;
-		String query = "update dettaglio_ordini set qta=? where idarticolo=? and idordine=?";
+		String query = "update dettaglio_scarico set qta=? where idarticolo=? and idordine=?";
 		PreparedStatement pst = dbm.getNewPreparedStatement(query);
 		try {
 
@@ -170,7 +170,7 @@ public class ScaricoModel extends AbstractTableModel implements DBStateChange {
 	private void recuperaDati() throws SQLException {
 		//this.query = "select codbarre as codice_articolo,descrizione,iva,um,qta,prezzo_ingrosso as prezzo_listino from articoli_scaricati_view where idordine="	+ idordine + " order by codbarre";
 
-		this.query = "select a.idarticolo,a.codbarre as codice,a.descrizione,a.iva,a.um,a.qta,g.deposito as disponibili, ar.prezzo_acquisto from articoli as ar, articoli_scaricati_view as a, giacenza_articoli_all_view as g where idordine="
+		this.query = "select a.idarticolo,a.codbarre as codice,a.descrizione,a.iva,a.um,a.qta,g.deposito as disponibili, ar.prezzo_acquisto from articolo as ar, articoli_scaricati_view as a, giacenza_articoli_all_view as g where idordine="
 				+ idordine + " and ar.idarticolo=a.idarticolo and g.codice=a.codbarre order by a.codbarre";
 		pst = dbm.getNewPreparedStatement(query);
 		rs = pst.executeQuery();

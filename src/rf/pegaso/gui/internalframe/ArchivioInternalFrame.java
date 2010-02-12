@@ -351,7 +351,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	 *
 	 * @return javax.swing.JButton
 	 */
-	private JButton getBtnScarico() {
+	private JButton getBtnVendite() {
 		if (btnVendite == null) {
 			try {
 				btnVendite = new JButton();
@@ -388,6 +388,9 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	private JPanel getPnlCentrale() {
 		if (pnlCentrale == null) {
 			try {
+				GridBagConstraints gridBagConstraints11 = new GridBagConstraints();
+				gridBagConstraints11.gridx = 4;
+				gridBagConstraints11.gridy = 1;
 				GridBagConstraints gridBagConstraints22 = new GridBagConstraints();
 				gridBagConstraints22.gridx = 2;
 				gridBagConstraints22.gridy = 1;
@@ -404,9 +407,9 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				gridBagConstraints14.gridx = 4;
 				gridBagConstraints14.gridy = 2;
 				GridBagConstraints gridBagConstraints18 = new GridBagConstraints();
-				gridBagConstraints18.gridx = 2; // Generated
+				gridBagConstraints18.gridx = 0; // Generated
 				gridBagConstraints18.insets = new Insets(10, 10, 10, 10);
-				gridBagConstraints18.gridy = 2; // Generated
+				gridBagConstraints18.gridy = 3; // Generated
 				GridBagConstraints gridBagConstraints17 = new GridBagConstraints();
 				gridBagConstraints17.gridx = 3; // Generated
 				gridBagConstraints17.insets = new Insets(10, 10, 10, 10);
@@ -416,9 +419,9 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				gridBagConstraints21.insets = new Insets(10, 10, 10, 10); // Generated
 				gridBagConstraints21.gridy = 2; // Generated
 				GridBagConstraints gridBagConstraints12 = new GridBagConstraints();
-				gridBagConstraints12.gridx = 4; // Generated
+				gridBagConstraints12.gridx = 2; // Generated
 				gridBagConstraints12.insets = new Insets(10, 10, 10, 10); // Generated
-				gridBagConstraints12.gridy = 1; // Generated
+				gridBagConstraints12.gridy = 2; // Generated
 				GridBagConstraints gridBagConstraints31 = new GridBagConstraints();
 				gridBagConstraints31.gridx = 3; // Generated
 				gridBagConstraints31.gridy = 1; // Generated
@@ -445,11 +448,12 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				pnlCentrale.add(getBtnClienti(), gridBagConstraints3);
 				pnlCentrale.add(getBtnFornitori(), gridBagConstraints4);
 				pnlCentrale.add(getBtnCarico(), gridBagConstraints31);
-				pnlCentrale.add(getBtnScarico(), gridBagConstraints12);
+				pnlCentrale.add(getBtnVendite(), gridBagConstraints12);
 				pnlCentrale.add(getBtnInventario(), gridBagConstraints21);
 				pnlCentrale.add(getBtnRicerche(), gridBagConstraints18);
 				pnlCentrale.add(getBtnFtByDdt(), gridBagConstraints15);
 				pnlCentrale.add(getBtnStampe(), gridBagConstraints22);
+				pnlCentrale.add(getBtnScarico(), gridBagConstraints11);
 				
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
@@ -524,6 +528,22 @@ public class ArchivioInternalFrame extends JInternalFrame {
 			
 		}
 		return btnStampe;
+	}
+
+	/**
+	 * This method initializes btnScarico1	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnScarico() {
+		if (btnScarico == null) {
+			btnScarico = new JButton();
+			btnScarico.setPreferredSize(new Dimension(120, 70));
+			btnScarico.setText("Scarico");
+			btnScarico.setVisible(true);
+			btnScarico.addActionListener(myActionListener);
+		}
+		return btnScarico;
 	}
 
 	

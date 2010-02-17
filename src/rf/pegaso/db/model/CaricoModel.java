@@ -66,6 +66,9 @@ public class CaricoModel extends AbstractTableModel implements DBStateChange {
 		if (getRowCount() > 0) {
 			if (c == 6 || c == 7)
 				return Double.class;
+			if(c==5 && getValueAt(0, c)==null){
+				return Double.class;
+			}
 			return getValueAt(0, c).getClass();
 		}
 		return String.class;

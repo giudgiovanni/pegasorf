@@ -1593,15 +1593,15 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener {
 			if (ok) {
 				ArticoloHome.getInstance().begin();
 				if ( !ArticoloHome.getInstance().codBarreEsistenteForInsert(a.getCodbarre()) ){
-					a.setIdarticolo(dbm.getNewID("articoli","idarticolo"));
+					//a.setIdarticolo(dbm.getNewID("articolo","idarticolo"));
 					ArticoloHome.getInstance().begin();
-					ArticoloHome.getInstance().persist(a);
+					ArticoloHome.getInstance().attachDirty(a);
 					ArticoloHome.getInstance().begin();
 					ArticoloHome.getInstance().commit();
 					Scarico sc = new Scarico();
 					Carico c = new Carico();
 					try {
-						a.setQtaInfinita(true);
+						a.setQtaInfinita(chkBoxQtaInfinita.isSelected());
 						if ( a.isQtaInfinita() ){
 							c.setIdCarico(0);
 							c.insertArticolo((int)a.getIdarticolo(), 0, a.getPrezzoAcquisto());

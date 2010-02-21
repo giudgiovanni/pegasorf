@@ -36,7 +36,7 @@ public class MyTableCellRendererProva extends DefaultTableCellRenderer {
 			JTextField txtCodice = new JTextField();
 			DBManager dbm = DBManager.getIstanceSingleton();
 			AutoCompleteTextComponent complete = new AutoCompleteTextComponent(
-					txtCodice, dbm, "articoli", "codbarre");
+					txtCodice, dbm, "articolo", "codbarre");
 			dbm.addDBStateChange(complete);
 
 			txtCodice.setDocument(new UpperAutoCompleteDocument(complete,

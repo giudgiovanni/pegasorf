@@ -121,7 +121,7 @@ public class ArticoliByFornitoreModel extends AbstractTableModel implements
 	 *
 	 */
 	private void recuperaDati() throws SQLException {
-		this.query = "select idarticolo as id, codbarre as codice_articolo,  descrizione,prezzo_acquisto,iva,prezzo_dettaglio from articoli where idfornitore="
+		this.query = "select idarticolo as id, codbarre as codice_articolo,  descrizione,prezzo_acquisto,iva,prezzo_dettaglio from articolo where idfornitore="
 				+ codFornitore + " order by codbarre";
 		pst = dbm.getNewStatement();
 		rs = pst.executeQuery(query);

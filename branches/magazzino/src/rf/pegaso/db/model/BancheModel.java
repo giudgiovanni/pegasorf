@@ -119,7 +119,7 @@ public class BancheModel extends AbstractTableModel implements DBStateChange {
 	 */
 	private void recuperaDati() throws SQLException {
 		// questa query è disabilitata per non visualizzare il ricarico listino.
-		//this.query = "select a.idArticolo,a.codbarre as codice,a.descrizione,a.prezzo_acquisto,a.prezzo_ingrosso as prezzo_listino, ((prezzo_ingrosso - prezzo_acquisto) / CASE prezzo_acquisto WHEN 0 THEN NULL ELSE prezzo_acquisto END) * 100 as ricario_listino,f.nome as fornitore from articoli a, fornitori f where a.idfornitore=f.idfornitore order by codice";
+		//this.query = "select a.idArticolo,a.codbarre as codice,a.descrizione,a.prezzo_acquisto,a.prezzo_ingrosso as prezzo_listino, ((prezzo_ingrosso - prezzo_acquisto) / CASE prezzo_acquisto WHEN 0 THEN NULL ELSE prezzo_acquisto END) * 100 as ricario_listino,f.nome as fornitore from articolo a, fornitori f where a.idfornitore=f.idfornitore order by codice";
 		//
 		// la sostituiamo con questa che elimina quella colonna.
 		this.query = "select * from banca order by ragione_sociale";

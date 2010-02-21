@@ -213,7 +213,7 @@ public class Carico {
 
 	public Object[][] getAllArticoliCaricati() throws SQLException {
 		String query = "SELECT A.codBarre, A.descrizione, A.iva, A.um, D.qta, D.prezzo_Acquisto "
-				+ "FROM Articoli AS A, carico AS C, Dettaglio_carico AS D, Fornitori AS F "
+				+ "FROM Articolo AS A, carico AS C, Dettaglio_carico AS D, Fornitore AS F "
 				+ "WHERE A.idArticolo=D.idArticolo AND C.idCarico=D.idCarico AND C.idFornitore=F.idFornitore";
 
 		Statement pst = dbm.getNewStatement();
@@ -229,7 +229,7 @@ public class Carico {
 	
 	public Object[][] getAllArticoliCaricatiByIdDocumento(long id) throws SQLException {
 		String query = "SELECT A.idarticolo, a.codFornitore, A.codBarre, A.descrizione, A.iva, A.um, D.qta, D.prezzo_Acquisto "
-				+ "FROM Articoli AS A, carico AS C, Dettaglio_carico AS D, Fornitori AS F "
+				+ "FROM Articolo AS A, carico AS C, Dettaglio_carico AS D, Fornitore AS F "
 				+ "WHERE A.idArticolo=D.idArticolo AND C.idCarico=D.idCarico AND C.idFornitore=F.idFornitore and C.idcarico="+id;
 
 		Statement pst = dbm.getNewStatement();

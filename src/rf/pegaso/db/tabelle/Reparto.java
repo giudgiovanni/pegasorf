@@ -69,7 +69,7 @@ public class Reparto {
 	public void caricaDati(int idReparto) throws SQLException {
 		Statement st = null;
 		ResultSet rs = null;
-		String query = "select * from reparti where idreparto=" + idReparto;
+		String query = "select * from reparto where idreparto=" + idReparto;
 		st = dbm.getNewStatement();
 		rs = st.executeQuery(query);
 		rs.next();
@@ -100,7 +100,7 @@ public class Reparto {
 		int cancellati = 0;
 		if (idReparto <= -1)
 			throw new IDNonValido();
-		delete = "DELETE FROM reparti WHERE idreparto=" + idReparto;
+		delete = "DELETE FROM reparto WHERE idreparto=" + idReparto;
 
 		cancellati = st.executeUpdate(delete);
 		if (st != null)
@@ -140,10 +140,10 @@ public class Reparto {
 	 */
 	public int insertReparto() {
 
-		idReparto = dbm.getNewID("reparti", "idreparto");
+		idReparto = dbm.getNewID("reparto", "idreparto");
 		int ok = 0;
 		PreparedStatement pst = null;
-		String update = "insert into reparti values (?,?,?,?)";
+		String update = "insert into reparto values (?,?,?,?)";
 		// preleviamo la data di inserimento
 		// e la impostiamo nelle proprietà
 		java.util.Date data = new java.util.Date();
@@ -205,7 +205,7 @@ public class Reparto {
 			throw new IDNonValido();
 		int ok = 0;
 		PreparedStatement pst = null;
-		String update = "UPDATE reparti SET idreparto=?,"
+		String update = "UPDATE reparto SET idreparto=?,"
 				+ "data_creazione=?,nome=?,descrizione=? WHERE idreparto=?";
 		dataCreazione = new Date(new java.util.Date().getTime());
 		pst = dbm.getNewPreparedStatement(update);

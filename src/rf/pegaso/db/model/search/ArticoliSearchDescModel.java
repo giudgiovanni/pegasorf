@@ -121,7 +121,7 @@ public class ArticoliSearchDescModel extends AbstractTableModel implements
 	 *
 	 */
 	private void recuperaDati() throws SQLException {
-		this.query = "select idarticolo,codbarre, descrizione, prezzo_acquisto, prezzo_ingrosso from articoli a where a.descrizione like '%"
+		this.query = "select idarticolo,codbarre, descrizione, prezzo_acquisto, prezzo_ingrosso from articolo a where a.descrizione like '%"
 				+ testo + "%'";
 		pst = dbm.getNewStatement();
 		rs = pst.executeQuery(query);

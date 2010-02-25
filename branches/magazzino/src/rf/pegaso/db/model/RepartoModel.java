@@ -109,7 +109,7 @@ public class RepartoModel extends AbstractTableModel implements DBStateChange {
 	 *
 	 */
 	private void recuperaDati() throws SQLException {
-		this.query = "select idreparto,nome as Descrizione, descrizione as note from reparti order by idreparto";
+		this.query = "select idreparto,nome as Descrizione, descrizione as note from reparto order by idreparto";
 		pst = dbm.getNewPreparedStatement(query);
 		rs = pst.executeQuery();
 		rsmd = rs.getMetaData();

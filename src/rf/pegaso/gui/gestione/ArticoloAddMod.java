@@ -399,7 +399,7 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener {
 	 *
 	 */
 	public void apriNuovaCategoria() {
-		RepartiAdd add = new RepartiAdd(this, dbm);
+		RepartiGestione add = new RepartiGestione(this);
 		add.setVisible(true);
 		caricaCmbCategoria();
 		// caricaReparti(cmbReparto);
@@ -1667,6 +1667,8 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener {
 					ArticoloHome.getInstance().persist(a);
 					ArticoloHome.getInstance().commit();
 				}
+			}else{
+				return;
 			}
 
 			this.ultimoArticolo[0]=a.getCodbarre();

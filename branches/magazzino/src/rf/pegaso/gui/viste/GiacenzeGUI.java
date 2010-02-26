@@ -16,6 +16,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Date;
@@ -60,7 +62,7 @@ import com.toedter.calendar.JTextFieldDateEditor;
 
 public class GiacenzeGUI extends JFrame {
 
-	private class MyPropertyChangeListener implements PropertyChangeListener {
+	private class MyPropertyChangeListener implements PropertyChangeListener, WindowListener {
 
 		public void propertyChange(PropertyChangeEvent evt) {
 
@@ -72,6 +74,48 @@ public class GiacenzeGUI extends JFrame {
 				}
 
 
+		}
+
+		@Override
+		public void windowActivated(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowClosed(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowClosing(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowDeactivated(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowDeiconified(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowIconified(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowOpened(WindowEvent e) {
+			txtCodBarre.requestFocusInWindow();
+			
 		}
 
 	}

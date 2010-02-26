@@ -26,6 +26,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
@@ -75,7 +77,7 @@ import javax.swing.JCheckBox;
  * @author Hunter
  *
  */
-public class ArticoloAddMod extends JFrame implements PropertyChangeListener {
+public class ArticoloAddMod extends JFrame implements PropertyChangeListener,WindowListener {
 	class MyActionListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
@@ -1038,7 +1040,7 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener {
 				lblCodFornitore.setText("Codice Fornitore"); // Generated
 				lblCodFornitore.setBounds(new Rectangle(206, 12, 110, 16)); // Generated
 				lblCodBarre = new JLabel();
-				lblCodBarre.setText("Codice Articolo"); // Generated
+				lblCodBarre.setText("Codice Barre"); // Generated
 				lblCodBarre.setBounds(new Rectangle(7, 13, 110, 16)); // Generated
 				pnlDatiPersonali = new JPanel();
 				pnlDatiPersonali.setLayout(null); // Generated
@@ -1403,6 +1405,8 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener {
 			txtCodFornitore.setEditable(true);
 			btnSuggerimento.setEnabled(true);
 		}// fine impostazione tipo finestra
+		
+		this.addWindowListener(this);
 
 	}
 	
@@ -2011,6 +2015,49 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener {
 			btnRemoveImage.addActionListener(new MyActionListener());
 		}
 		return btnRemoveImage;
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// portiamo il focus sul cosice a barre
+		txtCodBarre.requestFocusInWindow();
+		
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,7"

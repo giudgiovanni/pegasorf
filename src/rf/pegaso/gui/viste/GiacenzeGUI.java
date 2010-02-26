@@ -315,7 +315,7 @@ public class GiacenzeGUI extends JFrame {
 				lblDescrizioneProdotto.setText("Descrizione");
 				lblCodBarre = new JLabel();
 				lblCodBarre.setBounds(new Rectangle(8, 24, 98, 13));
-				lblCodBarre.setText("Codice prodotto");
+				lblCodBarre.setText("Codice Barre");
 				pnlProdotto = new JPanel();
 				pnlProdotto.setLayout(null);
 				pnlProdotto

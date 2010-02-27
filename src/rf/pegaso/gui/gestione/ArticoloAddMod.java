@@ -52,6 +52,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.JTextComponent;
@@ -1139,6 +1140,7 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 				txtDescrizione.setPreferredSize(new Dimension(140, 20)); // Generated
 				txtDescrizione.setBounds(new Rectangle(7, 70, 541, 20)); // Generated
 				txtDescrizione.setDocument(new UpperTextDocument());
+				
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -1157,7 +1159,16 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 				DecimalFormat formatPrice = new DecimalFormat();
 				formatPrice.setMaximumFractionDigits(2);
 				formatPrice.setMinimumFractionDigits(2);
-				txtPrezzoFinale = new JFormattedTextField(formatPrice);
+				txtPrezzoFinale = new JFormattedTextField(formatPrice){
+					@Override
+					protected void processFocusEvent(FocusEvent e) {
+						// modifica effettuata per permettere l'evidenziazione delle
+						// caselle quando si guadagna il focus
+						super.processFocusEvent(e);
+						if ( e.getID() == FocusEvent.FOCUS_GAINED )
+						selectAll() ;
+					}
+				};
 				txtPrezzoFinale.setBounds(new Rectangle(84, 20, 97, 21)); // Generated
 				txtPrezzoFinale.setEditable(true); // Generated
 				txtPrezzoFinale.setBackground(Color.green); // Generated
@@ -1171,6 +1182,11 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 
 				txtPrezzoFinale.addPropertyChangeListener("value", this);
 				txtPrezzoFinale.setValue(new Double(0));
+				txtPrezzoFinale.addFocusListener(new java.awt.event.FocusAdapter() {
+					public void focusGained(java.awt.event.FocusEvent e) {
+						selezionaTestoIntero(txtPrezzoFinale);
+					}
+				});
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -1189,10 +1205,24 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 				NumberFormat f = NumberFormat
 						.getIntegerInstance(Locale.ITALIAN);
 				f.setMaximumIntegerDigits(2);
-				txtIva = new JFormattedTextField(f);
+				txtIva = new JFormattedTextField(f){
+					@Override
+					protected void processFocusEvent(FocusEvent e) {
+						// modifica effettuata per permettere l'evidenziazione delle
+						// caselle quando si guadagna il focus
+						super.processFocusEvent(e);
+						if ( e.getID() == FocusEvent.FOCUS_GAINED )
+						selectAll() ;
+					}
+				};
 				txtIva.setPreferredSize(new Dimension(40, 20)); // Generated
 				txtIva.setBounds(new Rectangle(147, 111, 40, 20)); // Generated
 				txtIva.setText("0");
+				txtIva.addFocusListener(new java.awt.event.FocusAdapter() {
+					public void focusGained(java.awt.event.FocusEvent e) {
+						selezionaTestoIntero(txtIva);
+					}
+				});
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -1230,17 +1260,37 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 				DecimalFormat formatPrice = new DecimalFormat();
 				formatPrice.setMaximumFractionDigits(2);
 				formatPrice.setMinimumFractionDigits(2);
-				txtPrezzoAcquisto = new JFormattedTextField(formatPrice);
+				txtPrezzoAcquisto = new JFormattedTextField(formatPrice){
+					protected void processFocusEvent(FocusEvent e) {
+						// modifica effettuata per permettere l'evidenziazione delle
+						// caselle quando si guadagna il focus
+						super.processFocusEvent(e);
+						if ( e.getID() == FocusEvent.FOCUS_GAINED )
+						selectAll() ;
+					}
+				};
 				txtPrezzoAcquisto.setPreferredSize(new Dimension(100, 20)); // Generated
 				txtPrezzoAcquisto.setBounds(new Rectangle(7, 111, 101, 20)); // Generated
 				txtPrezzoAcquisto.setDocument(new UpperTextDocument());
 				txtPrezzoAcquisto.addPropertyChangeListener("value", this);
 				txtPrezzoAcquisto.setValue(new Double(0));
+				txtPrezzoAcquisto.addFocusListener(new java.awt.event.FocusAdapter() {
+					public void focusGained(java.awt.event.FocusEvent e) {
+						txtPrezzoAcquisto.selectAll();
+						
+					}
+				});
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
 		}
 		return txtPrezzoAcquisto;
+	}
+
+	protected void selezionaTestoIntero(JTextField txt) {
+		txt.requestFocusInWindow();
+		txt.selectAll();
+		
 	}
 
 	/**
@@ -1254,7 +1304,16 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 				DecimalFormat formatPrice = new DecimalFormat();
 				formatPrice.setMaximumFractionDigits(2);
 				formatPrice.setMinimumFractionDigits(2);
-				txtPrezzoListino = new JFormattedTextField(formatPrice);
+				txtPrezzoListino = new JFormattedTextField(formatPrice){
+					@Override
+					protected void processFocusEvent(FocusEvent e) {
+						// modifica effettuata per permettere l'evidenziazione delle
+						// caselle quando si guadagna il focus
+						super.processFocusEvent(e);
+						if ( e.getID() == FocusEvent.FOCUS_GAINED )
+						selectAll() ;
+					}
+				};
 				txtPrezzoListino.setPreferredSize(new Dimension(100, 20)); // Generated
 				txtPrezzoListino.setBounds(new Rectangle(6, 153, 113, 20)); // Generated
 				/*
@@ -1265,6 +1324,11 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 				 */
 				txtPrezzoListino.addPropertyChangeListener("value", this);
 				txtPrezzoListino.setValue(new Double(0));
+				txtPrezzoListino.addFocusListener(new java.awt.event.FocusAdapter() {
+					public void focusGained(java.awt.event.FocusEvent e) {
+						selezionaTestoIntero(txtPrezzoListino);
+					}
+				});
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -1302,7 +1366,16 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 				DecimalFormat formatPrice = new DecimalFormat();
 				formatPrice.setMaximumFractionDigits(2);
 				formatPrice.setMinimumFractionDigits(2);
-				txtRicaricoListino = new JFormattedTextField(formatPrice);
+				txtRicaricoListino = new JFormattedTextField(formatPrice){
+					@Override
+					protected void processFocusEvent(FocusEvent e) {
+						// modifica effettuata per permettere l'evidenziazione delle
+						// caselle quando si guadagna il focus
+						super.processFocusEvent(e);
+						if ( e.getID() == FocusEvent.FOCUS_GAINED )
+						selectAll() ;
+					}
+				};
 				txtRicaricoListino.setPreferredSize(new Dimension(100, 20)); // Generated
 				txtRicaricoListino.setBounds(new Rectangle(147, 153, 112, 20));
 				/*
@@ -1315,6 +1388,11 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 
 				txtRicaricoListino.addPropertyChangeListener("value", this);
 				txtRicaricoListino.setValue(new Double(0));
+				txtRicaricoListino.addFocusListener(new java.awt.event.FocusAdapter() {
+					public void focusGained(java.awt.event.FocusEvent e) {
+						selezionaTestoIntero(txtRicaricoListino);
+					}
+				});
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}

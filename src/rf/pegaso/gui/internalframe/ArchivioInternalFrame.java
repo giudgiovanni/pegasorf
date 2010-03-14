@@ -26,6 +26,7 @@ import rf.pegaso.gui.gestione.FatturaByDdt;
 import rf.pegaso.gui.gestione.FornitoriGestione;
 import rf.pegaso.gui.gestione.RepartiGestione;
 import rf.pegaso.gui.gestione.ScaricoGui;
+import rf.pegaso.gui.gestione.SospesiGui;
 import rf.pegaso.gui.gestione.StampeEtichette;
 import rf.pegaso.gui.gestione.UnitaDiMisuraGestione;
 import rf.pegaso.gui.gestione.VenditeGui;
@@ -60,6 +61,8 @@ public class ArchivioInternalFrame extends JInternalFrame {
 				apriRicerche();
 			}else if (e.getSource() == btnScarico) {
 				apriScarico();
+			}else if ( e.getSource() == btnSospesi ) {
+				apriSospesi();
 			}
 		}
 
@@ -89,6 +92,7 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	private JButton jButton = null;
 	private JButton btnFtByDdt = null;
 	private JButton btnScarico = null;
+	private JButton btnSospesi = null;
 	/**
 	 * This is the xxx default constructor
 	 */
@@ -105,6 +109,11 @@ public class ArchivioInternalFrame extends JInternalFrame {
 		ModalFrameUtil.showAsModal(ordine, padre);
 		//ordine.setVisible(true);
 		//ordine.setVisible(true);		 
+	}
+	
+	private void apriSospesi() {
+		SospesiGui sospesi = new SospesiGui();
+		ModalFrameUtil.showAsModal(sospesi, padre);
 	}
 
 	/**
@@ -388,73 +397,53 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	private JPanel getPnlCentrale() {
 		if (pnlCentrale == null) {
 			try {
+				GridBagConstraints gridBagConstraints00 = new GridBagConstraints();
+				gridBagConstraints00.gridx = 0;
+				gridBagConstraints00.gridy = 0;
+				GridBagConstraints gridBagConstraints10 = new GridBagConstraints();
+				gridBagConstraints10.gridx = 1;
+				gridBagConstraints10.gridy = 0;
+				GridBagConstraints gridBagConstraints20 = new GridBagConstraints();
+				gridBagConstraints20.gridx = 2;
+				gridBagConstraints20.gridy = 0;
+				GridBagConstraints gridBagConstraints30 = new GridBagConstraints();
+				gridBagConstraints30.gridx = 3;
+				gridBagConstraints30.gridy = 0;
+				GridBagConstraints gridBagConstraints01 = new GridBagConstraints();
+				gridBagConstraints01.gridx = 0;
+				gridBagConstraints01.gridy = 1;
 				GridBagConstraints gridBagConstraints11 = new GridBagConstraints();
-				gridBagConstraints11.gridx = 4;
+				gridBagConstraints11.gridx = 1;
 				gridBagConstraints11.gridy = 1;
+				GridBagConstraints gridBagConstraints21 = new GridBagConstraints();
+				gridBagConstraints21.gridx = 2;
+				gridBagConstraints21.gridy = 1;
+				GridBagConstraints gridBagConstraints31 = new GridBagConstraints();
+				gridBagConstraints31.gridx = 3;
+				gridBagConstraints31.gridy = 1;
+				GridBagConstraints gridBagConstraints02 = new GridBagConstraints();
+				gridBagConstraints02.gridx = 0;
+				gridBagConstraints02.gridy = 2;
+				GridBagConstraints gridBagConstraints12 = new GridBagConstraints();
+				gridBagConstraints12.gridx = 1;
+				gridBagConstraints12.gridy = 2;
 				GridBagConstraints gridBagConstraints22 = new GridBagConstraints();
 				gridBagConstraints22.gridx = 2;
-				gridBagConstraints22.gridy = 1;
-				GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
-				gridBagConstraints1.gridx = 4;
-				gridBagConstraints1.gridy = 1;
-				GridBagConstraints gridBagConstraints = new GridBagConstraints();
-				gridBagConstraints.gridx = 3;
-				gridBagConstraints.gridy = 1;
-				GridBagConstraints gridBagConstraints15 = new GridBagConstraints();
-				gridBagConstraints15.gridx = 0;
-				gridBagConstraints15.gridy = 2;
-				GridBagConstraints gridBagConstraints14 = new GridBagConstraints();
-				gridBagConstraints14.gridx = 4;
-				gridBagConstraints14.gridy = 2;
-				GridBagConstraints gridBagConstraints18 = new GridBagConstraints();
-				gridBagConstraints18.gridx = 0; // Generated
-				gridBagConstraints18.insets = new Insets(10, 10, 10, 10);
-				gridBagConstraints18.gridy = 3; // Generated
-				GridBagConstraints gridBagConstraints17 = new GridBagConstraints();
-				gridBagConstraints17.gridx = 3; // Generated
-				gridBagConstraints17.insets = new Insets(10, 10, 10, 10);
-				gridBagConstraints17.gridy = 2; // Generated
-				GridBagConstraints gridBagConstraints21 = new GridBagConstraints();
-				gridBagConstraints21.gridx = 0; // Generated
-				gridBagConstraints21.insets = new Insets(10, 10, 10, 10); // Generated
-				gridBagConstraints21.gridy = 2; // Generated
-				GridBagConstraints gridBagConstraints12 = new GridBagConstraints();
-				gridBagConstraints12.gridx = 2; // Generated
-				gridBagConstraints12.insets = new Insets(10, 10, 10, 10); // Generated
-				gridBagConstraints12.gridy = 2; // Generated
-				GridBagConstraints gridBagConstraints31 = new GridBagConstraints();
-				gridBagConstraints31.gridx = 3; // Generated
-				gridBagConstraints31.gridy = 1; // Generated
-				GridBagConstraints gridBagConstraints4 = new GridBagConstraints();
-				gridBagConstraints4.gridx = 4; // Generated
-				gridBagConstraints4.insets = new Insets(10, 10, 10, 10); // Generated
-				gridBagConstraints4.gridwidth = 1; // Generated
-				gridBagConstraints4.fill = GridBagConstraints.NONE; // Generated
-				gridBagConstraints4.gridheight = 1; // Generated
-				gridBagConstraints4.ipadx = 0; // Generated
-				gridBagConstraints4.weightx = 0.0; // Generated
-				gridBagConstraints4.gridy = 2; // Generated
-				GridBagConstraints gridBagConstraints3 = new GridBagConstraints();
-				gridBagConstraints3.gridx = 3; // Generated
-				gridBagConstraints3.insets = new Insets(10, 10, 10, 10); // Generated
-				gridBagConstraints3.gridy = 2; // Generated
-				GridBagConstraints gridBagConstraints2 = new GridBagConstraints();
-				gridBagConstraints2.gridx = 0; // Generated
-				gridBagConstraints2.insets = new Insets(10, 10, 10, 10); // Generated
-				gridBagConstraints2.gridy = 1; // Generated
+				gridBagConstraints22.gridy = 2;
+				
 				pnlCentrale = new JPanel();
 				pnlCentrale.setLayout(new GridBagLayout()); // Generated
-				pnlCentrale.add(getBtnArticoli(), gridBagConstraints2);
-				pnlCentrale.add(getBtnClienti(), gridBagConstraints3);
-				pnlCentrale.add(getBtnFornitori(), gridBagConstraints4);
-				pnlCentrale.add(getBtnCarico(), gridBagConstraints31);
-				pnlCentrale.add(getBtnVendite(), gridBagConstraints12);
-				pnlCentrale.add(getBtnInventario(), gridBagConstraints21);
-				pnlCentrale.add(getBtnRicerche(), gridBagConstraints18);
-				pnlCentrale.add(getBtnFtByDdt(), gridBagConstraints15);
-				pnlCentrale.add(getBtnStampe(), gridBagConstraints22);
-				pnlCentrale.add(getBtnScarico(), gridBagConstraints11);
-				
+				pnlCentrale.add(getBtnArticoli(), gridBagConstraints00);
+				pnlCentrale.add(getBtnCarico(), gridBagConstraints10);
+				pnlCentrale.add(getBtnScarico(), gridBagConstraints20);
+				pnlCentrale.add(getBtnInventario(), gridBagConstraints30);
+				pnlCentrale.add(getBtnSospesi(), gridBagConstraints01);
+				pnlCentrale.add(getBtnVendite(), gridBagConstraints11);
+				pnlCentrale.add(getBtnClienti(), gridBagConstraints21);
+				pnlCentrale.add(getBtnFornitori(), gridBagConstraints31);
+				pnlCentrale.add(getBtnFtByDdt(), gridBagConstraints02);				
+				pnlCentrale.add(getBtnRicerche(), gridBagConstraints12);				
+				pnlCentrale.add(getBtnStampe(), gridBagConstraints22);				
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -531,6 +520,25 @@ public class ArchivioInternalFrame extends JInternalFrame {
 	}
 
 	/**
+	 * This method initializes btnSospesi	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnSospesi() {
+		if (btnSospesi == null) {
+			try {
+				btnSospesi = new JButton();
+				btnSospesi.setText("Sospesi");
+				btnSospesi.setPreferredSize(new Dimension(120, 70));
+				btnSospesi.addActionListener(myActionListener);
+			} catch (java.lang.Throwable e) {
+				e.printStackTrace();
+			}
+		}
+		return btnSospesi;
+	}
+
+	/**
 	 * This method initializes btnScarico1	
 	 * 	
 	 * @return javax.swing.JButton	
@@ -545,7 +553,4 @@ public class ArchivioInternalFrame extends JInternalFrame {
 		}
 		return btnScarico;
 	}
-
-	
-
 } // @jve:decl-index=0:visual-constraint="10,10"

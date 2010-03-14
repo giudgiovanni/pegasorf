@@ -2,13 +2,13 @@ package it.infolabs.hibernate;
 
 // Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA
 
+import it.infolabs.hibernate.exception.FindAllEntityException;
+
 import java.util.List;
-import javax.naming.InitialContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.Logger;
 import org.hibernate.LockMode;
-import org.hibernate.SessionFactory;
+
 import static org.hibernate.criterion.Example.create;
 
 /**
@@ -17,11 +17,6 @@ import static org.hibernate.criterion.Example.create;
  * @author Hibernate Tools
  */
 public class ScaricoHome extends BusinessObjectHome{
-
-	/**
-	 * Logger for this class
-	 */
-	private static final Logger logger = Logger.getLogger(ScaricoHome.class);
 
 	private static final Log log = LogFactory.getLog(ScaricoHome.class);
 
@@ -109,6 +104,7 @@ public class ScaricoHome extends BusinessObjectHome{
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Scarico> findByExample(Scarico instance) {
 		log.debug("finding Ordini instance by example");
 		try {
@@ -121,6 +117,41 @@ public class ScaricoHome extends BusinessObjectHome{
 			return results;
 		} catch (RuntimeException re) {
 			log.error("find by example failed", re);
+			throw re;
+		}
+	}
+	
+	/**
+	 * Ritorna la lista di tutti gli scarichi con pagamento in sospeso
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Object> allSospesi() throws FindAllEntityException {
+		log.debug("finding All Sospesi instance by example");
+		try {
+			StringBuilder sb = new StringBuilder();
+//			sb.append("select sc.* "
+//					+ "from scarico sc "
+//					+ "left join pagamento p on sc.idpagamento = p.idpagamento "
+//					+ "left join cliente c on sc.idcliente = c.idcliente "
+//					+ "where p.nome = 'SOSPESO'");
+			sb.append("select sc.idordine, c.nome, c.cognome, sc.data_documento, ");
+			sb.append("sum(asvi.prezzo_vendita*asvi.qta) as imponibile,  ");
+			sb.append("sum(asvi.prezzo_vendita*asvi.qta*asvi.iva/100) as imposta, ");
+			sb.append("sum(((asvi.prezzo_vendita+asvi.prezzo_vendita*asvi.iva/100) - (asvi.prezzo_acquisto+asvi.prezzo_acquisto*asvi.iva/100))*asvi.qta) as agio ");
+			sb.append("from scarico sc  ");
+			sb.append("left join pagamento p on sc.idpagamento = p.idpagamento  ");
+			sb.append("left join cliente c on sc.idcliente = c.idcliente ");
+			sb.append("left join articoli_scaricati_view asvi on sc.idordine = asvi.idordine ");
+			sb.append("where p.nome = 'SOSPESO' ");
+			sb.append("group by sc.idordine, c.nome, c.cognome, sc.data_documento ");
+			List<Object> results = (List<Object>) sessionFactory.getCurrentSession().createSQLQuery(sb.toString()).list();
+//				.addEntity("sc", Scarico.class).list();
+			log.debug("find All Sospesi successful, result size: "
+					+ results.size());
+			return results;
+		} catch (RuntimeException re) {
+			log.error("find All Sospesi failed", re);
 			throw re;
 		}
 	}

@@ -298,9 +298,6 @@ public class ArticoliGestione extends JFrame {
 				btnChiudi.setBounds(new Rectangle(471, 5, 77, 25)); // Generated
 				btnChiudi.setText("Chiudi");
 				btnChiudi.addActionListener(new MyActionListener());
-				if ( this.modalita == RICERCA ){
-					btnChiudi.setBounds(new Rectangle(9, 5, 82, 26));
-				}
 			} catch (java.lang.Throwable e) {
 				e.printStackTrace();
 			}
@@ -321,9 +318,6 @@ public class ArticoliGestione extends JFrame {
 				btnElimina.setBounds(new Rectangle(378, 5, 82, 26)); // Generated
 				btnElimina.setPreferredSize(new Dimension(82, 26)); // Generated
 				btnElimina.addActionListener(new MyActionListener());
-				if ( this.modalita == RICERCA ){
-					btnElimina.setVisible(false);
-				}
 			} catch (java.lang.Throwable e) {
 				e.printStackTrace();
 			}
@@ -343,9 +337,6 @@ public class ArticoliGestione extends JFrame {
 				btnModifica.setText("Modifica"); // Generated
 				btnModifica.setBounds(new Rectangle(102, 5, 82, 26)); // Generated
 				btnModifica.addActionListener(new MyActionListener());
-				if ( this.modalita == RICERCA ){
-					btnModifica.setVisible(false);
-				}
 			} catch (java.lang.Throwable e) {
 				e.printStackTrace();
 			}
@@ -367,9 +358,6 @@ public class ArticoliGestione extends JFrame {
 				btnNuovo.setText("Nuovo"); // Generated
 				btnNuovo.setPreferredSize(new Dimension(82, 26)); // Generated
 				btnNuovo.addActionListener(new MyActionListener());
-				if ( this.modalita == RICERCA ){
-					btnNuovo.setVisible(false);
-				}
 			} catch (java.lang.Throwable e) {
 				e.printStackTrace();
 			}
@@ -386,7 +374,9 @@ public class ArticoliGestione extends JFrame {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
+			if ( this.modalita != RICERCA ){				
 			jContentPane.add(getPnlNord(), BorderLayout.NORTH); // Generated
+			}
 			jContentPane.add(getJPanel(), BorderLayout.CENTER);
 		}
 		return jContentPane;
@@ -622,9 +612,6 @@ public class ArticoliGestione extends JFrame {
 				btnDuplica.setBounds(new Rectangle(195, 5, 80, 26)); // Generated
 				btnDuplica.setText("Duplica");
 				btnDuplica.addActionListener(new MyActionListener());
-				if ( this.modalita == RICERCA ){
-					btnDuplica.setVisible(false);
-				}
 			} catch (java.lang.Throwable e) {
 				e.printStackTrace();
 			}
@@ -644,9 +631,6 @@ public class ArticoliGestione extends JFrame {
 				btnStampa.setBounds(new Rectangle(286, 5, 81, 25)); // Generated
 				btnStampa.setText("Stampa");
 				btnStampa.addActionListener(new MyActionListener());
-				if ( this.modalita == RICERCA ){
-					btnStampa.setVisible(false);
-				}
 			} catch (java.lang.Throwable e) {
 				e.printStackTrace();
 			}

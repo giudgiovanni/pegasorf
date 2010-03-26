@@ -5,6 +5,8 @@ package it.infolabs.hibernate;
 import it.infolabs.hibernate.exception.FindAllEntityException;
 
 import java.util.List;
+import java.util.Random;
+
 import javax.naming.InitialContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -230,5 +232,73 @@ public class ArticoloHome extends BusinessObjectHome{
 			log.error("find All Articoli failed", re);
 			throw re;
 		}
+	}
+	
+	public String getRandomBarcode(){
+		if (logger.isDebugEnabled()) {
+			logger.debug("getRandomBarcode() - start");
+		}
+
+		StringBuffer sb=new StringBuffer();
+		Random random=null;
+		int START = 0;
+	    int END = 9;
+
+		do{
+			//eseguiamo un ciclo 10volte per inserire i numeri random
+			//del codice a barre...e nel caso non esiste lo ritorniamo
+			for(int i=0;i<10;i++){
+				random=new Random();
+				int n=getRandomInteger(START, END, random);
+				sb.append(n);
+			}
+			// stringa finale che sta per personal barcode
+			sb.append("PBC");
+		}while(existBarcode(sb.toString()));
+		String returnString = sb.toString();
+		if (logger.isDebugEnabled()) {
+			logger.debug("getRandomBarcode() - end");
+		}
+		return returnString;
+	}
+	
+	private static int getRandomInteger(int aStart, int aEnd, Random aRandom){
+	    if ( aStart > aEnd ) {
+	      throw new IllegalArgumentException("Start cannot exceed End.");
+	    }
+	    //get the range, casting to long to avoid overflow problems
+	    long range = (long)aEnd - (long)aStart + 1;
+	    // compute a fraction of the range, 0 <= frac < range
+	    long fraction = (long)(range * aRandom.nextDouble());
+	    int randomNumber =  (int)(fraction + aStart); 
+	    return randomNumber;
+	  }
+
+
+	private boolean existBarcode(String barcode) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("existBarcode(String) - start");
+		}
+
+		if(barcode==null){
+			if (logger.isDebugEnabled()) {
+				logger.debug("existBarcode(String) - end");
+			}
+			return false;
+		}
+		Articolo articolo=new Articolo();
+		articolo.setCodbarre(barcode);
+		List articoli=findByExample(articolo);
+		if(articoli.size()>0){
+			if (logger.isDebugEnabled()) {
+				logger.debug("existBarcode(String) - end");
+			}
+			return true;
+		}
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("existBarcode(String) - end");
+		}
+		return false;
 	}
 }

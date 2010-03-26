@@ -74,6 +74,12 @@ import rf.utility.number.Arrays;
 import javax.swing.JRadioButton;
 import javax.swing.JCheckBox;
 
+import net.sourceforge.barbecue.Barcode;
+import net.sourceforge.barbecue.BarcodeException;
+import net.sourceforge.barbecue.BarcodeFactory;
+
+import java.awt.GridBagLayout;
+
 /**
  * @author Hunter
  *
@@ -253,6 +259,7 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 	private JButton btnAddImage = null;
 	private JButton btnRemoveImage = null;
 	private ImmagineArticolo imgArticolo;
+	private JPanel pnlBarcode = null;
 
 	/**
 	 * @param owner
@@ -311,11 +318,27 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 
 	public void suggerimentoCodice() {
 		// usato per passaggio valore di riferimento
-		String[] codice=new String[1];
-		codice[0]="";
-		SuggerimentoCodice s=new SuggerimentoCodice(this,dbm,codice);
-		s.setVisible(true);
-		txtCodBarre.setText(codice[0]);
+		// vecchio codice che visualizzava la maschera
+		// per la visualizzazione dei codici
+//		String[] codice=new String[1];
+//		codice[0]="";
+//		SuggerimentoCodice s=new SuggerimentoCodice(this,dbm,codice);
+//		s.setVisible(true);
+//		txtCodBarre.setText(codice[0]);
+		
+		// nuovo codice per la generazione random dei codici a barre
+		txtCodBarre.setText("");
+		String code=ArticoloHome.getInstance().getRandomBarcode();
+		txtCodBarre.setText(code);
+		pnlBarcode.removeAll();
+		try {
+			Barcode barcode=BarcodeFactory.createCode128(code);
+			pnlBarcode.add(barcode);
+			pnlBarcode.repaint();
+		} catch (BarcodeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	// questo metodo permette di chiudere
@@ -1083,6 +1106,7 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 				pnlDatiPersonali.add(getChkBoxQtaInfinita(), null);
 				pnlDatiPersonali.add(lblQtaInfinita, null);
 				pnlDatiPersonali.add(getPnlImage(), null);
+				pnlDatiPersonali.add(getPnlBarcode(), null);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -1138,7 +1162,7 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 			try {
 				txtDescrizione = new JTextField();
 				txtDescrizione.setPreferredSize(new Dimension(140, 20)); // Generated
-				txtDescrizione.setBounds(new Rectangle(7, 70, 541, 20)); // Generated
+				txtDescrizione.setBounds(new Rectangle(7, 70, 472, 20)); // Generated
 				txtDescrizione.setDocument(new UpperTextDocument());
 				
 			} catch (java.lang.Throwable e) {
@@ -1434,7 +1458,7 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(636, 444);
+		this.setSize(750, 444);
 		this.setResizable(false); // Generated
 
 		this.setContentPane(getJContentPane());
@@ -1442,6 +1466,7 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 		// Modifichiamo l'editor e aggiorniamo
 		// Combo box con i relativi dati dal DB
 		caricaComboBox();
+		this.addWindowListener(this);
 		
 		inizializzaRadioButton();
 
@@ -1483,8 +1508,6 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 			txtCodFornitore.setEditable(true);
 			btnSuggerimento.setEnabled(true);
 		}// fine impostazione tipo finestra
-		
-		this.addWindowListener(this);
 
 	}
 	
@@ -2095,46 +2118,78 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 		return btnRemoveImage;
 	}
 
+	/**
+	 * This method initializes pnlBarcode	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getPnlBarcode() {
+		if (pnlBarcode == null) {
+			pnlBarcode = new JPanel();
+			pnlBarcode.setLayout(new BorderLayout());
+			pnlBarcode.setBounds(new Rectangle(484, 8, 246, 85));
+		}
+		return pnlBarcode;
+	}
+
 	@Override
-	public void windowActivated(WindowEvent e) {
+	public void windowActivated(WindowEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void windowClosed(WindowEvent e) {
+	public void windowClosed(WindowEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void windowClosing(WindowEvent e) {
+	public void windowClosing(WindowEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void windowDeactivated(WindowEvent e) {
+	public void windowDeactivated(WindowEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void windowDeiconified(WindowEvent e) {
+	public void windowDeiconified(WindowEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void windowIconified(WindowEvent e) {
+	public void windowIconified(WindowEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void windowOpened(WindowEvent e) {
+	public void windowOpened(WindowEvent arg0) {
 		// portiamo il focus sul cosice a barre
 		txtCodBarre.requestFocusInWindow();
+		// se l'articolo ha il codice a barre creiamo l'immagine dello stesso a video
+		if(txtCodBarre.getText()!=null && !txtCodBarre.getText().equalsIgnoreCase("")){
+			// Always get a Barcode from the BarcodeFactory
+	        Barcode barcode = null;
+	        try {
+	            barcode = BarcodeFactory.createCode128(txtCodBarre.getText());
+	        } catch (BarcodeException e) {
+	            // Error handling
+	        }
+
+	        /* Because Barcode extends Component, you can use it just like any other
+			 * Swing component. In this case, we can add it straight into a panel
+			 * and it will be drawn and layed out according to the layout of the panel.
+			 */
+			pnlBarcode.add(barcode,BorderLayout.CENTER);
+	        //pnlBarcode.add(barcode);
+			pnlBarcode.repaint();
+		}
 		
 	}
 

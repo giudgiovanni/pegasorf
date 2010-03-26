@@ -198,5 +198,10 @@
 			<artifactId>poi</artifactId>
 			<version>3.0.1-FINAL</version>
 		</dependency>
+		<dependency>
+    	<groupId>net.sourceforge.barbecue</groupId>
+    		<artifactId>barbecue</artifactId>
+    		<version>1.5-beta1</version>
+		</dependency>
 	</dependencies>
 </project>

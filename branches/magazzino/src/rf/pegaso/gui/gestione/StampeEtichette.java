@@ -56,11 +56,16 @@ public class StampeEtichette extends JFrame {
 
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == btnEtichetta24) {
-				stampaEtichetta(24);
+				stampaEtichetta("24");
 			} else if (e.getSource() == btnChiudi) {
 				dispose();
-			} else if (e.getSource() == btnEtichetta48)
-				stampaEtichetta(48);
+			} else if (e.getSource() == btnEtichetta48){
+				stampaEtichetta("48");
+			} else if (e.getSource() == btnEtichetta64x36){
+				stampaEtichetta("64x36");
+			}
+				
+			
 
 		}
 
@@ -100,6 +105,10 @@ public class StampeEtichette extends JFrame {
 
 	private JButton btnEtichetta48 = null;
 
+	private JButton btnEtichetta64x36 = null;
+
+	private JButton btnEtichetta69x25nobordi = null;
+
 	/**
 	 * @param owner
 	 */
@@ -118,7 +127,7 @@ public class StampeEtichette extends JFrame {
 		if (btnChiudi == null) {
 			try {
 				btnChiudi = new JButton();
-				btnChiudi.setBounds(new Rectangle(328, 8, 81, 41)); // Generated
+				btnChiudi.setBounds(new Rectangle(658, 9, 81, 41)); // Generated
 				btnChiudi.setText("Chiudi");
 				btnChiudi.addActionListener(new MyActionListener());
 			} catch (java.lang.Throwable e) {
@@ -233,6 +242,8 @@ public class StampeEtichette extends JFrame {
 				pnlNord.add(getBtnStampaEtichetta(), null); // Generated
 				pnlNord.add(getPnlRicerca(), null); // Generated
 				pnlNord.add(getBtnEtichetta48(), null); // Generated
+				pnlNord.add(getBtnEtichetta64x34(), null);
+				pnlNord.add(getBtnEtichetta69x25nobordi(), null);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -389,7 +400,7 @@ public class StampeEtichette extends JFrame {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(600, 400);
+		this.setSize(759, 400);
 		this.setTitle("Gestione Stampe Etichette");
 
 		this.setContentPane(getJContentPane());
@@ -421,9 +432,9 @@ public class StampeEtichette extends JFrame {
 	}
 
 	/**
-	 *
+	 * nEtichette è il numero di etichette presenti nel foglio
 	 */
-	private void stampaEtichetta(int nEtichette) {
+	private void stampaEtichetta(String dimEtichetta) {
 		// Apre la Dialog delegata alla modifica
 		// di un reparto
 		if (tblArticoli.getSelectedRow() <= -1) {
@@ -443,12 +454,20 @@ public class StampeEtichette extends JFrame {
 		int nCopie[] = { 1 };
 
 		// scelta della posizione da cui iniziare a stampare
-		if (nEtichette == 24) {
+		if (dimEtichetta.equalsIgnoreCase("24")) {
 			StartLabelPrint start = new StartLabelPrint(this, 8, 3, startPos,
 					nCopie);
 			start.setVisible(true);
-		} else if (nEtichette == 48) {
+		} else if (dimEtichetta.equalsIgnoreCase("48")) {
 			StartLabelPrint start = new StartLabelPrint(this, 12, 4, startPos,
+					nCopie);
+			start.setVisible(true);
+		} else if (dimEtichetta.equalsIgnoreCase("64x36")) {
+			StartLabelPrint start = new StartLabelPrint(this, 8, 3, startPos,
+					nCopie);
+			start.setVisible(true);
+		}else if (dimEtichetta.equalsIgnoreCase("69x25nobordi")) {
+			StartLabelPrint start = new StartLabelPrint(this, 12, 3, startPos,
 					nCopie);
 			start.setVisible(true);
 		}
@@ -499,13 +518,21 @@ public class StampeEtichette extends JFrame {
 		// stampa dell'etichetta
 		try {
 
-			if (nEtichette == 24) {
+			if (dimEtichetta.equalsIgnoreCase("24")) {
 				JasperPrintManager.printReport(JasperFillManager.fillReport(
 						"report/etichette70x36.jasper", null, this.dbm
 								.getConnessione()), true);
-			} else if (nEtichette == 48) {
+			} else if (dimEtichetta.equalsIgnoreCase("48")) {
 				JasperPrintManager.printReport(JasperFillManager.fillReport(
 						"report/etichette51x24.jasper", null, this.dbm
+								.getConnessione()), true);
+			} else if (dimEtichetta.equalsIgnoreCase("64x36")) {
+				JasperPrintManager.printReport(JasperFillManager.fillReport(
+						"report/etichette64x36.jasper", null, this.dbm
+								.getConnessione()), true);
+			} else if (dimEtichetta.equalsIgnoreCase("69x25nobordi")) {
+				JasperPrintManager.printReport(JasperFillManager.fillReport(
+						"report/etichette69x25-nobordi.jasper", null, this.dbm
 								.getConnessione()), true);
 			}
 
@@ -576,7 +603,7 @@ public class StampeEtichette extends JFrame {
 		if (btnEtichetta48 == null) {
 			try {
 				btnEtichetta48 = new JButton();
-				btnEtichetta48.setBounds(new Rectangle(172, 8, 147, 42)); // Generated
+				btnEtichetta48.setBounds(new Rectangle(500, 9, 147, 41)); // Generated
 				btnEtichetta48
 						.setText("<html><div align=\"center\">Stampa Etichetta<br/>(48 etichette 51x24)</html>"); // Generated
 				btnEtichetta48.addActionListener(new MyActionListener());
@@ -585,6 +612,40 @@ public class StampeEtichette extends JFrame {
 			}
 		}
 		return btnEtichetta48;
+	}
+
+	/**
+	 * This method initializes btnEtichetta64x34	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnEtichetta64x34() {
+		if (btnEtichetta64x36 == null) {
+			btnEtichetta64x36 = new JButton();
+			btnEtichetta64x36.setBounds(new Rectangle(170, 8, 153, 41));
+			btnEtichetta64x36.setText("<html><div align=\"center\">Stampa Etichetta<br/>(24 etichette 64x36)</html>");
+			btnEtichetta64x36.addActionListener(new MyActionListener());
+		}
+		return btnEtichetta64x36;
+	}
+
+	/**
+	 * This method initializes btnEtichetta69x25nobordi	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnEtichetta69x25nobordi() {
+		if (btnEtichetta69x25nobordi == null) {
+			btnEtichetta69x25nobordi = new JButton();
+			btnEtichetta69x25nobordi.setText("<html><div align=\"center\">Stampa Etichetta<br/>(36 etichette 69x25)</html>");
+			btnEtichetta69x25nobordi.setBounds(new Rectangle(340, 9, 147, 42));
+			btnEtichetta69x25nobordi.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					stampaEtichetta("69x25nobordi");
+				}
+			});
+		}
+		return btnEtichetta69x25nobordi;
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

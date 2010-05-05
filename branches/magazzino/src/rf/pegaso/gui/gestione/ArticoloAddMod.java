@@ -260,6 +260,8 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 	private JButton btnRemoveImage = null;
 	private ImmagineArticolo imgArticolo;
 	private JPanel pnlBarcode = null;
+	private Barcode barcode;
+	private JButton btnStampaCodBarre = null;
 
 	/**
 	 * @param owner
@@ -332,7 +334,7 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 		txtCodBarre.setText(code);
 		pnlBarcode.removeAll();
 		try {
-			Barcode barcode=BarcodeFactory.createCode128(code);
+			barcode=BarcodeFactory.createCode128(code);
 			pnlBarcode.add(barcode);
 			pnlBarcode.repaint();
 		} catch (BarcodeException e) {
@@ -915,7 +917,7 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 				lblIngrosso.setText("Pubblico \u20AC"); // Generated
 				jPanel1 = new JPanel();
 				jPanel1.setLayout(null); // Generated
-				jPanel1.setBounds(new Rectangle(402, 101, 201, 49)); // Generated
+				jPanel1.setBounds(new Rectangle(321, 162, 201, 64)); // Generated
 				jPanel1.setBorder(BorderFactory.createTitledBorder(
 						BorderFactory.createBevelBorder(BevelBorder.RAISED),
 						"Prezzo al Pubblico",
@@ -944,7 +946,7 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 				lblQta.setText("Quantit\u00E0"); // Generated
 				jPanel2 = new JPanel();
 				jPanel2.setLayout(null); // Generated
-				jPanel2.setBounds(new Rectangle(402, 161, 201, 65)); // Generated
+				jPanel2.setBounds(new Rectangle(529, 162, 201, 65)); // Generated
 				jPanel2.setBorder(BorderFactory.createTitledBorder(
 						BorderFactory.createBevelBorder(BevelBorder.RAISED),
 						"Magazzino", TitledBorder.DEFAULT_JUSTIFICATION,
@@ -1107,6 +1109,7 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 				pnlDatiPersonali.add(lblQtaInfinita, null);
 				pnlDatiPersonali.add(getPnlImage(), null);
 				pnlDatiPersonali.add(getPnlBarcode(), null);
+				pnlDatiPersonali.add(getBtnStampaCodBarre(), null);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -2175,7 +2178,7 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 		// se l'articolo ha il codice a barre creiamo l'immagine dello stesso a video
 		if(txtCodBarre.getText()!=null && !txtCodBarre.getText().equalsIgnoreCase("")){
 			// Always get a Barcode from the BarcodeFactory
-	        Barcode barcode = null;
+	        barcode = null;
 	        try {
 	            barcode = BarcodeFactory.createCode128(txtCodBarre.getText());
 	        } catch (BarcodeException e) {
@@ -2190,6 +2193,30 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 	        //pnlBarcode.add(barcode);
 			pnlBarcode.repaint();
 		}
+		
+	}
+
+	/**
+	 * This method initializes btnStampaCodBarre	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnStampaCodBarre() {
+		if (btnStampaCodBarre == null) {
+			btnStampaCodBarre = new JButton();
+			btnStampaCodBarre.setBounds(new Rectangle(485, 96, 245, 37));
+			btnStampaCodBarre.setText("Stampa Codice a Barre");
+			btnStampaCodBarre.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					stampaCodiceBarre(); // TODO Auto-generated Event stub actionPerformed()
+				}
+			});
+		}
+		return btnStampaCodBarre;
+	}
+
+	protected void stampaCodiceBarre() {
+		// TODO Auto-generated method stub
 		
 	}
 

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="it.infolabs.hibernate.QtaCaricateView" table="qta_caricate_view" schema="public">
+        <composite-id name="id" class="it.infolabs.hibernate.QtaCaricateViewId">
+            <key-property name="idarticolo" type="java.lang.Long">
+                <column name="idarticolo" />
+            </key-property>
+            <key-property name="codbarre" type="string">
+                <column name="codbarre" length="40" />
+            </key-property>
+            <key-property name="sum" type="java.lang.Double">
+                <column name="sum" precision="17" scale="17" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="it.infolabs.hibernate.Categoria" table="categoria" schema="public">
+        <id name="id" type="long">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <property name="dataCreazione" type="date">
+            <column name="data_creazione" length="13" />
+        </property>
+        <property name="descrizione" type="string">
+            <column name="descrizione" not-null="true" />
+        </property>
+        <property name="note" type="string">
+            <column name="note" />
+        </property>
+        <set name="repartos" inverse="true" lazy="true" table="reparto" fetch="select">
+            <key>
+                <column name="categoria" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.Reparto" />
+        </set>
+        <set name="repartos_1" inverse="true" lazy="true" table="reparto" fetch="select">
+            <key>
+                <column name="categoria" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.Reparto" />
+        </set>
+    </class>
+</hibernate-mapping>

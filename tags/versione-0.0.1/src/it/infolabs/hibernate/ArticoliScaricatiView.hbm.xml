@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="it.infolabs.hibernate.ArticoliScaricatiView" table="articoli_scaricati_view" schema="public">
+        <composite-id name="id" class="it.infolabs.hibernate.ArticoliScaricatiViewId">
+            <key-property name="idordine" type="java.lang.Long">
+                <column name="idordine" />
+            </key-property>
+            <key-property name="idarticolo" type="java.lang.Long">
+                <column name="idarticolo" />
+            </key-property>
+            <key-property name="codbarre" type="string">
+                <column name="codbarre" length="40" />
+            </key-property>
+            <key-property name="descrizione" type="string">
+                <column name="descrizione" length="100" />
+            </key-property>
+            <key-property name="prezzoAcquisto" type="java.lang.Double">
+                <column name="prezzo_acquisto" precision="17" scale="17" />
+            </key-property>
+            <key-property name="prezzoIngrosso" type="java.lang.Double">
+                <column name="prezzo_ingrosso" precision="17" scale="17" />
+            </key-property>
+            <key-property name="prezzoDettaglio" type="java.lang.Double">
+                <column name="prezzo_dettaglio" precision="17" scale="17" />
+            </key-property>
+            <key-property name="iva" type="java.lang.Long">
+                <column name="iva" />
+            </key-property>
+            <key-property name="um" type="string">
+                <column name="um" length="40" />
+            </key-property>
+            <key-property name="qta" type="java.lang.Double">
+                <column name="qta" precision="17" scale="17" />
+            </key-property>
+            <key-property name="sconto" type="java.lang.Long">
+                <column name="sconto" />
+            </key-property>
+            <key-property name="prezzoVendita" type="java.lang.Double">
+                <column name="prezzo_vendita" precision="17" scale="17" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

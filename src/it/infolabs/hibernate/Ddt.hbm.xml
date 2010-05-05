@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 6-mag-2010 0.12.01 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="it.infolabs.hibernate.Ddt" table="ddt" schema="doc">
+        <id name="id" type="long">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="porto" class="it.infolabs.hibernate.Porto" fetch="select">
+            <column name="porto" />
+        </many-to-one>
+        <many-to-one name="causale" class="it.infolabs.hibernate.Causale" fetch="select">
+            <column name="causale" />
+        </many-to-one>
+        <many-to-one name="pagamento" class="it.infolabs.hibernate.Pagamento" fetch="select">
+            <column name="pagamento" />
+        </many-to-one>
+        <many-to-one name="consegna" class="it.infolabs.hibernate.Consegna" fetch="select">
+            <column name="consegna_a_mezzo" />
+        </many-to-one>
+        <property name="serie" type="string">
+            <column name="serie" length="3" />
+        </property>
+        <property name="sconto" type="java.lang.Double">
+            <column name="sconto" precision="17" scale="17" />
+        </property>
+        <property name="speseTrasporto" type="java.lang.Double">
+            <column name="spese_trasporto" precision="17" scale="17" />
+        </property>
+        <property name="speseIncasso" type="java.lang.Double">
+            <column name="spese_incasso" precision="17" scale="17" />
+        </property>
+        <property name="riferimento" type="string">
+            <column name="riferimento" />
+        </property>
+        <property name="colli" type="java.lang.Integer">
+            <column name="colli" />
+        </property>
+        <property name="destinazione" type="java.lang.Long">
+            <column name="destinazione" />
+        </property>
+    </class>
+</hibernate-mapping>

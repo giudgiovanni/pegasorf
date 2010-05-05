@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 1-feb-2010 2.09.21 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="it.infolabs.hibernate.Cliente" table="cliente" schema="public">
+        <id name="idcliente" type="long" unsaved-value="0">
+            <column name="idcliente" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="nazionalita" class="it.infolabs.hibernate.Nazionalita" fetch="select">
+            <column name="nazionalita" />
+        </many-to-one>
+        <many-to-one name="documentoCliente" class="it.infolabs.hibernate.DocumentoCliente" fetch="select">
+            <column name="documento" />
+        </many-to-one>
+        <many-to-one name="provincia" class="it.infolabs.hibernate.Provincia" fetch="select">
+            <column name="provincia" />
+        </many-to-one>
+        <many-to-one name="ente" class="it.infolabs.hibernate.Ente" fetch="select">
+            <column name="rilasciato_da" />
+        </many-to-one>
+        <property name="dataInserimento" type="date">
+            <column name="data_inserimento" length="13" />
+        </property>
+        <property name="nome" type="string">
+            <column name="nome" length="40" not-null="true" />
+        </property>
+        <property name="cognome" type="string">
+            <column name="cognome" length="40" not-null="true" />
+        </property>
+        <property name="piva" type="string">
+            <column name="piva" length="40" />
+        </property>
+        <property name="codfisc" type="string">
+            <column name="codfisc" length="40" />
+        </property>
+        <property name="via" type="string">
+            <column name="via" length="40" />
+        </property>
+        <property name="cap" type="string">
+            <column name="cap" length="40" />
+        </property>
+        <property name="citta" type="string">
+            <column name="citta" length="40" />
+        </property>
+        <property name="tel" type="string">
+            <column name="tel" length="40" />
+        </property>
+        <property name="cell" type="string">
+            <column name="cell" length="40" />
+        </property>
+        <property name="fax" type="string">
+            <column name="fax" length="40" />
+        </property>
+        <property name="email" type="string">
+            <column name="email" length="50" />
+        </property>
+        <property name="website" type="string">
+            <column name="website" length="40" />
+        </property>
+        <property name="note" type="string">
+            <column name="note" length="200" />
+        </property>
+        <property name="dataNascita" type="date">
+            <column name="data_nascita" length="13" />
+        </property>
+        <property name="numDoc" type="string">
+            <column name="num_doc" />
+        </property>
+        <property name="rilasciatoIl" type="date">
+            <column name="rilasciato_il" length="13" />
+        </property>
+        <property name="natoA" type="string">
+            <column name="nato_a" />
+        </property>
+        <property name="intestazione" type="string">
+            <column name="intestazione" />
+        </property>
+        <property name="rilasciatoDi" type="string">
+            <column name="rilasciato_di" />
+        </property>
+        <set name="scaricos" inverse="true" lazy="true" table="scarico" fetch="select">
+            <key>
+                <column name="idcliente" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.Scarico" />
+        </set>
+        <set name="scaricos_1" inverse="true" lazy="true" table="scarico" fetch="select">
+            <key>
+                <column name="idcliente" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.Scarico" />
+        </set>
+        <set name="scaricos_2" inverse="true" lazy="true" table="scarico" fetch="select">
+            <key>
+                <column name="idcliente" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.Scarico" />
+        </set>
+    </class>
+</hibernate-mapping>

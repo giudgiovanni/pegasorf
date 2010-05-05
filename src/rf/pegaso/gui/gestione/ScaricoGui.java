@@ -419,8 +419,12 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 		// Calcoliamo ora la parte all'ingrosso
 		try {
 
-			imponibile = Scarico.getTotAcquistoImponibileByOrder(id);
-			imposta = Scarico.getTotAcquistoImpostaByOrder(idScarico);
+//			imponibile = Scarico.getTotAcquistoImponibileByOrder(id);
+//			imposta = Scarico.getTotAcquistoImpostaByOrder(idScarico);
+			
+			imponibile = Scarico.getTotDettaglioImponibile(id);
+			imposta = Scarico.getTotDettaglioImposta(idScarico);
+			
 			tot = imponibile + imposta;
 
 			// impostiamo i campi
@@ -981,7 +985,7 @@ public class ScaricoGui extends JFrame implements TableModelListener {
 				col.setCellRenderer(dispColumnRenderer);
 				col.setPreferredWidth(40);
 
-				col = tblScarico.getColumn("prezzo_acquisto");
+				col = tblScarico.getColumn("prezzo_dettaglio");
 				DefaultTableCellRenderer prezzoColumnRenderer = new DefaultTableCellRenderer();
 				prezzoColumnRenderer.setHorizontalAlignment(JLabel.RIGHT);
 				col.setCellRenderer(prezzoColumnRenderer);

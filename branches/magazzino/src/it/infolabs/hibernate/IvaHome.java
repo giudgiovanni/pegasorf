@@ -11,13 +11,13 @@ import org.hibernate.SessionFactory;
 import static org.hibernate.criterion.Example.create;
 
 /**
- * Home object for domain model class Documento.
- * @see it.infolabs.hibernate.Documento
+ * Home object for domain model class Iva.
+ * @see it.infolabs.hibernate.Iva
  * @author Hibernate Tools
  */
-public class DocumentoHome {
+public class IvaHome {
 
-	private static final Log log = LogFactory.getLog(DocumentoHome.class);
+	private static final Log log = LogFactory.getLog(IvaHome.class);
 
 	private final SessionFactory sessionFactory = getSessionFactory();
 
@@ -32,8 +32,8 @@ public class DocumentoHome {
 		}
 	}
 
-	public void persist(Documento transientInstance) {
-		log.debug("persisting Documento instance");
+	public void persist(Iva transientInstance) {
+		log.debug("persisting Iva instance");
 		try {
 			sessionFactory.getCurrentSession().persist(transientInstance);
 			log.debug("persist successful");
@@ -43,8 +43,8 @@ public class DocumentoHome {
 		}
 	}
 
-	public void attachDirty(Documento instance) {
-		log.debug("attaching dirty Documento instance");
+	public void attachDirty(Iva instance) {
+		log.debug("attaching dirty Iva instance");
 		try {
 			sessionFactory.getCurrentSession().saveOrUpdate(instance);
 			log.debug("attach successful");
@@ -54,8 +54,8 @@ public class DocumentoHome {
 		}
 	}
 
-	public void attachClean(Documento instance) {
-		log.debug("attaching clean Documento instance");
+	public void attachClean(Iva instance) {
+		log.debug("attaching clean Iva instance");
 		try {
 			sessionFactory.getCurrentSession().lock(instance, LockMode.NONE);
 			log.debug("attach successful");
@@ -65,8 +65,8 @@ public class DocumentoHome {
 		}
 	}
 
-	public void delete(Documento persistentInstance) {
-		log.debug("deleting Documento instance");
+	public void delete(Iva persistentInstance) {
+		log.debug("deleting Iva instance");
 		try {
 			sessionFactory.getCurrentSession().delete(persistentInstance);
 			log.debug("delete successful");
@@ -76,11 +76,11 @@ public class DocumentoHome {
 		}
 	}
 
-	public Documento merge(Documento detachedInstance) {
-		log.debug("merging Documento instance");
+	public Iva merge(Iva detachedInstance) {
+		log.debug("merging Iva instance");
 		try {
-			Documento result = (Documento) sessionFactory.getCurrentSession()
-					.merge(detachedInstance);
+			Iva result = (Iva) sessionFactory.getCurrentSession().merge(
+					detachedInstance);
 			log.debug("merge successful");
 			return result;
 		} catch (RuntimeException re) {
@@ -89,11 +89,11 @@ public class DocumentoHome {
 		}
 	}
 
-	public Documento findById(long id) {
-		log.debug("getting Documento instance with id: " + id);
+	public Iva findById(long id) {
+		log.debug("getting Iva instance with id: " + id);
 		try {
-			Documento instance = (Documento) sessionFactory.getCurrentSession()
-					.get("it.infolabs.hibernate.Documento", id);
+			Iva instance = (Iva) sessionFactory.getCurrentSession().get(
+					"it.infolabs.hibernate.Iva", id);
 			if (instance == null) {
 				log.debug("get successful, no instance found");
 			} else {
@@ -106,12 +106,11 @@ public class DocumentoHome {
 		}
 	}
 
-	public List<Documento> findByExample(Documento instance) {
-		log.debug("finding Documento instance by example");
+	public List<Iva> findByExample(Iva instance) {
+		log.debug("finding Iva instance by example");
 		try {
-			List<Documento> results = (List<Documento>) sessionFactory
-					.getCurrentSession().createCriteria(
-							"it.infolabs.hibernate.Documento").add(
+			List<Iva> results = (List<Iva>) sessionFactory.getCurrentSession()
+					.createCriteria("it.infolabs.hibernate.Iva").add(
 							create(instance)).list();
 			log.debug("find by example successful, result size: "
 					+ results.size());

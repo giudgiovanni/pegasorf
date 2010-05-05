@@ -1,25 +1,43 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 6-mag-2010 0.12.01 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="it.infolabs.hibernate.Documento" table="documento" schema="doc">
-        <composite-id name="id" class="it.infolabs.hibernate.DocumentoId">
-            <key-property name="id" type="java.lang.Long">
-                <column name="id" />
-            </key-property>
-            <key-property name="dataEmissione" type="date">
-                <column name="data_emissione" length="13" />
-            </key-property>
-            <key-property name="tipoDocumento" type="java.lang.Short">
-                <column name="tipo_documento" />
-            </key-property>
-            <key-property name="cliente" type="java.lang.Long">
-                <column name="cliente" />
-            </key-property>
-            <key-property name="note" type="string">
-                <column name="note" />
-            </key-property>
-        </composite-id>
+        <id name="id" type="long">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="cliente" class="it.infolabs.hibernate.Cliente" fetch="select">
+            <column name="cliente" />
+        </many-to-one>
+        <property name="dataEmissione" type="date">
+            <column name="data_emissione" length="13" />
+        </property>
+        <property name="tipoDocumento" type="java.lang.Short">
+            <column name="tipo_documento" />
+        </property>
+        <property name="note" type="string">
+            <column name="note" />
+        </property>
+        <property name="numeroDocumento" type="java.lang.Long">
+            <column name="numero_documento" />
+        </property>
+        <one-to-one name="fattura" class="it.infolabs.hibernate.Fattura"></one-to-one>
+        <one-to-one name="ordine" class="it.infolabs.hibernate.Ordine"></one-to-one>
+        <set name="dettaglioDocumentos" inverse="true" lazy="true" table="dettaglio_documento" fetch="select">
+            <key>
+                <column name="documento" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.DettaglioDocumento" />
+        </set>
+        <one-to-one name="bolla" class="it.infolabs.hibernate.Bolla"></one-to-one>
+        <set name="dettaglioDocumentos_1" inverse="true" lazy="true" table="dettaglio_documento" fetch="select">
+            <key>
+                <column name="documento" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.DettaglioDocumento" />
+        </set>
+        <one-to-one name="ricevuta" class="it.infolabs.hibernate.Ricevuta"></one-to-one>
     </class>
 </hibernate-mapping>

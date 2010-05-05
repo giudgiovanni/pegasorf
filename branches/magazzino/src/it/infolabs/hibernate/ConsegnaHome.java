@@ -11,13 +11,13 @@ import org.hibernate.SessionFactory;
 import static org.hibernate.criterion.Example.create;
 
 /**
- * Home object for domain model class Documento.
- * @see it.infolabs.hibernate.Documento
+ * Home object for domain model class Consegna.
+ * @see it.infolabs.hibernate.Consegna
  * @author Hibernate Tools
  */
-public class DocumentoHome {
+public class ConsegnaHome {
 
-	private static final Log log = LogFactory.getLog(DocumentoHome.class);
+	private static final Log log = LogFactory.getLog(ConsegnaHome.class);
 
 	private final SessionFactory sessionFactory = getSessionFactory();
 
@@ -32,8 +32,8 @@ public class DocumentoHome {
 		}
 	}
 
-	public void persist(Documento transientInstance) {
-		log.debug("persisting Documento instance");
+	public void persist(Consegna transientInstance) {
+		log.debug("persisting Consegna instance");
 		try {
 			sessionFactory.getCurrentSession().persist(transientInstance);
 			log.debug("persist successful");
@@ -43,8 +43,8 @@ public class DocumentoHome {
 		}
 	}
 
-	public void attachDirty(Documento instance) {
-		log.debug("attaching dirty Documento instance");
+	public void attachDirty(Consegna instance) {
+		log.debug("attaching dirty Consegna instance");
 		try {
 			sessionFactory.getCurrentSession().saveOrUpdate(instance);
 			log.debug("attach successful");
@@ -54,8 +54,8 @@ public class DocumentoHome {
 		}
 	}
 
-	public void attachClean(Documento instance) {
-		log.debug("attaching clean Documento instance");
+	public void attachClean(Consegna instance) {
+		log.debug("attaching clean Consegna instance");
 		try {
 			sessionFactory.getCurrentSession().lock(instance, LockMode.NONE);
 			log.debug("attach successful");
@@ -65,8 +65,8 @@ public class DocumentoHome {
 		}
 	}
 
-	public void delete(Documento persistentInstance) {
-		log.debug("deleting Documento instance");
+	public void delete(Consegna persistentInstance) {
+		log.debug("deleting Consegna instance");
 		try {
 			sessionFactory.getCurrentSession().delete(persistentInstance);
 			log.debug("delete successful");
@@ -76,10 +76,10 @@ public class DocumentoHome {
 		}
 	}
 
-	public Documento merge(Documento detachedInstance) {
-		log.debug("merging Documento instance");
+	public Consegna merge(Consegna detachedInstance) {
+		log.debug("merging Consegna instance");
 		try {
-			Documento result = (Documento) sessionFactory.getCurrentSession()
+			Consegna result = (Consegna) sessionFactory.getCurrentSession()
 					.merge(detachedInstance);
 			log.debug("merge successful");
 			return result;
@@ -89,11 +89,11 @@ public class DocumentoHome {
 		}
 	}
 
-	public Documento findById(long id) {
-		log.debug("getting Documento instance with id: " + id);
+	public Consegna findById(long id) {
+		log.debug("getting Consegna instance with id: " + id);
 		try {
-			Documento instance = (Documento) sessionFactory.getCurrentSession()
-					.get("it.infolabs.hibernate.Documento", id);
+			Consegna instance = (Consegna) sessionFactory.getCurrentSession()
+					.get("it.infolabs.hibernate.Consegna", id);
 			if (instance == null) {
 				log.debug("get successful, no instance found");
 			} else {
@@ -106,12 +106,12 @@ public class DocumentoHome {
 		}
 	}
 
-	public List<Documento> findByExample(Documento instance) {
-		log.debug("finding Documento instance by example");
+	public List<Consegna> findByExample(Consegna instance) {
+		log.debug("finding Consegna instance by example");
 		try {
-			List<Documento> results = (List<Documento>) sessionFactory
+			List<Consegna> results = (List<Consegna>) sessionFactory
 					.getCurrentSession().createCriteria(
-							"it.infolabs.hibernate.Documento").add(
+							"it.infolabs.hibernate.Consegna").add(
 							create(instance)).list();
 			log.debug("find by example successful, result size: "
 					+ results.size());

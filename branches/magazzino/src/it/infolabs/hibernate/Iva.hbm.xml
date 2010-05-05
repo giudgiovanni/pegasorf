@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 6-mag-2010 0.12.01 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="it.infolabs.hibernate.Iva" table="iva" schema="doc">
+        <id name="id" type="long">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <property name="codiceIva" type="java.lang.Integer">
+            <column name="codice_iva" />
+        </property>
+        <property name="iva" type="java.lang.Integer">
+            <column name="iva" />
+        </property>
+        <property name="descrizione" type="string">
+            <column name="descrizione" />
+        </property>
+        <set name="dettaglioDocumentos" inverse="true" lazy="true" table="dettaglio_documento" fetch="select">
+            <key>
+                <column name="iva" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.DettaglioDocumento" />
+        </set>
+        <set name="dettaglioDocumentos_1" inverse="true" lazy="true" table="dettaglio_documento" fetch="select">
+            <key>
+                <column name="iva" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.DettaglioDocumento" />
+        </set>
+    </class>
+</hibernate-mapping>

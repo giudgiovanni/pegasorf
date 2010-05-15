@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 6-mag-2010 0.12.01 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="it.infolabs.hibernate.DettaglioDocumento" table="dettaglio_documento" schema="doc">
+        <id name="id" type="long">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="iva" class="it.infolabs.hibernate.Iva" fetch="select">
+            <column name="iva" />
+        </many-to-one>
+        <many-to-one name="documento" class="it.infolabs.hibernate.Documento" fetch="select">
+            <column name="documento" />
+        </many-to-one>
+        <property name="descrizione" type="string">
+            <column name="descrizione" />
+        </property>
+        <property name="um" type="java.lang.Character">
+            <column name="um" length="1" />
+        </property>
+        <property name="quantita" type="java.lang.Double">
+            <column name="quantita" precision="17" scale="17" />
+        </property>
+        <property name="imponibile" type="java.lang.Double">
+            <column name="imponibile" precision="17" scale="17" />
+        </property>
+        <property name="sconto" type="java.lang.Integer">
+            <column name="sconto" />
+        </property>
+    </class>
+</hibernate-mapping>

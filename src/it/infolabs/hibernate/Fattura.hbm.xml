@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 6-mag-2010 0.12.01 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="it.infolabs.hibernate.Fattura" table="fattura" schema="doc">
+        <id name="id" type="long">
+            <column name="id" />
+            <generator class="foreign">
+                <param name="property">documento</param>
+            </generator>
+        </id>
+        <one-to-one name="documento" class="it.infolabs.hibernate.Documento" constrained="true"></one-to-one>
+        <many-to-one name="pagamento" class="it.infolabs.hibernate.Pagamento" fetch="select">
+            <column name="pagamento" />
+        </many-to-one>
+        <property name="speseTrasporto" type="java.lang.Double">
+            <column name="spese_trasporto" precision="17" scale="17" />
+        </property>
+        <property name="speseIncasso" type="java.lang.Double">
+            <column name="spese_incasso" precision="17" scale="17" />
+        </property>
+        <property name="notePagamento" type="string">
+            <column name="note_pagamento" />
+        </property>
+        <property name="serie" type="java.lang.Character">
+            <column name="serie" length="1" />
+        </property>
+        <property name="sconto" type="java.lang.Double">
+            <column name="sconto" precision="17" scale="17" />
+        </property>
+        <property name="bancaAbi" type="string">
+            <column name="banca_abi" length="5" />
+        </property>
+        <property name="bancaCab" type="string">
+            <column name="banca_cab" length="5" />
+        </property>
+        <property name="bancaIban" type="string">
+            <column name="banca_iban" length="1" />
+        </property>
+        <set name="accontos" inverse="true" lazy="true" table="acconto" fetch="select">
+            <key>
+                <column name="fattura" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.Acconto" />
+        </set>
+        <set name="accontos_1" inverse="true" lazy="true" table="acconto" fetch="select">
+            <key>
+                <column name="fattura" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.Acconto" />
+        </set>
+    </class>
+</hibernate-mapping>

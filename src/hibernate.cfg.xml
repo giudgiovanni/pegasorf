@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.pool_size">1</property>
+        <property name="hibernate.current_session_context_class">thread</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+        <property name="hibernate.format_sql">false</property>
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.password">postgres</property>
+        <property name="hibernate.connection.url">jdbc:postgresql:pegaso</property>
+        <property name="hibernate.connection.username">postgres</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+        
+         <mapping resource="it/infolabs/hibernate/TmpScelti.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/DettaglioCarico.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Fornitore.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Causale.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Um.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Articolo.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Ente.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Documento.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Ddt.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Carico.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Categoria.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Stato.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/GiacenzaArticoliView.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/ArticoliCaricatiView.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/ArticoliScaricatiView.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/ImmagineArticolo.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Bolla.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/DocumentoCliente.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/QtaScaricateView.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/DettaglioScaricoManuale.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/TmpEtichette.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Pannelli.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Cliente.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Ordine.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Acconto.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Reparto.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Iva.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Consegna.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/TipoDocumento.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/GiacenzaArticoliAllView.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Progressivi.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Fattura.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Pagamento.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Provincia.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Aspetto.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/DettaglioScarico.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Scarico.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Porto.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/TmpEtichetteFornitori.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/QtaCaricateView.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Nazionalita.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/DettaglioDocumento.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Ricevuta.hbm.xml" />
+    </session-factory>
+</hibernate-configuration>

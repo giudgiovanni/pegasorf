@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="it.infolabs.hibernate.Ente" table="ente" schema="public">
+        <id name="idente" type="long">
+            <column name="idente" />
+            <generator class="assigned" />
+        </id>
+        <property name="descrizione" type="string">
+            <column name="descrizione" not-null="true" />
+        </property>
+        <set name="clientes" inverse="true" lazy="true" table="cliente" fetch="select">
+            <key>
+                <column name="rilasciato_da" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.Cliente" />
+        </set>
+        <set name="clientes_1" inverse="true" lazy="true" table="cliente" fetch="select">
+            <key>
+                <column name="rilasciato_da" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.Cliente" />
+        </set>
+        <set name="clientes_2" inverse="true" lazy="true" table="cliente" fetch="select">
+            <key>
+                <column name="rilasciato_da" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.Cliente" />
+        </set>
+    </class>
+</hibernate-mapping>

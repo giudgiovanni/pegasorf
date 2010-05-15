@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="it.infolabs.hibernate.DettaglioScarico" table="dettaglio_scarico" schema="public">
+        <composite-id name="id" class="it.infolabs.hibernate.DettaglioScaricoId">
+            <key-property name="idordine" type="long">
+                <column name="idordine" />
+            </key-property>
+            <key-property name="idarticolo" type="long">
+                <column name="idarticolo" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="scarico" class="it.infolabs.hibernate.Scarico" update="false" insert="false" fetch="select">
+            <column name="idordine" not-null="true" />
+        </many-to-one>
+        <many-to-one name="articolo" class="it.infolabs.hibernate.Articolo" update="false" insert="false" fetch="select">
+            <column name="idarticolo" not-null="true" />
+        </many-to-one>
+        <property name="qta" type="double">
+            <column name="qta" precision="17" scale="17" not-null="true" />
+        </property>
+        <property name="sconto" type="java.lang.Long">
+            <column name="sconto" />
+        </property>
+        <property name="prezzoAcquisto" type="java.lang.Double">
+            <column name="prezzo_acquisto" precision="17" scale="17" />
+        </property>
+        <property name="prezzoVendita" type="java.lang.Double">
+            <column name="prezzo_vendita" precision="17" scale="17" />
+        </property>
+        <property name="iva" type="java.lang.Integer">
+            <column name="iva" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 6-mag-2010 0.12.01 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="it.infolabs.hibernate.Acconto" table="acconto" schema="doc">
+        <id name="id" type="long">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="fattura" class="it.infolabs.hibernate.Fattura" fetch="select">
+            <column name="fattura" />
+        </many-to-one>
+        <property name="data" type="date">
+            <column name="data" length="13" />
+        </property>
+        <property name="totale" type="java.lang.Double">
+            <column name="totale" precision="17" scale="17" />
+        </property>
+        <property name="note" type="string">
+            <column name="note" />
+        </property>
+    </class>
+</hibernate-mapping>

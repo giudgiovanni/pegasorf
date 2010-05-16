@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 6-mag-2010 0.12.01 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 16-mag-2010 11.17.52 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="it.infolabs.hibernate.DettaglioDocumento" table="dettaglio_documento" schema="doc">
         <id name="id" type="long">
             <column name="id" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="iva" class="it.infolabs.hibernate.Iva" fetch="select">
+        <many-to-one name="codiciIva" class="it.infolabs.hibernate.CodiciIva" fetch="select">
             <column name="iva" />
         </many-to-one>
         <many-to-one name="documento" class="it.infolabs.hibernate.Documento" fetch="select">

@@ -1,15 +1,18 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 1-feb-2010 2.09.21 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 16-mag-2010 11.17.52 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="it.infolabs.hibernate.Scarico" table="scarico" schema="public">
-        <id name="idordine" type="long" unsaved-value="0">
+        <id name="idordine" type="long">
             <column name="idordine" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <many-to-one name="tipoDocumento" class="it.infolabs.hibernate.TipoDocumento" fetch="select">
             <column name="tipo_documento" />
+        </many-to-one>
+        <many-to-one name="codiciIva" class="it.infolabs.hibernate.CodiciIva" fetch="select">
+            <column name="iva_documento" />
         </many-to-one>
         <many-to-one name="aspetto" class="it.infolabs.hibernate.Aspetto" fetch="select">
             <column name="idaspetto" />
@@ -43,9 +46,6 @@
         </property>
         <property name="totaleDocumento" type="java.lang.Double">
             <column name="totale_documento" precision="17" scale="17" />
-        </property>
-        <property name="ivaDocumento" type="java.lang.Integer">
-            <column name="iva_documento" />
         </property>
         <property name="docEmesso" type="java.lang.Integer">
             <column name="doc_emesso" />
@@ -107,31 +107,7 @@
             </key>
             <one-to-many class="it.infolabs.hibernate.DettaglioScarico" />
         </set>
-        <set name="dettaglioScaricos_1" inverse="true" lazy="true" table="dettaglio_scarico" fetch="select">
-            <key>
-                <column name="idordine" not-null="true" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.DettaglioScarico" />
-        </set>
-        <set name="dettaglioScaricos_2" inverse="true" lazy="true" table="dettaglio_scarico" fetch="select">
-            <key>
-                <column name="idordine" not-null="true" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.DettaglioScarico" />
-        </set>
         <set name="dettaglioScaricoManuales" inverse="true" lazy="true" table="dettaglio_scarico_manuale" fetch="select">
-            <key>
-                <column name="ordine" not-null="true" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.DettaglioScaricoManuale" />
-        </set>
-        <set name="dettaglioScaricoManuales_1" inverse="true" lazy="true" table="dettaglio_scarico_manuale" fetch="select">
-            <key>
-                <column name="ordine" not-null="true" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.DettaglioScaricoManuale" />
-        </set>
-        <set name="dettaglioScaricoManuales_2" inverse="true" lazy="true" table="dettaglio_scarico_manuale" fetch="select">
             <key>
                 <column name="ordine" not-null="true" />
             </key>

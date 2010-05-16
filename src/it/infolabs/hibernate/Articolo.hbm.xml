@@ -1,18 +1,21 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 16-mag-2010 11.17.52 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="it.infolabs.hibernate.Articolo" table="articolo" schema="public">
-        <id name="idarticolo" type="long" unsaved-value="0">
+        <id name="idarticolo" type="long">
             <column name="idarticolo" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <many-to-one name="pannelli" class="it.infolabs.hibernate.Pannelli" fetch="select">
             <column name="idpannello" />
         </many-to-one>
         <many-to-one name="reparto" class="it.infolabs.hibernate.Reparto" fetch="select">
             <column name="idreparto" />
+        </many-to-one>
+        <many-to-one name="codiciIva" class="it.infolabs.hibernate.CodiciIva" fetch="select">
+            <column name="iva" />
         </many-to-one>
         <many-to-one name="um" class="it.infolabs.hibernate.Um" fetch="select">
             <column name="um" />
@@ -28,9 +31,6 @@
         </property>
         <property name="prezzoAcquisto" type="java.lang.Double">
             <column name="prezzo_acquisto" precision="17" scale="17" />
-        </property>
-        <property name="iva" type="java.lang.Long">
-            <column name="iva" />
         </property>
         <property name="prezzoDettaglio" type="java.lang.Double">
             <column name="prezzo_dettaglio" precision="17" scale="17" />
@@ -71,55 +71,19 @@
         <property name="qtaInfinita" type="java.lang.Boolean">
             <column name="qta_infinita" />
         </property>
-        <set name="immagineArticolos" inverse="true" lazy="true" table="immagine_articolo" fetch="select">
-            <key>
-                <column name="articolo" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.ImmagineArticolo" />
-        </set>
         <set name="dettaglioCaricos" inverse="true" lazy="true" table="dettaglio_carico" fetch="select">
             <key>
                 <column name="idarticolo" not-null="true" />
             </key>
             <one-to-many class="it.infolabs.hibernate.DettaglioCarico" />
         </set>
-        <set name="dettaglioCaricos_1" inverse="true" lazy="true" table="dettaglio_carico" fetch="select">
-            <key>
-                <column name="idarticolo" not-null="true" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.DettaglioCarico" />
-        </set>
-        <set name="immagineArticolos_1" inverse="true" lazy="true" table="immagine_articolo" fetch="select">
+        <set name="immagineArticolos" inverse="true" lazy="true" table="immagine_articolo" fetch="select">
             <key>
                 <column name="articolo" />
             </key>
             <one-to-many class="it.infolabs.hibernate.ImmagineArticolo" />
         </set>
         <set name="dettaglioScaricos" inverse="true" lazy="true" table="dettaglio_scarico" fetch="select">
-            <key>
-                <column name="idarticolo" not-null="true" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.DettaglioScarico" />
-        </set>
-        <set name="dettaglioScaricos_1" inverse="true" lazy="true" table="dettaglio_scarico" fetch="select">
-            <key>
-                <column name="idarticolo" not-null="true" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.DettaglioScarico" />
-        </set>
-        <set name="dettaglioCaricos_2" inverse="true" lazy="true" table="dettaglio_carico" fetch="select">
-            <key>
-                <column name="idarticolo" not-null="true" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.DettaglioCarico" />
-        </set>
-        <set name="immagineArticolos_2" inverse="true" lazy="true" table="immagine_articolo" fetch="select">
-            <key>
-                <column name="articolo" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.ImmagineArticolo" />
-        </set>
-        <set name="dettaglioScaricos_2" inverse="true" lazy="true" table="dettaglio_scarico" fetch="select">
             <key>
                 <column name="idarticolo" not-null="true" />
             </key>

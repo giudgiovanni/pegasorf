@@ -1,6 +1,6 @@
 package it.infolabs.hibernate;
 
-// Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA
+// Generated 16-mag-2010 11.17.51 by Hibernate Tools 3.2.4.GA
 
 import java.util.Date;
 import java.util.HashSet;
@@ -11,16 +11,15 @@ import java.util.Set;
  */
 public class Articolo implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
 	private long idarticolo;
 	private Pannelli pannelli;
 	private Reparto reparto;
+	private CodiciIva codiciIva;
 	private Um um;
 	private String codfornitore;
 	private String codbarre;
 	private String descrizione;
 	private Double prezzoAcquisto;
-	private Long iva;
 	private Double prezzoDettaglio;
 	private Double prezzoIngrosso;
 	private String imballo;
@@ -34,23 +33,11 @@ public class Articolo implements java.io.Serializable {
 	private Long scortaMassima;
 	private Integer numeroPacchetti;
 	private Boolean qtaInfinita;
-	private Set<ImmagineArticolo> immagineArticolos = new HashSet<ImmagineArticolo>(
-			0);
 	private Set<DettaglioCarico> dettaglioCaricos = new HashSet<DettaglioCarico>(
 			0);
-	private Set<DettaglioCarico> dettaglioCaricos_1 = new HashSet<DettaglioCarico>(
-			0);
-	private Set<ImmagineArticolo> immagineArticolos_1 = new HashSet<ImmagineArticolo>(
+	private Set<ImmagineArticolo> immagineArticolos = new HashSet<ImmagineArticolo>(
 			0);
 	private Set<DettaglioScarico> dettaglioScaricos = new HashSet<DettaglioScarico>(
-			0);
-	private Set<DettaglioScarico> dettaglioScaricos_1 = new HashSet<DettaglioScarico>(
-			0);
-	private Set<DettaglioCarico> dettaglioCaricos_2 = new HashSet<DettaglioCarico>(
-			0);
-	private Set<ImmagineArticolo> immagineArticolos_2 = new HashSet<ImmagineArticolo>(
-			0);
-	private Set<DettaglioScarico> dettaglioScaricos_2 = new HashSet<DettaglioScarico>(
 			0);
 
 	public Articolo() {
@@ -61,31 +48,25 @@ public class Articolo implements java.io.Serializable {
 		this.descrizione = descrizione;
 	}
 
-	public Articolo(long idarticolo, Pannelli pannelli, Reparto reparto, Um um,
-			String codfornitore, String codbarre, String descrizione,
-			Double prezzoAcquisto, Long iva, Double prezzoDettaglio,
+	public Articolo(long idarticolo, Pannelli pannelli, Reparto reparto,
+			CodiciIva codiciIva, Um um, String codfornitore, String codbarre,
+			String descrizione, Double prezzoAcquisto, Double prezzoDettaglio,
 			Double prezzoIngrosso, String imballo, Double peso, Long sconto,
 			String colore, Long scortaMinima, String note,
 			Date dataInserimento, Long caricoIniziale, Long scortaMassima,
 			Integer numeroPacchetti, Boolean qtaInfinita,
-			Set<ImmagineArticolo> immagineArticolos,
 			Set<DettaglioCarico> dettaglioCaricos,
-			Set<DettaglioCarico> dettaglioCaricos_1,
-			Set<ImmagineArticolo> immagineArticolos_1,
-			Set<DettaglioScarico> dettaglioScaricos,
-			Set<DettaglioScarico> dettaglioScaricos_1,
-			Set<DettaglioCarico> dettaglioCaricos_2,
-			Set<ImmagineArticolo> immagineArticolos_2,
-			Set<DettaglioScarico> dettaglioScaricos_2) {
+			Set<ImmagineArticolo> immagineArticolos,
+			Set<DettaglioScarico> dettaglioScaricos) {
 		this.idarticolo = idarticolo;
 		this.pannelli = pannelli;
 		this.reparto = reparto;
+		this.codiciIva = codiciIva;
 		this.um = um;
 		this.codfornitore = codfornitore;
 		this.codbarre = codbarre;
 		this.descrizione = descrizione;
 		this.prezzoAcquisto = prezzoAcquisto;
-		this.iva = iva;
 		this.prezzoDettaglio = prezzoDettaglio;
 		this.prezzoIngrosso = prezzoIngrosso;
 		this.imballo = imballo;
@@ -99,15 +80,9 @@ public class Articolo implements java.io.Serializable {
 		this.scortaMassima = scortaMassima;
 		this.numeroPacchetti = numeroPacchetti;
 		this.qtaInfinita = qtaInfinita;
-		this.immagineArticolos = immagineArticolos;
 		this.dettaglioCaricos = dettaglioCaricos;
-		this.dettaglioCaricos_1 = dettaglioCaricos_1;
-		this.immagineArticolos_1 = immagineArticolos_1;
+		this.immagineArticolos = immagineArticolos;
 		this.dettaglioScaricos = dettaglioScaricos;
-		this.dettaglioScaricos_1 = dettaglioScaricos_1;
-		this.dettaglioCaricos_2 = dettaglioCaricos_2;
-		this.immagineArticolos_2 = immagineArticolos_2;
-		this.dettaglioScaricos_2 = dettaglioScaricos_2;
 	}
 
 	public long getIdarticolo() {
@@ -132,6 +107,14 @@ public class Articolo implements java.io.Serializable {
 
 	public void setReparto(Reparto reparto) {
 		this.reparto = reparto;
+	}
+
+	public CodiciIva getCodiciIva() {
+		return this.codiciIva;
+	}
+
+	public void setCodiciIva(CodiciIva codiciIva) {
+		this.codiciIva = codiciIva;
 	}
 
 	public Um getUm() {
@@ -172,14 +155,6 @@ public class Articolo implements java.io.Serializable {
 
 	public void setPrezzoAcquisto(Double prezzoAcquisto) {
 		this.prezzoAcquisto = prezzoAcquisto;
-	}
-
-	public Long getIva() {
-		return this.iva;
-	}
-
-	public void setIva(Long iva) {
-		this.iva = iva;
 	}
 
 	public Double getPrezzoDettaglio() {
@@ -278,20 +253,12 @@ public class Articolo implements java.io.Serializable {
 		this.numeroPacchetti = numeroPacchetti;
 	}
 
-	public Boolean isQtaInfinita() {
+	public Boolean getQtaInfinita() {
 		return this.qtaInfinita;
 	}
 
 	public void setQtaInfinita(Boolean qtaInfinita) {
 		this.qtaInfinita = qtaInfinita;
-	}
-
-	public Set<ImmagineArticolo> getImmagineArticolos() {
-		return this.immagineArticolos;
-	}
-
-	public void setImmagineArticolos(Set<ImmagineArticolo> immagineArticolos) {
-		this.immagineArticolos = immagineArticolos;
 	}
 
 	public Set<DettaglioCarico> getDettaglioCaricos() {
@@ -302,20 +269,12 @@ public class Articolo implements java.io.Serializable {
 		this.dettaglioCaricos = dettaglioCaricos;
 	}
 
-	public Set<DettaglioCarico> getDettaglioCaricos_1() {
-		return this.dettaglioCaricos_1;
+	public Set<ImmagineArticolo> getImmagineArticolos() {
+		return this.immagineArticolos;
 	}
 
-	public void setDettaglioCaricos_1(Set<DettaglioCarico> dettaglioCaricos_1) {
-		this.dettaglioCaricos_1 = dettaglioCaricos_1;
-	}
-
-	public Set<ImmagineArticolo> getImmagineArticolos_1() {
-		return this.immagineArticolos_1;
-	}
-
-	public void setImmagineArticolos_1(Set<ImmagineArticolo> immagineArticolos_1) {
-		this.immagineArticolos_1 = immagineArticolos_1;
+	public void setImmagineArticolos(Set<ImmagineArticolo> immagineArticolos) {
+		this.immagineArticolos = immagineArticolos;
 	}
 
 	public Set<DettaglioScarico> getDettaglioScaricos() {
@@ -324,38 +283,6 @@ public class Articolo implements java.io.Serializable {
 
 	public void setDettaglioScaricos(Set<DettaglioScarico> dettaglioScaricos) {
 		this.dettaglioScaricos = dettaglioScaricos;
-	}
-
-	public Set<DettaglioScarico> getDettaglioScaricos_1() {
-		return this.dettaglioScaricos_1;
-	}
-
-	public void setDettaglioScaricos_1(Set<DettaglioScarico> dettaglioScaricos_1) {
-		this.dettaglioScaricos_1 = dettaglioScaricos_1;
-	}
-
-	public Set<DettaglioCarico> getDettaglioCaricos_2() {
-		return this.dettaglioCaricos_2;
-	}
-
-	public void setDettaglioCaricos_2(Set<DettaglioCarico> dettaglioCaricos_2) {
-		this.dettaglioCaricos_2 = dettaglioCaricos_2;
-	}
-
-	public Set<ImmagineArticolo> getImmagineArticolos_2() {
-		return this.immagineArticolos_2;
-	}
-
-	public void setImmagineArticolos_2(Set<ImmagineArticolo> immagineArticolos_2) {
-		this.immagineArticolos_2 = immagineArticolos_2;
-	}
-
-	public Set<DettaglioScarico> getDettaglioScaricos_2() {
-		return this.dettaglioScaricos_2;
-	}
-
-	public void setDettaglioScaricos_2(Set<DettaglioScarico> dettaglioScaricos_2) {
-		this.dettaglioScaricos_2 = dettaglioScaricos_2;
 	}
 
 }

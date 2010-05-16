@@ -1,6 +1,6 @@
 package it.infolabs.hibernate;
 
-// Generated 1-feb-2010 2.09.20 by Hibernate Tools 3.2.4.GA
+// Generated 16-mag-2010 11.17.51 by Hibernate Tools 3.2.4.GA
 
 import java.util.Date;
 import java.util.HashSet;
@@ -13,6 +13,7 @@ public class Scarico implements java.io.Serializable {
 
 	private long idordine;
 	private TipoDocumento tipoDocumento;
+	private CodiciIva codiciIva;
 	private Aspetto aspetto;
 	private Pagamento pagamentoByPagamento;
 	private Causale causale;
@@ -24,7 +25,6 @@ public class Scarico implements java.io.Serializable {
 	private String numDocumento;
 	private Date dataDocumento;
 	private Double totaleDocumento;
-	private Integer ivaDocumento;
 	private Integer docEmesso;
 	private Integer docFiscale;
 	private Integer insPn;
@@ -45,15 +45,7 @@ public class Scarico implements java.io.Serializable {
 	private Long riferimentoOrdine;
 	private Set<DettaglioScarico> dettaglioScaricos = new HashSet<DettaglioScarico>(
 			0);
-	private Set<DettaglioScarico> dettaglioScaricos_1 = new HashSet<DettaglioScarico>(
-			0);
-	private Set<DettaglioScarico> dettaglioScaricos_2 = new HashSet<DettaglioScarico>(
-			0);
 	private Set<DettaglioScaricoManuale> dettaglioScaricoManuales = new HashSet<DettaglioScaricoManuale>(
-			0);
-	private Set<DettaglioScaricoManuale> dettaglioScaricoManuales_1 = new HashSet<DettaglioScaricoManuale>(
-			0);
-	private Set<DettaglioScaricoManuale> dettaglioScaricoManuales_2 = new HashSet<DettaglioScaricoManuale>(
 			0);
 
 	public Scarico() {
@@ -63,25 +55,23 @@ public class Scarico implements java.io.Serializable {
 		this.idordine = idordine;
 	}
 
-	public Scarico(long idordine, TipoDocumento tipoDocumento, Aspetto aspetto,
+	public Scarico(long idordine, TipoDocumento tipoDocumento,
+			CodiciIva codiciIva, Aspetto aspetto,
 			Pagamento pagamentoByPagamento, Causale causale,
 			Pagamento pagamentoByIdpagamento, Cliente cliente, Date dataOrdine,
 			Date oraOrdine, String note, String numDocumento,
-			Date dataDocumento, Double totaleDocumento, Integer ivaDocumento,
-			Integer docEmesso, Integer docFiscale, Integer insPn,
-			Double speseIncasso, Double speseTrasporto, Date dataTrasp,
-			Date oraTrasp, Integer colli, Double peso, String consegna,
-			String porto, String diversaDest, Integer sconto,
-			Double scontoEuro, String numeroFattura, String numeroRicevuta,
+			Date dataDocumento, Double totaleDocumento, Integer docEmesso,
+			Integer docFiscale, Integer insPn, Double speseIncasso,
+			Double speseTrasporto, Date dataTrasp, Date oraTrasp,
+			Integer colli, Double peso, String consegna, String porto,
+			String diversaDest, Integer sconto, Double scontoEuro,
+			String numeroFattura, String numeroRicevuta,
 			String numeroNonFiscale, Long riferimentoOrdine,
 			Set<DettaglioScarico> dettaglioScaricos,
-			Set<DettaglioScarico> dettaglioScaricos_1,
-			Set<DettaglioScarico> dettaglioScaricos_2,
-			Set<DettaglioScaricoManuale> dettaglioScaricoManuales,
-			Set<DettaglioScaricoManuale> dettaglioScaricoManuales_1,
-			Set<DettaglioScaricoManuale> dettaglioScaricoManuales_2) {
+			Set<DettaglioScaricoManuale> dettaglioScaricoManuales) {
 		this.idordine = idordine;
 		this.tipoDocumento = tipoDocumento;
+		this.codiciIva = codiciIva;
 		this.aspetto = aspetto;
 		this.pagamentoByPagamento = pagamentoByPagamento;
 		this.causale = causale;
@@ -93,7 +83,6 @@ public class Scarico implements java.io.Serializable {
 		this.numDocumento = numDocumento;
 		this.dataDocumento = dataDocumento;
 		this.totaleDocumento = totaleDocumento;
-		this.ivaDocumento = ivaDocumento;
 		this.docEmesso = docEmesso;
 		this.docFiscale = docFiscale;
 		this.insPn = insPn;
@@ -113,11 +102,7 @@ public class Scarico implements java.io.Serializable {
 		this.numeroNonFiscale = numeroNonFiscale;
 		this.riferimentoOrdine = riferimentoOrdine;
 		this.dettaglioScaricos = dettaglioScaricos;
-		this.dettaglioScaricos_1 = dettaglioScaricos_1;
-		this.dettaglioScaricos_2 = dettaglioScaricos_2;
 		this.dettaglioScaricoManuales = dettaglioScaricoManuales;
-		this.dettaglioScaricoManuales_1 = dettaglioScaricoManuales_1;
-		this.dettaglioScaricoManuales_2 = dettaglioScaricoManuales_2;
 	}
 
 	public long getIdordine() {
@@ -134,6 +119,14 @@ public class Scarico implements java.io.Serializable {
 
 	public void setTipoDocumento(TipoDocumento tipoDocumento) {
 		this.tipoDocumento = tipoDocumento;
+	}
+
+	public CodiciIva getCodiciIva() {
+		return this.codiciIva;
+	}
+
+	public void setCodiciIva(CodiciIva codiciIva) {
+		this.codiciIva = codiciIva;
 	}
 
 	public Aspetto getAspetto() {
@@ -222,14 +215,6 @@ public class Scarico implements java.io.Serializable {
 
 	public void setTotaleDocumento(Double totaleDocumento) {
 		this.totaleDocumento = totaleDocumento;
-	}
-
-	public Integer getIvaDocumento() {
-		return this.ivaDocumento;
-	}
-
-	public void setIvaDocumento(Integer ivaDocumento) {
-		this.ivaDocumento = ivaDocumento;
 	}
 
 	public Integer getDocEmesso() {
@@ -384,22 +369,6 @@ public class Scarico implements java.io.Serializable {
 		this.dettaglioScaricos = dettaglioScaricos;
 	}
 
-	public Set<DettaglioScarico> getDettaglioScaricos_1() {
-		return this.dettaglioScaricos_1;
-	}
-
-	public void setDettaglioScaricos_1(Set<DettaglioScarico> dettaglioScaricos_1) {
-		this.dettaglioScaricos_1 = dettaglioScaricos_1;
-	}
-
-	public Set<DettaglioScarico> getDettaglioScaricos_2() {
-		return this.dettaglioScaricos_2;
-	}
-
-	public void setDettaglioScaricos_2(Set<DettaglioScarico> dettaglioScaricos_2) {
-		this.dettaglioScaricos_2 = dettaglioScaricos_2;
-	}
-
 	public Set<DettaglioScaricoManuale> getDettaglioScaricoManuales() {
 		return this.dettaglioScaricoManuales;
 	}
@@ -407,24 +376,6 @@ public class Scarico implements java.io.Serializable {
 	public void setDettaglioScaricoManuales(
 			Set<DettaglioScaricoManuale> dettaglioScaricoManuales) {
 		this.dettaglioScaricoManuales = dettaglioScaricoManuales;
-	}
-
-	public Set<DettaglioScaricoManuale> getDettaglioScaricoManuales_1() {
-		return this.dettaglioScaricoManuales_1;
-	}
-
-	public void setDettaglioScaricoManuales_1(
-			Set<DettaglioScaricoManuale> dettaglioScaricoManuales_1) {
-		this.dettaglioScaricoManuales_1 = dettaglioScaricoManuales_1;
-	}
-
-	public Set<DettaglioScaricoManuale> getDettaglioScaricoManuales_2() {
-		return this.dettaglioScaricoManuales_2;
-	}
-
-	public void setDettaglioScaricoManuales_2(
-			Set<DettaglioScaricoManuale> dettaglioScaricoManuales_2) {
-		this.dettaglioScaricoManuales_2 = dettaglioScaricoManuales_2;
 	}
 
 }

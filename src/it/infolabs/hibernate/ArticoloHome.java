@@ -72,7 +72,7 @@ public class ArticoloHome extends BusinessObjectHome{
 				art = (Articolo)results.get(0)[0];
 				obj[0] = art;
 				obj[1] = results.get(0)[5];
-				if ( art.isQtaInfinita() ){					
+				if ( art.getQtaInfinita() ){					
 					return obj;
 				}
 				else if ( (Double)results.get(0)[5] <= 0 ) {

@@ -162,9 +162,9 @@ public class DettaglioScarico implements Comparator<DettaglioScarico>{
 				prezzoAcquisto = a.getPrezzoAcquisto();
 				prezzoVendita = a.getPrezzoDettaglio();
 				codiceBarre = a.getCodbarre();
-				iva =a.getIva();
+				iva = (long)a.getCodiciIva().getPercentuale();
 				qta = 1.0;
-				qtaInfinita = a.isQtaInfinita();
+				qtaInfinita = a.getQtaInfinita();
 				disponibilita = (Double)obj[1];
 			}
 			

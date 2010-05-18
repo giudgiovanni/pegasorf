@@ -59,5 +59,6 @@
         <mapping resource="it/infolabs/hibernate/Nazionalita.hbm.xml" />
         <mapping resource="it/infolabs/hibernate/DettaglioDocumento.hbm.xml" />
         <mapping resource="it/infolabs/hibernate/Ricevuta.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/CodiciIva.hbm.xml" />
     </session-factory>
 </hibernate-configuration>

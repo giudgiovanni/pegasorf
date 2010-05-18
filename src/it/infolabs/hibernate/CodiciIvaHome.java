@@ -2,12 +2,19 @@ package it.infolabs.hibernate;
 
 // Generated 16-mag-2010 11.17.52 by Hibernate Tools 3.2.4.GA
 
+import it.infolabs.hibernate.exception.FindAllEntityException;
+
 import java.util.List;
 import javax.naming.InitialContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
 import org.hibernate.LockMode;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+
 import static org.hibernate.criterion.Example.create;
 
 /**
@@ -15,21 +22,18 @@ import static org.hibernate.criterion.Example.create;
  * @see it.infolabs.hibernate.CodiciIva
  * @author Hibernate Tools
  */
-public class CodiciIvaHome {
+public class CodiciIvaHome extends BusinessObjectHome {
 
-	private static final Log log = LogFactory.getLog(CodiciIvaHome.class);
+	private static final Logger logger = Logger.getLogger(CodiciIvaHome.class);
 
-	private final SessionFactory sessionFactory = getSessionFactory();
+	private static final CodiciIvaHome instance = new CodiciIvaHome();
 
-	protected SessionFactory getSessionFactory() {
-		try {
-			return (SessionFactory) new InitialContext()
-					.lookup("SessionFactory");
-		} catch (Exception e) {
-			log.error("Could not locate SessionFactory in JNDI", e);
-			throw new IllegalStateException(
-					"Could not locate SessionFactory in JNDI");
-		}
+	private CodiciIvaHome() {
+		super();
+	}
+
+	public static CodiciIvaHome getInstance() {
+		return instance;
 	}
 
 	public void persist(CodiciIva transientInstance) {
@@ -105,6 +109,25 @@ public class CodiciIvaHome {
 			throw re;
 		}
 	}
+	
+	public CodiciIva findByCodice(String codice) {
+		log.debug("getting CodiciIva instance with codice: " + codice);
+		try {
+			Criteria crit = sessionFactory.getCurrentSession().createCriteria(CodiciIva.class);
+			crit.add(Restrictions.eq("codice", codice));
+			CodiciIva instance = (CodiciIva)crit.uniqueResult();
+			
+			if (instance == null) {
+				log.debug("get successful, no instance found");
+			} else {
+				log.debug("get successful, instance found");
+			}
+			return instance;
+		} catch (RuntimeException re) {
+			log.error("get failed", re);
+			throw re;
+		}
+	}
 
 	public List<CodiciIva> findByExample(CodiciIva instance) {
 		log.debug("finding CodiciIva instance by example");
@@ -118,6 +141,21 @@ public class CodiciIvaHome {
 			return results;
 		} catch (RuntimeException re) {
 			log.error("find by example failed", re);
+			throw re;
+		}
+	}
+	
+	public List<CodiciIva> findAll() throws FindAllEntityException {
+		log.debug("finding All CodiciIva instance");
+		try {
+			List<CodiciIva> results = (List<CodiciIva>) sessionFactory
+					.getCurrentSession().createCriteria(
+							"it.infolabs.hibernate.CodiciIva").addOrder(Order.asc("id")).list();
+			log.debug("find All CodiciIva successful, result size: "
+					+ results.size());
+			return results;
+		} catch (RuntimeException re) {
+			log.error("find All CodiciIva failed", re);
 			throw re;
 		}
 	}

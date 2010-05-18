@@ -2,13 +2,13 @@ package it.infolabs.hibernate;
 
 // Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA
 
+import it.infolabs.hibernate.exception.FindAllEntityException;
+
 import java.util.List;
-import javax.naming.InitialContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
 import org.hibernate.LockMode;
-import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+
 import static org.hibernate.criterion.Example.create;
 
 /**
@@ -118,6 +118,21 @@ public class ClienteHome extends BusinessObjectHome{
 			return results;
 		} catch (RuntimeException re) {
 			log.error("find by example failed", re);
+			throw re;
+		}
+	}
+	
+	public List<Cliente> findAll() throws FindAllEntityException {
+		log.debug("finding All Cliente instance");
+		try {
+			List<Cliente> results = (List<Cliente>) sessionFactory
+					.getCurrentSession().createCriteria(
+							"it.infolabs.hibernate.Cliente").addOrder(Order.asc("cognome")).list();
+			log.debug("find All Cliente successful, result size: "
+					+ results.size());
+			return results;
+		} catch (RuntimeException re) {
+			log.error("find All Cliente failed", re);
 			throw re;
 		}
 	}

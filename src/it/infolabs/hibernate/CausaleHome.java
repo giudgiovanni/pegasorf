@@ -2,12 +2,13 @@ package it.infolabs.hibernate;
 
 // Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA
 
+import it.infolabs.hibernate.exception.FindAllEntityException;
+
 import java.util.List;
-import javax.naming.InitialContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.hibernate.LockMode;
-import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+
 import static org.hibernate.criterion.Example.create;
 
 /**
@@ -15,21 +16,18 @@ import static org.hibernate.criterion.Example.create;
  * @see it.infolabs.hibernate.Causale
  * @author Hibernate Tools
  */
-public class CausaleHome {
+public class CausaleHome extends BusinessObjectHome {
 
-	private static final Log log = LogFactory.getLog(CausaleHome.class);
+	private static final Logger logger = Logger.getLogger(CausaleHome.class);
 
-	private final SessionFactory sessionFactory = getSessionFactory();
+	private static final CausaleHome instance = new CausaleHome();
 
-	protected SessionFactory getSessionFactory() {
-		try {
-			return (SessionFactory) new InitialContext()
-					.lookup("SessionFactory");
-		} catch (Exception e) {
-			log.error("Could not locate SessionFactory in JNDI", e);
-			throw new IllegalStateException(
-					"Could not locate SessionFactory in JNDI");
-		}
+	private CausaleHome() {
+		super();
+	}
+
+	public static CausaleHome getInstance() {
+		return instance;
 	}
 
 	public void persist(Causale transientInstance) {
@@ -118,6 +116,21 @@ public class CausaleHome {
 			return results;
 		} catch (RuntimeException re) {
 			log.error("find by example failed", re);
+			throw re;
+		}
+	}
+	
+	public List<Causale> findAll() throws FindAllEntityException {
+		log.debug("finding All Causale instance");
+		try {
+			List<Causale> results = (List<Causale>) sessionFactory
+					.getCurrentSession().createCriteria(
+							"it.infolabs.hibernate.Causale").addOrder(Order.asc("nome")).list();
+			log.debug("find All Causale successful, result size: "
+					+ results.size());
+			return results;
+		} catch (RuntimeException re) {
+			log.error("find All Causale failed", re);
 			throw re;
 		}
 	}

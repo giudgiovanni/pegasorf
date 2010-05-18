@@ -104,7 +104,7 @@ public class ArticoloModel extends AbstractTableModel implements DBStateChange {
 			return numberFormatter.format(d);
 		}
 		else if ( c == 5 ){
-			return tmp.getIva();
+			return tmp.getCodiciIva().getCodice();
 		}
 		else{
 			

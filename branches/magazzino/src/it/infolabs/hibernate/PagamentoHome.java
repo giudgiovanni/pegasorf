@@ -2,12 +2,17 @@ package it.infolabs.hibernate;
 
 // Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA
 
+import it.infolabs.hibernate.exception.FindAllEntityException;
+
 import java.util.List;
 import javax.naming.InitialContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.hibernate.LockMode;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+
 import static org.hibernate.criterion.Example.create;
 
 /**
@@ -15,21 +20,18 @@ import static org.hibernate.criterion.Example.create;
  * @see it.infolabs.hibernate.Pagamento
  * @author Hibernate Tools
  */
-public class PagamentoHome {
+public class PagamentoHome extends BusinessObjectHome {
 
-	private static final Log log = LogFactory.getLog(PagamentoHome.class);
+	private static final Logger logger = Logger.getLogger(PagamentoHome.class);
 
-	private final SessionFactory sessionFactory = getSessionFactory();
+	private static final PagamentoHome instance = new PagamentoHome();
 
-	protected SessionFactory getSessionFactory() {
-		try {
-			return (SessionFactory) new InitialContext()
-					.lookup("SessionFactory");
-		} catch (Exception e) {
-			log.error("Could not locate SessionFactory in JNDI", e);
-			throw new IllegalStateException(
-					"Could not locate SessionFactory in JNDI");
-		}
+	private PagamentoHome() {
+		super();
+	}
+
+	public static PagamentoHome getInstance() {
+		return instance;
 	}
 
 	public void persist(Pagamento transientInstance) {
@@ -118,6 +120,21 @@ public class PagamentoHome {
 			return results;
 		} catch (RuntimeException re) {
 			log.error("find by example failed", re);
+			throw re;
+		}
+	}
+	
+	public List<Pagamento> findAll() throws FindAllEntityException {
+		log.debug("finding All Pagamento instance");
+		try {
+			List<Pagamento> results = (List<Pagamento>) sessionFactory
+					.getCurrentSession().createCriteria(
+							"it.infolabs.hibernate.Pagamento").addOrder(Order.asc("nome")).list();
+			log.debug("find All Pagamento successful, result size: "
+					+ results.size());
+			return results;
+		} catch (RuntimeException re) {
+			log.error("find All Pagamento failed", re);
 			throw re;
 		}
 	}

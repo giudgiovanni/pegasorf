@@ -6,6 +6,7 @@
 package rf.pegaso.db.tabelle;
 
 import it.infolabs.hibernate.ArticoloHome;
+import it.infolabs.hibernate.CodiciIvaHome;
 import it.infolabs.hibernate.FornitoreHome;
 import it.infolabs.hibernate.PannelliHome;
 import it.infolabs.hibernate.RepartoHome;
@@ -624,7 +625,6 @@ public class Articolo {
 //				try {
 //					e.printStackTrace(new PrintWriter("articolo_inserimento"));
 //				} catch (FileNotFoundException e1) {
-//					// TODO Auto-generated catch block
 //					e1.printStackTrace();
 //				}
 //			}
@@ -648,7 +648,9 @@ public class Articolo {
 		art.setCodbarre(codBarre);
 		art.setDescrizione(this.descrizione);
 		art.setPrezzoAcquisto(this.prezzoAcquisto);
-		art.setIva(new Long(this.iva));
+		CodiciIvaHome.getInstance().begin();
+		
+		art.setCodiciIva(CodiciIvaHome.getInstance().findByCodice(String.valueOf(this.iva)));
 		try {
 			UmHome.getInstance().begin();
 			art.setUm(UmHome.getInstance().findById(this.um));
@@ -872,7 +874,7 @@ public class Articolo {
 		art.setCodbarre(codBarre);
 		art.setDescrizione(this.descrizione);
 		art.setPrezzoAcquisto(this.prezzoAcquisto);
-		art.setIva(new Long(iva));
+		art.setCodiciIva(CodiciIvaHome.getInstance().findByCodice(String.valueOf(this.iva)));
 		try {
 			UmHome.getInstance().begin();
 			art.setUm(UmHome.getInstance().findById(this.um));

@@ -1652,6 +1652,7 @@ public class ArticoliAddMod extends JFrame implements PropertyChangeListener {
 				ArticoliHome.getInstance().begin();
 				if ( !ArticoliHome.getInstance().codBarreEsistenteForInsert(a.getCodbarre()) ){
 					a.setIdarticolo(dbm.getNewID("articoli","idarticolo"));
+					ArticoliHome.getInstance().begin();
 					ArticoliHome.getInstance().persist(a);
 					ArticoliHome.getInstance().begin();
 					ArticoliHome.getInstance().commit();

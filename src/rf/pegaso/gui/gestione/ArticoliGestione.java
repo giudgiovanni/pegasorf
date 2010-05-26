@@ -3,6 +3,9 @@
  */
 package rf.pegaso.gui.gestione;
 
+import it.infolabs.hibernate.Articoli;
+import it.infolabs.hibernate.ArticoliHome;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -225,14 +228,18 @@ public class ArticoliGestione extends JFrame {
 			riga = tblArticoli.getSelectedRow();
 			int idArticolo = ((Long) tblArticoli.getValueAt(riga, 0))
 					.intValue();
-			Articolo r = new Articolo();
-			try {
-				r.deleteArticolo(idArticolo);
-			} catch (IDNonValido e) {
-				JOptionPane.showMessageDialog(this, "Valore idArticolo errato",
-						"ERRORE", JOptionPane.WARNING_MESSAGE);
-				e.printStackTrace();
-			}
+//			Articolo r = new Articolo();
+//			try {
+//				r.deleteArticolo(idArticolo);
+				ArticoliHome.getInstance().begin();
+				Articoli a = ArticoliHome.getInstance().findById(idArticolo);
+				ArticoliHome.getInstance().begin();
+				ArticoliHome.getInstance().delete(a);
+//			} catch (Exception e) {
+//				JOptionPane.showMessageDialog(this, "Valore idArticolo errato",
+//						"ERRORE", JOptionPane.WARNING_MESSAGE);
+//				e.printStackTrace();
+//			}
 		} else {
 			righe = tblArticoli.getSelectedRows();
 			int idRighe[] = new int[righe.length];
@@ -247,7 +254,11 @@ public class ArticoliGestione extends JFrame {
 			// che sono state selezionate
 			for (int i = 0; i < idRighe.length; i++) {
 				int idArticolo = idRighe[i];
-				Articolo r = new Articolo();
+				ArticoliHome.getInstance().begin();
+				Articoli a = ArticoliHome.getInstance().findById(idArticolo);
+				ArticoliHome.getInstance().begin();
+				ArticoliHome.getInstance().delete(a);
+				/*Articolo r = new Articolo();
 				try {
 					r.deleteArticolo(idArticolo);
 				} catch (IDNonValido e) {
@@ -255,10 +266,10 @@ public class ArticoliGestione extends JFrame {
 							"Valore idArticolo errato", "ERRORE",
 							JOptionPane.WARNING_MESSAGE);
 					e.printStackTrace();
-				}
-			}
+				}*/
+			}			
 		}
-
+		ArticoliHome.getInstance().commit();
 	}
 
 	/**

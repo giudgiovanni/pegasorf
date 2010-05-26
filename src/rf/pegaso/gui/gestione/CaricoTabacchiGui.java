@@ -608,6 +608,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			avvisoCodBarreInesistente();
 			e1.printStackTrace();
 		}
+		articolo = a;
 	}
 	
 	private void caricaTabacchiByCodAams() {
@@ -639,6 +640,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			avvisoCodBarreInesistente();
 			e1.printStackTrace();
 		}
+		articolo = a;
 	}
 
 	public void tableChanged(TableModelEvent arg0) {

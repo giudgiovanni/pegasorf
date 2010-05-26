@@ -6,6 +6,7 @@ package rf.pegaso.gui.gestione;
 import it.infolabs.hibernate.Articoli;
 import it.infolabs.hibernate.ArticoliHome;
 import it.infolabs.hibernate.FornitoriHome;
+import it.infolabs.hibernate.PannelliHome;
 import it.infolabs.hibernate.RepartiHome;
 import it.infolabs.hibernate.UmHome;
 import it.infolabs.hibernate.exception.FindByNotFoundException;
@@ -1097,6 +1098,8 @@ public class GrattaEVinciAddMod extends JFrame {
 
 		//il 3 sta per reparto generale
 		a.setReparti(RepartiHome.getInstance().findById(Constant.REPARTO_GRATTA_E_VINCI));
+		
+		a.setPannelli(PannelliHome.getInstance().findById(Constant.PANNELLO_GRATTA_E_VINCI));
 
 		a.setImballo("");
 		try {

@@ -5,6 +5,7 @@ package rf.pegaso.db.model;
 
 import it.infolabs.hibernate.Articoli;
 import it.infolabs.hibernate.ArticoliHome;
+import it.infolabs.hibernate.FornitoriHome;
 import it.infolabs.hibernate.exception.FindAllEntityException;
 
 import java.text.DecimalFormat;
@@ -73,6 +74,8 @@ public class ArticoloModel extends AbstractTableModel implements DBStateChange {
 	}
 
 	public Object getValueAt(int r, int c) {
+		ArticoliHome.getInstance().begin();
+		FornitoriHome.getInstance().begin();
 		Articoli tmp = resultList.get(r);
 		if ( c == 0 ){
 			return tmp.getIdarticolo();

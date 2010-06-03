@@ -25,6 +25,7 @@ import javax.swing.WindowConstants;
 
 import rf.pegaso.db.tabelle.DettaglioScarico;
 import rf.pegaso.gui.gestione.ArticoliGestione;
+import rf.pegaso.gui.vendita.JPanelFattura;
 import rf.pegaso.gui.vendita.panel.JButtonEvent;
 import rf.pegaso.gui.vendita.panel.JButtonEventListener;
 import rf.pegaso.gui.vendita.panel.JPanelArticoli;
@@ -112,10 +113,12 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 	private JPanel pnlRiepilogo = null;
 	private JButton btnStorno1 = null;
 	private VenditaInternalFrame frame;
+	private JFrame padre = null;
 //	private LinkedList<JPanelRiepilogoVendita> listaPannelliRiepilogo = null;
 //	private int numCasse = 0;
 
 	public VenditaInternalFrame(JFrame padre) {
+		this.padre = padre;
 		initialize();
 	}
 
@@ -132,6 +135,9 @@ public class VenditaInternalFrame extends JInternalFrame implements TableModelLi
 		initializeCarrello();
 		txtFieldRicerca.requestFocus();
 		pannelloCarrello.addTableModelListener(this);
+		JPanelFattura fatt = new JPanelFattura(padre);
+		pnlContenitore.add(fatt, "fatt");
+		((CardLayout) pnlContenitore.getLayout()).show(pnlContenitore, "fatt");
 	}
 	
 	private void initializeCarrello(){

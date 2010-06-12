@@ -643,6 +643,7 @@ public class FornitoriAdd extends JDialog {
 
 	private void inserisci() {
 		try {
+			FornitoriHome.getInstance().close();
 			FornitoriHome.getInstance().begin();
 			Fornitori fornitore = new Fornitori();
 			fornitore.setNome(txtNome.getText());
@@ -658,11 +659,8 @@ public class FornitoriAdd extends JDialog {
 			fornitore.setEmail(txtEmail.getText());
 			fornitore.setWebsite(txtWebSite.getText());
 			fornitore.setNote(txtNote.getText());		
-			FornitoriHome.getInstance().persist(fornitore);
-		} catch (PersistEntityException pe) {
-			JOptionPane.showMessageDialog(this, pe.toString(),
-					"ERRORE", JOptionPane.ERROR_MESSAGE);
-			pe.printStackTrace();
+			FornitoriHome.getInstance().attachDirty(fornitore);
+			FornitoriHome.getInstance().commitAndClose();
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (FindByNotFoundException fe) {
@@ -706,6 +704,7 @@ public class FornitoriAdd extends JDialog {
 	private void caricaProvince(JComboBox cmbProvince) {
 		List<Provincia> resultList;
 		try {
+			ProvinciaHome.getInstance().begin();
 			resultList = ProvinciaHome.getInstance().findAllProvince();
 		} catch (FindAllEntityException e) {
 			e.printStackTrace();

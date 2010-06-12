@@ -246,6 +246,21 @@ public class RCHDriver implements PosDriver {
 		while(it.hasNext()){
 			System.out.println(it.next());
 		}
+		
+		try {
+			driver.openDeviceConnection();
+			System.out.println("Porta Device aperta");
+			driver.cutTicket();
+			System.out.println("CUT");
+			driver.closeDeviceConnection();
+			System.out.println("Porta Device chiuso");
+			System.exit(1);
+
+
+		} catch (PosException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -1,5 +1,8 @@
 package rf.pegaso.gui.internalframe;
 
+import it.infolabs.pos.driver.JDialogTestDevicePort;
+import it.infolabs.pos.driver.RCHDriver;
+
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -15,6 +18,7 @@ import javax.swing.JPanel;
 import org.jdesktop.swingx.JXLoginPanel;
 
 import rf.myswing.security.MyJDBCLoginService;
+import rf.pegaso.gui.InitialGUI;
 import rf.pegaso.gui.configurazioni.RootConfigGUI;
 import rf.utility.db.DBManager;
 
@@ -25,6 +29,7 @@ public class ConfigurazioneInternalFrame extends JInternalFrame {
 	private JButton btnConfigAppl = null;
 	private JFrame padre;
 	private JButton btnGestioneDb = null;
+	private JButton btnTestDevice = null;
 
 	public ConfigurazioneInternalFrame(JFrame padre) {
 		this.padre=padre;
@@ -45,8 +50,13 @@ public class ConfigurazioneInternalFrame extends JInternalFrame {
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
 			try {
+				GridBagConstraints gridBagConstraints12 = new GridBagConstraints();
+				gridBagConstraints12.gridx = 3;
+				gridBagConstraints12.insets = new Insets(10, 10, 10, 10);
+				gridBagConstraints12.gridy = 0;
 				GridBagConstraints gridBagConstraints11 = new GridBagConstraints();
 				gridBagConstraints11.gridx = 2;
+				gridBagConstraints11.insets = new Insets(10, 10, 10, 10);
 				gridBagConstraints11.gridy = 0;
 				GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
 				gridBagConstraints1.gridx = 1; // Generated
@@ -61,6 +71,7 @@ public class ConfigurazioneInternalFrame extends JInternalFrame {
 				jContentPane.add(getBtnConfigAdmin(), gridBagConstraints); // Generated
 				jContentPane.add(getBtnConfigAppl(), gridBagConstraints1); // Generated
 				jContentPane.add(getBtnGestioneDb(), gridBagConstraints11);
+				jContentPane.add(getBtnTestDevice(), gridBagConstraints12);
 			} catch (java.lang.Throwable e) {
 				// TODO: Something
 			}
@@ -163,6 +174,31 @@ public class ConfigurazioneInternalFrame extends JInternalFrame {
 	protected void apriGestioneDatabase() {
 		JDialogGestioneDatabase gdb=new JDialogGestioneDatabase(this.padre);
 		gdb.setVisible(true);
+		
+	}
+
+	/**
+	 * This method initializes btnTestDevice	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getBtnTestDevice() {
+		if (btnTestDevice == null) {
+			btnTestDevice = new JButton();
+			btnTestDevice.setPreferredSize(new Dimension(120, 70));
+			btnTestDevice.setText("<html><center>Test<br>Device Port</html>");
+			btnTestDevice.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					testDevicePort(); 
+				}
+			});
+		}
+		return btnTestDevice;
+	}
+
+	protected void testDevicePort() {
+		JDialogTestDevicePort test=new JDialogTestDevicePort(InitialGUI.getMainInstance());
+		test.setVisible(true);
 		
 	}
 

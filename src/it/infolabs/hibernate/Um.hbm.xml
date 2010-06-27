@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 23-lug-2009 17.43.50 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 27-giu-2010 12.59.17 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="it.infolabs.hibernate.Um" table="um" schema="public">
-        <id name="idum" type="long" unsaved-value="0">
+        <id name="idum" type="long">
             <column name="idum" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <property name="nome" type="string">
             <column name="nome" length="40" not-null="true" />
@@ -14,19 +14,7 @@
         <property name="descrizione" type="string">
             <column name="descrizione" length="100" />
         </property>
-        <set name="articolis" inverse="true" lazy="true" table="articoli" fetch="select">
-            <key>
-                <column name="um" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.Articolo" />
-        </set>
-        <set name="articolis_1" inverse="true" lazy="true" table="articoli" fetch="select">
-            <key>
-                <column name="um" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.Articolo" />
-        </set>
-        <set name="articolis_2" inverse="true" lazy="true" table="articoli" fetch="select">
+        <set name="articolos" inverse="true" lazy="true" table="articolo" fetch="select">
             <key>
                 <column name="um" />
             </key>

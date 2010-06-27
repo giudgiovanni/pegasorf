@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 6-mag-2010 0.12.01 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 27-giu-2010 12.59.17 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="it.infolabs.hibernate.Consegna" table="consegna" schema="doc">
         <id name="id" type="long">
@@ -12,12 +12,6 @@
             <column name="descrizione" />
         </property>
         <set name="ddts" inverse="true" lazy="true" table="ddt" fetch="select">
-            <key>
-                <column name="consegna_a_mezzo" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.Ddt" />
-        </set>
-        <set name="ddts_1" inverse="true" lazy="true" table="ddt" fetch="select">
             <key>
                 <column name="consegna_a_mezzo" />
             </key>

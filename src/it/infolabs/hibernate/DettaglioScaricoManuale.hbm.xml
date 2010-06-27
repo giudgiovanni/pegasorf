@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 16-mag-2010 11.17.52 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 27-giu-2010 12.59.17 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="it.infolabs.hibernate.DettaglioScaricoManuale" table="dettaglio_scarico_manuale" schema="public">
         <composite-id name="id" class="it.infolabs.hibernate.DettaglioScaricoManualeId">

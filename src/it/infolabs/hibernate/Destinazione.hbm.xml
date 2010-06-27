@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 27-giu-2010 12.59.17 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="it.infolabs.hibernate.Destinazione" table="destinazione" schema="public">
+        <id name="id" type="long">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="paese" class="it.infolabs.hibernate.Paese" fetch="select">
+            <column name="paese" />
+        </many-to-one>
+        <property name="ragioneSociale" type="string">
+            <column name="ragione_sociale" />
+        </property>
+        <property name="piva" type="java.lang.Character">
+            <column name="piva" length="1" />
+        </property>
+        <property name="coficeFiscale" type="java.lang.Character">
+            <column name="cofice_fiscale" length="1" />
+        </property>
+        <property name="indirizzo" type="string">
+            <column name="indirizzo" />
+        </property>
+        <property name="cap" type="string">
+            <column name="cap" length="5" />
+        </property>
+        <property name="localita" type="java.lang.Character">
+            <column name="localita" length="1" />
+        </property>
+        <property name="provincia" type="string">
+            <column name="provincia" length="2" />
+        </property>
+        <property name="telefono" type="java.lang.Character">
+            <column name="telefono" length="1" />
+        </property>
+        <property name="fax" type="java.lang.Character">
+            <column name="fax" length="1" />
+        </property>
+        <property name="email" type="java.lang.Character">
+            <column name="email" length="1" />
+        </property>
+        <property name="cellulare" type="java.lang.Character">
+            <column name="cellulare" length="1" />
+        </property>
+        <property name="note" type="string">
+            <column name="note" />
+        </property>
+        <set name="ddts" inverse="true" lazy="true" table="ddt" fetch="select">
+            <key>
+                <column name="destinazione" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.Ddt" />
+        </set>
+    </class>
+</hibernate-mapping>

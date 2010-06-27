@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 1-feb-2010 2.09.21 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 27-giu-2010 12.59.17 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="it.infolabs.hibernate.Cliente" table="cliente" schema="public">
-        <id name="idcliente" type="long" unsaved-value="0">
+        <id name="idcliente" type="long">
             <column name="idcliente" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <many-to-one name="nazionalita" class="it.infolabs.hibernate.Nazionalita" fetch="select">
             <column name="nazionalita" />
@@ -86,17 +86,11 @@
             </key>
             <one-to-many class="it.infolabs.hibernate.Scarico" />
         </set>
-        <set name="scaricos_1" inverse="true" lazy="true" table="scarico" fetch="select">
+        <set name="documentos" inverse="true" lazy="true" table="documento" fetch="select">
             <key>
-                <column name="idcliente" />
+                <column name="cliente" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Scarico" />
-        </set>
-        <set name="scaricos_2" inverse="true" lazy="true" table="scarico" fetch="select">
-            <key>
-                <column name="idcliente" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.Scarico" />
+            <one-to-many class="it.infolabs.hibernate.Documento" />
         </set>
     </class>
 </hibernate-mapping>

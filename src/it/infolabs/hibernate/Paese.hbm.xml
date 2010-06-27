@@ -3,19 +3,19 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 27-giu-2010 12.59.17 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
-    <class name="it.infolabs.hibernate.Stato" table="stato" schema="doc">
+    <class name="it.infolabs.hibernate.Paese" table="paese" schema="public">
         <id name="id" type="long">
             <column name="id" />
             <generator class="assigned" />
         </id>
-        <property name="descrizione" type="string">
-            <column name="descrizione" />
+        <property name="descrizione" type="java.lang.Character">
+            <column name="descrizione" length="1" />
         </property>
-        <set name="ordines" inverse="true" lazy="true" table="ordine" fetch="select">
+        <set name="destinaziones" inverse="true" lazy="true" table="destinazione" fetch="select">
             <key>
-                <column name="stato" />
+                <column name="paese" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Ordine" />
+            <one-to-many class="it.infolabs.hibernate.Destinazione" />
         </set>
     </class>
 </hibernate-mapping>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 27-giu-2010 12.59.17 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="it.infolabs.hibernate.TipoDocumento" table="tipo_documento" schema="public">
         <id name="iddocumento" type="long">
@@ -14,41 +14,17 @@
         <property name="descrizione" type="string">
             <column name="descrizione" length="200" />
         </property>
-        <set name="ordinis" inverse="true" lazy="true" table="ordini" fetch="select">
-            <key>
-                <column name="tipo_documento" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.Scarico" />
-        </set>
-        <set name="ordinis_1" inverse="true" lazy="true" table="ordini" fetch="select">
-            <key>
-                <column name="tipo_documento" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.Scarico" />
-        </set>
-        <set name="carichis" inverse="true" lazy="true" table="carichi" fetch="select">
+        <set name="caricos" inverse="true" lazy="true" table="carico" fetch="select">
             <key>
                 <column name="iddocumento" />
             </key>
             <one-to-many class="it.infolabs.hibernate.Carico" />
         </set>
-        <set name="ordinis_2" inverse="true" lazy="true" table="ordini" fetch="select">
+        <set name="scaricos" inverse="true" lazy="true" table="scarico" fetch="select">
             <key>
                 <column name="tipo_documento" />
             </key>
             <one-to-many class="it.infolabs.hibernate.Scarico" />
-        </set>
-        <set name="carichis_1" inverse="true" lazy="true" table="carichi" fetch="select">
-            <key>
-                <column name="iddocumento" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.Carico" />
-        </set>
-        <set name="carichis_2" inverse="true" lazy="true" table="carichi" fetch="select">
-            <key>
-                <column name="iddocumento" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.Carico" />
         </set>
     </class>
 </hibernate-mapping>

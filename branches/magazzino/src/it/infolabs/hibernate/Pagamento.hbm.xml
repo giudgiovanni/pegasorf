@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 27-giu-2010 12.59.17 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="it.infolabs.hibernate.Pagamento" table="pagamento" schema="public">
         <id name="idpagamento" type="long">
@@ -11,41 +11,41 @@
         <property name="nome" type="string">
             <column name="nome" length="40" not-null="true" />
         </property>
-        <set name="ordinisForPagamento" inverse="true" lazy="true" table="ordini" fetch="select">
+        <set name="ricevutas" inverse="true" lazy="true" table="ricevuta" fetch="select">
+            <key>
+                <column name="pagamento" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.Ricevuta" />
+        </set>
+        <set name="ordines" inverse="true" lazy="true" table="ordine" fetch="select">
+            <key>
+                <column name="pagamento" />
+            </key>
+            <one-to-many class="it.infolabs.hibernate.Ordine" />
+        </set>
+        <set name="scaricosForPagamento" inverse="true" lazy="true" table="scarico" fetch="select">
             <key>
                 <column name="pagamento" />
             </key>
             <one-to-many class="it.infolabs.hibernate.Scarico" />
         </set>
-        <set name="ordinisForPagamento_1" inverse="true" lazy="true" table="ordini" fetch="select">
+        <set name="ddts" inverse="true" lazy="true" table="ddt" fetch="select">
             <key>
                 <column name="pagamento" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Scarico" />
+            <one-to-many class="it.infolabs.hibernate.Ddt" />
         </set>
-        <set name="ordinisForIdpagamento" inverse="true" lazy="true" table="ordini" fetch="select">
+        <set name="scaricosForIdpagamento" inverse="true" lazy="true" table="scarico" fetch="select">
             <key>
                 <column name="idpagamento" />
             </key>
             <one-to-many class="it.infolabs.hibernate.Scarico" />
         </set>
-        <set name="ordinisForPagamento_2" inverse="true" lazy="true" table="ordini" fetch="select">
+        <set name="fatturas" inverse="true" lazy="true" table="fattura" fetch="select">
             <key>
                 <column name="pagamento" />
             </key>
-            <one-to-many class="it.infolabs.hibernate.Scarico" />
-        </set>
-        <set name="ordinisForIdpagamento_1" inverse="true" lazy="true" table="ordini" fetch="select">
-            <key>
-                <column name="idpagamento" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.Scarico" />
-        </set>
-        <set name="ordinisForIdpagamento_2" inverse="true" lazy="true" table="ordini" fetch="select">
-            <key>
-                <column name="idpagamento" />
-            </key>
-            <one-to-many class="it.infolabs.hibernate.Scarico" />
+            <one-to-many class="it.infolabs.hibernate.Fattura" />
         </set>
     </class>
 </hibernate-mapping>

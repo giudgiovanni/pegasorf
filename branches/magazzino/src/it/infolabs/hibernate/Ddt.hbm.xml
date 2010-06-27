@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 6-mag-2010 0.12.01 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 27-giu-2010 12.59.17 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="it.infolabs.hibernate.Ddt" table="ddt" schema="doc">
         <id name="id" type="long">
@@ -20,6 +20,9 @@
         <many-to-one name="consegna" class="it.infolabs.hibernate.Consegna" fetch="select">
             <column name="consegna_a_mezzo" />
         </many-to-one>
+        <many-to-one name="destinazione" class="it.infolabs.hibernate.Destinazione" fetch="select">
+            <column name="destinazione" />
+        </many-to-one>
         <property name="serie" type="string">
             <column name="serie" length="3" />
         </property>
@@ -37,9 +40,6 @@
         </property>
         <property name="colli" type="java.lang.Integer">
             <column name="colli" />
-        </property>
-        <property name="destinazione" type="java.lang.Long">
-            <column name="destinazione" />
         </property>
     </class>
 </hibernate-mapping>

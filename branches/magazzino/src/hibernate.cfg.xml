@@ -42,7 +42,7 @@
         <mapping resource="it/infolabs/hibernate/Ordine.hbm.xml" />
         <mapping resource="it/infolabs/hibernate/Acconto.hbm.xml" />
         <mapping resource="it/infolabs/hibernate/Reparto.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/Iva.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/CodiciIva.hbm.xml" />
         <mapping resource="it/infolabs/hibernate/Consegna.hbm.xml" />
         <mapping resource="it/infolabs/hibernate/TipoDocumento.hbm.xml" />
         <mapping resource="it/infolabs/hibernate/GiacenzaArticoliAllView.hbm.xml" />
@@ -59,6 +59,7 @@
         <mapping resource="it/infolabs/hibernate/Nazionalita.hbm.xml" />
         <mapping resource="it/infolabs/hibernate/DettaglioDocumento.hbm.xml" />
         <mapping resource="it/infolabs/hibernate/Ricevuta.hbm.xml" />
-        <mapping resource="it/infolabs/hibernate/CodiciIva.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Destinazione.hbm.xml" />
+        <mapping resource="it/infolabs/hibernate/Paese.hbm.xml" />
     </session-factory>
 </hibernate-configuration>

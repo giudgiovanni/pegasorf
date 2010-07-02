@@ -1928,7 +1928,7 @@ public class ArticoloAddMod extends JFrame implements PropertyChangeListener,Win
 					ImmagineArticoloHome.getInstance().delete(img);
 					ImmagineArticoloHome.getInstance().commit();
 				}
-				imgArticolo.setArticoli(a);
+				imgArticolo.setArticolo(a);
 				imgArticolo.setId(dbm.getNewID("immagine_articolo", "id"));
 				ImmagineArticoloHome.getInstance().begin();
 				ImmagineArticoloHome.getInstance().persist(imgArticolo);

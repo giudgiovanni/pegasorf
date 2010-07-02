@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 27-giu-2010 12.59.17 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 3-lug-2010 0.47.59 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="it.infolabs.hibernate.Provincia" table="provincia" schema="public">
         <id name="idprovincia" type="long">

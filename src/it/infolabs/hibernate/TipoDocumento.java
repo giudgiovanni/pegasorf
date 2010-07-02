@@ -1,6 +1,6 @@
 package it.infolabs.hibernate;
 
-// Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA
+// Generated 3-lug-2010 0.47.58 by Hibernate Tools 3.2.4.GA
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,12 +13,8 @@ public class TipoDocumento implements java.io.Serializable {
 	private long iddocumento;
 	private String tipo;
 	private String descrizione;
-	private Set<Scarico> ordinis = new HashSet<Scarico>(0);
-	private Set<Scarico> ordinis_1 = new HashSet<Scarico>(0);
-	private Set<Carico> carichis = new HashSet<Carico>(0);
-	private Set<Scarico> ordinis_2 = new HashSet<Scarico>(0);
-	private Set<Carico> carichis_1 = new HashSet<Carico>(0);
-	private Set<Carico> carichis_2 = new HashSet<Carico>(0);
+	private Set<Carico> caricos = new HashSet<Carico>(0);
+	private Set<Scarico> scaricos = new HashSet<Scarico>(0);
 
 	public TipoDocumento() {
 	}
@@ -29,18 +25,12 @@ public class TipoDocumento implements java.io.Serializable {
 	}
 
 	public TipoDocumento(long iddocumento, String tipo, String descrizione,
-			Set<Scarico> ordinis, Set<Scarico> ordinis_1, Set<Carico> carichis,
-			Set<Scarico> ordinis_2, Set<Carico> carichis_1,
-			Set<Carico> carichis_2) {
+			Set<Carico> caricos, Set<Scarico> scaricos) {
 		this.iddocumento = iddocumento;
 		this.tipo = tipo;
 		this.descrizione = descrizione;
-		this.ordinis = ordinis;
-		this.ordinis_1 = ordinis_1;
-		this.carichis = carichis;
-		this.ordinis_2 = ordinis_2;
-		this.carichis_1 = carichis_1;
-		this.carichis_2 = carichis_2;
+		this.caricos = caricos;
+		this.scaricos = scaricos;
 	}
 
 	public long getIddocumento() {
@@ -67,52 +57,20 @@ public class TipoDocumento implements java.io.Serializable {
 		this.descrizione = descrizione;
 	}
 
-	public Set<Scarico> getOrdinis() {
-		return this.ordinis;
+	public Set<Carico> getCaricos() {
+		return this.caricos;
 	}
 
-	public void setOrdinis(Set<Scarico> ordinis) {
-		this.ordinis = ordinis;
+	public void setCaricos(Set<Carico> caricos) {
+		this.caricos = caricos;
 	}
 
-	public Set<Scarico> getOrdinis_1() {
-		return this.ordinis_1;
+	public Set<Scarico> getScaricos() {
+		return this.scaricos;
 	}
 
-	public void setOrdinis_1(Set<Scarico> ordinis_1) {
-		this.ordinis_1 = ordinis_1;
-	}
-
-	public Set<Carico> getCarichis() {
-		return this.carichis;
-	}
-
-	public void setCarichis(Set<Carico> carichis) {
-		this.carichis = carichis;
-	}
-
-	public Set<Scarico> getOrdinis_2() {
-		return this.ordinis_2;
-	}
-
-	public void setOrdinis_2(Set<Scarico> ordinis_2) {
-		this.ordinis_2 = ordinis_2;
-	}
-
-	public Set<Carico> getCarichis_1() {
-		return this.carichis_1;
-	}
-
-	public void setCarichis_1(Set<Carico> carichis_1) {
-		this.carichis_1 = carichis_1;
-	}
-
-	public Set<Carico> getCarichis_2() {
-		return this.carichis_2;
-	}
-
-	public void setCarichis_2(Set<Carico> carichis_2) {
-		this.carichis_2 = carichis_2;
+	public void setScaricos(Set<Scarico> scaricos) {
+		this.scaricos = scaricos;
 	}
 
 }

@@ -1,6 +1,6 @@
 package it.infolabs.hibernate;
 
-// Generated 1-feb-2010 0.56.14 by Hibernate Tools 3.2.4.GA
+// Generated 3-lug-2010 0.47.58 by Hibernate Tools 3.2.4.GA
 
 import java.util.Date;
 import java.util.HashSet;
@@ -28,10 +28,6 @@ public class Carico implements java.io.Serializable {
 	private Long riferimentoOrdine;
 	private Set<DettaglioCarico> dettaglioCaricos = new HashSet<DettaglioCarico>(
 			0);
-	private Set<DettaglioCarico> dettaglioCaricos_1 = new HashSet<DettaglioCarico>(
-			0);
-	private Set<DettaglioCarico> dettaglioCaricos_2 = new HashSet<DettaglioCarico>(
-			0);
 
 	public Carico() {
 	}
@@ -45,9 +41,7 @@ public class Carico implements java.io.Serializable {
 			String note, String numDocumento, Date dataDocumento,
 			Double totaleDocumento, Integer sospeso, Integer rifDoc,
 			Integer sconto, Integer ivaDocumento, Integer insPn,
-			Long riferimentoOrdine, Set<DettaglioCarico> dettaglioCaricos,
-			Set<DettaglioCarico> dettaglioCaricos_1,
-			Set<DettaglioCarico> dettaglioCaricos_2) {
+			Long riferimentoOrdine, Set<DettaglioCarico> dettaglioCaricos) {
 		this.idcarico = idcarico;
 		this.fornitore = fornitore;
 		this.tipoDocumento = tipoDocumento;
@@ -64,8 +58,6 @@ public class Carico implements java.io.Serializable {
 		this.insPn = insPn;
 		this.riferimentoOrdine = riferimentoOrdine;
 		this.dettaglioCaricos = dettaglioCaricos;
-		this.dettaglioCaricos_1 = dettaglioCaricos_1;
-		this.dettaglioCaricos_2 = dettaglioCaricos_2;
 	}
 
 	public long getIdcarico() {
@@ -194,22 +186,6 @@ public class Carico implements java.io.Serializable {
 
 	public void setDettaglioCaricos(Set<DettaglioCarico> dettaglioCaricos) {
 		this.dettaglioCaricos = dettaglioCaricos;
-	}
-
-	public Set<DettaglioCarico> getDettaglioCaricos_1() {
-		return this.dettaglioCaricos_1;
-	}
-
-	public void setDettaglioCaricos_1(Set<DettaglioCarico> dettaglioCaricos_1) {
-		this.dettaglioCaricos_1 = dettaglioCaricos_1;
-	}
-
-	public Set<DettaglioCarico> getDettaglioCaricos_2() {
-		return this.dettaglioCaricos_2;
-	}
-
-	public void setDettaglioCaricos_2(Set<DettaglioCarico> dettaglioCaricos_2) {
-		this.dettaglioCaricos_2 = dettaglioCaricos_2;
 	}
 
 }

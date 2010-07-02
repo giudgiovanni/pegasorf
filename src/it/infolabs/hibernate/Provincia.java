@@ -1,6 +1,6 @@
 package it.infolabs.hibernate;
 
-// Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA
+// Generated 3-lug-2010 0.47.58 by Hibernate Tools 3.2.4.GA
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,12 +13,8 @@ public class Provincia implements java.io.Serializable {
 	private long idprovincia;
 	private String provincia;
 	private String targa;
-	private Set<Fornitore> fornitoris = new HashSet<Fornitore>(0);
-	private Set<Fornitore> fornitoris_1 = new HashSet<Fornitore>(0);
-	private Set<Fornitore> fornitoris_2 = new HashSet<Fornitore>(0);
-	private Set<Cliente> clientis = new HashSet<Cliente>(0);
-	private Set<Cliente> clientis_1 = new HashSet<Cliente>(0);
-	private Set<Cliente> clientis_2 = new HashSet<Cliente>(0);
+	private Set<Fornitore> fornitores = new HashSet<Fornitore>(0);
+	private Set<Cliente> clientes = new HashSet<Cliente>(0);
 
 	public Provincia() {
 	}
@@ -29,18 +25,12 @@ public class Provincia implements java.io.Serializable {
 	}
 
 	public Provincia(long idprovincia, String provincia, String targa,
-			Set<Fornitore> fornitoris, Set<Fornitore> fornitoris_1,
-			Set<Fornitore> fornitoris_2, Set<Cliente> clientis,
-			Set<Cliente> clientis_1, Set<Cliente> clientis_2) {
+			Set<Fornitore> fornitores, Set<Cliente> clientes) {
 		this.idprovincia = idprovincia;
 		this.provincia = provincia;
 		this.targa = targa;
-		this.fornitoris = fornitoris;
-		this.fornitoris_1 = fornitoris_1;
-		this.fornitoris_2 = fornitoris_2;
-		this.clientis = clientis;
-		this.clientis_1 = clientis_1;
-		this.clientis_2 = clientis_2;
+		this.fornitores = fornitores;
+		this.clientes = clientes;
 	}
 
 	public long getIdprovincia() {
@@ -67,52 +57,20 @@ public class Provincia implements java.io.Serializable {
 		this.targa = targa;
 	}
 
-	public Set<Fornitore> getFornitoris() {
-		return this.fornitoris;
+	public Set<Fornitore> getFornitores() {
+		return this.fornitores;
 	}
 
-	public void setFornitoris(Set<Fornitore> fornitoris) {
-		this.fornitoris = fornitoris;
+	public void setFornitores(Set<Fornitore> fornitores) {
+		this.fornitores = fornitores;
 	}
 
-	public Set<Fornitore> getFornitoris_1() {
-		return this.fornitoris_1;
+	public Set<Cliente> getClientes() {
+		return this.clientes;
 	}
 
-	public void setFornitoris_1(Set<Fornitore> fornitoris_1) {
-		this.fornitoris_1 = fornitoris_1;
-	}
-
-	public Set<Fornitore> getFornitoris_2() {
-		return this.fornitoris_2;
-	}
-
-	public void setFornitoris_2(Set<Fornitore> fornitoris_2) {
-		this.fornitoris_2 = fornitoris_2;
-	}
-
-	public Set<Cliente> getClientis() {
-		return this.clientis;
-	}
-
-	public void setClientis(Set<Cliente> clientis) {
-		this.clientis = clientis;
-	}
-
-	public Set<Cliente> getClientis_1() {
-		return this.clientis_1;
-	}
-
-	public void setClientis_1(Set<Cliente> clientis_1) {
-		this.clientis_1 = clientis_1;
-	}
-
-	public Set<Cliente> getClientis_2() {
-		return this.clientis_2;
-	}
-
-	public void setClientis_2(Set<Cliente> clientis_2) {
-		this.clientis_2 = clientis_2;
+	public void setClientes(Set<Cliente> clientes) {
+		this.clientes = clientes;
 	}
 
 }

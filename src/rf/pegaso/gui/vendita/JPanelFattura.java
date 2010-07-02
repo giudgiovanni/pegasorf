@@ -155,7 +155,7 @@ public class JPanelFattura extends JPanel {
 			else if ( e.getSource() == btnNuovoCliente ){
 				nuovoCliente();
 				caricaClienti();
-				cmbClienti.setSelectedItemByID((dbm.getNewID("clienti","idcliente") - 1));
+				cmbClienti.setSelectedItemByID((dbm.getNewID("cliente","idcliente") - 1));
 			}
 			else if ( e.getSource() == btnNuovoPagamento ){
 				nuovoPagamento();

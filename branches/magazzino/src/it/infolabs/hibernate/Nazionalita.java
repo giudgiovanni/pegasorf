@@ -1,6 +1,6 @@
 package it.infolabs.hibernate;
 
-// Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA
+// Generated 3-lug-2010 0.47.58 by Hibernate Tools 3.2.4.GA
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,9 +12,7 @@ public class Nazionalita implements java.io.Serializable {
 
 	private long idnazionalita;
 	private String descrizione;
-	private Set<Cliente> clientis = new HashSet<Cliente>(0);
-	private Set<Cliente> clientis_1 = new HashSet<Cliente>(0);
-	private Set<Cliente> clientis_2 = new HashSet<Cliente>(0);
+	private Set<Cliente> clientes = new HashSet<Cliente>(0);
 
 	public Nazionalita() {
 	}
@@ -25,13 +23,10 @@ public class Nazionalita implements java.io.Serializable {
 	}
 
 	public Nazionalita(long idnazionalita, String descrizione,
-			Set<Cliente> clientis, Set<Cliente> clientis_1,
-			Set<Cliente> clientis_2) {
+			Set<Cliente> clientes) {
 		this.idnazionalita = idnazionalita;
 		this.descrizione = descrizione;
-		this.clientis = clientis;
-		this.clientis_1 = clientis_1;
-		this.clientis_2 = clientis_2;
+		this.clientes = clientes;
 	}
 
 	public long getIdnazionalita() {
@@ -50,28 +45,12 @@ public class Nazionalita implements java.io.Serializable {
 		this.descrizione = descrizione;
 	}
 
-	public Set<Cliente> getClientis() {
-		return this.clientis;
+	public Set<Cliente> getClientes() {
+		return this.clientes;
 	}
 
-	public void setClientis(Set<Cliente> clientis) {
-		this.clientis = clientis;
-	}
-
-	public Set<Cliente> getClientis_1() {
-		return this.clientis_1;
-	}
-
-	public void setClientis_1(Set<Cliente> clientis_1) {
-		this.clientis_1 = clientis_1;
-	}
-
-	public Set<Cliente> getClientis_2() {
-		return this.clientis_2;
-	}
-
-	public void setClientis_2(Set<Cliente> clientis_2) {
-		this.clientis_2 = clientis_2;
+	public void setClientes(Set<Cliente> clientes) {
+		this.clientes = clientes;
 	}
 
 }

@@ -1,6 +1,6 @@
 package it.infolabs.hibernate;
 
-// Generated 1-feb-2010 2.09.20 by Hibernate Tools 3.2.4.GA
+// Generated 3-lug-2010 0.47.58 by Hibernate Tools 3.2.4.GA
 
 import java.util.Date;
 import java.util.HashSet;
@@ -37,8 +37,8 @@ public class Cliente implements java.io.Serializable {
 	private String intestazione;
 	private String rilasciatoDi;
 	private Set<Scarico> scaricos = new HashSet<Scarico>(0);
-	private Set<Scarico> scaricos_1 = new HashSet<Scarico>(0);
-	private Set<Scarico> scaricos_2 = new HashSet<Scarico>(0);
+	private Set<Documento> documentos = new HashSet<Documento>(0);
+	private Set<Documento> documentos_1 = new HashSet<Documento>(0);
 
 	public Cliente() {
 	}
@@ -56,7 +56,7 @@ public class Cliente implements java.io.Serializable {
 			String cell, String fax, String email, String website, String note,
 			Date dataNascita, String numDoc, Date rilasciatoIl, String natoA,
 			String intestazione, String rilasciatoDi, Set<Scarico> scaricos,
-			Set<Scarico> scaricos_1, Set<Scarico> scaricos_2) {
+			Set<Documento> documentos, Set<Documento> documentos_1) {
 		this.idcliente = idcliente;
 		this.nazionalita = nazionalita;
 		this.documentoCliente = documentoCliente;
@@ -83,8 +83,8 @@ public class Cliente implements java.io.Serializable {
 		this.intestazione = intestazione;
 		this.rilasciatoDi = rilasciatoDi;
 		this.scaricos = scaricos;
-		this.scaricos_1 = scaricos_1;
-		this.scaricos_2 = scaricos_2;
+		this.documentos = documentos;
+		this.documentos_1 = documentos_1;
 	}
 
 	public long getIdcliente() {
@@ -295,20 +295,20 @@ public class Cliente implements java.io.Serializable {
 		this.scaricos = scaricos;
 	}
 
-	public Set<Scarico> getScaricos_1() {
-		return this.scaricos_1;
+	public Set<Documento> getDocumentos() {
+		return this.documentos;
 	}
 
-	public void setScaricos_1(Set<Scarico> scaricos_1) {
-		this.scaricos_1 = scaricos_1;
+	public void setDocumentos(Set<Documento> documentos) {
+		this.documentos = documentos;
 	}
 
-	public Set<Scarico> getScaricos_2() {
-		return this.scaricos_2;
+	public Set<Documento> getDocumentos_1() {
+		return this.documentos_1;
 	}
 
-	public void setScaricos_2(Set<Scarico> scaricos_2) {
-		this.scaricos_2 = scaricos_2;
+	public void setDocumentos_1(Set<Documento> documentos_1) {
+		this.documentos_1 = documentos_1;
 	}
 
 }

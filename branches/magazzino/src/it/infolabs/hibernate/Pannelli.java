@@ -1,6 +1,6 @@
 package it.infolabs.hibernate;
 
-// Generated 26-ago-2009 22.04.11 by Hibernate Tools 3.2.5.Beta
+// Generated 3-lug-2010 0.47.58 by Hibernate Tools 3.2.4.GA
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,7 +12,7 @@ public class Pannelli implements java.io.Serializable {
 
 	private long idpannelli;
 	private String nome;
-	private Set articolis = new HashSet(0);
+	private Set<Articolo> articolos = new HashSet<Articolo>(0);
 
 	public Pannelli() {
 	}
@@ -21,10 +21,10 @@ public class Pannelli implements java.io.Serializable {
 		this.idpannelli = idpannelli;
 	}
 
-	public Pannelli(long idpannelli, String nome, Set articolis) {
+	public Pannelli(long idpannelli, String nome, Set<Articolo> articolos) {
 		this.idpannelli = idpannelli;
 		this.nome = nome;
-		this.articolis = articolis;
+		this.articolos = articolos;
 	}
 
 	public long getIdpannelli() {
@@ -43,12 +43,12 @@ public class Pannelli implements java.io.Serializable {
 		this.nome = nome;
 	}
 
-	public Set getArticolis() {
-		return this.articolis;
+	public Set<Articolo> getArticolos() {
+		return this.articolos;
 	}
 
-	public void setArticolis(Set articolis) {
-		this.articolis = articolis;
+	public void setArticolos(Set<Articolo> articolos) {
+		this.articolos = articolos;
 	}
 
 }

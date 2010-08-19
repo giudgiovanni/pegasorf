@@ -1482,6 +1482,7 @@ public class TabacchiAddMod extends JFrame implements PropertyChangeListener {
 			btnAddQtaIniziale.setText("Aggiungi Al Carico Iniziale");
 			btnAddQtaIniziale.setVisible(modalita == MOD);
 			btnAddQtaIniziale.addActionListener(new MyActionListener());
+			btnAddQtaIniziale.setVisible(false);
 		}
 		return btnAddQtaIniziale;
 	}

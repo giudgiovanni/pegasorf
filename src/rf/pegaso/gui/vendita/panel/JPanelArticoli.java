@@ -4,30 +4,21 @@ import it.infolabs.hibernate.Articoli;
 import it.infolabs.hibernate.PannelliHome;
 import it.infolabs.hibernate.exception.FindByNotFoundException;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.Vector;
 
-import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import javax.swing.JScrollPane;
 
-import rf.pegaso.db.tabelle.Articolo;
+import rf.utility.ArticoliComparator;
 import rf.utility.db.DBEvent;
 import rf.utility.db.DBStateChange;
 import rf.utility.db.RowEvent;
-
-import java.awt.GridBagLayout;
-
 
 public class JPanelArticoli extends JPanel implements DBStateChange{
 
@@ -72,6 +63,7 @@ public class JPanelArticoli extends JPanel implements DBStateChange{
 			pnlPulsanti.removeAll();
 			pnlPulsanti.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 			int countWidth = 0, row = 3;
+			Collections.sort((java.util.List<Articoli>)articoli, new ArticoliComparator());
 			for (Articoli art : articoli){
 				idPannello = art.getPannelli().getIdpannelli();
 				JButtonArticolo btnArticolo = new JButtonArticolo(art);
@@ -83,7 +75,7 @@ public class JPanelArticoli extends JPanel implements DBStateChange{
 					countWidth = 0; row ++;
 				}
 			}
-			int height = (row*100)+(row*10);
+			int height = (row*40)+(row*10);
 			pnlPulsanti.setPreferredSize(new Dimension(width-20, height));
 		}
 		catch (Exception e) {

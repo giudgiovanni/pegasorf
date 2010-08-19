@@ -1,16 +1,13 @@
 package rf.pegaso.gui.vendita.panel;
 
-import it.infolabs.hibernate.Articoli;
-import it.infolabs.hibernate.ArticoliHome;
-import it.infolabs.hibernate.Reparti;
+import it.infolabs.hibernate.RepartiHome;
 import it.infolabs.pos.PosException;
 import it.infolabs.pos.Ticket;
 import it.infolabs.pos.TicketRow;
-import it.infolabs.pos.driver.RCHDriver;
+import it.infolabs.pos.driver.TextFileDriver;
 
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
-import java.awt.Font;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Time;
@@ -23,9 +20,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 
-import javax.swing.BorderFactory;
-import javax.swing.border.BevelBorder;
-import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -428,15 +422,18 @@ public class JPanelRiepilogoVendita extends JPanel {
 			TicketRow row=new TicketRow();
 			row.setDescrizione(d.getDescrizione());
 			row.setIva(d.getIva());
-			row.setPrezzo(((Number)d.getPrezzoVendita()).floatValue());
+			row.setPrezzo(((Number)ControlloDati.arrotondaPrezzo(d.getPrezzoVendita())).floatValue());
 			row.setQta(((Number)d.getQta()).floatValue());
 			
 			// recuperiamo l'articolo e verifichiamo il suo
 			// reparto di appartenenza in modo da impostarlo nello scontrino.
-			ArticoliHome.getInstance().begin();
+			RepartiHome.getInstance().begin();
+			long idReparto = RepartiHome.getInstance().findRepartoByArticolo(d.getIdArticolo());
+			
+			/*ArticoliHome.getInstance().begin();
 			Articoli art=ArticoliHome.getInstance().findById(d.getIdArticolo());
 			Reparti reparto=art.getReparti();
-			long idReparto=reparto.getIdreparto();
+			long idReparto=reparto.getIdreparto();*/
 			
 			// se id reparto è uguale ad 1 o uguale a 4 impostiamo come
 			// reparto scontrino quello del reparto 5 del registratore di cassa.
@@ -446,9 +443,10 @@ public class JPanelRiepilogoVendita extends JPanel {
 				row.setReparto(1);
 			}
 			t.addTicketRow(row);
-		}
-		RCHDriver driver=new RCHDriver();
+		}		
+		//RCHDriver driver=new RCHDriver();
 		try {
+			TextFileDriver driver = new TextFileDriver();
 			driver.openDeviceConnection();
 			driver.startTicket();
 			driver.printTicket(t);

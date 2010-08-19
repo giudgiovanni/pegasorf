@@ -2,13 +2,13 @@ package it.infolabs.hibernate;
 
 // Generated 23-lug-2009 0.07.34 by Hibernate Tools 3.2.4.GA
 
+import java.math.BigInteger;
 import java.util.List;
-import javax.naming.InitialContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
 import org.hibernate.LockMode;
-import org.hibernate.SessionFactory;
+
 import static org.hibernate.criterion.Example.create;
 
 /**
@@ -103,6 +103,20 @@ public class RepartiHome extends BusinessObjectHome {
 				log.debug("get successful, instance found");
 			}
 			return instance;
+		} catch (RuntimeException re) {
+			log.error("get failed", re);
+			throw re;
+		}
+	}
+	
+	public long findRepartoByArticolo(long id) {
+		log.debug("getting Reparto by Articolo: " + id);
+		try {
+			List result = (List)sessionFactory.getCurrentSession().createSQLQuery("select rep.idreparto from reparti rep left join articoli art on rep.idreparto = art.idreparto where art.idarticolo = " + id).list();
+			if (result.size() > 0)
+				return ((BigInteger)result.get(0)).longValue();
+			log.debug("finding Reparto by Articolo successful");
+			return 0;
 		} catch (RuntimeException re) {
 			log.error("get failed", re);
 			throw re;

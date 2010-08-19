@@ -38,9 +38,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Time;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -283,8 +281,53 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		// FINE PUNTO BACKUP
 
 		int riga = tblViewCarichi.getSelectedRow();
-		int idcarico = ((Long) tblViewCarichi.getValueAt(riga, 0)).intValue();
-		Carico c = new Carico();
+		if ( riga < 0)
+			return;
+		try {		
+			int idcarico = ((Long) tblViewCarichi.getValueAt(riga, 0)).intValue();
+			CarichiHome.getInstance().begin();
+			Carichi oldck = CarichiHome.getInstance().findById((long)idcarico);
+			Carichi ck = new Carichi();
+			ck.setIdcarico(DBManager.getIstanceSingleton().getNewID(
+					"carichi", "idcarico"));
+			ck.setTipoDocumento(TipoDocumentoHome.getInstance().findById(Constant.FATTURA));
+			ck.setDataCarico(oldck.getDataCarico());
+			ck.setDataDocumento(oldck.getDataDocumento());
+			ck.setFornitori(oldck.getFornitori());
+			ck.setInsPn(oldck.getInsPn());
+			ck.setIvaDocumento(oldck.getIvaDocumento());
+			ck.setNote(oldck.getNote());
+			ck.setNumDocumento(oldck.getNumDocumento());
+			ck.setOraCarico(oldck.getOraCarico());
+			ck.setRifDoc(oldck.getRifDoc());
+			ck.setRiferimentoOrdine(oldck.getRiferimentoOrdine());
+			ck.setSconto(oldck.getSconto());
+			ck.setSospeso(oldck.getSospeso());
+			ck.setTotaleDocumento(oldck.getTotaleDocumento());
+
+			CarichiHome.getInstance().attachDirty(ck);
+			DettaglioCarichi dc;
+			for (DettaglioCarichi item : oldck.getDettaglioCarichis()) {
+				dc = new DettaglioCarichi();
+				dc.setArticoli(item.getArticoli());
+				dc.setCarichi(ck);
+				dc.setPrezzoAcquisto(item.getPrezzoAcquisto());
+				dc.setQta(item.getQta());
+				dc.setSconto(item.getSconto());
+				dc.setId(new DettaglioCarichiId(item.getArticoli().getIdarticolo(), ck.getIdcarico()));
+				DettaglioCarichiHome.getInstance().attachDirty(dc);
+			}		
+			CarichiHome.getInstance().commitAndClose();
+			JOptionPane.showMessageDialog(this, "Procedura di Carico Ordine in Magazzino effettuata con successo.", "INFO", 2);
+		}
+		catch (Exception exc) {
+			exc.printStackTrace();
+			JOptionPane.showMessageDialog(this, "Errore nel db", "ERRORE", 2);
+		}
+		
+		
+		
+		/*Carico c = new Carico();
 		try {
 
 			// Inseriamo il carico come fattura di acquisto
@@ -320,7 +363,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(this, "Errore nel db", "ERRORE", 2);
 			e.printStackTrace();
-		}
+		}*/
 
 	}
 
@@ -2492,9 +2535,7 @@ public class CaricoTabacchiGui extends JFrame implements TableModelListener {
 			e1.printStackTrace();
 		}
 
-		try {
-			JasperReport subreport = (JasperReport) JRLoader
-					.loadObject("report/u88fax_subreport.jasper");
+		try {			
 			JasperViewer.viewReport(JasperFillManager.fillReport(
 					"report/u88fax.jasper", par, this.dbm.getConnessione()),
 					false);

@@ -42,7 +42,7 @@ public class JButtonArticolo extends javax.swing.JButton {
             setFocusable(false);
             setRequestFocusEnabled(false);
             FontMetrics met = this.getFontMetrics(getFont());            
-            setPreferredSize(new Dimension(met.stringWidth(articolo.getDescrizione())+40, 100));            
+            setPreferredSize(new Dimension(met.stringWidth(articolo.getDescrizione())+40, 40));            
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -50,7 +50,7 @@ public class JButtonArticolo extends javax.swing.JButton {
 	
 	@Override
 	public int getHeight() {
-		return 100;
+		return 40;
 	};
 
 	public Articoli getArticolo() {

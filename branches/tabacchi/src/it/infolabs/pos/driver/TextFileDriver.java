@@ -44,7 +44,7 @@ public class TextFileDriver implements PosDriver {
 	@Override
 	public void closeDeviceConnection() throws PosException {
 		// Inviare il File txt nella cartella di stampa		
-		File f = new File(printerFolderPath + new Date().toString() + ".txt");
+		File f = new File(printerFolderPath + new Date().toString().replace(":", "_") + ".txt");
 		try {
 			FileOutputStream fos = new FileOutputStream(f);
 			fos.write(scontrino.getBytes());
@@ -83,7 +83,7 @@ public class TextFileDriver implements PosDriver {
 			//viene moltiplicato per 100 in quanto il registratore onda accetta
 			//cifre senza virgola
 			//int price=(int)(amount*100);
-			int price = ((int)(row.getPrezzo() * 100)) + ((int)(MathUtility.percentualeDaAggiungere(row.getPrezzo(), row.getIva()) * 100));
+			int price = ((int)(row.getPrezzo() * 100)) + (int)Math.rint(MathUtility.percentualeDaAggiungere(row.getPrezzo(), row.getIva()) * 100);
 			StringBuffer sb=new StringBuffer();
 			String reparto="";
 			int id = row.getReparto();
